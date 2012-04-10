@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="css/main.css">
+    <script type="text/javascript"
+      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBJAvCwnDreQHJ_cAlbXAm9Fb_LmjvlaTI&sensor=true&libraries=geometry">
+    </script>
+  </head>
+  <body>
+    <div id="wrapper">
+        <div id="locations">
+            <ul></ul>
+        </div>
+        <div id="map-box">
+            <div id="address_thingy" class="clearfix">
+                <form id="map_form" action="map_submit" method="get" accept-charset="utf-8">
+                    <input type="textbox" name="address" value="" size="75">
+                    <input type="submit" value="submit">
+                </form>
+            </div>
+            <div id="map_canvas" style="width:100%; height:100%"></div>                    
+        </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
+    <script src="js/script.js" type="text/javascript" charset="utf-8"></script>
+  </body>
+</html>
