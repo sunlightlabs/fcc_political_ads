@@ -1,0 +1,18 @@
+{% extends "fcc-base.html" %}{% load static from staticfiles %}
+{% block title %}FCC Ad Tracker{% endblock title %}
+
+{% block content %}
+    <h1>FCC Map</h1>
+    <div id="map-box">
+        <div id="map_canvas" style="width:100%; height:100%"></div>                    
+    </div>
+{% endblock content %}
+
+{% block head %}
+    {{ block.super }}
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBJAvCwnDreQHJ_cAlbXAm9Fb_LmjvlaTI&sensor=true&libraries=geometry"></script>
+{% endblock head %}
+
+{% block js %}
+    <script src="{% static "js/fcc_site.js" %}" type="text/javascript" charset="utf-8"></script>
+{% endblock js %}
