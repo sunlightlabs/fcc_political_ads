@@ -1,72 +1,81 @@
 const amile = 1609.344;
-var pa_stations_file = 'js/pa_tvstations.js'
 
-var geocoder, map, userLoc, dist_service, dist_results, features;
+var geocoder, map, mapBounds, markers, searchLoc, nearby;
 
 jQuery(document).ready(function() {
     var gm = google.maps;
     
     var myOptions = {
-      center: new gm.LatLng(41.04433523326895, -77.77560713125001),
+      center: new gm.LatLng(startPos[1], startPos[0]),
       zoom: 7,
       mapTypeId: gm.MapTypeId.ROADMAP
     };
     
     geocoder = new gm.Geocoder();
+    markers = [];
     
-    
-    map = new gm.Map(document.getElementById("map_canvas"),
-        myOptions);
-    
-/*
-    $.getJSON(pa_stations_file, function(data) {
-        features = [];
+    map = new gm.Map(document.getElementById("map_canvas"), myOptions);
+    mapBounds = new gm.LatLngBounds();
         
-        $.each(data['features'], function(key, val) {
+    try {
+        for (var i = locations.length - 1; i >= 0; i--){
             var newMarker = new gm.Marker({
                 // 'animation': google.maps.Animation.DROP,
                 'map': map,
-                'position': new gm.LatLng(val['geometry'][1], val['geometry'][0])
+                'position': new gm.LatLng(locations[i]['lat'], locations[i]['lon'])
             });
-            newMarker.setTitle(val['properties']['combined_address_studio']);
-            val['marker'] = newMarker;
-            features.push(val);
-            $("#locations ul").append("<li id='" + val['properties']['tv_station'].toLowerCase() + "'><h3 class='station'>" + val['properties']['tv_station'] + "</h3><address>" + val['properties']['combined_address_studio'] + "</address></li>");
-            all_destinations = jQuery.map(features, function(val, i) { return val['marker'].getPosition()});
-            var num_sets = Math.ceil(all_destinations.length/25);
-            dest_sets = []
-            for (var i=0; i < num_sets; i++) {
-                dest_sets[i] = all_destinations.splice(0,25);
-            };
-            
-          });
-    });
-*/
-    
+            newMarker.setTitle(locations[i]['title']);
+            markers.push(newMarker);
+            mapBounds.extend(newMarker.getPosition());
+        }
+        console.log(mapBounds.getCenter());
+        map.fitBounds(mapBounds);
+        // map.panBy(-20, 0);
+    }
+    catch (e if e instanceof ReferenceError) {
+        if (window.console) console.log(e);
+    }
+
+
     $("form#map_form").submit(function(event) {
         var address = $("form#map_form input:first").val();
         
         geocoder.geocode( { 'address': address}, function(results, status) 
         {
-            dist_results = [];
             if (status == gm.GeocoderStatus.OK) 
             {
-                // dest_sets = [all_destinations.splice(0,25),  all_destinations];
-                userLoc = results[0].geometry.location;
-                map.setCenter(userLoc);
+                searchLoc = results[0].geometry.location;
+                map.setCenter(searchLoc);
                 var marker = new gm.Marker({
                     map: map,
-                    position: userLoc
+                    position: searchLoc
                 });
+                
+                for (var i=0; i < markers.length; i++) {
+                    markers[i].setMap(null);
+                };
+                $.getJSON('/broadcasters/nearby.json', {'lon': searchLoc.lng(), 'lat': searchLoc.lat()}, function(json, textStatus) {
+                    nearby = json;
+                    $(json).each(function(index, element) {
+                        if (console) console.log(element);
+                        var newMarker = new gm.Marker({
+                            map: map,
+                            position:  new gm.LatLng(element.obj.addresses.studio.pos[1], element.obj.addresses.studio.pos[0])
+                        });
+                        newMarker.setTitle(element.obj.callsign);
+                        markers.push(newMarker);
+                    });
+                });
+                
                                 
-                dist_service.getDistanceMatrix(
-                  {
-                    origins: [userLoc],
-                    destinations: dest_sets[0],
-                    travelMode: google.maps.TravelMode.DRIVING,
-                    avoidHighways: false,
-                    avoidTolls: false
-                  }, dist_callback);
+                // dist_service.getDistanceMatrix(
+                //   {
+                //     origins: [searchLoc],
+                //     destinations: dest_sets[0],
+                //     travelMode: google.maps.TravelMode.DRIVING,
+                //     avoidHighways: false,
+                //     avoidTolls: false
+                //   }, dist_callback);
                 
             } else {
                 if(console) console.log("Geocode was not successful for the following reason: " + status);

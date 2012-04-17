@@ -1,25 +1,6 @@
 from django.conf import settings
 import pymongo
 
-DATA_FIELDS = {
-    "broadcaster": [
-        "city", 
-        "zip", 
-        "address1", 
-        "address2", 
-        "network_affiliate", 
-        "facility_type", 
-        "state", 
-        "callsign", 
-        "zip2", 
-        "community_city", 
-        "community_state"
-    ]
-    
-}
-
-
-
 class LazyDatabase(object):
 
     def __init__(self):

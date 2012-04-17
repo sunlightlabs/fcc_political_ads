@@ -1,0 +1,42 @@
+{% extends "fcc-base.html" %}{% load static from staticfiles %}
+{% block bodyclass %}broadcasters{% endblock bodyclass %}
+{% block content %}
+    <h1>{{ state_name }} ({{ broadcaster_list|length }} stations)</h1>
+    <div id="stations">
+        <ul id="locations">{% for broadcaster in broadcaster_list %}
+            <li class="{% cycle odd,even %}">
+                <h3>{{ broadcaster.callsign }}</h3>
+                <div class="postal-address">
+                    <p class="street">{{ broadcaster.addresses.studio.address1|title }}</p>
+                    <p class="street">{{ broadcaster.addresses.studio.address2|default_if_none:''|title  }}</p>
+                    <p><span class="city">{{ broadcaster.addresses.studio.city|title  }}</span>, <span class="state">{{ broadcaster.addresses.studio.state }}</span> <span class="zipcode">{{ broadcaster.addresses.studio.zip1 }}</span></p>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>            
+    </div>
+    <div id="map-box">
+        <div id="address_thingy" class="clearfix">
+            <form id="map_form" action="map_submit" method="get" accept-charset="utf-8">
+                <input type="textbox" name="address" value="" size="75">
+                <input type="submit" value="submit">
+            </form>
+        </div>
+        <div id="map_canvas" style="width:100%; height:100%"></div>
+    </div>
+{% endblock content %}
+
+{% block head %}
+    {{ block.super }}
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBJAvCwnDreQHJ_cAlbXAm9Fb_LmjvlaTI&sensor=false&libraries=geometry"></script>
+{% endblock head %}
+
+{% block js %}
+    <script>
+        var startPos = {{ broadcaster_list.0.addresses.studio.pos|default:"0,0" }};
+        var locations = [{% for broadcaster in broadcaster_list %}{% if broadcaster.addresses.studio.pos %}
+            { 'title': '{{ broadcaster.callsign }} {{ broadcaster.addresses.studio.city|title  }}, {{ broadcaster.addresses.studio.state|title  }}', 'lat': {{ broadcaster.addresses.studio.pos.1|default:'null' }}, 'lon': {{ broadcaster.addresses.studio.pos.0|default:'null' }} }{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}
+        ];
+    </script>
+    <script src="{% static "js/fcc_site.js" %}" type="text/javascript" charset="utf-8"></script>
+{% endblock js %}

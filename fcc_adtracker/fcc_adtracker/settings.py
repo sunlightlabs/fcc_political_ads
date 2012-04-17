@@ -127,6 +127,8 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     
     'sfapp',
+    
+    'broadcasters',
 )
 
 # A sample logging configuration. The only tangible logging

@@ -6,9 +6,9 @@ from fcc_adtracker.views import HomePageView
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^broadcasters/', include('broadcasters.urls')),
     url(r'', include('sfapp.urls')),
     url(r'^$', HomePageView.as_view(), name='home'),
-    # url(r'^fcc_adtracker/', include('fcc_adtracker.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
