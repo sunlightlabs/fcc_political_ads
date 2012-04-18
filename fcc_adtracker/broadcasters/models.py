@@ -46,6 +46,10 @@ STATES_DICT = dict(us_states.US_STATES)
 
 EARTH_RADIUS_MILES = float(3959)
 
+def get_broadcaster_by_callsign(callsign):
+    broadcasters = db.fccads.broadcasters
+    return broadcasters.find_one({'callsign': callsign})
+    
 
 def get_broadcasters_for_state(state):
     broadcasters = db.fccads.broadcasters

@@ -1,0 +1,6 @@
+<h3>{{ broadcaster.callsign }} {# {% if broadcaster.addresses.studio.pos %}<i class="icon-map-marker"></i>{% endif %} #}</h3>
+<div class="postal-address">
+    {% if broadcaster.addresses.studio.address1 %}<p class="street">{{ broadcaster.addresses.studio.address1|title }}</p>{% endif %}
+    {% if broadcaster.addresses.studio.address2 %}<p class="street">{{ broadcaster.addresses.studio.address2|title  }}</p>{% endif %}
+    <p><span class="city">{{ broadcaster.addresses.studio.city|title  }}</span>, <span class="state">{{ broadcaster.addresses.studio.state }}</span> <span class="zipcode">{{ broadcaster.addresses.studio.zip }}</span></p>
+</div>
