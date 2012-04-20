@@ -1,0 +1,7 @@
+Django==1.4
+mongoengine==0.6.3
+pymongo==2.1.1
+-e git+git@github.com:sunlightlabs/sfapp.git@dee5b7aef0335c007ecba31ab0dd762a8e8e9cde#egg=sfapp-dev
+
+# for our deploy
+gunicorn==0.12.2
