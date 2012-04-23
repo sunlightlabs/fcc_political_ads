@@ -1,4 +1,4 @@
-var SLL = {
+var SLF = {
     geocoder: null,
     map: null,
     markers: null,
@@ -18,89 +18,104 @@ jQuery(document).ready(function() {
       mapTypeId: gm.MapTypeId.ROADMAP
     };
     
-    SLL.geocoder = new gm.Geocoder();
-    SLL.map = new gm.Map(document.getElementById("map_canvas"), myOptions);
-    SLL.markers = {};
-    SLL.userMarkerImage = new gm.MarkerImage(userMarker_url, gm.Size(19,32));
-    SLL.stationMarkerImage = new gm.MarkerImage(stationMarker_url, gm.Size(19,32));
+    SLF.geocoder = new gm.Geocoder();
+    SLF.map = new gm.Map(document.getElementById("map_canvas"), myOptions);
+    SLF.markers = {};
+    SLF.userMarkerImage = new gm.MarkerImage(userMarker_url, gm.Size(19,32));
+    SLF.stationMarkerImage = new gm.MarkerImage(stationMarker_url, gm.Size(19,32));
     
-    SLL.list_elem = $("ul#locations");
+    SLF.list_elem = $("ul#locations");
     
-    SLL.removeStationMarkers = function () {
-        for each( mkr in SLL.markers) { mkr.setMap(); }
-        SLL.markers = {};
+    SLF.removeStationMarkers = function () {
+        for each( mkr in SLF.markers) { mkr.setMap(); }
+        SLF.markers = {};
     }
     
-    SLL.attachInfoWindow = function (marker, content, open) {
+    SLF.attachInfoWindow = function (marker, content, open) {
         var infowindow = new gm.InfoWindow({ content: content });
         gm.event.addListener(marker, 'click', function() { infowindow.open(marker.get('map'), marker); });
         if (open) { infowindow.open(marker.get('map'), marker); };
     }
     
-    SLL.addMarker = function(id, pos, infoContent, markerImage) {
+    SLF.addMarker = function(id, pos, infoContent, markerImage) {
         var marker = new gm.Marker({
             position:  new gm.LatLng(pos[1], pos[0]),
             draggable: false,
             icon: markerImage
         });
-        SLL.markers[id] = marker;
+        SLF.markers[id] = marker;
         marker.setTitle(id);
-        SLL.attachInfoWindow(marker, infoContent);
+        SLF.attachInfoWindow(marker, infoContent);
         return marker;
     };
-        
-    SLL.revealList = function() {
+    
+    SLF.generateListElement = function(element) {
+        var snippet = $('<h3>').text(element.callsign);
+        if (element.addresses.length > 1) {
+            var addr = $('<div class="postal-address">');
+            $("<p>").text(element.addresses[1].address1).appendTo(addr);
+            if(element.addresses[1].address2) $("<p>").text(element.addresses[1].address2).appendTo(addr);
+            var city = $('<span></span>').text(element.addresses[1].city);
+            var state = $('<span></span>').text(element.addresses[1].state);
+            var zip1 = $('<span></span>').text(element.addresses[1].zip1);
+            $("<p>").append(city.html() + ", " + state.html() + " " + zip1.html()).appendTo(addr);
+            snippet = snippet.after(addr);
+        };
+        return snippet;
+    };
+    
+    SLF.revealList = function() {
         console.log('revealList');
-        var li_els = SLL.list_elem.children('li');
+        var li_els = SLF.list_elem.children('li');
         $(li_els).each(function(index, element) {
             $(element).delay(index*100).fadeIn('slow');
         });
     };
     
-    SLL.revealMarkers = function(callback) {
-        for each( mkr in SLL.markers) { 
-            mkr.setMap(SLL.map);
+    SLF.revealMarkers = function(callback) {
+        for each( mkr in SLF.markers) { 
+            mkr.setMap(SLF.map);
         }
         callback();
     };
     
-    SLL.updateMapApp = function (location_list) {
-        SLL.removeStationMarkers();
-        SLL.list_elem.empty();
+    SLF.updateMapApp = function (location_list) {
+        SLF.removeStationMarkers();
+        SLF.list_elem.empty();
         var mapBounds = new gm.LatLngBounds();
         for (var i=0; i < location_list.length; i++) {
             var element = location_list[i];
-            var pos = (element['addresses']['studio'] && element['addresses']['studio']['pos']) ? element['addresses']['studio']['pos'] : null;
+            var pos = (element['addresses'][1] && element['addresses'][1]['pos']) ? element['addresses'][1]['pos'] : null;
             if (pos !== null) {
-                var marker= SLL.addMarker(element.callsign, pos, element.html, SLL.stationMarkerImage);
+                var marker= SLF.addMarker(element.callsign, pos, element.html, SLF.stationMarkerImage);
                 mapBounds.extend(marker.getPosition());
             };
-            var elem = $('<li>' + element.html + '</li>');
+            var elem = $('<li>').append(SLF.generateListElement(element));
             if (element.distance) {
                 elem.append('<p class="distance">' + element.distance + ' miles (approx.)</p>');
             }
             elem.hide();
-            SLL.list_elem.append(elem);
+            SLF.list_elem.append(elem);
             // elem.delay(i*100).fadeIn('slow');
         };
-        gm.event.addListenerOnce(SLL.map, 'bounds_changed', function() {
-            SLL.revealMarkers(SLL.revealList);    
+        gm.event.addListenerOnce(SLF.map, 'bounds_changed', function() {
+            SLF.revealMarkers(SLF.revealList);    
         });
-        SLL.map.fitBounds(mapBounds);
+        SLF.map.fitBounds(mapBounds);
     }
     
-    SLL.handleNearbySuccess = function(data, textStatus) {
+    SLF.handleNearbySuccess = function(data, textStatus) {
         nearby = data;
-        SLL.updateMapApp(nearby);
+        SLF.updateMapApp(nearby);
     }
     
-    SLL.handleNearbyComplete = function(jqXHR, textStatus) {
+    SLF.handleNearbyComplete = function(jqXHR, textStatus) {
         if (window.console) { console.log('handleNearbyComplete: ' + textStatus); }
     }
     
     
     try {
-        SLL.updateMapApp(locations);
+        SLF.updateMapApp(locations);
     }
     catch (e if e instanceof ReferenceError) {
         if (window.console) console.log(e);
@@ -109,28 +124,29 @@ jQuery(document).ready(function() {
 
     $("form#map_form").submit(function(event) {
         var address = $("form#map_form input#address").val();
-        SLL.geocoder.geocode( {'address': address}, function(results, status) 
+        SLF.geocoder.geocode( {'address': address}, function(results, status) 
         {
             if (status == gm.GeocoderStatus.OK) 
             {
-                SLL.searchLoc = results[0].geometry.location;
-                SLL.map.setCenter(SLL.searchLoc);
+                SLF.searchLoc = results[0].geometry.location;
+                if (console) {console.log(SLF.searchLoc.lat(), SLF.searchLoc.lng());};
+                SLF.map.setCenter(SLF.searchLoc);
                 var marker = new gm.Marker({
-                    map: SLL.map,
-                    position: SLL.searchLoc,
-                    icon: SLL.userMarkerImage,
+                    map: SLF.map,
+                    position: SLF.searchLoc,
+                    icon: SLF.userMarkerImage,
                     animation: gm.Animation.DROP
                 });
-                SLL.attachInfoWindow(marker, address);
+                SLF.attachInfoWindow(marker, address);
                 marker.setTitle(address);
                 var radius = $("form#map_form select#radius").val();
                 
                 $.ajax({
                     url: '/broadcasters/nearby.json',
                     dataType: 'json',
-                    data: {'lon': SLL.searchLoc.lng(), 'lat': SLL.searchLoc.lat(), 'radius': radius},
-                    success: SLL.handleNearbySuccess,
-                    complete: SLL.handleNearbyComplete
+                    data: {'lon': SLF.searchLoc.lng(), 'lat': SLF.searchLoc.lat(), 'radius': radius},
+                    success: SLF.handleNearbySuccess,
+                    complete: SLF.handleNearbyComplete
                 });
 
              } else {

@@ -7,17 +7,16 @@ from django.core.urlresolvers import reverse
 from django.core import serializers
 
 from .models import *
+from fcc_adtracker.settings import mongo_conn
 
-import json
-from bson import json_util
+from mongoengine import *
+from bson.son import SON
+from mongo_utils.serializer import encode_model 
+try:
+    import simplejson as json
+except ImportError, e:
+    import json
 
-def clean_output_objects(input_list):
-    cleaned_objs = []
-    for inny in input_list:
-        if inny.get('_id'):
-            del inny['_id']
-        cleaned_objs.append(inny)
-    return cleaned_objs
 
 def generate_broadcaster_html(broadcaster):
     return render_to_string('broadcasters/_broadcaster_snippet.html',  {'broadcaster': broadcaster})
@@ -26,11 +25,8 @@ def generate_broadcaster_html(broadcaster):
 def state_broadcaster_list(request, state_id):
     state_name = STATES_DICT.get(state_id.upper(), None)
     if state_name:
-        broadcaster_list = get_broadcasters_for_state(state_id.upper())
-        for broadcaster in broadcaster_list:
-            broadcaster['html'] = generate_broadcaster_html(broadcaster)
-        jsonout = json.dumps(clean_output_objects(broadcaster_list), default=json_util.default, indent=4)
-        return render_to_response('broadcasters/broadcaster_list.html', {'broadcaster_list': broadcaster_list, 'state_name': state_name, 'broadcaster_json': jsonout}, context_instance=RequestContext(request))
+        broadcaster_list = Broadcaster.objects.filter(community_state=state_id.upper())
+        return render_to_response('broadcasters/broadcaster_list.html', {'broadcaster_list': broadcaster_list, 'state_name': state_name}, context_instance=RequestContext(request))
     else:
         raise Http404('State with abbrevation "{state_id}" not found.'.format(state_id=state_id))
 
@@ -38,7 +34,7 @@ def state_broadcaster_list(request, state_id):
 def broadcaster_detail(request, callsign):
     if not callsign.isupper():
         return HttpResponsePermanentRedirect(reverse('broadcaster_detail', kwargs={'callsign': callsign.upper()}))
-    broadcaster = get_broadcaster_by_callsign(callsign.upper())
+    broadcaster = Broadcaster.objects.get(callsign=callsign.upper())
     if broadcaster:
         return render_to_response('broadcasters/_broadcaster_snippet.html', {'broadcaster': broadcaster}, context_instance=RequestContext(request))
     else:
@@ -47,18 +43,17 @@ def broadcaster_detail(request, callsign):
     
 def nearest_broadcasters_list(request):
     radius = int(request.GET['radius']) if 'radius' in request.GET else 20
-    
+    radian_dist = radius/EARTH_RADIUS_MILES
     if 'lat' in request.GET and 'lon' in request.GET:
-        
-        locations = nearby_broadcaster_stations(request.GET['lat'], request.GET['lon'], radius=radius)
-        
-        output = []
-        for loc in locations:
-            obj = loc.get('obj');
-            obj['distance'] = floatformat(loc.get('distance'), 2)
-            obj['html'] = generate_broadcaster_html(obj)
-            output.append(obj)
-        jsonout = json.dumps(clean_output_objects(output), default=json_util.default, indent=4)
+        lat = float(request.GET['lat'])
+        lon = float(request.GET['lon'])
+        cursor = mongo_conn.fccads.command(SON([ ('geoNear', 'broadcaster'), ('near', [lon, lat]), ('spherical', True), ('maxDistance', radian_dist) ]))
+        results = []
+        for item in cursor['results']:
+            item['obj']['distance'] = item['dis'] * EARTH_RADIUS_MILES
+            del(item['dis'])
+            results.append(item['obj'])
+        jsonout = json.dumps(results, default=encode_model)
         return HttpResponse(jsonout, content_type='application/javascript')
     else:
         return HttpResponseBadRequest('You must include lat, lon args')
