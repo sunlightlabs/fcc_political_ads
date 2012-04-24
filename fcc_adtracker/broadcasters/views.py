@@ -7,11 +7,15 @@ from django.core.urlresolvers import reverse
 from django.core import serializers
 
 from .models import *
+from .forms import *
 from fcc_adtracker.settings import mongo_conn
 
 from mongoengine import *
 from bson.son import SON
 from mongo_utils.serializer import encode_model 
+from mongotools.views import (CreateView, UpdateView,
+                              DeleteView, ListView,
+                              DetailView)
 try:
     import simplejson as json
 except ImportError, e:
@@ -53,3 +57,20 @@ def nearest_broadcasters_list(request):
         return HttpResponse(jsonout, content_type='application/javascript')
     else:
         return HttpResponseBadRequest('You must include lat, lon args')
+
+
+def edit_broadcaster(request, callsign):
+    """For getting form for updating broadcaster"""
+    broadcaster = Broadcaster.objects.get(callsign=callsign.upper())
+    if broadcaster:
+        bform = BroadcasterForm(instance=broadcaster)
+        return render_to_response('broadcasters/broadcaster_change_form.html', {'broadcaster': broadcaster, 'broadcaster_form': bform}, context_instance=RequestContext(request))
+    else:
+        raise Http404('Broadcaster with "{callsign}" not found.'.format(callsign=callsign))
+
+
+class UpdateBroadcasterView(UpdateView):
+    document = Broadcaster
+    form_class = BroadcasterForm
+
+

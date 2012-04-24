@@ -1,0 +1,7 @@
+{% extends "fcc-base.html" %}{% load static from staticfiles %}
+{% block bodyclass %}broadcaster-change-form{% endblock bodyclass %}
+{% block content %}
+    <h1>{{ broadcaster.callsign }}</h1>
+    {{ broadcaster_form.as_p }}
+{% endblock content %}
+
