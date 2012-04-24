@@ -18,10 +18,6 @@ except ImportError, e:
     import json
 
 
-def generate_broadcaster_html(broadcaster):
-    return render_to_string('broadcasters/_broadcaster_snippet.html',  {'broadcaster': broadcaster})
-
-
 def state_broadcaster_list(request, state_id):
     state_name = STATES_DICT.get(state_id.upper(), None)
     if state_name:
@@ -36,7 +32,7 @@ def broadcaster_detail(request, callsign):
         return HttpResponsePermanentRedirect(reverse('broadcaster_detail', kwargs={'callsign': callsign.upper()}))
     broadcaster = Broadcaster.objects.get(callsign=callsign.upper())
     if broadcaster:
-        return render_to_response('broadcasters/_broadcaster_snippet.html', {'broadcaster': broadcaster}, context_instance=RequestContext(request))
+        return render_to_response('broadcasters/broadcaster_detail.html', {'broadcaster': broadcaster}, context_instance=RequestContext(request))
     else:
         raise Http404('Broadcaster with "{callsign}" not found.'.format(callsign=callsign))
     
