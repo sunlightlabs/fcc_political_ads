@@ -49,8 +49,9 @@ jQuery(document).ready(function() {
         return marker;
     };
     
-    SLF.generateListElement = function(element) {
-        var snippet = $('<h3>').text(element.callsign);
+    SLF.generateDescriptionHTML = function(element) {
+        var snippet = $('<div></div>');
+        snippet.append($('<h3>').text(element.callsign));
         if (element.addresses.length > 1) {
             var addr = $('<div class="postal-address">');
             $("<p>").text(element.addresses[1].address1).appendTo(addr);
@@ -59,9 +60,12 @@ jQuery(document).ready(function() {
             var state = $('<span></span>').text(element.addresses[1].state);
             var zip1 = $('<span></span>').text(element.addresses[1].zip1);
             $("<p>").append(city.html() + ", " + state.html() + " " + zip1.html()).appendTo(addr);
-            snippet = snippet.after(addr);
+            snippet.append(addr);
         };
-        return snippet;
+        if (element.distance) {
+            snippet = snippet.append('<p class="distance">' + Number(element.distance).toPrecision(3) + ' miles (approx.)</p>');
+        }
+        return snippet.html();
     };
     
     SLF.revealList = function() {
@@ -86,14 +90,12 @@ jQuery(document).ready(function() {
         for (var i=0; i < location_list.length; i++) {
             var element = location_list[i];
             var pos = (element['addresses'][1] && element['addresses'][1]['pos']) ? element['addresses'][1]['pos'] : null;
+            var descriptionHTML = SLF.generateDescriptionHTML(element);
             if (pos !== null) {
-                var marker= SLF.addMarker(element.callsign, pos, element.html, SLF.stationMarkerImage);
+                var marker= SLF.addMarker(element.callsign, pos, descriptionHTML, SLF.stationMarkerImage);
                 mapBounds.extend(marker.getPosition());
             };
-            var elem = $('<li>').append(SLF.generateListElement(element));
-            if (element.distance) {
-                elem.append('<p class="distance">' + element.distance + ' miles (approx.)</p>');
-            }
+            var elem = $('<li></li>').append(descriptionHTML);
             elem.hide();
             SLF.list_elem.append(elem);
             // elem.delay(i*100).fadeIn('slow');
@@ -101,7 +103,7 @@ jQuery(document).ready(function() {
         gm.event.addListenerOnce(SLF.map, 'bounds_changed', function() {
             SLF.revealMarkers(SLF.revealList);    
         });
-        SLF.map.fitBounds(mapBounds);
+        if ( location_list.length == 1) {  SLF.map.setZoom(12); } else { SLF.map.fitBounds(mapBounds); }
     }
     
     SLF.handleNearbySuccess = function(data, textStatus) {
@@ -114,14 +116,6 @@ jQuery(document).ready(function() {
     }
     
     
-    try {
-        SLF.updateMapApp(locations);
-    }
-    catch (e if e instanceof ReferenceError) {
-        if (window.console) console.log(e);
-    }
-
-
     $("form#map_form").submit(function(event) {
         var address = $("form#map_form input#address").val();
         SLF.geocoder.geocode( {'address': address}, function(results, status) 
@@ -156,5 +150,15 @@ jQuery(document).ready(function() {
         
         return false;
     });
+    
+    /*
+        Get to the action.
+    */ 
+    try {
+        SLF.updateMapApp(locations);
+    }
+    catch (e if e instanceof ReferenceError) {
+        if (window.console) console.log(e);
+    }
 
 });

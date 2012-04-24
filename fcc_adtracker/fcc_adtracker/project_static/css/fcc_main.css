@@ -19,10 +19,19 @@ form#map_form > label {
     height: 600px;
 }
 
-.postal-address p {
+.broadcaster-detail #map-box {
+    width:50%;
+    height: 300px;
+}
+
+li p {
     font-size: 92%;
     line-height: 105%;
     margin-bottom: 3px;
+}
+
+p.distance {
+    color: #65befe;
 }
 
 .broadcasters #map-box {

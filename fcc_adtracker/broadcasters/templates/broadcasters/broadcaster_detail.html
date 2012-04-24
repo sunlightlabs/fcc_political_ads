@@ -1,0 +1,39 @@
+{% extends "fcc-base.html" %}{% load static from staticfiles %}
+{% block bodyclass %}broadcaster-detail{% endblock bodyclass %}
+{% block content %}
+    <h1>{{ broadcaster.callsign }}</h1>
+    <div class="postal-address">
+        {% if broadcaster.addresses.1.address1 %}<p class="street">{{ broadcaster.addresses.1.address1|title }}</p>{% endif %}
+        {% if broadcaster.addresses.1.address2 %}<p class="street">{{ broadcaster.addresses.1.address2|title  }}</p>{% endif %}
+        <p><span class="city">{{ broadcaster.addresses.1.city|title  }}</span>, <span class="state">{{ broadcaster.addresses.1.state }}</span> <span class="zipcode">{{ broadcaster.addresses.1.zip1 }}</span></p>
+    </div>
+    <div id="map-box">
+        <div id="map_canvas" style="width:100%; height:100%"></div>
+    </div>
+{% endblock content %}
+
+{% block head %}
+    {{ block.super }}
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBJAvCwnDreQHJ_cAlbXAm9Fb_LmjvlaTI&sensor=false&libraries=geometry"></script>
+{% endblock head %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script>
+        var startPos = {{ broadcaster.addresses.1.pos|default:"[0,0]" }};
+        var locations = [ {{ broadcaster.as_json|safe }} ];
+        var userMarker_url = "{% static 'img/sll_map_marker_purple.png' %}";
+        var stationMarker_url = "{% static 'img/sll_map_marker_blue.png' %}";
+        $(document).ready(function() {
+            if (!("autofocus" in document.createElement("input"))) {
+                  $("#address").focus();
+            }
+            // if(!Modernizr.inputtypes.number) {
+            //     
+            // }
+        });
+        
+    </script>
+    <script src="{% static "js/fcc_site.js" %}" type="text/javascript" charset="utf-8"></script>
+{% endblock js %}
