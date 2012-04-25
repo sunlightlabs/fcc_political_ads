@@ -1,7 +1,21 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %}
 {% block bodyclass %}broadcaster-change-form{% endblock bodyclass %}
 {% block content %}
-    <h1>{{ broadcaster.callsign }}</h1>
-    {{ broadcaster_form.as_p }}
+    <h1>{{ broadcaster.callsign }} {% if broadcaster.network_affiliate %}({{ broadcaster.network_affiliate }} affiliate){% endif %}</h1>
+    <form class="form-horizontal" action="broadcaster_change_form_submit" method="get" accept-charset="utf-8">
+        {% for addressform in address_forms %}<fieldset class="address">
+            <legend>'{{ addressform.title.value|upper }}' Address</legend>
+                {% for boundfield in addressform %}
+                <div class="control-group">
+                    <label class="control-label">{{ boundfield.label }}</label>
+                    <div class="controls">
+                        {{ boundfield }}                    
+                    </div>                    
+                </div>{% endfor %}
+            </fieldset>{% endfor %}
+        <p><input type="submit" value="Update"></p>
+    </form>
+    <div class="addresses">
+    </div>
 {% endblock content %}
 

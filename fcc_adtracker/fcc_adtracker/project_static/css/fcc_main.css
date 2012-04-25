@@ -71,3 +71,17 @@ ul#locations {
     line-height: 105%;
     margin-bottom: 5px;
 }
+
+form p {
+    margin: 6px 0;
+}
+
+fieldset {
+    margin-bottom: 1em;
+}
+
+
+fieldset legend {
+    font-size: 120%;
+    margin: 0 0 8px;
+}

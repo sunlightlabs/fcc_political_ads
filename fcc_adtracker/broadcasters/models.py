@@ -17,13 +17,13 @@ EARTH_RADIUS_MILES = float(3959)
 
 class Address(EmbeddedDocument):
     """Postal Address"""
-    title = StringField()
-    address1 = StringField()
-    address2 = StringField()
-    city = StringField()
-    state = StringField()
-    zip1 = StringField()
-    zip2 = StringField()
+    title = StringField(max_length=80)
+    address1 = StringField(max_length=40)
+    address2 = StringField(max_length=40)
+    city = StringField(max_length=20)
+    state = StringField(max_length=2, choices=us_states.US_STATES)
+    zip1 = StringField(max_length=5)
+    zip2 = StringField(max_length=4)
     pos = ListField()
 
     def as_json(self):
@@ -41,10 +41,10 @@ class Address(EmbeddedDocument):
 class Broadcaster(DynamicDocument):
     """Broadcaster, based on FCC's CDBS facility table"""
     addresses = ListField(EmbeddedDocumentField(Address))
-    callsign = StringField(unique=True)
-    network_affiliate = StringField()
-    facility_type = StringField()
-    community_city = StringField()
+    callsign = StringField(max_length=12, unique=True)
+    network_affiliate = StringField(max_length=100)
+    facility_type = StringField(max_length=3)
+    community_city = StringField(max_length=20)
     community_state = StringField(max_length=2, choices=us_states.US_STATES)
     
     def as_json(self):

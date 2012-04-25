@@ -63,14 +63,18 @@ def edit_broadcaster(request, callsign):
     """For getting form for updating broadcaster"""
     broadcaster = Broadcaster.objects.get(callsign=callsign.upper())
     if broadcaster:
+        address_forms = []
         bform = BroadcasterForm(instance=broadcaster)
-        return render_to_response('broadcasters/broadcaster_change_form.html', {'broadcaster': broadcaster, 'broadcaster_form': bform}, context_instance=RequestContext(request))
+        for address in broadcaster.addresses:
+            address_forms.append(AddressForm(instance=address))
+        resp_obj = {
+            'broadcaster': broadcaster, 
+            'broadcaster_form': bform, 
+            'address_forms': address_forms
+        }
+        return render_to_response('broadcasters/broadcaster_change_form.html', resp_obj, context_instance=RequestContext(request))
     else:
         raise Http404('Broadcaster with "{callsign}" not found.'.format(callsign=callsign))
 
-
-class UpdateBroadcasterView(UpdateView):
-    document = Broadcaster
-    form_class = BroadcasterForm
 
 
