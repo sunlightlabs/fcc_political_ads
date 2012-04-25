@@ -1,5 +1,5 @@
 # Django settings for fcc_adtracker project.
-
+from mongoengine import connect
 import os
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -23,6 +23,12 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
+
+# MongoEngine
+MONGO_HOST = 'localhost'
+MONGO_PORT = 27017
+MONGO_DATABASE = None
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -165,3 +171,5 @@ try:
 except Exception, e:
     pass
 
+
+mongo_conn = connect(MONGO_DATABASE, host=MONGO_HOST, port=MONGO_PORT)

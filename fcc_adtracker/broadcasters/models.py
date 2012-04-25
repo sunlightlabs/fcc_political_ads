@@ -1,72 +1,57 @@
 from __future__ import division
 from django.contrib.localflavor.us import us_states
 
-from fcc_adtracker.data import db
-from bson.son import SON
+from mongoengine import *
+from mongo_utils.serializer import encode_model 
+try:
+    import simplejson as json
+except ImportError, e:
+    import json
 
 
-POSITION = {
-    'type': 'array',
-    "minItems": 2,
-    "maxItems": 3
-}
-
-ADDRESS = {
-    'type': 'object',
-    'properties': {
-        "address1": {'type': 'string'}, 
-        "address2": {'type': 'string', 'required': False},                 
-        "state": {'type': 'string'}, 
-        "city": {'type': 'string'}, 
-        "zip": {'type': 'string'}, 
-        "zip2": {'type': 'string', 'required': False},
-        "pos": POSITION
-    }
-}
-
-BROADCASTER = {
-    'type': 'object',
-    'properties': {
-        "addresses": {
-            'type': 'object',
-            'properties': {
-                "fcc": { 'type': ADDRESS },
-                "studio": { 'type': ADDRESS }        
-            }
-        },
-        "network_affiliate": {'type': 'string', 'required': False}, 
-        "facility_type": {'type': 'string', 'required': False}, 
-        "callsign": {'type': 'string', 'required': True}, 
-        "community_city": {'type': 'string', 'required': False}, 
-        "community_state": {'type': 'string', 'required': True}    
-    }
-}
 
 STATES_DICT = dict(us_states.US_STATES)
 
 EARTH_RADIUS_MILES = float(3959)
 
-def get_broadcaster_by_callsign(callsign):
-    broadcasters = db.fccads.broadcasters
-    return broadcasters.find_one({'callsign': callsign})
-    
 
-def get_broadcasters_for_state(state):
-    broadcasters = db.fccads.broadcasters
-    cursor =  broadcasters.find({'community_state': state}).sort('callsign')
-    return [x for x in cursor]
+class Address(EmbeddedDocument):
+    """Postal Address"""
+    title = StringField(max_length=80)
+    address1 = StringField(max_length=40)
+    address2 = StringField(max_length=40)
+    city = StringField(max_length=20)
+    state = StringField(max_length=2, choices=us_states.US_STATES)
+    zip1 = StringField(max_length=5)
+    zip2 = StringField(max_length=4)
+    pos = ListField()
+
+    def as_json(self):
+        return json.dumps(self, default=encode_model)
+    
+    meta = {
+        'allow_inheritance': False,
+        'indexes': [ '*pos', ],
+    }
+    
+    def __unicode__(self):
+        return u"Address"
 
 
-def nearby_broadcaster_stations(lat, lon, radius=50):
-    lat = float(lat)
-    lon = float(lon)
+class Broadcaster(DynamicDocument):
+    """Broadcaster, based on FCC's CDBS facility table"""
+    addresses = ListField(EmbeddedDocumentField(Address))
+    callsign = StringField(max_length=12, unique=True)
+    network_affiliate = StringField(max_length=100)
+    facility_type = StringField(max_length=3)
+    community_city = StringField(max_length=20)
+    community_state = StringField(max_length=2, choices=us_states.US_STATES)
     
-    radian_dist = radius/EARTH_RADIUS_MILES
+    def as_json(self):
+        return json.dumps(self, default=encode_model)
     
-    cursor = db.fccads.command(SON([ ('geoNear', 'broadcasters'), ('near', [lon, lat]), ('spherical', True), ('maxDistance', radian_dist) ]))
+    meta = {'allow_inheritance': False}
     
-    results = []
-    for item in cursor['results']:
-        item['distance'] = item['dis'] * EARTH_RADIUS_MILES
-        results.append(item)
-    return results
+    def __unicode__(self):
+        return u"Broadcaster"
+
