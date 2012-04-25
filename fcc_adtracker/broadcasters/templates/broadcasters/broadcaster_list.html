@@ -2,9 +2,6 @@
 {% block bodyclass %}broadcasters{% endblock bodyclass %}
 {% block content %}
     <h1>{{ state_name }} ({{ broadcaster_list|length }} stations)</h1>
-    <div id="stations">
-        <ul id="locations"></ul>
-    </div>
     <div>
         <p>Find stations near you! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
         <form id="map_form" class="form-inline" action="map_submit" method="get" accept-charset="utf-8">
@@ -30,6 +27,12 @@
         <div id="map_canvas" style="width:100%; height:100%"></div>
     </div>
 {% endblock content %}
+
+{% block sidebar %}
+<div id="stations">
+    <ul id="locations"></ul>
+</div>
+{% endblock sidebar %}
 
 {% block head %}
     {{ block.super }}
