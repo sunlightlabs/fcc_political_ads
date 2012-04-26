@@ -69,7 +69,6 @@ jQuery(document).ready(function() {
     };
     
     SLF.revealList = function() {
-        console.log('revealList');
         var li_els = SLF.list_elem.children('li');
         $(li_els).each(function(index, element) {
             $(element).delay(index*100).fadeIn('slow');

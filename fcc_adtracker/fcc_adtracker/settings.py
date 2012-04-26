@@ -24,10 +24,13 @@ DATABASES = {
     }
 }
 
-# MongoEngine
+# MongoEngine settings
+# Typically set in local_settings.py
 MONGO_HOST = 'localhost'
 MONGO_PORT = 27017
-MONGO_DATABASE = None
+MONGO_DATABASE = ''
+MONGO_USERNAME = ''
+MONGO_PASSWORD = ''
 
 
 # Local time zone for this installation. Choices can be found here:
@@ -172,4 +175,4 @@ except Exception, e:
     pass
 
 
-mongo_conn = connect(MONGO_DATABASE, host=MONGO_HOST, port=MONGO_PORT)
+mongo_conn = connect(MONGO_DATABASE, host=MONGO_HOST, port=MONGO_PORT, username=MONGO_USERNAME, password=MONGO_PASSWORD)
