@@ -2,6 +2,22 @@ h1 {
     margin-bottom: 20px;
 }
 
+section {
+    margin-bottom: 25px;
+}
+
+section .content {
+    margin-left: 0;
+}
+
+.resources li {
+    margin-bottom: 20px;
+}
+
+.invalid {
+    border-color: #E9322D;
+}
+
 #map_canvas { height: 100% }
 #address_thingy {
     margin-bottom: 10px;
@@ -34,23 +50,28 @@ p.distance {
     color: #65befe;
 }
 
-.broadcasters #map-box {
+#map-box {
     position: relative;
     display: block;
-    float: left;
-    width:640px;
+    width:620px;
     height: 480px;
     margin-right: 20px;
 }
 
-.broadcasters #stations {
-    width: 280px;
-    float: right;
+/*.broadcasters-featured #map-box {
+    height: 400px;
+}
+*/
+#stations {
     background-color: #FFF;
 }
 
+/*.broadcasters-featured ul#locations {
+    height:350px;
+}*/
+
 ul#locations {
-    height: 560px;
+    height: 628px;
     overflow-y: scroll;
     list-style-type: none;
     margin: 0px;

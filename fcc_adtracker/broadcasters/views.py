@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect, render_to_response, get_object_or_404
+from django.views.generic import View
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.template.defaultfilters import floatformat
-from django.http import HttpResponse, HttpResponsePermanentRedirect, HttpResponseBadRequest, Http404
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponseBadRequest, Http404
+from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core import serializers
+from django.conf import settings
 
 from .models import *
 from .forms import *
@@ -20,6 +23,12 @@ try:
     import simplejson as json
 except ImportError, e:
     import json
+
+import urllib
+import urllib2
+
+
+FEATURED_BROADCASTER_STATE = getattr(settings, 'FEATURED_BROADCASTER_STATE', 'OH')
 
 
 def state_broadcaster_list(request, state_id):
@@ -39,8 +48,52 @@ def broadcaster_detail(request, callsign):
         return render_to_response('broadcasters/broadcaster_detail.html', {'broadcaster': broadcaster}, context_instance=RequestContext(request))
     else:
         raise Http404('Broadcaster with "{callsign}" not found.'.format(callsign=callsign))
+
+
+def featured_broadcasters(request):
+    """Featured page. For pilot, perhaps other uses in future."""
+    state_name = STATES_DICT.get(FEATURED_BROADCASTER_STATE.upper(), None)
+    broadcaster_list = Broadcaster.objects.filter(community_state=FEATURED_BROADCASTER_STATE.upper())
+    resp_obj = {
+        'broadcaster_list': broadcaster_list, 
+        'state_name': state_name,
+        'sfapp_base_template': 'sfapp/base-full.html'
+    }
+    return render_to_response('broadcasters/broadcasters_featured.html', resp_obj, context_instance=RequestContext(request))
+
+
+class ActionSignupView(View):
+
+    bsd_url = 'http://bsd.sunlightfoundation.com/page/s/fcc-public-files'
+    success_message = 'Thanks for registering!'
     
-    
+    def get(self, request, *args, **kwargs):
+        return HttpResponseNotAllowed(('POST',))
+
+    def post(self, request, *args, **kwargs):
+
+        email = request.POST.get("email", "")
+        phone = request.POST.get("phone", "")
+        firstname = request.POST.get("firstname", "")
+        lastname = request.POST.get("lastname", "")
+        station = request.POST.get("station", "")
+        
+        if email:
+            self.bsd_url += "?source=%s" % request.build_absolute_uri()
+            params = {"email": email, "phone": phone, "firstname": firstname, "lastname": lastname, "custom-1093": station}
+            response = urllib2.urlopen(self.bsd_url, urllib.urlencode(params)).read()
+
+        if request.is_ajax():
+            resp = {'message': self.success_message}
+            return HttpResponse(json.dumps(resp), content_type='application/json')
+
+        messages.success(request, self.success_message)
+        referrer = request.META.get('HTTP_REFERER', None)
+
+        return HttpResponseRedirect(referrer or '/')
+
+
+
 def nearest_broadcasters_list(request):
     radius = int(request.GET['radius']) if 'radius' in request.GET else 20
     radian_dist = radius/EARTH_RADIUS_MILES

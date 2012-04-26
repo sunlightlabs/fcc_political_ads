@@ -1,0 +1,154 @@
+{% extends "fcc-base.html" %}{% load static from staticfiles %}
+{% block title %}FCC Ad Tracker{% endblock title %}
+{% block bodyclass %}broadcasters-featured{% endblock bodyclass %}
+
+{% block content %}
+<section class="clearfix">
+    <div class="span8 content">
+        <h1>FCC Files Thingy</h1>
+        <h2>Intro</h2>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+        <h2>Next Steps</h2>
+        <p>After you've gone through the training...???</p>
+        <ul>
+            <li>Find stations near you using the tool below</li>
+            <li>Tell us which station you plan to visit by filling out the form</li>
+        </ul>
+    </div>
+    <div class="span4 sidebar">
+        <div class='inner'>
+            <h3>Resources</h3>
+            <ul class='resources unstyled'>
+                <li>
+                    <a href='http://www.freepress.net/how-to-inspect-public-political-files'>How to inspect public political files</a>
+                    <p>Blurb.</p>
+                </li>
+                <li>
+                    <a href='http://www.freepress.net/files/publicfiles-howto.pdf'>Public files how-to guide</a>
+                    <p>Blurb.</p>
+                </li>
+                <li>
+                    <a href='http://www.freepress.net/files/publicfiles-checklist.pdf'>Public checklist</a>
+                    <p>Blurb.</p>
+                </li>
+                <li>
+                    <a href=''>Excerpt from 'The Public &amp; Broadcasting'</a>
+                    <p>Blurb.</p>
+                </li>
+            </ul>
+        </div>
+        <h3>Sign up to get involved!</h3>
+        <form id='action_signup' class="form-vertical" action="{% url action_signup %}" method="post" accept-charset="utf-8">{% csrf_token %}
+            <div class="control-group">
+                <label for="email">Email</label><input type="email" name="email" value="" id="email" required="required">                     </div>
+            <div class="control-group">
+                <label for="phone">Phone</label><input type="text" name="phone" value="" id="phone">
+            </div>
+            <div class="control-group">
+                <label for="firstname">First Name</label><input type="text" name="firstname" value="" id="firstname">
+            </div>
+            <div class="control-group">
+                <label for="lastname">Last Name</label><input type="text" name="lastname" value="" id="lastname">
+            </div>
+            <div class="control-group">
+                <label for="station">Station</label>
+                <select name="station" id="station" size="1"></select>
+            </div>
+            <input type="submit" class="btn" value="Sign up &rarr;">
+        </form>
+        
+    </div>
+</section>
+<section class="clearfix">
+    <div class="span8 content">
+        <div>
+            <h2>{{ state_name }} ({{ broadcaster_list|length }} stations)</h2>    
+            <p>Find stations near you! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
+            <form id="map_form" class="form-inline" action="" method="get" accept-charset="utf-8">
+                <label>
+                    Address: 
+                    <input type="textbox" name="address" id="address" class="span4" value="" size="75" autofocus>
+                </label>
+                <label>
+                    Radius: 
+                    <select  name="radius" id="radius" class="span1">
+                        <option value="10">10</option>
+                        <option value="25" selected>25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                    </select>
+                    <span class="add-on">miles</span>
+                </label>
+                <input class="btn" type="submit" value="Search">
+            </form>
+        </div>
+        <div id="map-box">
+            <div id="map_canvas" style="width:100%; height:100%"></div>
+        </div>
+
+    </div>
+    <div class="span4 sidebar">
+        <div id="stations">
+            <ul id="locations"></ul>
+        </div>
+        
+    </div>
+</section>
+{% endblock content %}
+
+{% block head %}
+    {{ block.super }}
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBJAvCwnDreQHJ_cAlbXAm9Fb_LmjvlaTI&sensor=false&libraries=geometry"></script>
+{% endblock head %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script>
+        var startPos = {{ broadcaster_list.0.addresses.1.pos|default:"[0,0]" }};
+        var locations = [
+            {% for broadcaster in broadcaster_list %}{{ broadcaster.as_json|safe }}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+        var userMarker_url = "{% static 'img/sll_map_marker_purple.png' %}";
+        var stationMarker_url = "{% static 'img/sll_map_marker_blue.png' %}";
+        $(document).ready(function() {
+            if (!("autofocus" in document.createElement("input"))) {
+                  $("#address").focus();
+            }
+            $('#action_signup').submit(function(event) {
+                var theform = $(this);
+                var data = theform.serialize();
+                jQuery.post("{% url action_signup %}",data, function(resp, textStatus) {
+                    var $p = $('<p class="alert alert-success">').text(resp.message).hide();
+                    theform.slideUp('fast', function() {
+                        theform.after($p);
+                        $p.slideDown();
+                    });
+                });
+                event.preventDefault();
+                return false;
+            });
+            
+            var station_sel = $('select#station');
+            station_sel.empty();
+            station_sel.append('<option value="">-----------</option>');
+            for (var i=0; i < locations.length; i++) {
+                var opt = $('<option></option>').text(locations[i].callsign).attr('value', locations[i].callsign)
+                station_sel.append(opt);
+            };
+            
+        });
+        
+    </script>
+    <script src="{% static "js/fcc_site.js" %}" type="text/javascript" charset="utf-8"></script>
+{% endblock js %}
