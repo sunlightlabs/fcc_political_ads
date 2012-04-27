@@ -6,3 +6,13 @@
 {% block head %}    <script src="{% static "js/libs/modernizr-2.5.3.min.js" %}"></script>{% endblock head %}
 
 {% block css %}    <link rel="stylesheet" href="{% static 'css/fcc_main.css' %}">{% endblock css %}
+
+
+{% block container %}
+<header>
+    <h1>FCC Public Files</h1>
+</header>
+{{ block.super }}
+{% endblock container %}
+
+{% block js %}<script src="{% static 'js/fcc_site.js' %}" type="text/javascript" charset="utf-8"></script>{% endblock js %}

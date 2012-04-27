@@ -1,7 +1,7 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %}
 {% block bodyclass %}broadcasters{% endblock bodyclass %}
 {% block content %}
-    <h1>{{ state_name }} ({{ broadcaster_list|length }} stations)</h1>
+    <h2>{{ state_name }} ({{ broadcaster_list|length }} stations)</h2>
     <div>
         <p>Find stations near you! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
         <form id="map_form" class="form-inline" action="map_submit" method="get" accept-charset="utf-8">

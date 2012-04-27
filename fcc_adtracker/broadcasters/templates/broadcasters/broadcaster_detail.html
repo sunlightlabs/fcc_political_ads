@@ -1,7 +1,7 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %}
 {% block bodyclass %}broadcaster-detail{% endblock bodyclass %}
 {% block content %}
-    <h1>{{ broadcaster.callsign }}</h1>
+    <h2>{{ broadcaster.callsign }}</h2>
     <div class="postal-address">
         {% if broadcaster.addresses.1.address1 %}<p class="street">{{ broadcaster.addresses.1.address1|title }}</p>{% endif %}
         {% if broadcaster.addresses.1.address2 %}<p class="street">{{ broadcaster.addresses.1.address2|title  }}</p>{% endif %}
@@ -29,11 +29,7 @@
             if (!("autofocus" in document.createElement("input"))) {
                   $("#address").focus();
             }
-            // if(!Modernizr.inputtypes.number) {
-            //     
-            // }
         });
         
     </script>
-    <script src="{% static "js/fcc_site.js" %}" type="text/javascript" charset="utf-8"></script>
 {% endblock js %}
