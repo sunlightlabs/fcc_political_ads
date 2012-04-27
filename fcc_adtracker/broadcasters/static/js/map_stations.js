@@ -5,37 +5,35 @@ var SLF = {
     searchLoc: null,
     nearby: null,
     list_elem: null,
-    amile: function() { return 1609.344; },
+    amile: function () { return 1609.344; },
     userMarkerImage: null,
-    stationMarkerImage: null
+    stationMarkerImage: null,
+    DEBUG: false
 };
 
 jQuery(document).ready(function() {
-    var gm = google.maps;
-    var myOptions = {
-      center: new gm.LatLng(startPos[1], startPos[0]),
-      zoom: 8,
-      mapTypeId: gm.MapTypeId.ROADMAP
+    var gm = google.maps, myOptions = {
+        center: new gm.LatLng(startPos[1], startPos[0]),
+        zoom: 8,
+        mapTypeId: gm.MapTypeId.ROADMAP
     };
-    
     SLF.geocoder = new gm.Geocoder();
     SLF.map = new gm.Map(document.getElementById("map_canvas"), myOptions);
     SLF.markers = {};
-    SLF.userMarkerImage = new gm.MarkerImage(userMarker_url, gm.Size(19,32));
-    SLF.stationMarkerImage = new gm.MarkerImage(stationMarker_url, gm.Size(19,32));
-    
+    SLF.userMarkerImage = new gm.MarkerImage(userMarker_url, gm.Size(19, 32));
+    SLF.stationMarkerImage = new gm.MarkerImage(stationMarker_url, gm.Size(19, 32));
     SLF.list_elem = $("ul#locations");
     
     SLF.removeStationMarkers = function () {
-        for each( mkr in SLF.markers) { mkr.setMap(); }
+        for ( var key in SLF.markers) { SLF.markers[key].setMap(); }
         SLF.markers = {};
-    }
+    };
     
     SLF.attachInfoWindow = function (marker, content, open) {
         var infowindow = new gm.InfoWindow({ content: content });
         gm.event.addListener(marker, 'click', function() { infowindow.open(marker.get('map'), marker); });
-        if (open) { infowindow.open(marker.get('map'), marker); };
-    }
+        if (open) infowindow.open(marker.get('map'), marker);
+    };
     
     SLF.addMarker = function(id, pos, infoContent, markerImage) {
         var marker = new gm.Marker({
@@ -61,7 +59,7 @@ jQuery(document).ready(function() {
             var zip1 = $('<span></span>').text(element.addresses[1].zip1);
             $("<p>").append(city.html() + ", " + state.html() + " " + zip1.html()).appendTo(addr);
             snippet.append(addr);
-        };
+        }
         if (element.distance) {
             snippet = snippet.append('<p class="distance">' + Number(element.distance).toPrecision(3) + ' miles (approx.)</p>');
         }
@@ -76,8 +74,8 @@ jQuery(document).ready(function() {
     };
     
     SLF.revealMarkers = function(callback) {
-        for each( mkr in SLF.markers) { 
-            mkr.setMap(SLF.map);
+        for(var key in SLF.markers) { 
+            SLF.markers[key].setMap(SLF.map);
         }
         callback();
     };
@@ -88,31 +86,32 @@ jQuery(document).ready(function() {
         var mapBounds = new gm.LatLngBounds();
         for (var i=0; i < location_list.length; i++) {
             var element = location_list[i];
-            var pos = (element['addresses'][1] && element['addresses'][1]['pos']) ? element['addresses'][1]['pos'] : null;
+            var pos = (element.addresses[1] && element.addresses[1].pos) ? element.addresses[1].pos : null;
             var descriptionHTML = SLF.generateDescriptionHTML(element);
             if (pos !== null) {
+                if (SLF.DEBUG) window.log(element.callsign + ' pos ' + pos);
                 var marker= SLF.addMarker(element.callsign, pos, descriptionHTML, SLF.stationMarkerImage);
                 mapBounds.extend(marker.getPosition());
-            };
+            }
             var elem = $('<li></li>').append(descriptionHTML);
             elem.hide();
             SLF.list_elem.append(elem);
             // elem.delay(i*100).fadeIn('slow');
-        };
+        }
         gm.event.addListenerOnce(SLF.map, 'bounds_changed', function() {
             SLF.revealMarkers(SLF.revealList);    
         });
         if ( location_list.length == 1) {  SLF.map.setZoom(12); } else { SLF.map.fitBounds(mapBounds); }
-    }
+    };
     
     SLF.handleNearbySuccess = function(data, textStatus) {
         nearby = data;
         SLF.updateMapApp(nearby);
-    }
+    };
     
     SLF.handleNearbyComplete = function(jqXHR, textStatus) {
-        if (window.console) { console.log('handleNearbyComplete: ' + textStatus); }
-    }
+        if (SLF.DEBUG) window.log('handleNearbyComplete: ' + textStatus);
+    };
     
     
     $("form#map_form").submit(function(event) {
@@ -122,7 +121,6 @@ jQuery(document).ready(function() {
             if (status == gm.GeocoderStatus.OK) 
             {
                 SLF.searchLoc = results[0].geometry.location;
-                if (console) {console.log(SLF.searchLoc.lat(), SLF.searchLoc.lng());};
                 SLF.map.setCenter(SLF.searchLoc);
                 var marker = new gm.Marker({
                     map: SLF.map,
@@ -143,7 +141,7 @@ jQuery(document).ready(function() {
                 });
 
              } else {
-                if(console) console.log("Geocode was not successful for the following reason: " + status);
+                if (SLF.DEBUG) window.log("Geocode was not successful for the following reason: " + status);
             }
         });
         
@@ -156,8 +154,8 @@ jQuery(document).ready(function() {
     try {
         SLF.updateMapApp(locations);
     }
-    catch (e if e instanceof ReferenceError) {
-        if (window.console) console.log(e);
+    catch (e) {
+        if (SLF.DEBUG) window.log(e);
     }
 
 });
