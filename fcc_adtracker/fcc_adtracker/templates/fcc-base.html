@@ -1,5 +1,5 @@
 {% extends sfapp_base_template|default:"sfapp/base-sidebar.html" %}{% load static from staticfiles %}
-{% block title %}FCC Ad Tracker{% endblock title %}
+{% block title %}Free the Files{% endblock title %}
 
 {% block ga %}XXXXX-XX{% endblock ga %}
 
@@ -7,12 +7,20 @@
 
 {% block css %}    <link rel="stylesheet" href="{% static 'css/fcc_main.css' %}">{% endblock css %}
 
+{% block header %}
+{{ block.super }}
+<ul>
+    <li><a href="http://www.freepress.net/"><img alt="Free Press Logo" src="{% static 'img/freepress_temp.png' %}"></a></li>
+    <li class="last"><a href="http://newamerica.net/"><img alt="New America Logo" src="{% static 'img/NAFlogo-horizontal.png' %}"></a></li>
+</ul>
+{% endblock header %}
 
 {% block container %}
 <header>
-    <h1>FCC Public Files</h1>
+    <h1>Free the Files</h1>
 </header>
 {{ block.super }}
 {% endblock container %}
 
-{% block js %}<script src="{% static 'js/fcc_site.js' %}" type="text/javascript" charset="utf-8"></script>{% endblock js %}
+{% block js %}<script src="{% static 'js/fcc_site.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'js/bootstrap.min.js' %}" type="text/javascript" charset="utf-8"></script>{% endblock js %}
