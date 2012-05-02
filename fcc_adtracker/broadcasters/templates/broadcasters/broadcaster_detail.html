@@ -14,7 +14,7 @@
 
 {% block head %}
     {{ block.super }}
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBJAvCwnDreQHJ_cAlbXAm9Fb_LmjvlaTI&sensor=false&libraries=geometry"></script>
+    {% include "broadcasters/_googlemaps_script_include.html" %}
 {% endblock head %}
 
 {% block js %}

@@ -18,14 +18,37 @@ section .content {
     border-color: #E9322D;
 }
 
+.sf-header ul {
+    margin-top: 15px;
+}
+
+.sf-header li {
+    display: block;
+    float: left;
+    margin-right: 30px;
+}
+
+.content nav {
+    margin-bottom: 15px;
+}
+
+.nav-pills li {
+    border-right: 1px dashed #F1F1F1;
+}
+
+.nav-pills li:last-child, .nav-pills li.last {
+    border-right: none;
+}
+
+
 #map_canvas { height: 100% }
 #address_thingy {
     margin-bottom: 10px;
 }
 
 
-form#map_form > label {
-    margin-right: 15px;
+form#map_form > input, form#map_form > label {
+    margin-right: 10px;
 }
 
 #map-box {
@@ -53,8 +76,8 @@ p.distance {
 #map-box {
     position: relative;
     display: block;
-    width:620px;
-    height: 480px;
+    width:100%;
+    height: 536px;
     margin-right: 20px;
 }
 
@@ -72,7 +95,7 @@ p.distance {
 }*/
 
 ul#locations {
-    height: 628px;
+    height: 536px;
     overflow-y: scroll;
     list-style-type: none;
     margin: 0px;
@@ -111,3 +134,9 @@ fieldset legend {
     font-size: 120%;
     margin: 0 0 8px;
 }
+
+#action_signup.form-inline input {
+    margin-right: 25px;
+}
+
+input#address { width: 276px;}

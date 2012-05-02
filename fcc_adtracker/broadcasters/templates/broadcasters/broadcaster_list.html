@@ -4,24 +4,8 @@
     <h2>{{ state_name }} ({{ broadcaster_list|length }} stations)</h2>
     <div>
         <p>Find stations near you! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
-        <form id="map_form" class="form-inline" action="map_submit" method="get" accept-charset="utf-8">
-            <label>
-                Address: 
-                <input type="textbox" name="address" id="address" class="span4" value="" size="75" autofocus>
-            </label>
-            <label>
-                Radius: 
-                <select  name="radius" id="radius" class="span1">
-                    <option value="10">10</option>
-                    <option value="25" selected>25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="200">200</option>
-                </select>
-                <span class="add-on">miles</span>
-            </label>
-            <input class="btn" type="submit" value="Search">
-        </form>
+        {% include 'broadcasters/_map_searchform.html' %}
+
     </div>
     <div id="map-box">
         <div id="map_canvas" style="width:100%; height:100%"></div>
@@ -36,7 +20,7 @@
 
 {% block head %}
     {{ block.super }}
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBJAvCwnDreQHJ_cAlbXAm9Fb_LmjvlaTI&sensor=false&libraries=geometry"></script>
+    {% include "broadcasters/_googlemaps_script_include.html" %}
 {% endblock head %}
 
 {% block js %}

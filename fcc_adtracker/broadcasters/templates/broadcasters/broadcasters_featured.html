@@ -1,114 +1,108 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %}
-{% block title %}FCC Ad Tracker{% endblock title %}
 {% block bodyclass %}broadcasters-featured{% endblock bodyclass %}
 
 {% block content %}
-<section class="clearfix">
-    <div class="span8 content">
+<nav>
+    <ul class="nav nav-pills">
+        <li>
+            <a href="#page-intro">Intro</a>
+        </li>
+        <li>
+            <a href="#map">Find Stations</a>
+        </li>
+        <li>
+            <a href="#get_involved">Get Involved</a>
+        </li>
+        <li>
+            <a href="#feedback">Questions</a>
+        </li>
+    </ul>        
+</nav>
+<section class="row">
+    <div class="span8">
         <h2 id='page-intro'>Intro</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            With the emergence of Super PACs and the flood of dark money, voters are ever more susceptible to the influence of political spending and advertisements. For the first time, the Federal Communication Commission (FCC) has ruled to require television stations in the top 50 media markets to put their public and political files online. These files contain information on political ad spending which are crucial to the public interest, providing a glimpse into the political influence wielded by groups trying to sway our elections. But the top 50 media markets hardly cover the country and only a fraction of the swing states, where the majority of political ad spending will occur. We need your help to unlock the files from the rest of the broadcasters and post the information from the political ad files online.
         </p>
+ 
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
+            Sunlight Foundation in partnership with Free Press, New America Foundation and other coalition members are working with our members, volunteers, journalists and allies across the country to inspect political files and post our findings online. As a pilot project, we will focus on Wisconsin’s gubernatorial election on June 5th. Sign up for a training or search for a tv station near you.
+        </p>        
     </div>
     <div class="span4 sidebar">
         <div class='inner'>
             <h3>Resources</h3>
             <ul class='resources unstyled'>
                 <li>
-                    <a href='http://www.freepress.net/how-to-inspect-public-political-files'>How to inspect public political files</a>
-                    <p>Blurb.</p>
+                    <p><a href='http://www.freepress.net/how-to-inspect-public-political-files'>How to inspect public political files</a></p>
+                    <p>This handy how-to guide provides step-by-step information on how to free the files from your local boardcaster. (<a href="http://www.freepress.net/files/publicfiles-howto.pdf">pdf version</a>)</p>
                 </li>
                 <li>
-                    <a href='http://www.freepress.net/files/publicfiles-howto.pdf'>Public files how-to guide</a>
-                    <p>Blurb.</p>
+                    <p><a href='http://www.freepress.net/files/publicfiles-checklist.pdf'>Public Files Inspection Checklist</a></p>
+                    <p>Ready to go to the station? Print this checklist and the <a href='{% static 'files/public_and_broadcasting_fcc_excerpt.pdf' %}'>political files excerpt</a> from FCC’s manual and bring it with you.</p>
                 </li>
                 <li>
-                    <a href='http://www.freepress.net/files/publicfiles-checklist.pdf'>Public checklist</a>
-                    <p>Blurb.</p>
-                </li>
-                <li>
-                    <a href=''>Excerpt from 'The Public &amp; Broadcasting'</a>
-                    <p>Blurb.</p>
+                    <p><a href='{% static 'files/FCC_public_files_excerpt.pdf' %}'>Excerpt from 'The Public &amp; Broadcasting'</a></p>
+                    <p>Excerpt from FCC’s manual </p>
                 </li>
             </ul>
         </div>
     </div>
 </section>
-<section class="clearfix">
-    <div class="span8 content">
-        <div>
-            <h2>{{ state_name }} ({{ broadcaster_list|length }} stations)</h2>    
-            <p>Find stations near you! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
-            <form id="map_form" class="form-inline" action="" method="get" accept-charset="utf-8">
-                <label>
-                    Address: 
-                    <input type="textbox" name="address" id="address" class="span4" value="" size="75">
-                </label>
-                <label>
-                    Radius: 
-                    <select  name="radius" id="radius" class="span1">
-                        <option value="10">10</option>
-                        <option value="25" selected>25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="200">200</option>
-                    </select>
-                    <span class="add-on">miles</span>
-                </label>
-                <input class="btn" type="submit" value="Search">
-            </form>
-        </div>
+<section id="map" class="row">
+    <div class="span12">
+        <h2>Find Nearby Stations: {{ state_name }}</h2>    
+        <p>Find stations near you! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
+        {% include 'broadcasters/_map_searchform.html' %}
+    </div>
+    <div class="span8">
         <div id="map-box">
             <div id="map_canvas" style="width:100%; height:100%"></div>
         </div>
 
     </div>
-    <div class="span4 sidebar">
+    <div class="span4">
         <div id="stations">
             <ul id="locations"></ul>
         </div>
         
     </div>
 </section>
-<section>
-    <h4>Sign up to get involved!</h4>
-    <form id='action_signup' class='form-horizontal' action="{% url action_signup %}" method="post" accept-charset="utf-8">
+<section id="get_involved">
+    <h2>Get involved!</h2>
+    <form id='action_signup' class='form-inline' action="{% url action_signup %}" method="post" accept-charset="utf-8">
         <fieldset>
         {% csrf_token %}
         <div class="control-group">
-            <label class="control-label" for="email">Email</label>
-            <div class="controls"><input type="email" name="email" value="" id="email" required="required"></div>
-       </div>
-        <div class="control-group">
-            <label class="control-label" for="phone">Phone</label>
-            <div class="controls"><input type="text" name="phone" value="" id="phone"></div>
+            <div class="controls">
+                <input type="email" name="email" value="" placeholder="Email" required="required">
+                <input type="text" name="firstname" value="" placeholder="First Name" id="firstname">
+                <input type="text" name="lastname" value="" id="lastname" placeholder="Last Name">
+            </div>
         </div>
         <div class="control-group">
-            <label class="control-label" for="firstname">First Name</label>
-            <div class="controls"><input type="text" name="firstname" value="" id="firstname"></div>
+            <div class="controls">
+                <input type="text" name="phone" value="" placeholder="Phone" id="phone">
+                <label>
+                    Callsign 
+                    <select name="station" id="station" size="1"></select>
+                </label>
+                
+            </div>
         </div>
-        <div class="control-group">
-            <label class="control-label" for="lastname">Last Name</label>
-            <div class="controls"><input type="text" name="lastname" value="" id="lastname"></div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="station">Station</label>
-            <div class="controls"><select name="station" id="station" size="1"></select></div>
-        </div>
-        <div class="controls">
-            <input type="submit" class="btn" value="Sign up &rarr;">
-        </div>
+        <input type="submit" class="btn" value="Sign up &rarr;">
         </fieldset>
     </form>
+</section>
+<section id="feedback">
+    <h2>Questions, Comments, Etc.</h2>
+    <p>Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? Let us know:</p>
 </section>
 {% endblock content %}
 
 {% block head %}
     {{ block.super }}
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBJAvCwnDreQHJ_cAlbXAm9Fb_LmjvlaTI&sensor=false&libraries=geometry"></script>
+    {% include "broadcasters/_googlemaps_script_include.html" %}
 {% endblock head %}
 
 {% block js %}

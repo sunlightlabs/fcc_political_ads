@@ -1,0 +1,20 @@
+        <form id="map_form" class="form-inline" action="#map_form" method="get" accept-charset="utf-8">
+            <label>
+                Address: 
+                <input type="text" name="address" id="address" class="span4" value="" placeholder="Street Address" required="required" size="75">
+            </label>
+                <input type="text" class="input-medium" name="city" placeholder="City" value="" id="city">
+                <input type="text" class="input-small" name="state" value="{{ state_name }}" id="state" readonly>
+            <label>
+                Radius: 
+                <select  name="radius" id="radius" class="span1">
+                    <option value="10">10</option>
+                    <option value="25" selected>25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                </select>
+                <span class="add-on">miles</span>
+            </label>
+            <button class="btn">Search</button>
+        </form>

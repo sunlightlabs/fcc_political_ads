@@ -8,7 +8,7 @@ var SLF = {
     amile: function () { return 1609.344; },
     userMarkerImage: null,
     stationMarkerImage: null,
-    DEBUG: false
+    DEBUG: true
 };
 
 jQuery(document).ready(function() {
@@ -105,8 +105,9 @@ jQuery(document).ready(function() {
     };
     
     SLF.handleNearbySuccess = function(data, textStatus) {
+        if (SLF.DEBUG) window.log('handleNearbySuccess: ' + textStatus);
         nearby = data;
-        SLF.updateMapApp(nearby);
+        if (nearby instanceof Array && nearby.length !== 0) SLF.updateMapApp(nearby);
     };
     
     SLF.handleNearbyComplete = function(jqXHR, textStatus) {
@@ -116,10 +117,15 @@ jQuery(document).ready(function() {
     
     $("form#map_form").submit(function(event) {
         var address = $("form#map_form input#address").val();
-        SLF.geocoder.geocode( {'address': address}, function(results, status) 
+        var city = $("form#map_form input#city").val();
+        var state = $("form#map_form input#state").val();
+        var full_address = address + ' ' + city + ', ' + state;
+        SLF.geocoder.geocode( {'address': full_address}, function(results, status) 
         {
             if (status == gm.GeocoderStatus.OK) 
             {
+                if (SLF.DEBUG) window.log('GeocoderStatus.OK results:');
+                if (SLF.DEBUG) window.log(results);
                 SLF.searchLoc = results[0].geometry.location;
                 SLF.map.setCenter(SLF.searchLoc);
                 var marker = new gm.Marker({
