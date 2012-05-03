@@ -107,7 +107,7 @@
                     Callsign: 
                 </label>
                 <div class="controls">
-                    <select name="station" id="station" size="1"></select>
+                    <select name="custom-1093" id="station" size="1"></select>
                 </div>
             </div>
             <div class="control-group">
@@ -132,10 +132,9 @@
 
 {% block js %}
     {{ block.super }}
-    <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
     <script>
         var startPos = {{ broadcaster_list.0.addresses.1.pos|default:"[0,0]" }};
-        var locations = [
+        var initialLocations = [
             {% for broadcaster in broadcaster_list %}{{ broadcaster.as_json|safe }}{% if not forloop.last %},{% endif %}
             {% endfor %}
         ];
@@ -155,16 +154,8 @@
                 event.preventDefault();
                 return false;
             });
-            
-            var station_sel = $('select#station');
-            station_sel.empty();
-            station_sel.append('<option value="">-----------</option>');
-            for (var i=0; i < locations.length; i++) {
-                var opt = $('<option></option>').text(locations[i].callsign).attr('value', locations[i].callsign)
-                station_sel.append(opt);
-            };
-            
         });
         
     </script>
+    <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
 {% endblock js %}

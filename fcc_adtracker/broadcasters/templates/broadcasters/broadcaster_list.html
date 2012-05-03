@@ -25,10 +25,9 @@
 
 {% block js %}
     {{ block.super }}
-    <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
     <script>
         var startPos = {{ broadcaster_list.0.addresses.1.pos|default:"[0,0]" }};
-        var locations = [
+        var initialLocations = [
             {% for broadcaster in broadcaster_list %}{{ broadcaster.as_json|safe }}{% if not forloop.last %},{% endif %}
             {% endfor %}
         ];
@@ -44,5 +43,5 @@
         });
         
     </script>
-    <script src="{% static "js/fcc_site.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
 {% endblock js %}

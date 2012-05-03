@@ -2,13 +2,14 @@ var SLF = {
     geocoder: null,
     map: null,
     markers: null,
+    locations: null,
     searchLoc: null,
     nearby: null,
     list_elem: null,
     amile: function () { return 1609.344; },
     userMarkerImage: null,
     stationMarkerImage: null,
-    DEBUG: true
+    DEBUG: false
 };
 
 jQuery(document).ready(function() {
@@ -23,6 +24,8 @@ jQuery(document).ready(function() {
     SLF.userMarkerImage = new gm.MarkerImage(userMarker_url, gm.Size(19, 32));
     SLF.stationMarkerImage = new gm.MarkerImage(stationMarker_url, gm.Size(19, 32));
     SLF.list_elem = $("ul#locations");
+    
+    SLF.locations = initialLocations ? initialLocations : [];
     
     SLF.removeStationMarkers = function () {
         for ( var key in SLF.markers) { SLF.markers[key].setMap(); }
@@ -50,6 +53,7 @@ jQuery(document).ready(function() {
     SLF.generateDescriptionHTML = function(element) {
         var snippet = $('<div></div>');
         snippet.append($('<h3>').text(element.callsign));
+        if (element.network_affiliate) snippet.append($('<p>').text('Network: ' + element.network_affiliate));
         if (element.addresses.length > 1) {
             var addr = $('<div class="postal-address">');
             $("<p>").text(element.addresses[1].address1).appendTo(addr);
@@ -73,6 +77,18 @@ jQuery(document).ready(function() {
         });
     };
     
+    SLF.updateStationSelect = function() {
+        var station_sel = $('select#station');
+        var selected = $('select#station :selected');
+        station_sel.empty();
+        station_sel.append('<option value="">-----------</option>');
+        for (var i=0; i < SLF.locations.length; i++) {
+            var opt = $('<option></option>').text(SLF.locations[i].callsign + ' (' + SLF.locations[i].network_affiliate + ')').attr('value', SLF.locations[i].callsign);
+            if (selected.val() === opt.val()) opt.attr('selected', 'selected');
+            station_sel.append(opt);
+        }
+    };
+    
     SLF.revealMarkers = function(callback) {
         for(var key in SLF.markers) { 
             SLF.markers[key].setMap(SLF.map);
@@ -80,12 +96,12 @@ jQuery(document).ready(function() {
         callback();
     };
     
-    SLF.updateMapApp = function (location_list) {
+    SLF.updateMapApp = function () {
         SLF.removeStationMarkers();
         SLF.list_elem.empty();
         var mapBounds = new gm.LatLngBounds();
-        for (var i=0; i < location_list.length; i++) {
-            var element = location_list[i];
+        for (var i=0; i < SLF.locations.length; i++) {
+            var element = SLF.locations[i];
             var pos = (element.addresses[1] && element.addresses[1].pos) ? element.addresses[1].pos : null;
             var descriptionHTML = SLF.generateDescriptionHTML(element);
             if (pos !== null) {
@@ -101,13 +117,14 @@ jQuery(document).ready(function() {
         gm.event.addListenerOnce(SLF.map, 'bounds_changed', function() {
             SLF.revealMarkers(SLF.revealList);    
         });
-        if ( location_list.length == 1) {  SLF.map.setZoom(12); } else { SLF.map.fitBounds(mapBounds); }
+        if (  SLF.locations.length == 1) {  SLF.map.setZoom(12); } else { SLF.map.fitBounds(mapBounds); }
+        SLF.updateStationSelect();
     };
     
     SLF.handleNearbySuccess = function(data, textStatus) {
         if (SLF.DEBUG) window.log('handleNearbySuccess: ' + textStatus);
-        nearby = data;
-        if (nearby instanceof Array && nearby.length !== 0) SLF.updateMapApp(nearby);
+        SLF.locations = data;
+        if (SLF.locations instanceof Array && SLF.locations.length !== 0) SLF.updateMapApp();
     };
     
     SLF.handleNearbyComplete = function(jqXHR, textStatus) {
@@ -158,7 +175,7 @@ jQuery(document).ready(function() {
         Get to the action.
     */ 
     try {
-        SLF.updateMapApp(locations);
+        SLF.updateMapApp(SLF.locations);
     }
     catch (e) {
         if (SLF.DEBUG) window.log(e);

@@ -53,7 +53,7 @@ def broadcaster_detail(request, callsign):
 def featured_broadcasters(request):
     """Featured page. For pilot, perhaps other uses in future."""
     state_name = STATES_DICT.get(FEATURED_BROADCASTER_STATE.upper(), None)
-    broadcaster_list = Broadcaster.objects.filter(community_state=FEATURED_BROADCASTER_STATE.upper())
+    broadcaster_list = Broadcaster.objects.filter(community_state=FEATURED_BROADCASTER_STATE.upper(), addresses__title='studio', addresses__pos__exists=True)
     resp_obj = {
         'broadcaster_list': broadcaster_list, 
         'state_name': state_name,
