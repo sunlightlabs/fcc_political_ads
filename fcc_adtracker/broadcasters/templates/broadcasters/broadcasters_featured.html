@@ -2,7 +2,7 @@
 {% block bodyclass %}broadcasters-featured{% endblock bodyclass %}
 
 {% block content %}
-<nav>
+<nav class="subnav">
     <ul class="nav nav-pills">
         <li>
             <a href="#map">Find Stations</a>
@@ -61,39 +61,68 @@
         
     </div>
 </section>
-<section id="get_involved">
-    <h2>Get involved!</h2>
-    <p>
-        <span class="label label-important">EMAIL SHARING DISCLAIMER SHALL GO HERE.</span>
-    </p>
-    <form id='action_signup' class='form-inline' action="{% url action_signup %}" method="post" accept-charset="utf-8">
-        <fieldset>
-        {% csrf_token %}
-        <div class="control-group">
-            <div class="controls">
-                <input type="email" name="email" value="" placeholder="Email" required="required">
-                <input type="text" name="firstname" value="" placeholder="First Name" id="firstname">
-                <input type="text" name="lastname" value="" id="lastname" placeholder="Last Name">
+<div class="row">
+    <section id="get_involved" class="span6 span-divider">
+        <h2>Get involved!</h2>
+        <p>
+            <span class="label label-important">EMAIL SHARING DISCLAIMER SHALL GO HERE.</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+        <form id='action_signup' class='form-horizontal' action="{% url action_signup %}" method="post" accept-charset="utf-8">
+            <fieldset>
+            {% csrf_token %}
+            <div class="control-group">
+                    <label class="control-label">
+                        Email: 
+                    </label>
+                <div class="controls">
+                    <input type="email" name="email" value="" placeholder="Email" required="required">
+                </div>
             </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <input type="text" name="phone" value="" placeholder="Phone" id="phone">
-                <label>
-                    Callsign 
-                    <select name="station" id="station" size="1"></select>
+            <div class="control-group">
+                <label class="control-label">
+                    First Name: 
                 </label>
-                
+                <div class="controls">
+                    <input type="text" name="firstname" value="" placeholder="First Name" id="firstname">
+                </div>
             </div>
-        </div>
-        <input type="submit" class="btn" value="Sign up &rarr;">
-        </fieldset>
-    </form>
-</section>
-<section id="feedback">
-    <h2>Questions, Comments, Etc.</h2>
-    <p>Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? Let us know! <span class="label label-important">CONTACT ADDRESS GOES HERE</span></p>
-</section>
+            <div class="control-group">
+                <label class="control-label">
+                    Last Name: 
+                </label>
+                <div class="controls">
+                    <input type="text" name="lastname" value="" id="lastname" placeholder="Last Name">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">
+                    Phone: 
+                </label>
+                <div class="controls">
+                    <input type="text" name="phone" value="" placeholder="Phone" id="phone">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">
+                    Callsign: 
+                </label>
+                <div class="controls">
+                    <select name="station" id="station" size="1"></select>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <input type="submit" class="btn" value="Sign up &rarr;">
+                </div>
+            </div>
+            </fieldset>
+        </form>
+    </section>
+    <section id="feedback" class="span6">
+        <h2>Questions, Comments, Etc.</h2>
+        <p>Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? Let us know! <span class="label label-important">CONTACT ADDRESS GOES HERE</span></p>
+    </section>
+</div>
 {% endblock content %}
 
 {% block head %}

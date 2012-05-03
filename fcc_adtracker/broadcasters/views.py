@@ -35,7 +35,7 @@ def state_broadcaster_list(request, state_id):
     state_name = STATES_DICT.get(state_id.upper(), None)
     if state_name:
         broadcaster_list = Broadcaster.objects.filter(community_state=state_id.upper())
-        return render_to_response('broadcasters/broadcaster_list.html', {'broadcaster_list': broadcaster_list, 'state_name': state_name}, context_instance=RequestContext(request))
+        return render(request, 'broadcasters/broadcaster_list.html', {'broadcaster_list': broadcaster_list, 'state_name': state_name})
     else:
         raise Http404('State with abbrevation "{state_id}" not found.'.format(state_id=state_id))
 
@@ -45,7 +45,7 @@ def broadcaster_detail(request, callsign):
         return HttpResponsePermanentRedirect(reverse('broadcaster_detail', kwargs={'callsign': callsign.upper()}))
     broadcaster = Broadcaster.objects.get(callsign=callsign.upper())
     if broadcaster:
-        return render_to_response('broadcasters/broadcaster_detail.html', {'broadcaster': broadcaster}, context_instance=RequestContext(request))
+        return render(request, 'broadcasters/broadcaster_detail.html', {'broadcaster': broadcaster})
     else:
         raise Http404('Broadcaster with "{callsign}" not found.'.format(callsign=callsign))
 
@@ -59,7 +59,7 @@ def featured_broadcasters(request):
         'state_name': state_name,
         'sfapp_base_template': 'sfapp/base-full.html'
     }
-    return render_to_response('broadcasters/broadcasters_featured.html', resp_obj, context_instance=RequestContext(request))
+    return render(request, 'broadcasters/broadcasters_featured.html', resp_obj)
 
 
 class ActionSignupView(View):
@@ -125,7 +125,7 @@ def edit_broadcaster(request, callsign):
             'broadcaster_form': bform, 
             'address_forms': address_forms
         }
-        return render_to_response('broadcasters/broadcaster_change_form.html', resp_obj, context_instance=RequestContext(request))
+        return render(request, 'broadcasters/broadcaster_change_form.html', resp_obj)
     else:
         raise Http404('Broadcaster with "{callsign}" not found.'.format(callsign=callsign))
 
