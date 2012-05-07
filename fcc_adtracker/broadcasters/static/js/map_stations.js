@@ -53,7 +53,8 @@ jQuery(document).ready(function() {
     SLF.generateDescriptionHTML = function(element) {
         var snippet = $('<div></div>');
         snippet.append($('<h3>').text(element.callsign));
-        if (element.network_affiliate) snippet.append($('<p>').text('Network: ' + element.network_affiliate));
+        if (element.network_affiliate) snippet.append($('<p>').html('Network: <span class="label label-info">' + element.network_affiliate + '</span>'));
+        if (element.channel) snippet.append($('<p>').html('Channel: ' + element.channel));
         if (element.addresses.length > 1) {
             var addr = $('<div class="postal-address">');
             $("<p>").text(element.addresses[1].address1).appendTo(addr);

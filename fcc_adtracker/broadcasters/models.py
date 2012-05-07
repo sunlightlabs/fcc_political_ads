@@ -42,6 +42,8 @@ class Broadcaster(DynamicDocument):
     """Broadcaster, based on FCC's CDBS facility table"""
     addresses = ListField(EmbeddedDocumentField(Address))
     callsign = StringField(max_length=12, unique=True)
+    channel = IntField()
+    nielsen_dma = StringField(max_length=60)
     network_affiliate = StringField(max_length=100)
     facility_type = StringField(max_length=3)
     community_city = StringField(max_length=20)
