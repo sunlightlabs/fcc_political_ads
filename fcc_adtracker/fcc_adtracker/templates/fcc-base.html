@@ -7,17 +7,10 @@
 
 {% block css %}    <link rel="stylesheet" href="{% static 'css/fcc_main.css' %}">{% endblock css %}
 
-{% block header %}
-{{ block.super }}
-<ul>
-    <li><a href="http://www.freepress.net/"><img alt="Free Press Logo" src="{% static 'img/freepress_temp.png' %}"></a></li>
-    <li class="last"><a href="http://newamerica.net/"><img alt="New America Logo" src="{% static 'img/NAFlogo-horizontal.png' %}"></a></li>
-</ul>
-{% endblock header %}
-
 {% block container %}
 <header>
     <h1>Free the Files</h1>
+    {% block pageheader %}{% endblock pageheader %}
 </header>
 {{ block.super }}
 {% endblock container %}

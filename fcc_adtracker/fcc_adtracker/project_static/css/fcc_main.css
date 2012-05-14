@@ -35,15 +35,6 @@ section .content {
     margin-bottom: 15px;
 }
 
-.nav-pills li {
-    border-right: 1px dashed #F1F1F1;
-}
-
-.nav-pills li:last-child, .nav-pills li.last {
-    border-right: none;
-}
-
-
 #map_canvas { height: 100% }
 #address_thingy {
     margin-bottom: 10px;
