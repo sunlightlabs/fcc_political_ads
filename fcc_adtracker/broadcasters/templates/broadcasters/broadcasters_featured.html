@@ -24,17 +24,18 @@
 {% endblock pageheader %}
 
 {% block content %}
-<div class="row hero-unit module">
-    <section class="span7">
+<div class="hero-unit module">
+    <div class="span7">
         <h2 id='page-intro'>Who's trying to influence your vote?<br /> Help us find out!</h2>
         <div class="featureText">
             <p>New campaign finance rules mean that the airwaves this election year will be dominated by outside groups, many of whom don’t have to disclose the sources of their funding and don’t even have to register with the Federal Election Commission. But there is one place where they will leave a paper trail: At the TV stations where they buy their ads. For the first time, the Federal Communication Commission (FCC) has ruled to require television stations in the top 50 media markets to put their public and political files online -- but these markets cover <a href="http://reporting.sunlightfoundation.com/2012/fcc-ruling-would-exempt-160-markets-posting-requirements/">only a fraction of the swing states</a>, where the majority of political ad spending will occur. We need your help to unlock the rest of the political files and post the information online.</p>
             <p>As a pilot project, we will be unlocking the files from Wisconsin’s gubernatorial election on June 5th. <a href="http://act2.freepress.net/sign/public_file_pledge/?source=FPblog">Sign up</a> for a <a href="http://www.freepress.net/how-to-inspect-public-political-files">training</a> or search for a tv station near you.</p>
         </div>
-    </section>
+    </div>
     <div class="span3 featureImg">
         <img src="{% static 'img/img_fccBallot.png' %}" alt="Ballot Box">
     </div>
+    <div class="clearfix"></div>
 </div>
 <div id="map" class="row module">
     <div class="span12">
@@ -60,69 +61,42 @@
         <h3 class="withTip">Get involved!</h3>
         <p class="tip">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
         <form id='action_signup' class='form-horizontal' action="{% url action_signup %}" method="post" accept-charset="utf-8">
-            <fieldset>
-            {% csrf_token %}
-            <div class="control-group">
-                    <label class="control-label">
-                        Email
-                    </label>
-                <div class="controls">
+            <ul>
+                {% csrf_token %}
+                <li>
+                    <label>Email</label>
                     <input type="email" name="email" value="" placeholder="Email" required="required">
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">
-                    First Name: 
-                </label>
-                <div class="controls">
+                </li>
+                <li>
+                    <label>First Name</label>
                     <input type="text" name="firstname" value="" placeholder="First Name" id="firstname">
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">
-                    Last Name: 
-                </label>
-                <div class="controls">
+                </li>
+                <li>
+                    <label class="control-label">Last Name</label>
                     <input type="text" name="lastname" value="" id="lastname" placeholder="Last Name">
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">
-                    Phone: 
-                </label>
-                <div class="controls">
+                </li>
+                <li>
+                    <label>Phone</label>
                     <input type="text" name="phone" value="" placeholder="Phone" id="phone">
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">
-                    Callsign: 
-                </label>
-                <div class="controls">
+                </li>
+                <li>
+                    <label>Callsign</label>
                     <select name="custom-1093" id="station" size="1"></select>
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">
-                    Share with Free Press: 
-                </label>
-                <div class="controls">
-                    <input type="checkbox" name="custom-1116" id="optin" size="1" checked="checked">
-                    <label class="help-block">Yes, I would like to receive email alerts from Free Press</label>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
+                </li>
+                <li>
+                    <label>Share with Free Press</label>
+                    <label class="tip asInput"><input class="checkbox" type="checkbox" name="custom-1116" id="optin" checked="checked" />Yes, I would like to receive email alerts from Free Press</label>
+                </li>
+                <li>
                     <input type="submit" class="btn" value="Sign up &rarr;">
-                </div>
-            </div>
-            </fieldset>
+                </li>
+            </ul>
         </form>
     </section>
-    <section id="feedback" class="span4 offset1">
+    <div id="feedback" class="span4 offset1 module">
         <h4 class="withTip">Questions, Comments, Etc.</h4>
         <p class="tip">Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? Let us know! <span class="label label-important">CONTACT ADDRESS GOES HERE</span></p>
-    </section>
+    </div>
     <div class="span4 offset1">
         <section class="boxCallout resources">
             <h3>Resources</h3>
