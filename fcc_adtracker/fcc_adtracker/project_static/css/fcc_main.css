@@ -1,45 +1,6 @@
-img {
-    max-width: none;
-}
-h1 {
-    margin-bottom: 20px;
-}
-
-section {
-    margin-bottom: 25px;
-}
-
-section .content {
-    margin-left: 0;
-}
-
-.resources li {
-    margin-bottom: 20px;
-}
-
-.invalid {
-    border-color: #E9322D;
-}
-
-.sf-header ul {
-    margin-top: 15px;
-}
-
-.sf-header li {
-    display: block;
-    float: left;
-    margin-right: 30px;
-}
-
-.content nav {
-    margin-bottom: 15px;
-}
+.invalid { border-color: #E9322D; }
 
 #map_canvas { height: 100% }
-#address_thingy {
-    margin-bottom: 10px;
-}
-
 
 form#map_form > input, form#map_form > label {
     margin-right: 10px;
@@ -55,12 +16,6 @@ form#map_form > input, form#map_form > label {
 .broadcaster-detail #map-box {
     width:50%;
     height: 300px;
-}
-
-li p {
-    font-size: 92%;
-    line-height: 105%;
-    margin-bottom: 3px;
 }
 
 p.distance {
@@ -80,10 +35,6 @@ p.distance {
 }
 */
 
-#stations {
-    background-color: #FFF;
-}
-
 /*.broadcasters-featured ul#locations {
     height:350px;
 }*/
@@ -95,26 +46,6 @@ ul#locations {
     margin: 0px;
 }
 
-
-#locations li {
-    padding: 7px;
-    border-bottom: 1px solid #EFEFEF;
-}
-
-#locations li.even {
-    background-color: #FBFBFB;
-}
-
-#locations h3 {
-    font-size: 120%;
-    line-height: 105%;
-    margin-bottom: 5px;
-}
-
-.control-group input {
-    margin-bottom: 0px;
-}
-
 form p {
     margin: 6px 0;
 }
@@ -122,7 +53,6 @@ form p {
 fieldset {
     margin-bottom: 1em;
 }
-
 
 fieldset legend {
     font-size: 120%;
@@ -134,3 +64,9 @@ fieldset legend {
 }
 
 input#address { width: 276px;}
+
+.featureImg { margin-top: 180px; float: right; margin-right: 20px; }
+
+#freepress { background: url(../img/logo_freepress.png) top left no-repeat; width: 118px; height: 40px; }
+#newAmerica { background: url(../img/logo_newAmerica.png) top left no-repeat; width: 156px; height: 28px; margin-top: 10px;}
+#sponsorLogos { float: right; margin-top: -90px;}

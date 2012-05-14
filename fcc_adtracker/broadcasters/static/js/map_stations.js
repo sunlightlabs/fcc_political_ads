@@ -59,11 +59,11 @@ jQuery(document).ready(function() {
     
     SLF.generateDescriptionHTML = function(element) {
         var snippet = $('<div></div>');
-        snippet.append($('<h3>').text(element.callsign));
-        if (element.network_affiliate) snippet.append($('<p>').html('Network: <span class="label label-info">' + element.network_affiliate + '</span>'));
-        if (element.channel) snippet.append($('<p>').html('Channel: ' + element.channel));
+        snippet.append($('<h5 class="withTip">').text(element.callsign));
+        if (element.network_affiliate) snippet.append($('<p>').html('<dt>Network:</dt> <dd class="label-info">' + element.network_affiliate + '</dd>'));
+        if (element.channel) snippet.append($('<p>').html('<dt>Channel:</dt> <dd">' + element.channel + '</dd>'));
         if (element.addresses.length > 1) {
-            var addr = $('<div class="postal-address">');
+            var addr = $('<address class="vcard"><span class="adr">');
             $("<p>").text(element.addresses[1].address1).appendTo(addr);
             if(element.addresses[1].address2) $("<p>").text(element.addresses[1].address2).appendTo(addr);
             var city = $('<span></span>').text(element.addresses[1].city);
