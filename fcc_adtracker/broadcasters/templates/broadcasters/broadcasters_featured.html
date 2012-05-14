@@ -6,10 +6,11 @@
         <nav class="subnav span">
             <ul class="nav nav-pills">
                 <li>
-                    <a href="#map">Find Stations</a>
+                    <a href="#get_involved">Get Involved</a>
+                    
                 </li>
                 <li>
-                    <a href="#get_involved">Get Involved</a>
+                    <a href="#map">Find Stations</a>
                 </li>
                 <li>
                     <a href="#feedback">Questions</a>
@@ -40,42 +41,42 @@
 <div class="row module">
     <div id="get_involved" class="span7">
         <h3 class="withTip">Get involved!</h3>
-        <p class="tip">Sign up to get and start down the path to a more transparent election.</p>
-        <form id='action_signup' class='form-horizontal' action="{% url action_signup %}" method="post" accept-charset="utf-8">
+        <p class="tip">Sign up to get help us find a more transparent government!</p>
+        <form id='action_signup' class='form-inline formStacked' action="{% url action_signup %}" method="post" accept-charset="utf-8">
             <ul>
                 {% csrf_token %}
-                <li>
+                <li class="span3">
                     <label>Email</label>
                     <input type="email" name="email" value="" placeholder="Email" required="required">
                 </li>
-                <li>
+                <li class="span3">
                     <label>First Name</label>
                     <input type="text" name="firstname" value="" placeholder="First Name" id="firstname">
                 </li>
-                <li>
+                <li class="span3">
                     <label class="control-label">Last Name</label>
                     <input type="text" name="lastname" value="" id="lastname" placeholder="Last Name">
                 </li>
-                <li>
+                <li class="span3">
                     <label>Phone</label>
                     <input type="text" name="phone" value="" placeholder="Phone" id="phone">
                 </li>
-                <li>
+                <li class="span3">
                     <label>Callsign</label>
                     <select name="custom-1093" id="station" size="1"></select>
                 </li>
-                <li>
+                <li class="span6">
                     <label>Share with Free Press</label>
                     <label class="tip asInput"><input class="checkbox" type="checkbox" name="custom-1116" id="optin" checked="checked" />Yes, I would like to receive email alerts from Free Press</label>
                 </li>
-                <li>
-                    <input type="submit" class="btn" value="Sign up &rarr;">
+                <li class="span3">
+                    <input type="submit" class="btn btn-sunlight" value="Sign up &rarr;">
                 </li>
             </ul>
         </form>
     </div>
     <div class="span4 offset1">
-        <section class="boxCallout resources">
+        <div class="boxCallout resources">
             <h3>Resources</h3>
             <ul class='bulletList unstyled'>
                 <li>
@@ -87,7 +88,7 @@
                     <p>Ready to go to the station? <a href='http://www.freepress.net/files/publicfiles-checklist.pdf'>Print this checklist</a> and the <a href='{% static 'files/FCC_public_files_excerpt.pdf' %}'>political files excerpt</a> from FCC’s manual and bring it with you.</p>
                 </li>
             </ul>
-        </section>
+        </div>
     </div>
 </div>
 <div id="map" class="row module">
@@ -96,13 +97,13 @@
         <p class="tip">Find stations near you! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
         {% include 'broadcasters/_map_searchform.html' %}
     </div>
-    <div class="span8">
+    <div class="span8 withBorder">
         <div id="map-box">
             <div id="map_canvas" style="width:100%; height:100%"></div>
         </div>
 
     </div>
-    <div class="span4">
+    <div class="span4 withBorder stations">
         <div id="stations">
             <ul class="withLine" id="locations"></ul>
         </div>
@@ -110,13 +111,11 @@
     </div>
 </div>
 <div class="row">
-    <div id="feedback" class="span4 offset1 module">
+    <div id="feedback" class="span8 module">
         <h4 class="withTip">Questions, Comments, Etc.</h4>
         <p class="tip">Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? Let us know! <span class="label label-important">CONTACT ADDRESS GOES HERE</span></p>
     </div>
-    
-    
-</div>
+</div>    
 {% endblock content %}
 
 {% block head %}
