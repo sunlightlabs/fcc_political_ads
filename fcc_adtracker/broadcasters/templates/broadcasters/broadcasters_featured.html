@@ -37,29 +37,10 @@
     </div>
     <div class="clearfix"></div>
 </div>
-<div id="map" class="row module">
-    <div class="span12">
-        <h3 class="withTip">Find Nearby Stations: {{ state_name }}</h3>    
-        <p class="tip">Find stations near you! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
-        {% include 'broadcasters/_map_searchform.html' %}
-    </div>
-    <div class="span8">
-        <div id="map-box">
-            <div id="map_canvas" style="width:100%; height:100%"></div>
-        </div>
-
-    </div>
-    <div class="span4">
-        <div id="stations">
-            <ul class="withLine" id="locations"></ul>
-        </div>
-        
-    </div>
-</div>
-<div class="row">
-    <section id="get_involved" class="span7">
+<div class="row module">
+    <div id="get_involved" class="span7">
         <h3 class="withTip">Get involved!</h3>
-        <p class="tip">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p class="tip">Sign up to get and start down the path to a more transparent election.</p>
         <form id='action_signup' class='form-horizontal' action="{% url action_signup %}" method="post" accept-charset="utf-8">
             <ul>
                 {% csrf_token %}
@@ -92,10 +73,6 @@
                 </li>
             </ul>
         </form>
-    </section>
-    <div id="feedback" class="span4 offset1 module">
-        <h4 class="withTip">Questions, Comments, Etc.</h4>
-        <p class="tip">Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? Let us know! <span class="label label-important">CONTACT ADDRESS GOES HERE</span></p>
     </div>
     <div class="span4 offset1">
         <section class="boxCallout resources">
@@ -112,6 +89,32 @@
             </ul>
         </section>
     </div>
+</div>
+<div id="map" class="row module">
+    <div class="span12">
+        <h3 class="withTip">Find Nearby Stations: {{ state_name }}</h3>    
+        <p class="tip">Find stations near you! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
+        {% include 'broadcasters/_map_searchform.html' %}
+    </div>
+    <div class="span8">
+        <div id="map-box">
+            <div id="map_canvas" style="width:100%; height:100%"></div>
+        </div>
+
+    </div>
+    <div class="span4">
+        <div id="stations">
+            <ul class="withLine" id="locations"></ul>
+        </div>
+        
+    </div>
+</div>
+<div class="row">
+    <div id="feedback" class="span4 offset1 module">
+        <h4 class="withTip">Questions, Comments, Etc.</h4>
+        <p class="tip">Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? Let us know! <span class="label label-important">CONTACT ADDRESS GOES HERE</span></p>
+    </div>
+    
     
 </div>
 {% endblock content %}
