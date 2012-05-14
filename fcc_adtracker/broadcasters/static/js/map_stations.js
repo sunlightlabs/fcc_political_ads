@@ -58,24 +58,25 @@ jQuery(document).ready(function() {
     };
     
     SLF.generateDescriptionHTML = function(element) {
-        var snippet = $('<div></div>');
-        snippet.append($('<h5 class="withTip">').text(element.callsign));
-        if (element.network_affiliate) snippet.append($('<p>').html('<dt>Network:</dt> <dd class="label-info">' + element.network_affiliate + '</dd>'));
-        if (element.channel) snippet.append($('<p>').html('<dt>Channel:</dt> <dd">' + element.channel + '</dd>'));
+        var snippet = $('<div class="vcard"></div>');
+        snippet.append($('<h5 class="org withTip">').text(element.callsign));
+        var dl = $('<dl class="smallModule floatedList"></dl>');
+        if (element.network_affiliate) dl.append($('<dt>Network:</dt> <dd class="label-info">' + element.network_affiliate + '</dd>'));
+        if (element.channel) dl.append($('<dt>Channel:</dt> <dd>' + element.channel + '</dd>'));
+        snippet.append(dl);
         if (element.addresses.length > 1) {
-            var addr = $('<address class="vcard"><span class="adr">');
-            $("<p>").text(element.addresses[1].address1).appendTo(addr);
-            if(element.addresses[1].address2) $("<p>").text(element.addresses[1].address2).appendTo(addr);
-            var city = $('<span></span>').text(element.addresses[1].city);
-            var state = $('<span></span>').text(element.addresses[1].state);
-            var zip1 = $('<span></span>').text(element.addresses[1].zip1);
-            $("<p>").append(city.html() + ", " + state.html() + " " + zip1.html()).appendTo(addr);
-            snippet.append(addr);
+            var addr = $('<div class="adr"></div>');
+            $('<span class="street-address">').text(element.addresses[1].address1).appendTo(addr);
+            if(element.addresses[1].address2) $('<span class="street-address">').text(element.addresses[1].address2).appendTo(addr);
+            var city = $('<span class="locality"></span>').text(element.addresses[1].city);
+            var state = $('<span class="region"></span>').text(element.addresses[1].state);
+            var zip1 = $('<span class="postal-code"></span>').text(element.addresses[1].zip1);
+            snippet.append(addr.append(city, ', ', state, ' ', zip1));
         }
         if (element.distance) {
             snippet = snippet.append('<p class="distance">' + Number(element.distance).toPrecision(3) + ' miles (approx.)</p>');
         }
-        return snippet.html();
+        return snippet[0];
     };
     
     SLF.revealList = function() {
