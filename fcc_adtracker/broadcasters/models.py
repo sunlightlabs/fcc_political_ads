@@ -57,3 +57,8 @@ class Broadcaster(DynamicDocument):
     def __unicode__(self):
         return u"Broadcaster"
 
+
+
+def get_callsigns():
+    return [b.callsign for b in Broadcaster.objects.only('callsign').all().order_by('callsign')]
+

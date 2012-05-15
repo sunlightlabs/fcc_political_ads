@@ -132,12 +132,17 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     # 'django.contrib.admindocs',
     
     'sfapp',
     
+    'doccloud',
+    'fccpublicfiles',
+    
     'broadcasters',
+    
+    'south',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -168,6 +173,10 @@ LOGGING = {
         },
     }
 }
+
+DOCUMENTS_PATH = ''
+DOCUMENTCLOUD_USERNAME = ''
+DOCUMENTCLOUD_PASS = ''
 
 try:
     from local_settings import *
