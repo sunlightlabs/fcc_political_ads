@@ -6,7 +6,7 @@ import datetime
 CALLSIGNS = [(c,c) for c in get_callsigns()]
 
 class PublicDocument(models.Model):
-    station = models.CharField(choices=CALLSIGNS, max_length=12) 
+    station = models.CharField(choices=CALLSIGNS, max_length=12, verbose_name="Station Callsign") 
     documentcloud_doc = models.ForeignKey(Document)
     
     def __unicode__(self):
