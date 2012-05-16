@@ -38,9 +38,24 @@
     </div>
     <div class="clearfix"></div>
 </div>
-<div class="row module">
-    <div id="get_involved" class="span7">
-        <h3 class="withTip">Get involved!</h3>
+<div id="map" class="row module">
+    <div class="span12">
+        <h3 class="withTip">Get Involved!</h3>    
+        <p class="tip">Find stations near you and then sign up to go collect the files! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
+    </div>
+    <div class="span8">
+        {% include 'broadcasters/_map_searchform.html' %}
+        <div id="map-box">
+            <div id="map_canvas" style="width:100%; height:100%"></div>
+        </div>
+        <div class="span2 withBorder stations">
+            <div id="stations">
+                <ul class="withLine" id="locations"></ul>
+            </div>
+        </div>
+    </div>
+    <div id="get_involved" class="span3">
+        <h3 class="withTip">Sign Up</h3>
         <p class="tip">Sign up to get help us find a more transparent government!</p>
         <form id='action_signup' class='form-inline formStacked' action="{% url action_signup %}" method="post" accept-charset="utf-8">
             <ul>
@@ -62,10 +77,10 @@
                     <input type="text" name="phone" value="" placeholder="Phone" id="phone">
                 </li>
                 <li class="span3">
-                    <label>Callsign</label>
+                    <label>Station I Plan to Visit</label>
                     <select name="custom-1093" id="station" size="1"></select>
                 </li>
-                <li class="span6">
+                <li class="span3">
                     <label>Share with Free Press</label>
                     <label class="tip asInput"><input class="checkbox" type="checkbox" name="custom-1116" id="optin" checked="checked" />Yes, I would like to receive email alerts from Free Press</label>
                 </li>
@@ -75,7 +90,14 @@
             </ul>
         </form>
     </div>
-    <div class="span4 offset1">
+    
+</div>
+<div class="row">
+    <div id="feedback" class="span8 module">
+        <h4 class="withTip">Questions, Comments, Etc.</h4>
+        <p class="tip">Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? Let us know! <span class="label label-important">CONTACT ADDRESS GOES HERE</span></p>
+    </div>
+    <div class="span4">
         <div class="boxCallout resources">
             <h3>Resources</h3>
             <ul class='bulletList unstyled'>
@@ -89,31 +111,6 @@
                 </li>
             </ul>
         </div>
-    </div>
-</div>
-<div id="map" class="row module">
-    <div class="span12">
-        <h3 class="withTip">Find Nearby Stations: {{ state_name }}</h3>    
-        <p class="tip">Find stations near you! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
-        {% include 'broadcasters/_map_searchform.html' %}
-    </div>
-    <div class="span8 withBorder">
-        <div id="map-box">
-            <div id="map_canvas" style="width:100%; height:100%"></div>
-        </div>
-
-    </div>
-    <div class="span4 withBorder stations">
-        <div id="stations">
-            <ul class="withLine" id="locations"></ul>
-        </div>
-        
-    </div>
-</div>
-<div class="row">
-    <div id="feedback" class="span8 module">
-        <h4 class="withTip">Questions, Comments, Etc.</h4>
-        <p class="tip">Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? Let us know! <span class="label label-important">CONTACT ADDRESS GOES HERE</span></p>
     </div>
 </div>    
 {% endblock content %}
