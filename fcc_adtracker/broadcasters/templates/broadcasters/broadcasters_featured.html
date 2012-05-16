@@ -39,11 +39,9 @@
     <div class="clearfix"></div>
 </div>
 <div id="map" class="row module">
-    <div class="span12">
-        <h3 class="withTip">Get Involved!</h3>    
-        <p class="tip">Find stations near you and then sign up to go collect the files! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
-    </div>
     <div class="span8">
+        <h3 class="withTip">Find a Station</h3>    
+        <p class="tip">Find stations near you and then sign up to go collect the files! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
         {% include 'broadcasters/_map_searchform.html' %}
         <div id="map-box">
             <div id="map_canvas" style="width:100%; height:100%"></div>
@@ -55,7 +53,7 @@
         </div>
     </div>
     <div id="get_involved" class="span3">
-        <h3 class="withTip">Sign Up</h3>
+        <h3 class="withTip">Take Action!</h3>
         <p class="tip">Sign up to get help us find a more transparent government!</p>
         <form id='action_signup' class='form-inline formStacked' action="{% url action_signup %}" method="post" accept-charset="utf-8">
             <ul>
