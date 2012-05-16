@@ -3,6 +3,12 @@ from django import forms
 from .models import *
 from django.contrib.admin import widgets
 
+try:
+    import simplejson as json
+except Exception, e:
+    import json
+
+CALLSIGNS_LIST = map(lambda x: x[1], CALLSIGNS)
 
 class PoliticalAdAdminForm(forms.ModelForm):
     class Meta:
@@ -41,7 +47,7 @@ class PoliticalDocumentAdminForm(forms.ModelForm):
     class Meta:
         model = PoliticalDocument
 
-    # station = forms.ChoiceField(widget=forms.Select(attrs={'class':'typeahead'}), choices=PublicDocument.station.choices)
+    station = forms.CharField(widget=forms.TextInput(attrs={'class':'typeahead', 'autocomplete': 'off', 'data-source':json.dumps(CALLSIGNS_LIST), 'data-provide': 'typeahead' }))
 
 
 class PoliticalDocumentAdmin(admin.ModelAdmin):
