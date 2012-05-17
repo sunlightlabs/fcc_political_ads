@@ -1,29 +1,6 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %}
 {% block bodyclass %}broadcasters-featured{% endblock bodyclass %}
 
-{% block pageheader %}
-    <div class="row">
-        <nav class="subnav span">
-            <ul class="nav nav-pills">
-                <li>
-                    <a href="#get_involved">Get Involved</a>
-                    
-                </li>
-                <li>
-                    <a href="#map">Find Stations</a>
-                </li>
-                <li>
-                    <a href="#feedback">Questions</a>
-                </li>
-            </ul>        
-        </nav>
-        <ul id="sponsorLogos" class="floatList">
-            <li id="freepress" class="textReplace"><a href="http://www.freepress.net/">Free Press></a></li>
-            <li id="newAmerica" class="last textReplace"><a href="http://newamerica.net/">New America Foundation></a></li>
-        </ul>
-    </div>
-{% endblock pageheader %}
-
 {% block content %}
 <div class="hero-unit module">
     <div class="span7">
@@ -31,6 +8,12 @@
         <div class="featureText">
             <p>New campaign finance rules mean that the airwaves this election year will be dominated by outside groups, many of whom don’t have to disclose the sources of their funding and don’t even have to register with the Federal Election Commission. But there is one place where they will leave a paper trail: At the TV stations where they buy their ads. For the first time, the Federal Communication Commission (FCC) has ruled to require television stations in the top 50 media markets to put their public and political files online -- but these markets cover <a href="http://reporting.sunlightfoundation.com/2012/fcc-ruling-would-exempt-160-markets-posting-requirements/">only a fraction of the swing states</a>, where the majority of political ad spending will occur. We need your help to unlock the rest of the political files and post the information online.</p>
             <p>As a pilot project, we will be unlocking the files from Wisconsin’s gubernatorial election on June 5th. <a href="http://act2.freepress.net/sign/public_file_pledge/?source=FPblog">Sign up</a> for a <a href="http://www.freepress.net/how-to-inspect-public-political-files">training</a> or search for a tv station near you.</p>
+        </div>
+        <div class="row">
+            <ul id="sponsorLogos" class="floatList">
+                <li id="freepress" class="textReplace"><a href="http://www.freepress.net/">Free Press></a></li>
+                <li id="newAmerica" class="last textReplace"><a href="http://newamerica.net/">New America Foundation></a></li>
+            </ul>
         </div>
     </div>
     <div class="span3 featureImg">

@@ -9,8 +9,17 @@
 
 {% block container %}
 <header>
-    <h1>Free the Files</h1>
-    {% block pageheader %}{% endblock pageheader %}
+    <nav class="clearfix">
+        <ul class="account listNav unstyled">
+            <li>
+                <a href="#feedback">Questions</a>
+            </li>
+            <li class="first">
+                <a href="#map">Get Involved</a>
+            </li>
+        </ul>        
+    </nav>
+    <h1 class="textReplace" id="logo">Free the Files</h1>
 </header>
 {{ block.super }}
 {% endblock container %}
