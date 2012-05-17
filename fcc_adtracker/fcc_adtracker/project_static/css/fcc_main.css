@@ -1,5 +1,7 @@
-h1 { background: url(../img/);}
 .invalid { border-color: #E9322D; }
+
+#logo { background: url(../img/logo.png) top left no-repeat; width: 135px; height: 80px;}
+nav { margin-top: -20px;}
 
 #map_canvas { height: 100% }
 
@@ -61,6 +63,5 @@ input#address { width: 150px;}
 
 .featureImg { margin-top: 180px; float: right; margin-right: 20px; }
 
-#freepress { background: url(../img/logo_freepress.png) top left no-repeat; width: 118px; height: 40px; }
-#newAmerica { background: url(../img/logo_newAmerica.png) top left no-repeat; width: 156px; height: 28px; margin-top: 10px;}
-#sponsorLogos { float: right; margin-top: -90px;}
+#freepress { background: url(../img/logo_freepress.png) top left no-repeat; width: 118px; height: 40px; margin-top: 10px;}
+#newAmerica { background: url(../img/logo_newAmerica.png) top left no-repeat; width: 156px; height: 28px; margin-top: 20px; margin-right: 0;}
