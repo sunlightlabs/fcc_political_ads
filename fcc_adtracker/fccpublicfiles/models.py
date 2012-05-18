@@ -2,6 +2,7 @@ from django.db import models
 from doccloud.models import Document
 from broadcasters.models import get_callsigns
 import datetime
+import timedelta
 
 CALLSIGNS = [(c,c) for c in get_callsigns()]
 
@@ -34,7 +35,7 @@ class PoliticalAd(models.Model):
     timeslot_begin = models.TimeField(blank=True, null=True)
     timeslot_end = models.TimeField(blank=True, null=True)
     show_name = models.CharField(blank=True, null=True, max_length=100)
-    broadcast_length = models.TimeField(blank=True, null=True)
+    broadcast_length = timedelta.TimedeltaField(blank=True, null=True, help_text="The easiest way to enter time is as <em>XX minutes, YY seconds</em> or <em>YY seconds</em>.")
     num_spots = models.IntegerField(blank=True, null=True, verbose_name="Number of Spots")
     rate = models.DecimalField(blank=True, null=True, max_digits=9, decimal_places=2, help_text="Dollar cost for each spot")
     
