@@ -1,5 +1,9 @@
 .invalid { border-color: #E9322D; }
 
+img {
+    max-width: none;
+}
+
 #logo { background: url(../img/logo.png) top left no-repeat; width: 135px; height: 80px;}
 nav { margin-top: -20px;}
 
@@ -43,6 +47,7 @@ p.distance {
 ul#locations {
     height: 500px;
     overflow-y: scroll;
+    overflow-x: hidden;
     list-style-type: none;
     margin: 0px;
     padding: 0 10px;
