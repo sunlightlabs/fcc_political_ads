@@ -2,7 +2,7 @@
 {% block bodyclass %}broadcasters-featured{% endblock bodyclass %}
 
 {% block content %}
-<div class="hero-unit module">
+<div class="hero-unit module clearfix">
     <div class="span7">
         <h2 id='page-intro'>Who's trying to influence your vote?<br /> Help us find out!</h2>
         <div class="featureText">
@@ -19,7 +19,6 @@
     <div class="span3 featureImg">
         <img src="{% static 'img/img_fccBallot.png' %}" alt="Ballot Box">
     </div>
-    <div class="clearfix"></div>
 </div>
 <div id="map" class="row module">
     <div class="span8">
@@ -38,34 +37,34 @@
     <div id="get_involved" class="span3">
         <h3 class="withTip">Take Action!</h3>
         <p class="tip">Sign up to get help us find a more transparent government!</p>
-        <form id='action_signup' class='form-inline formStacked' action="{% url action_signup %}" method="post" accept-charset="utf-8">
+        <form id='action_signup' class='form-vertical' action="{% url action_signup %}" method="post" accept-charset="utf-8">
             <ul>
                 {% csrf_token %}
-                <li class="span3">
+                <li>
                     <label>Email</label>
                     <input type="email" name="email" value="" placeholder="Email" required="required">
                 </li>
-                <li class="span3">
+                <li>
                     <label>First Name</label>
                     <input type="text" name="firstname" value="" placeholder="First Name" id="firstname">
                 </li>
-                <li class="span3">
+                <li>
                     <label class="control-label">Last Name</label>
                     <input type="text" name="lastname" value="" id="lastname" placeholder="Last Name">
                 </li>
-                <li class="span3">
+                <li>
                     <label>Phone</label>
                     <input type="text" name="phone" value="" placeholder="Phone" id="phone">
                 </li>
-                <li class="span3">
+                <li>
                     <label>Station I Plan to Visit</label>
                     <select name="custom-1093" id="station" size="1"></select>
                 </li>
-                <li class="span3">
+                <li>
                     <label>Share with Free Press</label>
                     <label class="tip asInput"><input class="checkbox" type="checkbox" name="custom-1116" id="optin" checked="checked" />Yes, I would like to receive email alerts from Free Press</label>
                 </li>
-                <li class="span3">
+                <li class="last">
                     <input type="submit" class="btn btn-sunlight" value="Sign up &rarr;">
                 </li>
             </ul>
@@ -76,12 +75,12 @@
 <div class="row">
     <div id="feedback" class="span8 module">
         <h4 class="withTip">Questions, Comments, Etc.</h4>
-        <p class="tip">Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? Let us know! <span class="label label-important">CONTACT ADDRESS GOES HERE</span></p>
+        <p class="tip">Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? <a href="mailto:politicaladsleuth@sunlightfoundation.com">Please email us</a>!</p>
     </div>
     <div class="span4">
         <div class="boxCallout resources">
             <h3>Resources</h3>
-            <ul class='bulletList unstyled'>
+            <ul class='slf-list'>
                 <li>
                     <h5 class="withTip">How to inspect public political files</h5>
                     <p>This <a href='http://www.freepress.net/how-to-inspect-public-political-files'>handy how-to guide</a> provides step-by-step information on how to free the files from your local broadcaster. (<a href="http://www.freepress.net/files/publicfiles-howto.pdf">pdf version</a>)</p>
