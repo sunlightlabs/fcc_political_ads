@@ -5,6 +5,10 @@ nav { margin-top: -20px;}
 
 #map_canvas { height: 100% }
 
+#map_form {
+    margin-bottom: 0;
+}
+
 form#map_form > input, form#map_form > label {
     margin-right: 10px;
 }

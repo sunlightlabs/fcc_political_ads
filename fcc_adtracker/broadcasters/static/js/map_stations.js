@@ -59,7 +59,7 @@ jQuery(document).ready(function() {
     
     SLF.generateDescriptionHTML = function(element) {
         var snippet = $('<div class="vcard"></div>');
-        snippet.append($('<h5 class="org withTip">').text(element.callsign));
+        snippet.append($('<h5 class="org withTip"></h5>').text(element.callsign));
         var dl = $('<dl class="moduleSm floatedList clearfix"></dl>');
         if (element.network_affiliate) dl.append($('<dt>Network:</dt> <dd>' + element.network_affiliate + '</dd>'));
         if (element.channel) dl.append($('<dt>Channel:</dt> <dd>' + element.channel + '</dd>'));
