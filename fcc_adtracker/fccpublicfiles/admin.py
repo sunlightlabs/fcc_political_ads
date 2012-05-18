@@ -2,22 +2,17 @@ from django.contrib import admin
 from django import forms
 from .models import *
 from django.contrib.admin import widgets
+from bootstrapper.widgets import TypeaheadTextInput
 
-try:
-    import simplejson as json
-except Exception, e:
-    import json
 
 CALLSIGNS_LIST = map(lambda x: x[1], CALLSIGNS)
+
+# TODO make endpoint for on-the-fly generation ot the advertiser list, other lists
+ADVERTISER_LIST = [p.advertiser for p in PoliticalDocument.objects.only('advertiser').exclude(advertiser='')]
 
 class PoliticalAdAdminForm(forms.ModelForm):
     class Meta:
         model = PoliticalAd
-
-    broadcast_length = forms.TimeField( required=False, 
-                                        input_formats=('%S','%M:%S','%H:%M:%S'),
-                                        help_text="Allowed formats: <em>Seconds</em>, <em>MM:SS</em>, <em>HH:MM:SS</em>",
-                                        widget=widgets.AdminTimeWidget())
 
 
 
@@ -47,11 +42,12 @@ class PoliticalDocumentAdminForm(forms.ModelForm):
     class Meta:
         model = PoliticalDocument
 
-    station = forms.CharField(widget=forms.TextInput(attrs={'class':'typeahead', 'autocomplete': 'off', 'data-source':json.dumps(CALLSIGNS_LIST), 'data-provide': 'typeahead' }))
-
+    station = forms.CharField(widget=TypeaheadTextInput(data_source=list(CALLSIGNS_LIST)))
+    advertiser = forms.CharField(required=False, widget=TypeaheadTextInput(data_source=list(ADVERTISER_LIST)))
 
 class PoliticalDocumentAdmin(admin.ModelAdmin):
     form = PoliticalDocumentAdminForm
+    save_on_top = True
     list_display = ('documentcloud_doc', 'station', 'advertiser', 'ordered_by')
     inlines = [
        PoliticalAdInline,
