@@ -7,6 +7,7 @@ from fcc_adtracker.views import HomePageView
 
 urlpatterns = patterns('',
     url(r'^broadcasters/', include('broadcasters.urls')),
+    url(r'^volunteers/', include('volunteers.urls')),
     url(r'', include('sfapp.urls')),
     url(r'^$', 'broadcasters.views.featured_broadcasters', name='home'),
 

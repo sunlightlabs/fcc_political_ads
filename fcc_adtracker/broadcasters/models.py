@@ -3,6 +3,7 @@ from django.contrib.localflavor.us import us_states
 
 from mongoengine import *
 from mongo_utils.serializer import encode_model 
+import datetime
 try:
     import simplejson as json
 except ImportError, e:
@@ -55,5 +56,10 @@ class Broadcaster(DynamicDocument):
     meta = {'allow_inheritance': False}
     
     def __unicode__(self):
+        if self.callsign:
+            return u"Broadcaster: " + self.callsign
         return u"Broadcaster"
 
+
+
+    

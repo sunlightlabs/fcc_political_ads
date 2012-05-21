@@ -138,6 +138,7 @@ INSTALLED_APPS = (
     'sfapp',
     
     'broadcasters',
+    'volunteers',
 )
 
 # A sample logging configuration. The only tangible logging

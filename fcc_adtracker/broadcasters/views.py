@@ -62,38 +62,6 @@ def featured_broadcasters(request):
     return render(request, 'broadcasters/broadcasters_featured.html', resp_obj)
 
 
-class ActionSignupView(View):
-
-    bsd_url = 'http://bsd.sunlightfoundation.com/page/s/fcc-public-files'
-    success_message = 'Thanks for registering!'
-    
-    def get(self, request, *args, **kwargs):
-        return HttpResponseNotAllowed(('POST',))
-
-    def post(self, request, *args, **kwargs):
-
-        email = request.POST.get("email", "")
-        phone = request.POST.get("phone", "")
-        firstname = request.POST.get("firstname", "")
-        lastname = request.POST.get("lastname", "")
-        station = request.POST.get("station", "")
-        
-        if email:
-            self.bsd_url += "?source=%s" % request.build_absolute_uri()
-            params = {"email": email, "phone": phone, "firstname": firstname, "lastname": lastname, "custom-1093": station}
-            response = urllib2.urlopen(self.bsd_url, urllib.urlencode(params)).read()
-
-        if request.is_ajax():
-            resp = {'message': self.success_message}
-            return HttpResponse(json.dumps(resp), content_type='application/json')
-
-        messages.success(request, self.success_message)
-        referrer = request.META.get('HTTP_REFERER', None)
-
-        return HttpResponseRedirect(referrer or '/')
-
-
-
 def nearest_broadcasters_list(request):
     radius = int(request.GET['radius']) if 'radius' in request.GET else 20
     radian_dist = radius/EARTH_RADIUS_MILES
