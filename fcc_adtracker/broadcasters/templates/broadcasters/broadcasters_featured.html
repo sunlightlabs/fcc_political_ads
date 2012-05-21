@@ -1,13 +1,26 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %}
 {% block bodyclass %}broadcasters-featured{% endblock bodyclass %}
 
+{% block pagenav %}
+<nav class="clearfix">
+    <ul class="account listNav unstyled">
+        <li>
+            <a href="#feedback">Questions</a>
+        </li>
+        <li class="first">
+            <a href="#map">Get Involved</a>
+        </li>
+    </ul>
+</nav>
+{% endblock pagenav %}
+
 {% block content %}
 <div class="hero-unit module clearfix">
     <div class="span7">
         <h2 id='page-intro'>Who's trying to influence your vote?<br /> Help us find out!</h2>
         <div class="featureText">
-            <p>New campaign finance rules mean that the airwaves this election year will be dominated by outside groups, many of whom don’t have to disclose the sources of their funding and don’t even have to register with the Federal Election Commission. But there is one place where they will leave a paper trail: At the TV stations where they buy their ads. For the first time, the Federal Communication Commission (FCC) has ruled to require television stations in the top 50 media markets to put their public and political files online -- but these markets cover <a href="http://reporting.sunlightfoundation.com/2012/fcc-ruling-would-exempt-160-markets-posting-requirements/">only a fraction of the swing states</a>, where the majority of political ad spending will occur. We need your help to unlock the rest of the political files and post the information online.</p>
-            <p>As a pilot project, we will be unlocking the files from Wisconsin’s gubernatorial election on June 5th. <a href="http://act2.freepress.net/sign/public_file_pledge/?source=FPblog">Sign up</a> for a <a href="http://www.freepress.net/how-to-inspect-public-political-files">training</a> or search for a tv station near you.</p>
+            <p>New campaign finance rules mean that the airwaves this election year will be dominated by outside groups, many of which don’t have to disclose the sources of their funding and don’t even have to register with the Federal Election Commission. But there is one place where they will leave a paper trail: At the TV stations where they buy their ads. For the first time, the Federal Communication Commission (FCC) has ordered television stations to put their public and political files online. But this year, only stations affiliated with the major networks (NBC, ABC, FOX, CBS) in the top 50 markets will have to put their political files online. These markets cover <a href="http://reporting.sunlightfoundation.com/2012/fcc-ruling-would-exempt-160-markets-posting-requirements/">only a fraction of the swing states</a> where the majority of political ad spending will occur. We need your help to unlock the rest of the political files and post the information online.</p>
+            <p>As a pilot project, we will be unlocking the files from Wisconsin’s gubernatorial election on June 5th. <a target="_blank" href="http://act2.freepress.net/survey/2012_file_inspection_project/">Sign up</a> for a <a target="_blank" href="http://www.freepress.net/how-to-inspect-public-political-files">training</a> or search for a tv station near you.</p>
         </div>
         <div class="row">
             <ul id="sponsorLogos" class="floatList">
@@ -23,7 +36,7 @@
 <div id="map" class="row module">
     <div class="span8">
         <h3 class="withTip">Find a Station</h3>    
-        <p class="tip">Find stations near you and then sign up to go collect the files! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
+        <p class="tip">Find stations near you and then sign up to go collect the files! Use this form to search for TV stations. It will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
         {% include 'broadcasters/_map_searchform.html' %}
         <div id="map-box">
             <div id="map_canvas" style="width:100%; height:100%"></div>
