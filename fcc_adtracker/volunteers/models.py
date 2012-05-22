@@ -15,7 +15,7 @@ class Signup(Document):
     firstname = StringField()
     lastname = StringField()
     broadcaster = ReferenceField('Broadcaster')
-    _share_info = BooleanField()
+    _share_info = BooleanField(default=False)
     date_submitted = DateTimeField(default=datetime.datetime.now)
 
     def share_checkbox():
