@@ -8,16 +8,16 @@ from bootstrapper.widgets import TypeaheadTextInput
 CALLSIGNS_LIST = map(lambda x: x[1], CALLSIGNS)
 
 # TODO make endpoint for on-the-fly generation ot the advertiser list, other lists
-ADVERTISER_LIST = [p.advertiser for p in PoliticalDocument.objects.only('advertiser').exclude(advertiser='')]
+ADVERTISER_LIST = [p.advertiser for p in PoliticalBuy.objects.only('advertiser').exclude(advertiser='')]
 
-class PoliticalAdAdminForm(forms.ModelForm):
+class PoliticalSpotAdminForm(forms.ModelForm):
     class Meta:
-        model = PoliticalAd
+        model = PoliticalSpot
 
 
 
-class PoliticalAdAdmin(admin.ModelAdmin):
-    form = PoliticalAdAdminForm
+class PoliticalSpotAdmin(admin.ModelAdmin):
+    form = PoliticalSpotAdminForm
     fieldsets = (
         (None, {
             'fields': ('document',)
@@ -27,30 +27,30 @@ class PoliticalAdAdmin(admin.ModelAdmin):
         }),
     )
 
-admin.site.register(PoliticalAd, PoliticalAdAdmin)
+admin.site.register(PoliticalSpot, PoliticalSpotAdmin)
 
 
-class PoliticalAdInline(admin.StackedInline):
-    model = PoliticalAd
+class PoliticalSpotInline(admin.StackedInline):
+    model = PoliticalSpot
     fieldsets = (
         (None, {
             'fields': (('airing_start_date', 'airing_end_date'), ('timeslot_begin', 'timeslot_end'), 'show_name', ('broadcast_length', 'num_spots', 'rate'))
         }),
     )
-    
-class PoliticalDocumentAdminForm(forms.ModelForm):
+
+class PoliticalBuyAdminForm(forms.ModelForm):
     class Meta:
-        model = PoliticalDocument
+        model = PoliticalBuy
 
     station = forms.CharField(widget=TypeaheadTextInput(data_source=list(CALLSIGNS_LIST)))
     advertiser = forms.CharField(required=False, widget=TypeaheadTextInput(data_source=list(ADVERTISER_LIST)))
 
-class PoliticalDocumentAdmin(admin.ModelAdmin):
-    form = PoliticalDocumentAdminForm
+class PoliticalBuyAdmin(admin.ModelAdmin):
+    form = PoliticalBuyAdminForm
     save_on_top = True
     list_display = ('documentcloud_doc', 'station', 'advertiser', 'ordered_by')
     inlines = [
-       PoliticalAdInline,
+       PoliticalSpotInline,
     ]
 
-admin.site.register(PoliticalDocument, PoliticalDocumentAdmin)
+admin.site.register(PoliticalBuy, PoliticalBuyAdmin)
