@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect, render_to_response, get_object_or
 from django.views.generic import View
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponseBadRequest, Http404
 from django.contrib import messages
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.template.loader import render_to_string
 
 from mongoengine import *
 from bson.son import SON
@@ -13,14 +16,24 @@ try:
 except ImportError, e:
     import json
 
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+
+
 import urllib
 import urllib2
+
+from smtplib import SMTPException
+
+SIGNUP_EMAIL_REPLY_TO = getattr(settings, 'SIGNUP_EMAIL_REPLY_TO', 'admin@localhost')
 
 class ActionSignupView(View):
 
     bsd_url = 'http://bsd.sunlightfoundation.com/page/s/fcc-public-files'
     success_message = 'Thanks for registering!'
-    
+
     def get(self, request, *args, **kwargs):
         return HttpResponseNotAllowed(('POST',))
 
@@ -31,7 +44,7 @@ class ActionSignupView(View):
         lastname = request.POST.get("lastname", "")
         station = request.POST.get("custom-1093", "")
         share_checkbox = request.POST.get("custom-1116", "")
-        
+
         signup = Signup( email=email, phone=phone, firstname=firstname, lastname=lastname )
         try:
             broadcaster = Broadcaster.objects.get(callsign=station)
@@ -49,6 +62,19 @@ class ActionSignupView(View):
             params = {"email": email, "phone": phone, "firstname": firstname, "lastname": lastname, "custom-1093": station, "custom-1116": share_checkbox}
             response = urllib2.urlopen(self.bsd_url, urllib.urlencode(params)).read()
 
+
+        message_text = render_to_string('volunteers/signup_autoresponse.txt')
+        email_message = EmailMessage( 'Thank you for signing up to be a Political Ad Sleuth in Wisconsin!',
+                                    message_text, 'adsleuth-noreply@sunlightfoundation.com', (email,),
+                                    headers={'Reply-To':SIGNUP_EMAIL_REPLY_TO} )
+        try:
+            email_message.send()
+        except SMTPException as e:
+            if hasattr(e, 'message'):
+                logger.error('SMTPException: ' + e.message)
+            else:
+                logger.error('SMTPException error!')
+
         if request.is_ajax():
             resp = {'message': self.success_message}
             return HttpResponse(json.dumps(resp), content_type='application/json')
@@ -57,5 +83,3 @@ class ActionSignupView(View):
         referrer = request.META.get('HTTP_REFERER', None)
 
         return HttpResponseRedirect(referrer or '/')
-
-# Create your views here.
