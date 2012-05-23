@@ -39,3 +39,11 @@ class PoliticalSpot(models.Model):
     num_spots = models.IntegerField(blank=True, null=True, verbose_name="Number of Spots")
     rate = models.DecimalField(blank=True, null=True, max_digits=9, decimal_places=2, help_text="Dollar cost for each spot")
 
+    def documentcloud_doc():
+        doc = "The documentcloud_doc property."
+        def fget(self):
+            if self.document:
+                return self.document.documentcloud_doc
+            return None
+        return locals()
+    documentcloud_doc = property(**documentcloud_doc())
