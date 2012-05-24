@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, render_to_response, get_object_or_404
 from django.views.generic import View
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponseBadRequest, Http404
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponseNotAllowed, HttpResponseBadRequest, Http404
 from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.conf import settings
