@@ -134,15 +134,16 @@ INSTALLED_APPS = (
 
     'django.contrib.admin',
     # 'django.contrib.admindocs',
-    
+
     'sfapp',
-    
+
     'doccloud',
     'fccpublicfiles',
-    
+
     'broadcasters',
-    
+
     'south',
+    'volunteers',
 )
 
 # A sample logging configuration. The only tangible logging

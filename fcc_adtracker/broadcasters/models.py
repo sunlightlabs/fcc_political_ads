@@ -2,7 +2,8 @@ from __future__ import division
 from django.contrib.localflavor.us import us_states
 
 from mongoengine import *
-from mongo_utils.serializer import encode_model 
+from mongo_utils.serializer import encode_model
+import datetime
 try:
     import simplejson as json
 except ImportError, e:
@@ -28,12 +29,12 @@ class Address(EmbeddedDocument):
 
     def as_json(self):
         return json.dumps(self, default=encode_model)
-    
+
     meta = {
         'allow_inheritance': False,
         'indexes': [ '*pos', ],
     }
-    
+
     def __unicode__(self):
         return u"Address"
 
@@ -48,13 +49,15 @@ class Broadcaster(DynamicDocument):
     facility_type = StringField(max_length=3)
     community_city = StringField(max_length=20)
     community_state = StringField(max_length=2, choices=us_states.US_STATES)
-    
+
     def as_json(self):
         return json.dumps(self, default=encode_model)
-    
+
     meta = {'allow_inheritance': False}
-    
+
     def __unicode__(self):
+        if self.callsign:
+            return u"Broadcaster: " + self.callsign
         return u"Broadcaster"
 
 
