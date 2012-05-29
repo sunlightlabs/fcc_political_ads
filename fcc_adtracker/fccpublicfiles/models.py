@@ -21,6 +21,7 @@ class PoliticalBuy(PublicDocument):
     """A subset of PublicFile, the PoliticalBuy records purchases of air time (generally for political ads)"""
     contract_number = models.CharField(blank=True, null=True, max_length=100)
     advertiser = models.CharField(blank=True, null=True, max_length=100)
+    advertiser_signatory = models.CharField(blank=True, null=True, max_length=100)
     ordered_by = models.CharField(blank=True, null=True, max_length=100)
     contract_start_date = models.DateField(blank=True, null=True, default=datetime.datetime.today)
     contract_end_date = models.DateField(blank=True, null=True, default=datetime.datetime.today)
