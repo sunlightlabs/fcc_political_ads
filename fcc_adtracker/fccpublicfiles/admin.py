@@ -1,14 +1,13 @@
 from django.contrib import admin
 from django import forms
 from .models import *
+from .views import *
 from django.contrib.admin import widgets
 from bootstrapper.widgets import TypeaheadTextInput
 
 
 CALLSIGNS_LIST = map(lambda x: x[1], CALLSIGNS)
 
-# TODO make endpoint for on-the-fly generation ot the advertiser list, other lists
-ADVERTISER_LIST = [p.advertiser for p in PoliticalBuy.objects.only('advertiser').exclude(advertiser='')]
 
 class PoliticalSpotAdminForm(forms.ModelForm):
     class Meta:
@@ -42,15 +41,17 @@ class PoliticalBuyAdminForm(forms.ModelForm):
     class Meta:
         model = PoliticalBuy
 
-    station = forms.CharField(widget=TypeaheadTextInput(data_source=list(CALLSIGNS_LIST)))
-    advertiser = forms.CharField(required=False, widget=TypeaheadTextInput(data_source=list(ADVERTISER_LIST)))
+    station = forms.CharField(widget=TypeaheadTextInput())
+    advertiser = forms.CharField(required=False, widget=TypeaheadTextInput())
+    advertiser_signatory = forms.CharField(required=False, widget=TypeaheadTextInput())
 
 class PoliticalBuyAdmin(admin.ModelAdmin):
     form = PoliticalBuyAdminForm
     save_on_top = True
-    list_display = ('documentcloud_doc', 'station', 'advertiser', 'ordered_by')
+    list_display = ('documentcloud_doc', 'station', 'advertiser', 'advertiser_signatory', 'ordered_by')
     inlines = [
        PoliticalSpotInline,
     ]
+
 
 admin.site.register(PoliticalBuy, PoliticalBuyAdmin)
