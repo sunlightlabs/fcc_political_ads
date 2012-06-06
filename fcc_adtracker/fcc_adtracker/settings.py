@@ -138,12 +138,13 @@ INSTALLED_APPS = (
     'sfapp',
 
     'doccloud',
-    'fccpublicfiles',
+    'registration',
 
+    'fccpublicfiles',
     'broadcasters',
+    'volunteers',
 
     'south',
-    'volunteers',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -178,6 +179,10 @@ LOGGING = {
 DOCUMENTS_PATH = ''
 DOCUMENTCLOUD_USERNAME = ''
 DOCUMENTCLOUD_PASS = ''
+
+# Django registration settings
+ACCOUNT_ACTIVATION_DAYS = 14
+AUTH_PROFILE_MODULE = 'volunteers.Profile'
 
 try:
     from local_settings import *

@@ -1,15 +1,21 @@
 from django.shortcuts import render, redirect, render_to_response, get_object_or_404
 from django.views.generic import View
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponseNotAllowed, HttpResponseBadRequest, Http404
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.contrib.auth.models import SiteProfileNotAvailable
+from django.core.exceptions import ObjectDoesNotExist
+
+from registration.views import register
 
 from mongoengine import *
 from bson.son import SON
 
 from .models import *
+from .forms import RegistrationProfileUniqueEmail
 
 try:
     import simplejson as json
@@ -83,3 +89,45 @@ class ActionSignupView(View):
         referrer = request.META.get('HTTP_REFERER', None)
 
         return HttpResponseRedirect(referrer or '/')
+
+
+def register_volunteer(request, *args, **kwargs):
+    resp = register(request,
+                backend='registration.backends.default.DefaultBackend',
+                form_class=RegistrationProfileUniqueEmail)
+
+
+    if request.method == 'POST':
+
+        try:
+
+            user = User.objects.get(username=request.POST['username'])
+            user.get_profile()
+
+        except User.DoesNotExist:
+            pass
+
+        except Profile.DoesNotExist:
+
+            data = request.POST
+
+            profile = Profile(
+                user=user,
+                phone=data.get('phone', ''),
+                state=data.get('state', ''),
+                is_a=data.get('is_a', ''),
+            )
+            profile.save()
+
+    return resp
+
+
+def profile(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/account/login/')
+    try:
+        profile = request.user.get_profile()
+    except Profile.DoesNotExist, SiteProfileNotAvailable:
+        profile = None
+    return render(request, 'volunteers/profile.html', {'profile': profile})
+

@@ -1,0 +1,13 @@
+{% extends "fcc-base.html" %}
+
+{% block content %}
+<form class="form-vertical" action="." method="post" accept-charset="utf-8">
+    {% csrf_token %}
+    <ul>
+        {{ form.as_ul }}
+        <li>
+            <button class="btn btn-sunlight" type="submit">Log In</button>
+        </li>
+    </ul>
+</form>
+{% endblock content %}
