@@ -10,4 +10,5 @@ python-dateutil==1.5
 python-documentcloud==0.154
 django-extensions==0.8
 -e hg+https://bitbucket.org/schinckel/django-timedelta-field@0ca08518d3eb60f9a5168b3279dcca1913f6b1f0#egg=django_timedeltafield-0.6.2
+django-weekday-field==0.1.4
 -e git://github.com/sunlightlabs/django-doccloud.git@78fc1198f67e8b173bed6b77eff47d09c203b804#egg=django_doccloud-dev
