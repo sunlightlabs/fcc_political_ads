@@ -18,6 +18,7 @@ jQuery(document).ready(function() {
     var gm = google.maps, myOptions = {
         center: new gm.LatLng(startPos[1], startPos[0]),
         zoom: 8,
+        maxZoom: 14,
         mapTypeId: gm.MapTypeId.ROADMAP,
         scaleControl: true
     };
