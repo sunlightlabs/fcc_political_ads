@@ -19,6 +19,7 @@ jQuery(document).ready(function() {
         center: new gm.LatLng(startPos[1], startPos[0]),
         zoom: 8,
         maxZoom: 14,
+        minZoom: 3,
         mapTypeId: gm.MapTypeId.ROADMAP,
         scaleControl: true
     };
