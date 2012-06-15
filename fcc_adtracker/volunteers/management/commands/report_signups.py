@@ -1,4 +1,4 @@
-from django.core.management.base import LabelCommand, CommandError
+from django.core.management.base import BaseCommand, CommandError
 from volunteers.models import Signup
 
 from mongoengine import *
@@ -8,8 +8,8 @@ import datetime
 import csv
 from optparse import make_option
 
-class Command(LabelCommand):
-    option_list = LabelCommand.option_list + (
+class Command(BaseCommand):
+    option_list = Command.option_list + (
         make_option('-f', '--file', default='volunteer_signups.csv', dest='filename', type="string",
                 help='Set the destination path for the output file. This will overwrite an existing file'),
         make_option('-a', '--all', action="store_true", default=False, dest='output_all',
@@ -39,13 +39,13 @@ class Command(LabelCommand):
         start_dt = from_dt.replace(hour=0, minute=0, second=0, microsecond=0)
         end_dt = to_dt.replace(hour=23, minute=59, second=59, microsecond=999999)
 
-        if verbosity >= 1: 
+        if verbosity >= 1:
             self.stdout.write('Fetching signups from {start_dt} to {end_dt}\n'.format(start_dt=start_dt, end_dt=end_dt))
 
         signup_list = Signup.objects(Q(date_submitted__gte=start_dt) & Q(date_submitted__lte=end_dt)).order_by('-date_submitted')
         if not output_all:
             signup_list.filter(_share_info=True)
-        
+
         if len(signup_list):
             writer = csv.DictWriter(open(filename, 'w'), fields)
             writer.writeheader()
@@ -60,7 +60,7 @@ class Command(LabelCommand):
                     'date_submitted': signup.date_submitted.strftime(self.date_format + '  %H:%M:%S'),
                     'share_info': signup._share_info
                 }
-                writer.writerow(output)            
+                writer.writerow(output)
 
             self.stdout.write('Data written to "%s"\n' % filename)
         else:
