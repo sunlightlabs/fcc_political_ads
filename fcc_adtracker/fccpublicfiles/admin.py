@@ -3,7 +3,11 @@ from django import forms
 from .models import *
 from .views import *
 from django.contrib.admin import widgets
+
 # from bootstrapper.widgets import TypeaheadTextInput
+from ajax_select import make_ajax_form
+from ajax_select.admin import AjaxSelectAdmin
+# import autocomplete_light
 
 import reversion
 
@@ -52,8 +56,10 @@ class PoliticalBuyAdminForm(forms.ModelForm):
     # advertiser = forms.CharField(required=False, widget=TypeaheadTextInput())
     # advertiser_signatory = forms.CharField(required=False, widget=TypeaheadTextInput())
 
-class PoliticalBuyAdmin(reversion.VersionAdmin):
-    form = PoliticalBuyAdminForm
+class PoliticalBuyAdmin(reversion.VersionAdmin, AjaxSelectAdmin):
+    # form = PoliticalBuyAdminForm
+    form = make_ajax_form(PoliticalBuy,{'advertiser':'organization', 'advertiser_signatory': 'person', 'bought_by':'organization'})
+    # form = autocomplete_light.modelform_factory(PoliticalBuy)
     save_on_top = True
     list_display = ('documentcloud_doc', 'station', 'advertiser', 'advertiser_signatory', 'bought_by')
     inlines = [

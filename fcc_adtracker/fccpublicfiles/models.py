@@ -65,8 +65,18 @@ class Person(models.Model):
         verbose_name_plural = "People"
         ordering = ('last_name', 'first_name',)
     
+    def full_name():
+        doc = "Full name of the person, as calculated"
+        def fget(self):
+            name_parts = [self.first_name, self.last_name]
+            if self.middle_name: name_parts.insert(1, self.middle_name)
+            if self.suffix: name_parts.append(self.suffix)
+            return u' '.join(name_parts)
+        return locals()
+    full_name = property(**full_name())
+    
     def __unicode__(self):
-        return u"{first_name} {last_name}".format(first_name=self.first_name, last_name=self.last_name)
+        return self.full_name
 
 
 class Organization(models.Model):

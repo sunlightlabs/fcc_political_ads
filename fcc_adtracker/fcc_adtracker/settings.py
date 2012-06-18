@@ -144,9 +144,11 @@ INSTALLED_APPS = (
     'fccpublicfiles',
 
     'broadcasters',
+    'volunteers',
 
     'south',
-    'volunteers',
+    'ajax_select',
+    # 'autocomplete_light',
 )
 
 # A sample logging configuration. The only tangible logging
