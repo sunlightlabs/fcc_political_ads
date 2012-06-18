@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.localflavor.us.models import USStateField
 
 from doccloud.models import Document
+
+import reversion
+
 from broadcasters.models import get_callsigns
 import datetime
 import timedelta
@@ -31,11 +34,25 @@ class Address(models.Model):
     city = models.CharField(max_length=50)
     state = USStateField()
     zipcode = models.CharField(blank=True, null=True, max_length=10)
-
+    
+    class Meta:
+        verbose_name_plural = "Addresses"
+    
+    def _combined_address(self):
+        address_bits = [self.city, self. state]
+        for street in (self.address2, self.address1):
+            if street != '': address_bits.insert(0, street)
+        return u', '.join(address_bits) + ' ' + self.zipcode
+    
+    def combined_address():
+        doc = "The combined_address property."
+        def fget(self):
+            return self._combined_address()
+        return locals()
+    combined_address = property(**combined_address())
+    
     def __unicode__(self):
-        if not self.address1 or self.address1 == '':
-            return u"Address"
-        return u"Address: " + self.address1
+        return self.combined_address
 
 
 class Person(models.Model):
@@ -52,20 +69,11 @@ class Person(models.Model):
         return u"{first_name} {last_name}".format(first_name=self.first_name, last_name=self.last_name)
 
 
-class Role(models.Model):
-    person = models.ForeignKey('Person')
-    organization = models.ForeignKey('Organization')
-    title = models.CharField(max_length=100, help_text="Job title or descriptor for position they hold.")
-    
-    def __unicode__(self):
-        return u"<" + self.person.__unicode__() + ": " + self.title + " >"
-
-
 class Organization(models.Model):
     name = models.CharField(max_length=100)
     organization_type = models.CharField(blank=True, max_length=2, choices=ORGANIZATION_TYPES)
     addresses = models.ManyToManyField(Address, blank=True, null=True)
-    employees = models.ManyToManyField(Person, through=Role)
+    employees = models.ManyToManyField(Person, through='Role')
     fec_id = models.CharField(max_length=9, blank=True)
     
     class Meta:
@@ -75,6 +83,15 @@ class Organization(models.Model):
         if self.name:
             return self.name
         return u"Organization"
+
+
+class Role(models.Model):
+    person = models.ForeignKey(Person)
+    organization = models.ForeignKey(Organization)
+    title = models.CharField(max_length=100, help_text="Job title or descriptor for position they hold.")
+    
+    def __unicode__(self):
+        return u"<" + self.person.__unicode__() + ": " + self.title + " >"
 
 
 class PoliticalBuy(PublicDocument):
@@ -110,3 +127,13 @@ class PoliticalSpot(models.Model):
             return None
         return locals()
     documentcloud_doc = property(**documentcloud_doc())
+
+
+
+reversion.register(Address, follow=['organization_set'])
+reversion.register(Person, follow=['role_set', 'organization_set', 'politicalbuy_set'])
+reversion.register(Role, follow=['person', 'organization'])
+reversion.register(Organization, follow=['employees', 'role_set'])
+reversion.register(PublicDocument)
+reversion.register(PoliticalBuy, follow=['publicdocument_ptr'])
+reversion.register(PoliticalSpot)

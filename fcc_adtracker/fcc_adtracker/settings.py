@@ -136,7 +136,10 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 
     'sfapp',
-
+    'django_extensions',
+    
+    'reversion',
+    
     'doccloud',
     'fccpublicfiles',
 

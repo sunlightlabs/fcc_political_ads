@@ -5,6 +5,8 @@ from .views import *
 from django.contrib.admin import widgets
 # from bootstrapper.widgets import TypeaheadTextInput
 
+import reversion
+
 import weekday_field
 
 CALLSIGNS_LIST = map(lambda x: x[1], CALLSIGNS)
@@ -17,7 +19,7 @@ class PoliticalSpotAdminForm(forms.ModelForm):
     airing_days = weekday_field.forms.WeekdayFormField()
 
 
-class PoliticalSpotAdmin(admin.ModelAdmin):
+class PoliticalSpotAdmin(reversion.VersionAdmin):
     form = PoliticalSpotAdminForm
     
     fieldsets = (
@@ -50,7 +52,7 @@ class PoliticalBuyAdminForm(forms.ModelForm):
     # advertiser = forms.CharField(required=False, widget=TypeaheadTextInput())
     # advertiser_signatory = forms.CharField(required=False, widget=TypeaheadTextInput())
 
-class PoliticalBuyAdmin(admin.ModelAdmin):
+class PoliticalBuyAdmin(reversion.VersionAdmin):
     form = PoliticalBuyAdminForm
     save_on_top = True
     list_display = ('documentcloud_doc', 'station', 'advertiser', 'advertiser_signatory', 'bought_by')
@@ -65,12 +67,24 @@ class RoleAdminInline(admin.StackedInline):
     extra = 1
 
 
-class OrganizationAdmin(admin.ModelAdmin):
+class RoleAdmin(reversion.VersionAdmin):
+    list_display = ('person', 'title', 'organization')
+admin.site.register(Role, RoleAdmin)
+
+
+class AddressAdmin(reversion.VersionAdmin):
+    list_display = ('__unicode__', 'city', 'state')
+    list_filter = ('state',)
+admin.site.register(Address, AddressAdmin)
+
+
+class OrganizationAdmin(reversion.VersionAdmin):
+    list_display = ('name', 'fec_id', 'organization_type')
     inlines = [
        RoleAdminInline,
     ]
 
-class PersonAdmin(admin.ModelAdmin):
+class PersonAdmin(reversion.VersionAdmin):
     list_display = ('last_name', 'first_name', 'middle_name')
     inlines = [
        RoleAdminInline,
