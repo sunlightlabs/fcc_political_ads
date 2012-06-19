@@ -180,9 +180,29 @@ LOGGING = {
     }
 }
 
+AJAX_LOOKUP_CHANNELS = {
+    #   pass a dict with the model and the field to search against
+    'organization'  : ('fccpublicfiles.lookups', 'OrganizationLookup'),
+    'advertiser'  : ('fccpublicfiles.lookups', 'AdvertiserLookup'),
+    'media_buyer'  : ('fccpublicfiles.lookups', 'MediaBuyerLookup'),
+    'role_title'  : ('fccpublicfiles.lookups', 'RoleTitleLookup'),
+    'person'  : ('fccpublicfiles.lookups', 'PersonLookup'),
+    'doccloud':  ('fccpublicfiles.lookups', 'DocumentCloudLookup'),
+    'address': ('fccpublicfiles.lookups', 'AddressLookup'),
+    'show_name': ('fccpublicfiles.lookups', 'ShowNameLookup'),
+    'callsign': ('broadcasters.lookups', 'BroadcasterLookup'),
+}
+# magically include jqueryUI/js/css
+AJAX_SELECT_BOOTSTRAP = True
+AJAX_SELECT_INLINES = 'inline'
+
 DOCUMENTS_PATH = ''
 DOCUMENTCLOUD_USERNAME = ''
 DOCUMENTCLOUD_PASS = ''
+
+DOCUMENTCLOUD_META = {
+    'contributedto': 'freethefiles'
+}
 
 try:
     from local_settings import *
