@@ -6,6 +6,8 @@ pymongo==2.1.1
 
 -e git://github.com/sunlightlabs/sfapp.git@c552ed79818c23ebda15c3a4640146f4c941509c#egg=sfapp-dev
 
+django-storages==1.1.4
+
 python-dateutil==1.5
 python-documentcloud==0.154
 django-extensions==0.8
