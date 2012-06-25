@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.localflavor.us.models import USStateField
+from django.db.models.signals import post_save, pre_delete
+from django.dispatch import receiver
+from django.conf import settings
 
 from doccloud.models import Document
 
@@ -10,12 +13,16 @@ import datetime
 import timedelta
 from weekday_field import fields as wf_fields
 
+import copy
+
 CALLSIGNS = [(c,c) for c in get_callsigns()]
 
 ORGANIZATION_TYPES = (
     (u'MB' ,u'MediaBuyer'),
     (u'AD', u'Advertiser'),
 )
+
+DOCUMENTCLOUD_META = getattr(settings, 'DOCUMENTCLOUD_META', {})
 
 
 class PublicDocument(models.Model):
@@ -114,6 +121,30 @@ class PoliticalBuy(PublicDocument):
     contract_end_date = models.DateField(blank=True, null=True, default=datetime.datetime.today)
     lowest_unit_price = models.NullBooleanField(default=None, blank=True, null=True)
 
+
+# Maybe update doccloud with fec_id if we have one?
+# @receiver(post_save, sender=PoliticalBuy)
+# def set_doccloud_data(sender, instance, signal, *args, **kwargs):
+#     doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
+#     doccloud_data['callsign'] = instance.station
+
+@receiver(post_save, sender=PublicDocument)
+@receiver(post_save, sender=PoliticalBuy)
+def set_doccloud_data(sender, instance, signal, *args, **kwargs):
+    doc = instance.documentcloud_doc
+    doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
+    doccloud_data['callsign'] = instance.station
+    doc.dc_data = doccloud_data
+
+
+@receiver(pre_delete, sender=PublicDocument)
+@receiver(pre_delete, sender=PoliticalBuy)
+def set_privacy_for_deassociated_docs(sender, instance, *args, **kwargs):
+    # Caution when PoliticalBuy or PublicDocument models are deleted: Make DocumentCloud doc private, but don't delete.
+    doc = instance.documentcloud_doc
+    doc.access_level = 'private'
+    doc.dc_properties.update_access(doc.access_level)
+    doc.save()
 
 class PoliticalSpot(models.Model):
     """Information particular to a political ad spot (e.g., a candidate ad)"""
