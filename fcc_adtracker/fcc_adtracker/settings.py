@@ -137,7 +137,7 @@ INSTALLED_APPS = (
 
     'sfapp',
     'django_extensions',
-    
+    'storages',
     'reversion',
     
     'doccloud',
