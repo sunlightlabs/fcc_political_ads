@@ -57,7 +57,19 @@ class Broadcaster(DynamicDocument):
 
     def __unicode__(self):
         if self.callsign:
-            return u"Broadcaster: " + self.callsign
+            disp_name = self.callsign
+            disp_elements = ('community_state', 'network_affiliate', 'channel')
+            extra_info = ', '.join([str(val) for val in [self.__getattribute__(el) for el in disp_elements] if val != None])
+            # for el in disp_elements:
+                # val = self.__getitem__(el)
+                # if val and val != '':
+                    # disp_name += ' | ' + str(val)
+            # if self.community_state: disp_elements.append(self.community_state)
+            # disp_elements.append(self.network_affiliate) if self.network_affiliate
+            # disp_elements.append(self.channel) if self.channel
+            # if len(disp_elements) > 0:
+            #     disp_name += '[' + ' '.join(disp_elements) +']'
+            return disp_name + ' ['+ extra_info + ']'
         return u"Broadcaster"
 
 
