@@ -4,10 +4,8 @@ from .models import *
 from .views import *
 from django.contrib.admin import widgets
 
-# from bootstrapper.widgets import TypeaheadTextInput
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
-# import autocomplete_light
 
 import reversion
 
@@ -25,7 +23,7 @@ class PoliticalSpotAdminForm(forms.ModelForm):
 
 class PoliticalSpotAdmin(reversion.VersionAdmin):
     form = make_ajax_form(PoliticalSpot,{'show_name':'show_name'}, superclass=PoliticalSpotAdminForm)
-    
+    search_fields = ['advertiser__name', 'bought_by__name']
     fieldsets = (
     
         (None, {
@@ -63,6 +61,7 @@ class PoliticalBuyAdmin(reversion.VersionAdmin, AjaxSelectAdmin):
                         })
     save_on_top = True
     list_display = ('documentcloud_doc', 'station', 'advertiser', 'advertiser_signatory', 'bought_by')
+    search_fields = ['advertiser__name', 'bought_by__name', 'station']
     inlines = [
        PoliticalSpotInline,
     ]
@@ -76,8 +75,9 @@ class RoleAdminInline(admin.StackedInline):
 
 
 class RoleAdmin(reversion.VersionAdmin, AjaxSelectAdmin):
-    list_display = ('person', 'title', 'organization')
     form = make_ajax_form(Role,{'organization':'organization', 'person':'person', 'title':'role_title'})
+    list_display = ('person', 'title', 'organization')
+    search_fields = ['organization__name',]
 admin.site.register(Role, RoleAdmin)
 
 
@@ -89,6 +89,7 @@ admin.site.register(Address, AddressAdmin)
 
 class OrganizationAdmin(reversion.VersionAdmin, AjaxSelectAdmin):
     list_display = ('name', 'fec_id', 'organization_type')
+    search_fields = ['name', 'fec_id']
     form = make_ajax_form(Organization,{'addresses':'address'})
     inlines = [
        RoleAdminInline,
@@ -96,6 +97,7 @@ class OrganizationAdmin(reversion.VersionAdmin, AjaxSelectAdmin):
 
 class PersonAdmin(reversion.VersionAdmin, AjaxSelectAdmin):
     list_display = ('last_name', 'first_name', 'middle_name')
+    search_fields = ['last_name', 'first_name']
     # form = make_ajax_form(Person,{'organization':'organization'})
     inlines = [
        RoleAdminInline,
