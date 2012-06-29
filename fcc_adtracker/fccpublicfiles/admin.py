@@ -56,7 +56,7 @@ class PoliticalBuyAdmin(reversion.VersionAdmin, AjaxSelectAdmin):
     form = make_ajax_form(PoliticalBuy,{
                         'advertiser':'advertiser',
                         'advertiser_signatory': 'person',
-                        'bought_by':'organization',
+                        'bought_by':'media_buyer',
                         'station': 'callsign', 'documentcloud_doc': 'doccloud'
                         })
     save_on_top = True

@@ -116,7 +116,11 @@ class PoliticalBuy(PublicDocument):
     contract_number = models.CharField(blank=True, max_length=100)
     advertiser = models.ForeignKey('Organization', blank=True, null=True, related_name='advertiser_politicalbuys', limit_choices_to={'organization_type' : u'AD'})
     advertiser_signatory = models.ForeignKey('Person', blank=True, null=True)
-    bought_by = models.ForeignKey('Organization', blank=True, null=True, related_name='mediabuyer_politicalbuys', limit_choices_to={'organization_type' : u'MB'})
+    bought_by = models.ForeignKey('Organization', blank=True, null=True,
+                                    related_name='mediabuyer_politicalbuys',
+                                    limit_choices_to={'organization_type' : u'MB'},
+                                    help_text="The media buyer"
+                                    )
     contract_start_date = models.DateField(blank=True, null=True, default=datetime.datetime.today)
     contract_end_date = models.DateField(blank=True, null=True, default=datetime.datetime.today)
     lowest_unit_price = models.NullBooleanField(default=None, blank=True, null=True)
