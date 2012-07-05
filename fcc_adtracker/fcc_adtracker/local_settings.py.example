@@ -1,0 +1,46 @@
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+
+ADMINS = (
+    # ('Your Name', 'your_email@example.com'),
+)
+
+TIME_ZONE = 'US/Eastern'
+
+MEDIA_ROOT = ''  # Keep blank if using S3BotoStorage
+MEDIA_URL = '/media/'
+
+STATIC_ROOT = ''  # Keep blank if using S3BotoStorage
+STATIC_URL = '' # Set to url for S3 bucket.
+
+
+SECRET_KEY = 'generateyourownsecretkey'
+
+MONGO_HOST = 'localhost'
+MONGO_PORT = 27017
+MONGO_DATABASE = ''
+MONGO_USERNAME = ''
+MONGO_PASSWORD = ''
+
+#EMAIL_HOST = ''
+#EMAIL_HOST_PASSWORD = ''
+#EMAIL_HOST_USER = ''
+#EMAIL_PORT = ''
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+AWS_QUERYSTRING_AUTH = False  # We don't want auth in the querystring
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCESS_KEY = ''
+AWS_STORAGE_BUCKET_NAME = ''
+
+DOCUMENTS_PATH = ''
+DOCUMENTCLOUD_USERNAME = ''
+DOCUMENTCLOUD_PASS = ''
+
+
+FEATURED_BROADCASTER_STATE = 'NC'
+
+GOOGLE_DOCS_ACCOUNT = ''
+GOOGLE_DOCS_PASSWORD = ''
+GOOGLE_DOCS_RESOURCE_ID = ''

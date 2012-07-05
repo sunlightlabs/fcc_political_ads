@@ -15,6 +15,7 @@
         width: 580px;
         height: 780px;
         background-color: #bfbfbf;
+        z-index: -1;
     }
     #content-main > form {
         width: 644px;
@@ -28,6 +29,19 @@
     .inline-group .aligned label {
         width: 8.5em;
     }
+    
+    div.field-airing_days ul {
+        padding-left: 15px;
+        margin-left: 9em;
+    }
+    div.field-airing_days li {
+        list-style-type: none;
+        display: block;
+        margin-right: 10px;
+    }
+    div.field-airing_days li input {
+        vertical-align: bottom;
+    }
 </style>
 {% endblock %}
 
@@ -38,9 +52,11 @@
 
 {% block content %}<div id="content-main" class="clearfix">
 {% block object-tools %}{{ block.super }}{% endblock %}
+{% if original.documentcloud_doc.doc_id %}
 <div class="documentcloud_embed">
     {% include "doccloud/_documentcloud_embed.html" with document=original.documentcloud_doc width=580 height=780 %}
 </div>
+{% endif %}
 <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}{% block form_top %}{{ block.super }}{% endblock %}
 <div>
 {% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}

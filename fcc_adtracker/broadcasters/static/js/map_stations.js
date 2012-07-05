@@ -18,6 +18,8 @@ jQuery(document).ready(function() {
     var gm = google.maps, myOptions = {
         center: new gm.LatLng(startPos[1], startPos[0]),
         zoom: 8,
+        maxZoom: 14,
+        minZoom: 3,
         mapTypeId: gm.MapTypeId.ROADMAP,
         scaleControl: true
     };
@@ -169,11 +171,21 @@ jQuery(document).ready(function() {
     };
     
     
+    SLF.generateModal = function(title, body_html) {
+        var modal = $('<div class="modal"></div>');
+        modal.append($('<div class="modal-header"></div>').html('<button type="button" class="close" data-dismiss="modal">&times;</button><h3>' + title + '</h3>'));
+        var modal_body = $('<div class="modal-body"></div>').html(body_html);
+        modal.append(modal_body);
+        $('body').append(modal);
+        $(modal).modal({'backdrop': false, show: false });
+        return modal;
+    };
+    
     $("form#map_form").submit(function(event) {
         var address = $("form#map_form input#address");
         var city = $("form#map_form input#city");
-        var state = $("form#map_form input#state");
-        var full_address = address.val() + ' ' + city.val() + ', ' + state.val();
+        var state = $("form#map_form #state");
+        var full_address = address.val() + ' ' + city.val() + ', ' + state.text();
         SLF.geocoder.geocode( {'address': full_address}, function(results, status) 
         {
             if (status == gm.GeocoderStatus.OK) 
@@ -183,6 +195,10 @@ jQuery(document).ready(function() {
                 if (results.length == 1) {
                     SLF.setselectedGeocoderResult(results[0]);
                     SLF.findNearbyLocations();
+                    if (results[0]['geometry']['location_type'] == gm.GeocoderLocationType.APPROXIMATE) {
+                        var approx_modal = SLF.generateModal('Location is approximate.', '<p>We could not find an exact address, but we did find an approximate location.</p>');
+                        $(approx_modal).modal('show');
+                    }
                 }
                 else
                 {
@@ -193,12 +209,8 @@ jQuery(document).ready(function() {
                         $(anchor).data('location', results[i]);
                         location_select.append( $('<li> </li>').append(anchor) );
                     }
-                    var modal = $('<div class="modal">');
-                    modal.append($('<div class="modal-header">').html('<h3>Multiple results were found, please choose one.</h3>'));
-                    var modal_body = $('<div class="modal-body">').html(location_select);
-                    modal.append(modal_body);
-                    $('body').append(modal);
-                    $(modal).modal({'backdrop': false});
+                    var modal = SLF.generateModal('Multiple results were found, please choose one.', location_select);
+                    $(modal).modal('show');
                     location_select.on('click', 'li a', function(event) {
                         if (SLF.DEBUG) window.log($(this).data('location'));
                         $(modal).modal('hide').detach();
@@ -211,8 +223,14 @@ jQuery(document).ready(function() {
                     });
                 }
 
-             } else {
+             } else if (status == gm.GeocoderStatus.ZERO_RESULTS) {
+                if (SLF.DEBUG) window.log("Geocode returned 0 results");
+                var noresults_modal = SLF.generateModal('We encountered an error.', '<p>The Google geocoder was unable to find your address.</p>');
+                $(noresults_modal).modal('show');
+            } else {
                 if (SLF.DEBUG) window.log("Geocode was not successful for the following reason: " + status);
+                var fail_modal = SLF.generateModal('We encountered an error.', '<p>'+ status + '</p>');
+                $(fail_modal).modal('show');
             }
         });
         

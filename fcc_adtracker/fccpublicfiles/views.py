@@ -1,18 +1,19 @@
 from django.http import HttpResponse
-from django.db.models import Q, F
+from django.db.models import Q
 
 
 from .models import *
 
-try:
-    import simplejson as json
-except Exception, e:
-    import json
+# try:
+#     import simplejson as json
+# except Exception, e:
+#     import json
 
 
 POLITICALBUY_WHITELIST = ('advertiser', 'advertiser_signatory', 'ordered_by')
 POLITICALSPOT_WHITELIST = ('show_name',)
 STATION_WHITELIST = ('station',)
+
 
 def get_values_for_model_field(model, fieldname):
     exclude_query = Q(**{'{0}__isnull'.format(fieldname): True}) | Q(**{fieldname: ''})
@@ -33,7 +34,8 @@ def admin_autocomplete_json(request):
         elif fieldname in STATION_WHITELIST:
             obj_list = [c[0] for c in CALLSIGNS]
 
-        if not obj_list: obj_list = get_values_for_model_field(model, fieldname)
+        if not obj_list:
+            obj_list = get_values_for_model_field(model, fieldname)
     else:
         obj_list = []
     return HttpResponse(json.dumps(obj_list), content_type='application/javascript')
