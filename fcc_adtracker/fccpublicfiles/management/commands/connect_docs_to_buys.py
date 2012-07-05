@@ -18,7 +18,6 @@ class Command(NoArgsCommand):
     def handle_noargs(self, **options):
         orphan_docs = Document.objects.filter(publicdocument__isnull=True)
         self.stdout.write('Found {0} orphan docs (not  attached to PoliticalBuy records)\n'.format(orphan_docs.count()))
-        import ipdb; ipdb.set_trace()
         for orphan_obj in orphan_docs:
             doc_meta = orphan_obj.dc_data
             callsign = doc_meta.get('callsign')
