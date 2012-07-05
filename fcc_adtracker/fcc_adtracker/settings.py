@@ -15,7 +15,7 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': '',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
@@ -139,7 +139,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'storages',
     'reversion',
-    
+
     'doccloud',
     'fccpublicfiles',
 
@@ -148,7 +148,6 @@ INSTALLED_APPS = (
 
     'south',
     'ajax_select',
-    # 'autocomplete_light',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -182,12 +181,12 @@ LOGGING = {
 
 AJAX_LOOKUP_CHANNELS = {
     #   pass a dict with the model and the field to search against
-    'organization'  : ('fccpublicfiles.lookups', 'OrganizationLookup'),
-    'advertiser'  : ('fccpublicfiles.lookups', 'AdvertiserLookup'),
-    'media_buyer'  : ('fccpublicfiles.lookups', 'MediaBuyerLookup'),
-    'role_title'  : ('fccpublicfiles.lookups', 'RoleTitleLookup'),
-    'person'  : ('fccpublicfiles.lookups', 'PersonLookup'),
-    'doccloud':  ('fccpublicfiles.lookups', 'DocumentCloudLookup'),
+    'organization': ('fccpublicfiles.lookups', 'OrganizationLookup'),
+    'advertiser': ('fccpublicfiles.lookups', 'AdvertiserLookup'),
+    'media_buyer': ('fccpublicfiles.lookups', 'MediaBuyerLookup'),
+    'role_title': ('fccpublicfiles.lookups', 'RoleTitleLookup'),
+    'person': ('fccpublicfiles.lookups', 'PersonLookup'),
+    'doccloud': ('fccpublicfiles.lookups', 'DocumentCloudLookup'),
     'address': ('fccpublicfiles.lookups', 'AddressLookup'),
     'show_name': ('fccpublicfiles.lookups', 'ShowNameLookup'),
     'callsign': ('broadcasters.lookups', 'BroadcasterLookup'),
