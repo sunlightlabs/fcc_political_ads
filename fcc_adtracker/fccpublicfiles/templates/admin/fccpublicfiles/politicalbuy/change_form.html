@@ -9,13 +9,12 @@
         min-width: 960px;
     }
     .documentcloud_embed {
-        display:block;
-        position: relative;
-        float: right;
+        position: absolute;
+        left: 675px;
+        top: 100px;
         width: 580px;
         height: 780px;
         background-color: #bfbfbf;
-        z-index: -1;
     }
     #content-main > form {
         width: 644px;
@@ -29,7 +28,7 @@
     .inline-group .aligned label {
         width: 8.5em;
     }
-    
+
     div.field-airing_days ul {
         padding-left: 15px;
         margin-left: 9em;
@@ -42,6 +41,7 @@
     div.field-airing_days li input {
         vertical-align: bottom;
     }
+
 </style>
 {% endblock %}
 
@@ -52,7 +52,7 @@
 
 {% block content %}<div id="content-main" class="clearfix">
 {% block object-tools %}{{ block.super }}{% endblock %}
-{% if original.documentcloud_doc.doc_id %}
+{% if original.documentcloud_doc %}
 <div class="documentcloud_embed">
     {% include "doccloud/_documentcloud_embed.html" with document=original.documentcloud_doc width=580 height=780 %}
 </div>
