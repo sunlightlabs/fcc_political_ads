@@ -22,7 +22,7 @@ class PoliticalSpotAdminForm(forms.ModelForm):
 
 
 class PoliticalSpotAdmin(reversion.VersionAdmin):
-    form = make_ajax_form(PoliticalSpot, {'show_name': ' show_name'}, superclass=PoliticalSpotAdminForm)
+    form = make_ajax_form(PoliticalSpot, {'show_name': 'show_name'}, superclass=PoliticalSpotAdminForm)
     search_fields = ['advertiser__name', 'bought_by__name']
     fieldsets = (
 
