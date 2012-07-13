@@ -11,11 +11,18 @@
 <script type="text/javascript">
     window.__admin_media_prefix__.charAt(window.__admin_media_prefix__.length-1) !== '/' ? window.__admin_media_prefix__ += '/': false;
 </script>
+<link rel="stylesheet" href="{% static 'admin/css/smoothness/jquery-ui-1.8.21.custom.css' %}" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="{% static 'css/ajax_select.css' %}" type="text/css" charset="utf-8">
 <link rel="stylesheet" href="{% static 'admin/css/fcc_admin.css' %}" type="text/css" charset="utf-8">
+<style type="text/css">
+    .ui-autocomplete-loading {
+    background:  url('{% static 'admin/img/loading-indicator.gif' %}') no-repeat;
+    background-origin: content-box;
+    background-position: right;
+}
+</style>
+<script src="{% static 'admin/js/jquery-1.7.2.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'admin/js/jquery-ui-1.8.21.custom.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/ajax_select.js' %}" type="text/javascript"></script>
+<script src="{% static 'admin/js/fcc_admin.js' %}" type="text/javascript"></script>
 {% endblock extrahead %}
-
-{% block footer %}
-    {{ block.super }}
-    <script src="{% static 'admin/js/jquery-1.7.2.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'admin/js/fcc_admin.js' %}" type="text/javascript"></script>
-{% endblock %}

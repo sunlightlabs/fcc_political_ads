@@ -143,7 +143,8 @@ def set_doccloud_data(sender, instance, signal, *args, **kwargs):
     doc = instance.documentcloud_doc
     doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
     doccloud_data['callsign'] = instance.station
-    doc.dc_data = doccloud_data
+    if doc.dc_data != doccloud_data:
+        doc.dc_data = doccloud_data
 
 
 @receiver(pre_delete, sender=PublicDocument)

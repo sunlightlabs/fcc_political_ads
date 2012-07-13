@@ -6,6 +6,7 @@ import re
 import copy
 from time import sleep
 
+from broadcasters.models import Broadcaster
 from doccloud.models import get_client
 
 DOCUMENTCLOUD_META = getattr(settings, 'DOCUMENTCLOUD_META', {})
@@ -41,6 +42,7 @@ class Command(BaseCommand):
         if len(args) == 0:
             raise CommandError('You must pass one or more search strings')
 
+        verbosity = options.get('verbosity', 1)
         add_to_project = options.get('add_to_project')
         overwrite_data = options.get('overwrite_data')
         dry_run = options.get('dry_run')
@@ -68,11 +70,21 @@ class Command(BaseCommand):
                 else:
                     self.stdout.write('\n')
                 match_obj = prog.search(doc.title)
-                callsign = match_obj.group(1).strip().replace(' ', '-') if hasattr(match_obj, 'group') else None
+                possible_callsign = match_obj.group(1).strip().replace(' ', '-') if hasattr(match_obj, 'group') else None
                 new_data = copy.deepcopy(DOCUMENTCLOUD_META)
-                if callsign:
-                    self.stdout.write('Found possible callsign "{callsign}" in the title: "{title}"\n'.format(callsign=callsign, title=doc.title))
-                    new_data.update({'callsign': callsign})
+                if possible_callsign:
+                    self.stdout.write('Found possible callsign "{callsign}" in the title: "{title}"\n'.format(callsign=possible_callsign, title=doc.title))
+                    broadcaster = None
+                    try:
+                        broadcaster = Broadcaster.objects.get(callsign__startswith=possible_callsign)
+                    except Broadcaster.DoesNotExist:
+                        self.stderr.write("Can't find a Broadcaster with a callsign that matches {0}. Skipping...\n".format(possible_callsign))
+                    except Broadcaster.MultipleObjectsReturned:
+                        self.stderr.write("document's callsign, {0}, matches multiple broadcasters. Skipping...\n".format(possible_callsign))
+                    if broadcaster:
+                        if verbosity > 1:
+                            self.stdout.write('Found broadcaster callsign "{0}"" to match "{1}"\n'.format(broadcaster.callsign, possible_callsign))
+                        new_data.update({'callsign': broadcaster.callsign})
                 doc_data = copy.deepcopy(doc.data)
                 if overwrite_data:
                     doc_data.update(new_data)
