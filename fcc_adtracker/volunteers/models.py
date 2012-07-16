@@ -24,6 +24,7 @@ IS_A_CHOICES = (
     ('nonprofit', 'Non-profit'),
 )
 
+# Signup model was used for pilot. Fields may be indicators of additional fields needed on Profile, or new model(?)
 class Signup(Document):
     email = EmailField()
     phone = StringField()
