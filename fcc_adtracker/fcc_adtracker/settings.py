@@ -231,7 +231,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 LOGIN_URL = '/account/login/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/account/profile/'
 LOGIN_ERROR_URL = '/account/error/'
 
 SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
@@ -241,16 +241,27 @@ SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = '/account/'
 SOCIAL_AUTH_BACKEND_ERROR_URL = '/account/error/'
 SOCIAL_AUTH_ERROR_KEY = 'social_errors'
 SOCIAL_AUTH_DEFAULT_USERNAME = lambda u: slugify(u)
-SOCIAL_AUTH_EXTRA_DATA = False
 SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
+SOCIAL_AUTH_PIPELINE = (
+    'social_auth.backends.pipeline.social.social_auth_user',
+    'social_auth.backends.pipeline.associate.associate_by_email',
+    'social_auth.backends.pipeline.misc.save_status_to_session',
+    'volunteers.pipeline.account_details',
+    'volunteers.pipeline.set_account_details',
+    'social_auth.backends.pipeline.user.create_user',
+    'social_auth.backends.pipeline.social.associate_user',
+    'social_auth.backends.pipeline.social.load_extra_data',
+    'social_auth.backends.pipeline.user.update_user_details',
+    'volunteers.pipeline.create_profile',
+    'volunteers.pipeline.cleanup',
+)
 
 TWITTER_CONSUMER_KEY = ''
 TWITTER_CONSUMER_SECRET = ''
 FACEBOOK_APP_ID = ''
 FACEBOOK_API_SECRET = ''
 FACEBOOK_EXTENDED_PERMISSIONS = ['email']
-GOOGLE_OAUTH2_CLIENT_ID = ''
-GOOGLE_OAUTH2_CLIENT_SECRET = ''
+
 
 try:
     from local_settings import *
