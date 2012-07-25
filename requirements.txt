@@ -1,6 +1,8 @@
 Django==1.4
 mongoengine==0.6.5
 pymongo==2.1.1
+psycopg2
+django-debug-toolbar
 -e git://github.com/wpjunior/django-mongotools.git@9858ebdf3499d1fb0aff248a48ea039e4fa4afd5#egg=django_mongotools-dev
 
 -e git://github.com/sunlightlabs/sfapp.git#egg=sfapp-dev
