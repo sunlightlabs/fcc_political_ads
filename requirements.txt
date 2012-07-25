@@ -11,7 +11,8 @@ django-debug-toolbar
 boto==2.5.1
 django-storages==1.1.4
 
-python-dateutil==1.5
+django-social-auth
+django-registration
 python-documentcloud==0.154
 django-extensions==0.8
 -e hg+https://bitbucket.org/schinckel/django-timedelta-field@0ca08518d3eb60f9a5168b3279dcca1913f6b1f0#egg=django_timedeltafield-0.6.2
