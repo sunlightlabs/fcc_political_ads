@@ -1,12 +1,13 @@
 from django.contrib import admin
 from django import forms
-from .models import *
-from .views import *
+from .models import PoliticalSpot, PoliticalBuy, Role, Address, Organization, \
+        Person, CALLSIGNS
 
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
 
-import reversion
+from reversion import VersionAdmin
+from moderation.admin import ModerationAdmin
 
 import weekday_field
 
@@ -21,7 +22,7 @@ class PoliticalSpotAdminForm(forms.ModelForm):
     airing_days = weekday_field.forms.WeekdayFormField(required=False)
 
 
-class PoliticalSpotAdmin(reversion.VersionAdmin):
+class PoliticalSpotAdmin(ModerationAdmin, VersionAdmin):
     form = make_ajax_form(PoliticalSpot, {'show_name': 'show_name'}, superclass=PoliticalSpotAdminForm)
     search_fields = ['advertiser__name', 'bought_by__name']
     fieldsets = (
@@ -52,7 +53,7 @@ class PoliticalBuyAdminForm(forms.ModelForm):
         model = PoliticalBuy
 
 
-class PoliticalBuyAdmin(reversion.VersionAdmin, AjaxSelectAdmin):
+class PoliticalBuyAdmin(ModerationAdmin, VersionAdmin):
     # form = PoliticalBuyAdminForm
     form = make_ajax_form(PoliticalBuy, {
                           'advertiser': 'advertiser',
@@ -75,27 +76,27 @@ class RoleAdminInline(admin.StackedInline):
     form = make_ajax_form(Role, {'organization': 'organization', 'person': 'person', 'title': 'role_title'})
 
 
-class RoleAdmin(reversion.VersionAdmin, AjaxSelectAdmin):
+class RoleAdmin(AjaxSelectAdmin, ModerationAdmin, VersionAdmin):
     form = make_ajax_form(Role, {'organization': 'organization', 'person': 'person', 'title': 'role_title'})
     list_display = ('person', 'title', 'organization')
     search_fields = ['organization__name', ]
 admin.site.register(Role, RoleAdmin)
 
 
-class AddressAdmin(reversion.VersionAdmin, AjaxSelectAdmin):
+class AddressAdmin(AjaxSelectAdmin, ModerationAdmin, VersionAdmin):
     list_display = ('__unicode__', 'city', 'state')
     list_filter = ('state',)
 admin.site.register(Address, AddressAdmin)
 
 
-class OrganizationAdmin(reversion.VersionAdmin, AjaxSelectAdmin):
+class OrganizationAdmin(AjaxSelectAdmin, ModerationAdmin, VersionAdmin):
     list_display = ('name', 'fec_id', 'organization_type')
     search_fields = ['name', 'fec_id']
     form = make_ajax_form(Organization, {'addresses': 'address'})
     inlines = [RoleAdminInline, ]
 
 
-class PersonAdmin(reversion.VersionAdmin, AjaxSelectAdmin):
+class PersonAdmin(AjaxSelectAdmin, ModerationAdmin, VersionAdmin):
     list_display = ('last_name', 'first_name', 'middle_name')
     search_fields = ['last_name', 'first_name']
     # form = make_ajax_form(Person,{'organization':'organization'})
