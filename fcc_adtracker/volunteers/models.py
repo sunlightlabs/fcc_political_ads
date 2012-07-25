@@ -1,5 +1,10 @@
+from django.db import models
+from django.contrib.auth.models import User
+from django.contrib.localflavor.us.models import PhoneNumberField, USStateField
+from django.contrib.localflavor.us import us_states
+
 from mongoengine import *
-from mongo_utils.serializer import encode_model 
+from mongo_utils.serializer import encode_model
 import datetime
 
 try:
@@ -9,6 +14,17 @@ except ImportError, e:
 
 from broadcasters.models import Broadcaster
 
+
+IS_A_CHOICES = (
+    ('other', 'Other'),
+    ('journalist', 'Journalist'),
+    ('researcher', 'Researcher'),
+    ('activist', 'Activist'),
+    ('student', 'Student'),
+    ('nonprofit', 'Non-profit'),
+)
+
+# Signup model was used for pilot. Fields may be indicators of additional fields needed on Profile, or new model(?)
 class Signup(Document):
     email = EmailField()
     phone = StringField()
@@ -30,4 +46,14 @@ class Signup(Document):
     share_checkbox = property(**share_checkbox())
 
 Signup.register_delete_rule(Broadcaster, 'bar', NULLIFY)
-    
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User)
+    phone = PhoneNumberField(blank=True, null=True)
+    state = USStateField(blank=True, null=True)
+    is_a = models.CharField(max_length=16, choices=IS_A_CHOICES, blank=True)
+
+    def __unicode__(self):
+        return u'Profile: ' + self.user.username
+

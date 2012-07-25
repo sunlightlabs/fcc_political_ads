@@ -1,5 +1,5 @@
-{% extends sfapp_base_template|default:"sfapp/base-sidebar.html" %}{% load static from staticfiles %}
-{% block title %}Political Ad Sleuth{% endblock title %}
+{% extends sfapp_base_template|default:"sfapp/base-full.html" %}{% load static from staticfiles %}
+{% block title %}{% block pagetitle %}Home{% endblock pagetitle %} | Political Ad Sleuth{% endblock title %}
 
 {% block ga %}UA-22821126-17{% endblock ga %}
 
@@ -9,8 +9,18 @@
 
 {% block container %}
 <header>
-    {% block pagenav %}{% endblock pagenav %}
+    <div class="span4 offset8">
+    {% block pagenav %}{% endblock pagenav %}        
+        <div id="user-status">
+            {% if user.is_authenticated %}
+                <p>Welcome, <strong>{{ user.username }}</strong>.</p>
+            {% else %}
+                <p><a href="{% url auth_login %}">Log in</a> or CALLOUT TO RECRUITMENT(?).</p>
+            {% endif %}
+        </div>
+    </div>
     <h1 class="textReplace" id="logo">Free the Files</h1>
+
 </header>
 {{ block.super }}
 {% endblock container %}

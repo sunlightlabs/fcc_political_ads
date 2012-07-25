@@ -1,5 +1,9 @@
 .invalid { border-color: #E9322D; }
 
+.errorlist  {
+    color: #B94A48;
+}
+
 img {
     max-width: none;
 }

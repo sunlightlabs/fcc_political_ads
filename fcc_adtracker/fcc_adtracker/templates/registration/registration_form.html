@@ -1,0 +1,15 @@
+{% extends "fcc-base.html" %}
+{% block pagetitle %}Register an account{% endblock pagetitle %}
+
+{% block content %}
+<h2>Register an account so you can upload and enter political ad buys!</h2>
+<form class="form-vertical" action="." method="post" accept-charset="utf-8">
+    {% csrf_token %}
+    <ul>
+        {{ form.as_ul }}
+        <li>
+            <button class="btn btn-sunlight" type="submit">Register</button>
+        </li>
+    </ul>
+</form>
+{% endblock content %}
