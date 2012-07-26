@@ -1,5 +1,6 @@
 # Django settings for fcc_adtracker project.
 from mongoengine import connect
+from django.template.defaultfilters import slugify
 import os
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -105,6 +106,18 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.request',
+    'django.core.context_processors.static',
+    'django.contrib.messages.context_processors.messages',
+    'social_auth.context_processors.social_auth_by_name_backends',
+    'social_auth.context_processors.social_auth_backends',
+)
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -141,8 +154,10 @@ INSTALLED_APPS = (
     'reversion',
 
     'doccloud',
-    'fccpublicfiles',
+    'registration',
+    'social_auth',
 
+    'fccpublicfiles',
     'broadcasters',
     'volunteers',
 
@@ -195,13 +210,58 @@ AJAX_LOOKUP_CHANNELS = {
 AJAX_SELECT_BOOTSTRAP = False
 AJAX_SELECT_INLINES = False
 
+# DocumentCloud
 DOCUMENTS_PATH = ''
 DOCUMENTCLOUD_USERNAME = ''
 DOCUMENTCLOUD_PASS = ''
-
 DOCUMENTCLOUD_META = {
     'contributedto': 'freethefiles'
 }
+
+# Django registration settings
+ACCOUNT_ACTIVATION_DAYS = 14
+AUTH_PROFILE_MODULE = 'volunteers.Profile'
+
+# Social auth
+AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.twitter.TwitterBackend',
+    'social_auth.backends.facebook.FacebookBackend',
+    'social_auth.backends.google.GoogleOAuth2Backend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+LOGIN_URL = '/account/login/'
+LOGIN_REDIRECT_URL = '/account/profile/'
+LOGIN_ERROR_URL = '/account/error/'
+
+SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
+SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
+SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = '/account/'
+SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = '/account/'
+SOCIAL_AUTH_BACKEND_ERROR_URL = '/account/error/'
+SOCIAL_AUTH_ERROR_KEY = 'social_errors'
+SOCIAL_AUTH_DEFAULT_USERNAME = lambda u: slugify(u)
+SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
+SOCIAL_AUTH_PIPELINE = (
+    'social_auth.backends.pipeline.social.social_auth_user',
+    'social_auth.backends.pipeline.associate.associate_by_email',
+    'social_auth.backends.pipeline.misc.save_status_to_session',
+    'volunteers.pipeline.account_details',
+    'volunteers.pipeline.set_account_details',
+    'social_auth.backends.pipeline.user.create_user',
+    'social_auth.backends.pipeline.social.associate_user',
+    'social_auth.backends.pipeline.social.load_extra_data',
+    'social_auth.backends.pipeline.user.update_user_details',
+    'volunteers.pipeline.create_profile',
+    'volunteers.pipeline.cleanup',
+)
+
+TWITTER_CONSUMER_KEY = ''
+TWITTER_CONSUMER_SECRET = ''
+FACEBOOK_APP_ID = ''
+FACEBOOK_API_SECRET = ''
+FACEBOOK_EXTENDED_PERMISSIONS = ['email']
+
 
 try:
     from local_settings import *

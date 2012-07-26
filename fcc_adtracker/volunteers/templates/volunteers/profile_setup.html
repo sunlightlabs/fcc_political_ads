@@ -1,0 +1,58 @@
+{% extends "fcc-base.html" %}
+
+{% block pagetitle %}Create your new account{% endblock pagetitle %}
+
+{% block content %}
+    <h2>Create your new account</h2>
+    <form action="." method="post" class="form-vertical">
+        {% csrf_token %}
+        <fieldset>
+            <legend>Your account</legend>
+            <ul>
+                <li>
+                    {{ form.username.errors }}
+                    <label for="id_username">Username</label>
+                    {{ form.username }}
+                </li>
+                <li>
+                    {{ form.first_name.errors }}
+                    <label for="id_first_name">First name</label>
+                    {{ form.first_name }}
+                </li>
+                <li>
+                    {{ form.last_name.errors }}
+                    <label for="id_phone">Last name</label>
+                    {{ form.last_name }}
+                </li>
+                <li>
+                    {{ form.email.errors }}
+                    <label for="id_email">Email</label>
+                    {{ form.email }}
+                </li>
+                <li>
+                    {{ form.phone.errors }}
+                    <label for="id_phone">Phone Number</label>
+                    {{ form.phone }}
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset>
+            <legend>About You</legend>
+            <ul>
+                <li>
+                    {{ form.state.errors }}
+                    <label for="id_state">State (where you can collect files)</label>
+                    {{ form.state }}
+                </li>
+                <li>
+                    {{ form.is_a.errors }}
+                    <label for="id_is_a">What best describes your role?</label>
+                    {{ form.is_a }}
+                </li>
+                <li>
+                    <button class="btn btn-sunlight" type="submit">Create Account</button>
+                </li>
+            </ul>
+        </fieldset>
+    </form>
+{% endblock content %}

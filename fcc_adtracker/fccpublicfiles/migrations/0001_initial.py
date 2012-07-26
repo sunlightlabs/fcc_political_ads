@@ -92,6 +92,7 @@ class Migration(SchemaMigration):
             ('preemptable', self.gf('django.db.models.fields.NullBooleanField')(default=None, null=True, blank=True)),
         ))
         db.send_create_signal('fccpublicfiles', ['PoliticalSpot'])
+        db.send_pending_create_signals()
 
 
     def backwards(self, orm):

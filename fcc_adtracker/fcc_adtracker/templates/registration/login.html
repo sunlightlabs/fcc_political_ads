@@ -1,0 +1,24 @@
+{% extends "fcc-base.html" %}
+
+{% block pagetitle %}Sign in{% endblock pagetitle %}
+
+{% block content %}
+<h2>Sign In</h2>
+<div class="row">
+    <div class="span8">
+        <form class="form-vertical" action="." method="post" accept-charset="utf-8">
+            {% csrf_token %}
+            <ul>
+                {{ form.as_ul }}
+                <li>
+                    <button class="btn btn-sunlight" type="submit">Log In</button>
+                </li>
+            </ul>
+        </form>
+    </div>
+    <div class="span4">
+        <p> Sign in with <a class="signinBtn" id="tweetBtn" href="{% url socialauth_begin 'twitter' %}">Twitter</a> or <a class="signinBtn" id="fbBtn" href="{% url socialauth_begin 'facebook' %}">Facebook</a>.</p>
+    </div>
+</div>
+
+ {% endblock content %}

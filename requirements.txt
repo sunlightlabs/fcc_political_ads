@@ -2,6 +2,8 @@ Django==1.4
 South==0.7.5
 mongoengine==0.6.5
 pymongo==2.1.1
+psycopg2
+django-debug-toolbar
 -e git://github.com/wpjunior/django-mongotools.git@9858ebdf3499d1fb0aff248a48ea039e4fa4afd5#egg=django_mongotools-dev
 
 -e git://github.com/sunlightlabs/sfapp.git@c552ed79818c23ebda15c3a4640146f4c941509c#egg=sfapp-dev
@@ -9,7 +11,8 @@ pymongo==2.1.1
 boto==2.5.1
 django-storages==1.1.4
 
-python-dateutil==1.5
+django-social-auth
+django-registration
 python-documentcloud==0.154
 django-extensions==0.8
 -e hg+https://bitbucket.org/schinckel/django-timedelta-field@0ca08518d3eb60f9a5168b3279dcca1913f6b1f0#egg=django_timedeltafield-0.6.2

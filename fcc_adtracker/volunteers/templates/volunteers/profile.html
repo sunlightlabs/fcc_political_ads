@@ -1,0 +1,11 @@
+{% extends "fcc-base.html" %}
+
+{% block pagetitle %}Profile{% endblock pagetitle %}
+
+{% block content %}
+    <h2>{{ user.username }}</h2>
+    {% if profile %}
+    <p>State: {{ profile.state }}</p>
+    <p>Phone: {{ profile.phone }}</p>
+    {% endif %}
+{% endblock content %}
