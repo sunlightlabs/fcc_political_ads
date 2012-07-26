@@ -18,5 +18,6 @@ django-extensions==0.8
 -e hg+https://bitbucket.org/schinckel/django-timedelta-field@0ca08518d3eb60f9a5168b3279dcca1913f6b1f0#egg=django_timedeltafield-0.6.2
 -e hg+https://bitbucket.org/schinckel/django-weekday-field@f075f68d54dfe5f4a532b3819c7048a1acc42bc9#egg=django_weekday_field-dev
 -e git://github.com/sunlightlabs/django-doccloud.git@d0e2b2156770e4a191f2c7857be83dd86d88194a#egg=django_doccloud-dev
+-e git://github.com/dominno/django-moderation.git#egg=django-moderation
 django-reversion==1.6.0
 django-ajax-selects==1.2.4

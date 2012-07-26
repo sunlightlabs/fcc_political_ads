@@ -4,7 +4,11 @@ from fcc_adtracker.views import HomePageView
 from ajax_select import urls as ajax_select_urls
 
 from django.contrib import admin
+import moderation.helpers
+
+moderation.helpers.auto_discover()
 admin.autodiscover()
+
 
 urlpatterns = patterns('',
     url(r'^broadcasters/', include('broadcasters.urls')),
