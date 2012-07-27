@@ -1,11 +1,15 @@
-from moderation import moderation
+from moderation import moderation, GenericModerator
 from fccpublicfiles.models import Address, Person, Role, Organization, \
     PublicDocument, PoliticalBuy, PoliticalSpot
 
-moderation.register(Address)
-moderation.register(Person)
-moderation.register(Role)
-moderation.register(Organization)
-moderation.register(PublicDocument)
-moderation.register(PoliticalBuy)
-moderation.register(PoliticalSpot)
+
+class DefaultModerator(GenericModerator):
+    auto_approve_for_staff = False
+
+moderation.register(Address, DefaultModerator)
+moderation.register(Person, DefaultModerator)
+moderation.register(Role, DefaultModerator)
+moderation.register(Organization, DefaultModerator)
+moderation.register(PublicDocument, DefaultModerator)
+moderation.register(PoliticalBuy, DefaultModerator)
+moderation.register(PoliticalSpot, DefaultModerator)
