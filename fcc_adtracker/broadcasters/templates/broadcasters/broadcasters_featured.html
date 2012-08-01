@@ -6,8 +6,10 @@
     <div class="span7">
         <h2 id='page-intro'>Who's trying to influence your vote?<br /> Help us find out!</h2>
         <div class="featureText">
-            <p>New campaign finance rules mean that the airwaves this election year will be dominated by outside groups, many of whom don’t have to disclose the sources of their funding and don’t even have to register with the Federal Election Commission. But there is one place where they will leave a paper trail: At the TV stations where they buy their ads. For the first time, the Federal Communication Commission (FCC) has ruled to require television stations in the top 50 media markets to put their public and political files online -- but these markets cover <a href="http://reporting.sunlightfoundation.com/2012/fcc-ruling-would-exempt-160-markets-posting-requirements/">only a fraction of the swing states</a>, where the majority of political ad spending will occur. We need your help to unlock the rest of the political files and post the information online.</p>
-            <p>As a pilot project, we will be unlocking the files from Wisconsin’s gubernatorial election on June 5th. <a href="http://act2.freepress.net/sign/public_file_pledge/?source=FPblog">Sign up</a> for a <a href="http://www.freepress.net/how-to-inspect-public-political-files">training</a> or search for a tv station near you.</p>
+            <p>New campaign finance rules mean that the airwaves this election year will be dominated by outside groups, many of which don’t have to disclose the sources of their funding.</p> 
+            <p>But there is one place where they will leave a paper trail: At the TV stations where they buy their ads. For the first time, the Federal Communications Commission (FCC) has ordered television stations to put their public and political files online. But this year, only stations affiliated with the major networks (NBC, ABC, FOX, CBS) in the top 50 markets will have to put their political files online -- and only beginning August 2.</p>
+            <p>This leaves out much of the spending that already has occurred this year and will <a href="http://reporting.sunlightfoundation.com/2012/fcc-ruling-would-exempt-160-markets-posting-requirements/">cover only a fraction</a> of the markets in swing states where the majority of political ad spending will occur. <strong>We need your help to unlock the rest of the political files and post the information online</strong>.</p>
+            <p>This nationwide effort is already underway and we need your help! Sign up below to receive more information and enroll as a Political Ad Sleuth!</p>
         </div>
         <div class="row">
             <ul id="sponsorLogos" class="floatList">
@@ -21,7 +23,7 @@
     </div>
 </div>
 <div id="map" class="row module">
-    <div class="span8">
+    <!-- <div class="span8">
         <h3 class="withTip">Find a Station</h3>    
         <p class="tip">Find stations near you and then sign up to go collect the files! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
         {% include 'broadcasters/_map_searchform.html' %}
@@ -33,11 +35,11 @@
                 <ul class="withLine" id="locations"></ul>
             </div>
         </div>
-    </div>
-    <div id="get_involved" class="span3">
+    </div> -->
+    <div id="get_involved" class="span7">
         <h3 class="withTip">Take Action!</h3>
-        <p class="tip">Sign up to get help us find a more transparent government!</p>
-        <form id='action_signup' class='form-vertical' action="{% url action_signup %}" method="post" accept-charset="utf-8">
+        <p class="tip">Sign up to unlock the political files and find out who's trying to influence your vote.</p>
+        <form id='action_signup' class='form-horizontal' action="{% url action_signup %}" method="post" accept-charset="utf-8">
             <ul>
                 {% csrf_token %}
                 <li>
@@ -57,10 +59,18 @@
                     <input type="text" name="phone" value="" placeholder="Phone" id="phone">
                 </li>
                 <li>
+                    <label>City</label>
+                    <input type="text" name="city" value="" placeholder="City" id="city">
+                </li>
+                <li>
+                    <label>State</label>
+                    <select id="state" size="1"></select>
+                </li>
+                <li class="clearfix">
                     <label>Station I Plan to Visit</label>
                     <select name="custom-1093" id="station" size="1"></select>
                 </li>
-                <li>
+                <li class="clearfix">
                     <label>Share with Free Press</label>
                     <label class="tip asInput checkbox"><input type="checkbox" name="custom-1116" id="optin" checked="checked" />Yes, I would like to receive email alerts from Free Press</label>
                 </li>
@@ -70,20 +80,17 @@
             </ul>
         </form>
     </div>
-    
-</div>
-<div class="row">
-    <div id="feedback" class="span8 module">
-        <h4 class="withTip">Questions, Comments, Etc.</h4>
-        <p class="tip">Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? <a href="mailto:politicaladsleuth@sunlightfoundation.com?subject=Question%20or%20comment%20about%20Political%20Ad%20Sleuth">Please email us!</a></p>
-    </div>
     <div class="span4">
+        <div id="feedback" class="module">
+            <h4 class="withTip">Questions, Comments, Etc.</h4>
+            <p class="tip">Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? <a href="mailto:politicaladsleuth@sunlightfoundation.com?subject=Question%20or%20comment%20about%20Political%20Ad%20Sleuth">Please email us!</a></p>
+        </div>
         <div class="boxCallout resources">
             <h3>Resources</h3>
             <ul class='slf-list'>
                 <li>
                     <h5 class="withTip">How to inspect public political files</h5>
-                    <p>This <a href='http://www.freepress.net/how-to-inspect-public-political-files'>handy how-to guide</a> provides step-by-step information on how to free the files from your local broadcaster. (<a href="http://www.freepress.net/files/publicfiles-howto.pdf">pdf version</a>)</p>
+                    <p>This <a href="http://www.freepress.net/resource/98445/inspecting-broadcasters-public-and-political-files">handy how-to guide</a> from Free Press provides step-by-step information on how to free the files from your local broadcaster. (<a href="http://www.freepress.net/files/publicfiles-howto.pdf">pdf version</a>)</p>
                 </li>
                 <li>
                     <h5 class="withTip">Public Files Inspection Checklist</h5>
@@ -92,7 +99,8 @@
             </ul>
         </div>
     </div>
-</div>    
+</div>
+   
 {% endblock content %}
 
 {% block head %}

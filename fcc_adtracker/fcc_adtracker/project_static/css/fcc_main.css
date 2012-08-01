@@ -28,6 +28,8 @@ p.distance {
     height: 550px;
 }
 #get_involved { margin-left: 50px;}
+#action_signup li { padding-top: 10px; }
+#action_signup .btn { margin-left: 120px; }
 
 .stations { margin-left: 475px; margin-top: -505px; position: absolute; background-color: #fff; -moz-opacity: 0.90; opacity: 0.90; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";}
 
@@ -63,7 +65,6 @@ fieldset legend {
 
 input#address { width: 150px;}
 #radius { width: 90px;}
-#city { width: 80px;}
 
 .featureImg { margin-top: 180px; float: right; margin-right: 20px; }
 
