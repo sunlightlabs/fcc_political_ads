@@ -1,6 +1,5 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
-from fcc_adtracker.views import HomePageView
 from ajax_select import urls as ajax_select_urls
 
 from django.contrib import admin
@@ -11,7 +10,7 @@ urlpatterns = patterns('',
     url(r'', include('volunteers.urls')),
     # url(r'^publicfiles/', include('fccpublicfiles.urls')),
     url(r'', include('sfapp.urls')),
-    url(r'^$', 'broadcasters.views.featured_broadcasters', name='home'),
+    url(r'^$', 'fcc_adtracker.views.home_view', name='home'),
     
     # url(r'autocomplete/', include('autocomplete_light.urls')),
     (r'^admin/lookups/', include(ajax_select_urls)),
