@@ -151,18 +151,18 @@ INSTALLED_APPS = (
     'sfapp',
     'django_extensions',
     'storages',
-    'reversion',
+    # 'reversion',
 
     'doccloud',
     'registration',
     'social_auth',
 
-    'fccpublicfiles',
+    # 'fccpublicfiles',
     'broadcasters',
     'volunteers',
 
     'south',
-    'ajax_select',
+    # 'ajax_select',
 )
 
 # A sample logging configuration. The only tangible logging
