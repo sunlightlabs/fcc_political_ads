@@ -32,7 +32,7 @@ class Command(NoArgsCommand):
             raise CommandError('You must set both GOOGLE_DOCS_ACCOUNT, GOOGLE_DOCS_PASSWORD and GOOGLE_DOCS_RESOURCE_ID in your settings file.')
         verbosity = int(options.get('verbosity', 1))
         output_all = options.get('output_all')
-        fields = ('email', 'firstname', 'lastname', 'phone', 'station', 'date_submitted', 'share_info')
+        fields = ('email', 'firstname', 'lastname', 'phone', 'city', 'state', 'station', 'date_submitted', 'share_info')
 
 
         signup_list = Signup.objects.all().order_by('-date_submitted')
@@ -50,6 +50,8 @@ class Command(NoArgsCommand):
                     'firstname': signup.firstname,
                     'lastname': signup.lastname,
                     'phone': signup.phone,
+                    'city': signup.city,
+                    'state': signup.state,
                     'station': signup.broadcaster.callsign if signup.broadcaster else None,
                     'date_submitted': signup.date_submitted.strftime('%m/%d/%Y %H:%M:%S'),
                     'share_info': signup._share_info

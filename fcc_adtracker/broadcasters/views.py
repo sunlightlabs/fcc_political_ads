@@ -4,6 +4,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.template.defaultfilters import floatformat
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponseBadRequest, Http404
+from django.contrib.localflavor.us import us_states
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core import serializers
@@ -15,7 +16,7 @@ from fcc_adtracker.settings import mongo_conn
 
 from mongoengine import *
 from bson.son import SON
-from mongo_utils.serializer import encode_model 
+from mongo_utils.serializer import encode_model
 from mongotools.views import (CreateView, UpdateView,
                               DeleteView, ListView,
                               DetailView)
@@ -55,8 +56,9 @@ def featured_broadcasters(request):
     state_name = STATES_DICT.get(FEATURED_BROADCASTER_STATE.upper(), None)
     broadcaster_list = Broadcaster.objects.filter(community_state=FEATURED_BROADCASTER_STATE.upper(), addresses__title='studio', addresses__pos__exists=True)
     resp_obj = {
-        'broadcaster_list': broadcaster_list, 
+        'broadcaster_list': broadcaster_list,
         'state_name': state_name,
+        'states_dict': us_states.US_STATES,
         'sfapp_base_template': 'sfapp/base-full.html'
     }
     return render(request, 'broadcasters/broadcasters_featured.html', resp_obj)
@@ -89,8 +91,8 @@ def edit_broadcaster(request, callsign):
         for address in broadcaster.addresses:
             address_forms.append(AddressForm(instance=address))
         resp_obj = {
-            'broadcaster': broadcaster, 
-            'broadcaster_form': bform, 
+            'broadcaster': broadcaster,
+            'broadcaster_form': bform,
             'address_forms': address_forms
         }
         return render(request, 'broadcasters/broadcaster_change_form.html', resp_obj)
