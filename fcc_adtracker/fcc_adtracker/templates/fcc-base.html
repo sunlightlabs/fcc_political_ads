@@ -3,23 +3,24 @@
 
 {% block ga %}UA-22821126-17{% endblock ga %}
 
-{% block head %}    <script src="{% static "js/libs/modernizr-2.5.3.min.js" %}"></script>{% endblock head %}
+{% block head %}    <script src="{% static "js/libs/modernizr-2.5.3.min.js" %}"></script>
+                    <script src="http://cdn.gigya.com/js/gigyaGAIntegration.js" ></script>{% endblock head %}
 
 {% block css %}    <link rel="stylesheet" href="{% static 'css/fcc_main.css' %}">{% endblock css %}
 
 {% block container %}
 <header>
     <div class="span4 offset8">
-    {% block pagenav %}{% endblock pagenav %}        
-        <div id="user-status">
-            {% if user.is_authenticated %}
-                <p>Welcome, <strong>{{ user.username }}</strong>.</p>
-            {% else %}
-                <p><a href="{% url auth_login %}">Log in</a> or CALLOUT TO RECRUITMENT(?).</p>
-            {% endif %}
-        </div>
+    {% block pagenav %}{% endblock pagenav %}
+        {# <div id="user-status"> #}
+            {# {% if user.is_authenticated %} #}
+                {# <p>Welcome, <strong>{{ user.username }}</strong>.</p> #}
+            {# {% else %} #}
+                {# <p><a href="{% url auth_login %}">Log in</a> or CALLOUT TO RECRUITMENT(?).</p> #}
+            {# {% endif %} #}
+        {# </div> #}
     </div>
-    <h1 class="textReplace" id="logo">Free the Files</h1>
+    <h1 class="textReplace" id="logo">Political Ad Sleuth</h1>
 
 </header>
 {{ block.super }}
