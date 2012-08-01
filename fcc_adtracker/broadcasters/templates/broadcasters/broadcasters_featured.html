@@ -35,8 +35,8 @@
         <img src="{% static 'img/img_fccBallot.png' %}" alt="Ballot Box">
     </div>
 </div>
-<div id="map" class="row module">
-    <!-- <div class="span8">
+<div class="row module">
+    <div class="span8">
         <h3 class="withTip">Find a Station</h3>    
         <p class="tip">Find stations near you and then sign up to go collect the files! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
         {% include 'broadcasters/_map_searchform.html' %}
@@ -48,13 +48,13 @@
                 <ul class="withLine" id="locations"></ul>
             </div>
         </div>
-    </div> -->
+    </div>
     <div id="get_involved" class="span7">
         <h3 class="withTip">Take Action!</h3>
         <p class="tip">Sign up to unlock the political files and find out who's trying to influence your vote.</p>
         <form id='action_signup' class='form-horizontal' action="{% url action_signup %}" method="post" accept-charset="utf-8">
+            {% csrf_token %}
             <ul>
-                {% csrf_token %}
                 <li>
                     <label>Email</label>
                     <input type="email" name="email" value="" placeholder="Email" required="required">
@@ -64,7 +64,7 @@
                     <input type="text" name="firstname" value="" placeholder="First Name" id="firstname">
                 </li>
                 <li>
-                    <label class="control-label">Last Name</label>
+                    <label>Last Name</label>
                     <input type="text" name="lastname" value="" id="lastname" placeholder="Last Name">
                 </li>
                 <li>
@@ -77,11 +77,16 @@
                 </li>
                 <li>
                     <label>State</label>
-                    <select id="state" size="1"></select>
+                    <select id="state" size="1"  name="state_cd">
+                        <option selected="selected" value="">----------------</option>
+                    {% for k,v in states_dict %}
+                        <option value="{{ k }}">{{ v }}</option>
+                    {% endfor %}
+                    </select>
                 </li>
                 <li class="clearfix">
-                    <label>Station I Plan to Visit</label>
-                    <select name="custom-1093" id="station" size="1"></select>
+                    <label>Station I Plan to Visit (optional)</label>
+                    <input type="text" name="custom-1093" value="" placeholder="Station" id="station">
                 </li>
                 <li class="clearfix">
                     <label>Share with Free Press</label>
@@ -93,12 +98,10 @@
             </ul>
         </form>
     </div>
-</div>
-<div class="row">
     <div class="span4">
         <div id="feedback" class="module">
             <h4 class="withTip">Questions, Comments, Etc.</h4>
-            <p class="tip">Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? <a href="mailto:outreach@politicaladsleuth.com?subject=Question%20or%20comment%20about%20Political%20Ad%20Sleuth">Please email us!</a></p>
+            <p class="tip">Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? <a href="mailto:politicaladsleuth@sunlightfoundation.com?subject=Question%20or%20comment%20about%20Political%20Ad%20Sleuth">Please email us!</a></p>
         </div>
         <div class="boxCallout resources">
             <h3>Resources</h3>
@@ -118,22 +121,10 @@
 
 {% endblock content %}
 
-{% block head %}
-    {{ block.super }}
-    {% include "broadcasters/_googlemaps_script_include.html" %}
-{% endblock head %}
-
 {% block js %}
     {{ block.super }}
-    <script>
-        var startPos = {{ broadcaster_list.0.addresses.1.pos|default:"[0,0]" }};
-        var initialLocations = [
-            {% for broadcaster in broadcaster_list %}{{ broadcaster.as_json|safe }}{% if not forloop.last %},{% endif %}
-            {% endfor %}
-        ];
-        var userMarker_url = "{% static 'img/sll_map_marker_purple.png' %}";
-        var stationMarker_url = "{% static 'img/sll_map_marker_blue.png' %}";
-        $(document).ready(function() {
+    <script type="text/javascript">
+            $(document).ready(function() {
             $('#action_signup').submit(function(event) {
                 var theform = $(this);
                 var data = theform.serialize();
@@ -148,7 +139,5 @@
                 return false;
             });
         });
-
     </script>
-    <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
 {% endblock js %}
