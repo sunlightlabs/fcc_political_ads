@@ -66,7 +66,7 @@ class ActionSignupView(View):
             response = urllib2.urlopen(self.bsd_url, urllib.urlencode(params)).read()
 
         message_text = render_to_string('volunteers/signup_autoresponse.txt')
-        email_message = EmailMessage('Thank you for signing up to be a Political Ad Sleuth in Wisconsin!',
+        email_message = EmailMessage('Thank you for signing up to be a Political Ad Sleuth!',
                                      message_text, 'adsleuth-noreply@sunlightfoundation.com', (email,),
                                      headers={'Reply-To': SIGNUP_EMAIL_REPLY_TO})
         try:
