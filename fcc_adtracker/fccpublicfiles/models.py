@@ -181,6 +181,19 @@ class PoliticalSpot(models.Model):
         return locals()
     documentcloud_doc = property(**documentcloud_doc())
 
+    def __unicode__(self):
+        name_string = u'PoliticalSpot'
+        if self.document and self.document.advertiser:
+            name_string = u'{0}'.format(self.document.advertiser)
+            if self.document.station:
+                name_string = u'{0} on {1}'.format(name_string, self.document.station)
+        if self.show_name:
+                name_string = u'{0}: "{1}"'.format(name_string, self.show_name)
+        if self.airing_start_date:
+            name_string = u'{0} ({1} to {2})'.format(name_string, self.airing_start_date, self.airing_end_date)
+        return name_string
+
+
 
 reversion.register(Address, follow=['organization_set'])
 reversion.register(Person, follow=['role_set', 'organization_set', 'politicalbuy_set'])

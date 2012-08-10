@@ -8,6 +8,7 @@ from ajax_select.admin import AjaxSelectAdmin
 
 from reversion import VersionAdmin
 from moderation.admin import ModerationAdmin
+from moderation.forms import BaseModeratedObjectForm
 
 import weekday_field
 
@@ -16,7 +17,7 @@ CALLSIGNS_LIST = map(lambda x: x[1], CALLSIGNS)
 POLITICAL_SPOT_FIELDS = (('airing_start_date', 'airing_end_date', 'airing_days',), ('timeslot_begin', 'timeslot_end'), 'show_name', ('broadcast_length', 'num_spots', 'rate'))
 
 
-class PoliticalSpotAdminForm(forms.ModelForm):
+class PoliticalSpotAdminForm(BaseModeratedObjectForm):
     class Meta:
         model = PoliticalSpot
     airing_days = weekday_field.forms.WeekdayFormField(required=False)
@@ -25,6 +26,8 @@ class PoliticalSpotAdminForm(forms.ModelForm):
 class PoliticalSpotAdmin(ModerationAdmin, VersionAdmin):
     form = make_ajax_form(PoliticalSpot, {'show_name': 'show_name'}, superclass=PoliticalSpotAdminForm)
     search_fields = ['advertiser__name', 'bought_by__name']
+    list_display = ('__unicode__', 'show_name', 'airing_start_date', 'airing_end_date')
+    list_filter = ('show_name',)
     fieldsets = (
 
         (None, {
@@ -48,7 +51,7 @@ class PoliticalSpotInline(admin.StackedInline):
     )
 
 
-class PoliticalBuyAdminForm(forms.ModelForm):
+class PoliticalBuyAdminForm(BaseModeratedObjectForm):
     class Meta:
         model = PoliticalBuy
 
