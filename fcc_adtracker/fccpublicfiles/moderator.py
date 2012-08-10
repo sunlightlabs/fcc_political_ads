@@ -1,4 +1,5 @@
-from moderation import moderation, GenericModerator
+from moderation import moderation
+from moderation.moderator import GenericModerator
 from fccpublicfiles.models import Address, Person, Role, Organization, \
     PublicDocument, PoliticalBuy, PoliticalSpot
 
