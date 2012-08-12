@@ -38,6 +38,15 @@ class Broadcaster(models.Model):
     community_state = USStateField(choices=us_states.US_STATES, blank=True, null=True)
     addresses = models.ManyToManyField('Address', blank=True, null=True)
 
+    class Meta:
+        ordering = ('community_state', 'community_city', 'callsign')
+
+    def fcc_profile_url():
+        def fget(self):
+            return u'https://stations.fcc.gov/station-profile/{0}'.format(self.callsign.lower())
+        return locals()
+    fcc_profile_url = property(**fcc_profile_url())
+
     def __unicode__(self):
         if self.callsign:
             disp_name = self.callsign
@@ -48,13 +57,12 @@ class Broadcaster(models.Model):
 
 
 class PublicDocument(models.Model):
-    station = models.CharField(choices=CALLSIGNS, max_length=12, verbose_name="Station Callsign")
-    # broadcaster = models.ForeignKey(Broadcaster)
+    broadcasters = models.ManyToManyField(Broadcaster)
     documentcloud_doc = models.ForeignKey(Document)
 
     def __unicode__(self):
         if self.documentcloud_doc:
-            return u"{0}: {1}".format(self.station, self.documentcloud_doc)
+            return u"{0}: {1}".format(', '.join([x.callsign for x in self.broadcasters.all()[:5]]), self.documentcloud_doc)
         return u"PublicDocument"
 
 
@@ -72,6 +80,8 @@ class Address(models.Model):
     city = models.CharField(max_length=50)
     state = USStateField()
     zipcode = models.CharField(blank=True, null=True, max_length=10)
+    lat = models.FloatField(blank=True, null=True)
+    lng = models.FloatField(blank=True, null=True)
     address_labels = models.ManyToManyField(AddressLabel)
 
     _get_labels_display = None
@@ -180,12 +190,13 @@ class PoliticalBuy(PublicDocument):
 #     doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
 #     doccloud_data['callsign'] = instance.station
 
+# Can we check docdata update?
 @receiver(post_save, sender=PublicDocument)
 @receiver(post_save, sender=PoliticalBuy)
 def set_doccloud_data(sender, instance, signal, *args, **kwargs):
     doc = instance.documentcloud_doc
     doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
-    doccloud_data['callsign'] = instance.station
+    doccloud_data['callsign'] = instance.broadcasters.latest('id').callsign
     if doc.dc_data != doccloud_data:
         doc.dc_data = doccloud_data
 
@@ -228,8 +239,8 @@ class PoliticalSpot(models.Model):
         name_string = u'PoliticalSpot'
         if self.document and self.document.advertiser:
             name_string = u'{0}'.format(self.document.advertiser)
-            if self.document.station:
-                name_string = u'{0} on {1}'.format(name_string, self.document.station)
+            # if self.document.station:
+                # name_string = u'{0} on {1}'.format(name_string, self.document.station)
         if self.show_name:
                 name_string = u'{0}: "{1}"'.format(name_string, self.show_name)
         if self.airing_start_date:

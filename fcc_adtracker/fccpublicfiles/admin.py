@@ -19,8 +19,31 @@ POLITICAL_SPOT_FIELDS = (('airing_start_date', 'airing_end_date', 'airing_days',
 
 class BroadcasterAdmin(admin.ModelAdmin):
     model = Broadcaster
-    list_display = ('callsign', 'channel', 'network_affiliate', 'community_city', 'community_state')
-    list_filter = ('network_affiliate',)
+    list_display = ('callsign', 'channel', 'network_affiliate', 'community_city', 'community_state', 'display_fcc_profile_url')
+    list_filter = ('community_state',)
+    search_fields = ('callsign', 'community_city', 'community_state')
+    filter_vertical = ('addresses',)
+    readonly_fields = ('facility_id', 'facility_type')
+    fieldsets = (
+        (None, {'fields': ('callsign', 'channel', 'network_affiliate')}),
+        ('FCC DB fields', {
+            'classes': ['collapse',],
+            'fields': ('facility_id', 'facility_type')
+        }),
+        (None, {
+            'fields': ('community_city', 'community_state')
+        }),
+        (None, {
+            'classes': ['wide',],
+            'fields': {'addresses'}
+        })
+
+    )
+
+    def display_fcc_profile_url(self, obj):
+        return u"<a target='_blank' href='{0}'>{1} FCC profile page</a>".format(obj.fcc_profile_url, obj.callsign)
+    display_fcc_profile_url.short_description = u'FCC Profile Page'
+    display_fcc_profile_url.allow_tags = True
 
 admin.site.register(Broadcaster, BroadcasterAdmin)
 
@@ -69,12 +92,13 @@ class PoliticalBuyAdmin(ModerationAdmin, VersionAdmin):
                           'advertiser': 'advertiser',
                           'advertiser_signatory': 'person',
                           'bought_by': 'media_buyer',
-                          'station': 'callsign',
+                          # 'station': 'callsign',
                           'documentcloud_doc': 'doccloud'
                           })
     save_on_top = True
-    list_display = ('documentcloud_doc', 'station', 'advertiser', 'advertiser_signatory', 'bought_by')
-    search_fields = ['advertiser__name', 'bought_by__name', 'station']
+    list_display = ('documentcloud_doc', 'advertiser', 'advertiser_signatory', 'bought_by')
+    filter_horizontal = ('broadcasters',)
+    search_fields = ['advertiser__name', 'bought_by__name', 'broadcasters__callsign']
     inlines = [PoliticalSpotInline, ]
 
 admin.site.register(PoliticalBuy, PoliticalBuyAdmin)
@@ -101,7 +125,7 @@ admin.site.register(AddressLabel, AddressLabelAdmin)
 
 
 class AddressAdmin(AjaxSelectAdmin, ModerationAdmin, VersionAdmin):
-    list_display = ('__unicode__', 'city', 'state', 'get_labels_display')
+    list_display = ('__unicode__', 'city', 'state', 'get_labels_display', 'lat', 'lng')
     list_filter = ('state',)
 admin.site.register(Address, AddressAdmin)
 
