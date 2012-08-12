@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
-from .models import PoliticalSpot, PoliticalBuy, Role, Address, Organization, \
-        Person, CALLSIGNS
+from .models import PoliticalSpot, PoliticalBuy, Role, Address, AddressLabel, Organization, \
+        Person, Broadcaster, CALLSIGNS
 
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
@@ -16,6 +16,13 @@ CALLSIGNS_LIST = map(lambda x: x[1], CALLSIGNS)
 
 POLITICAL_SPOT_FIELDS = (('airing_start_date', 'airing_end_date', 'airing_days',), ('timeslot_begin', 'timeslot_end'), 'show_name', ('broadcast_length', 'num_spots', 'rate'))
 
+
+class BroadcasterAdmin(admin.ModelAdmin):
+    model = Broadcaster
+    list_display = ('callsign', 'channel', 'network_affiliate', 'community_city', 'community_state')
+    list_filter = ('network_affiliate',)
+
+admin.site.register(Broadcaster, BroadcasterAdmin)
 
 class PoliticalSpotAdminForm(BaseModeratedObjectForm):
     class Meta:
@@ -86,8 +93,15 @@ class RoleAdmin(AjaxSelectAdmin, ModerationAdmin, VersionAdmin):
 admin.site.register(Role, RoleAdmin)
 
 
+class AddressLabelAdmin(admin.ModelAdmin):
+    model = AddressLabel
+    prepopulated_fields = {"slug": ("name",)}
+
+admin.site.register(AddressLabel, AddressLabelAdmin)
+
+
 class AddressAdmin(AjaxSelectAdmin, ModerationAdmin, VersionAdmin):
-    list_display = ('__unicode__', 'city', 'state')
+    list_display = ('__unicode__', 'city', 'state', 'get_labels_display')
     list_filter = ('state',)
 admin.site.register(Address, AddressAdmin)
 
