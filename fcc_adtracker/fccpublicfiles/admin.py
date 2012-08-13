@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 from .models import PoliticalSpot, PoliticalBuy, Role, Address, AddressLabel, Organization, \
-        Person, Broadcaster, CALLSIGNS
+        Person, Broadcaster, BroadcasterAddress
 
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
@@ -12,9 +12,21 @@ from moderation.forms import BaseModeratedObjectForm
 
 import weekday_field
 
-CALLSIGNS_LIST = map(lambda x: x[1], CALLSIGNS)
 
 POLITICAL_SPOT_FIELDS = (('airing_start_date', 'airing_end_date', 'airing_days',), ('timeslot_begin', 'timeslot_end'), 'show_name', ('broadcast_length', 'num_spots', 'rate'))
+
+
+class BroadcasterAddressInlineAdmin(admin.StackedInline):
+    model = BroadcasterAddress
+
+
+class BroadcasterAddressAdmin(admin.ModelAdmin):
+    model = BroadcasterAddress
+    list_display = ('__unicode__', 'address', 'label')
+    list_filter = ('label',)
+    search_fields = ('broadcaster', 'address')
+
+admin.site.register(BroadcasterAddress, BroadcasterAddressAdmin)
 
 
 class BroadcasterAdmin(admin.ModelAdmin):
@@ -33,10 +45,10 @@ class BroadcasterAdmin(admin.ModelAdmin):
         (None, {
             'fields': ('community_city', 'community_state')
         }),
-        (None, {
-            'classes': ['wide',],
-            'fields': {'addresses'}
-        })
+        # (None, {
+        #     'classes': ['wide',],
+        #     'fields': {'addresses'}
+        # })
 
     )
 

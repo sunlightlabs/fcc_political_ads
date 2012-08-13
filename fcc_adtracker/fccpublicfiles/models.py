@@ -36,7 +36,7 @@ class Broadcaster(models.Model):
     facility_type = models.CharField(max_length=3, blank=True, null=True, help_text='FCC assigned facility_type')
     community_city = models.CharField(max_length=20, blank=True, null=True)
     community_state = USStateField(choices=us_states.US_STATES, blank=True, null=True)
-    addresses = models.ManyToManyField('Address', blank=True, null=True)
+    addresses = models.ManyToManyField('Address', through='BroadcasterAddress', blank=True, null=True)
 
     class Meta:
         ordering = ('community_state', 'community_city', 'callsign')
@@ -74,6 +74,15 @@ class AddressLabel(models.Model):
         return self.name
 
 
+class BroadcasterAddress(models.Model):
+    broadcaster = models.ForeignKey('Broadcaster')
+    address = models.ForeignKey('Address')
+    label = models.ForeignKey('AddressLabel')
+
+    def __unicode__(self):
+        return u"{0}'s '{1}' address".format(self.broadcaster.callsign, self.label)
+
+
 class Address(models.Model):
     address1 = models.CharField(blank=True, null=True, max_length=100)
     address2 = models.CharField(blank=True, null=True, max_length=100)
@@ -82,7 +91,7 @@ class Address(models.Model):
     zipcode = models.CharField(blank=True, null=True, max_length=10)
     lat = models.FloatField(blank=True, null=True)
     lng = models.FloatField(blank=True, null=True)
-    address_labels = models.ManyToManyField(AddressLabel)
+    # address_labels = models.ManyToManyField(AddressLabel)
 
     _get_labels_display = None
 
