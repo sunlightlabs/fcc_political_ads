@@ -32,7 +32,8 @@ class Signup(Document):
     lastname = StringField()
     state = StringField()
     city = StringField()
-    broadcaster = ReferenceField('Broadcaster')
+    # broadcaster = ReferenceField('Broadcaster')
+    broadcaster = StringField()
     _share_info = BooleanField(default=False)
     date_submitted = DateTimeField(default=datetime.datetime.now)
 

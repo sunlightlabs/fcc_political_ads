@@ -45,12 +45,12 @@ class ActionSignupView(View):
         state = request.POST.get("state_cd", "")
         share_checkbox = request.POST.get("custom-1116", "")
 
-        signup = Signup(email=email, phone=phone, firstname=firstname, lastname=lastname, city=city, state=state)
-        try:
-            broadcaster = Broadcaster.objects.get(callsign=station)
-            signup.broadcaster = broadcaster
-        except Broadcaster.DoesNotExist as e:
-            pass
+        signup = Signup(email=email, phone=phone, firstname=firstname, lastname=lastname, city=city, state=state, broadcaster=station)
+        # try:
+        #     broadcaster = Broadcaster.objects.get(callsign=station)
+        #     signup.broadcaster = broadcaster
+        # except Broadcaster.DoesNotExist as e:
+        #     pass
         signup.share_checkbox = share_checkbox or False
         try:
             signup.save()
