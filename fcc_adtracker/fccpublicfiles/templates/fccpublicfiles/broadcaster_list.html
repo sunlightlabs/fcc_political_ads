@@ -4,7 +4,7 @@
     <h2>{{ state_name }} ({{ broadcaster_list|length }} stations)</h2>
     <div>
         <p>Find stations near you! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
-        {% include 'broadcasters/_map_searchform.html' %}
+        {% include 'fccpublicfiles/_map_searchform.html' %}
 
     </div>
     <div id="map-box">
@@ -20,7 +20,7 @@
 
 {% block head %}
     {{ block.super }}
-    {% include "broadcasters/_googlemaps_script_include.html" %}
+    {% include "fccpublicfiles/_googlemaps_script_include.html" %}
 {% endblock head %}
 
 {% block js %}

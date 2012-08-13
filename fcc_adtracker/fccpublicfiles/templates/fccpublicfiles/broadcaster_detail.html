@@ -1,7 +1,11 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %}
 {% block bodyclass %}broadcaster-detail{% endblock bodyclass %}
+{% block pagetitle %}{{ broadcaster.callsign }} {% endblock pagetitle %}
 {% block content %}
     <h2>{{ broadcaster.callsign }}</h2>
+    <div class='broadcaster-info'>
+        <p>Channel: {{ broadcaster.channel }}</p>
+    </div>
     <div class="postal-address">
         {% if broadcaster.addresses.1.address1 %}<p class="street">{{ broadcaster.addresses.1.address1|title }}</p>{% endif %}
         {% if broadcaster.addresses.1.address2 %}<p class="street">{{ broadcaster.addresses.1.address2|title  }}</p>{% endif %}
@@ -14,22 +18,21 @@
 
 {% block head %}
     {{ block.super }}
-    {% include "broadcasters/_googlemaps_script_include.html" %}
+    {% include "fccpublicfiles/_googlemaps_script_include.html" %}
 {% endblock head %}
 
 {% block js %}
     {{ block.super }}
-    <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
-    <script>
-        var startPos = {{ broadcaster.addresses.1.pos|default:"[0,0]" }};
-        var locations = [ {{ broadcaster.as_json|safe }} ];
-        var userMarker_url = "{% static 'img/sll_map_marker_purple.png' %}";
-        var stationMarker_url = "{% static 'img/sll_map_marker_blue.png' %}";
-        $(document).ready(function() {
-            if (!("autofocus" in document.createElement("input"))) {
-                  $("#address").focus();
-            }
-        });
-        
+    // <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
+    // <script>
+    //     var startPos = {{ broadcaster.addresses.1.pos|default:"[0,0]" }};
+    //     var locations = [ {{ broadcaster.as_json|safe }} ];
+    //     var userMarker_url = "{% static 'img/sll_map_marker_purple.png' %}";
+    //     var stationMarker_url = "{% static 'img/sll_map_marker_blue.png' %}";
+    //     $(document).ready(function() {
+    //         if (!("autofocus" in document.createElement("input"))) {
+    //               $("#address").focus();
+    //         }
+    //     });
     </script>
 {% endblock js %}

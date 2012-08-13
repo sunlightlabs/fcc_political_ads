@@ -37,7 +37,7 @@
     <div class="span8">
         <h3 class="withTip">Find a Station</h3>
         <p class="tip">Find stations near you, and then sign up to go collect the files! Use this form to search for TV stations. It will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
-        {% include 'broadcasters/_map_searchform.html' %}
+        {% include 'fccpublicfiles/_map_searchform.html' %}
         <div id="map-box">
             <div id="map_canvas" style="width:100%; height:100%"></div>
         </div>
@@ -110,7 +110,7 @@
 
 {% block head %}
     {{ block.super }}
-    {% include "broadcasters/_googlemaps_script_include.html" %}
+    {% include "fccpublicfiles/_googlemaps_script_include.html" %}
 {% endblock head %}
 
 {% block js %}
