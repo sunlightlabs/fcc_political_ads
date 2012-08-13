@@ -41,14 +41,16 @@ class ActionSignupView(View):
         firstname = request.POST.get("firstname", "")
         lastname = request.POST.get("lastname", "")
         station = request.POST.get("custom-1093", "")
+        city = request.POST.get("city", "")
+        state = request.POST.get("state_cd", "")
         share_checkbox = request.POST.get("custom-1116", "")
 
-        signup = Signup(email=email, phone=phone, firstname=firstname, lastname=lastname)
-        try:
-            broadcaster = Broadcaster.objects.get(callsign=station)
-            signup.broadcaster = broadcaster
-        except Broadcaster.DoesNotExist as e:
-            pass
+        signup = Signup(email=email, phone=phone, firstname=firstname, lastname=lastname, city=city, state=state, broadcaster=station)
+        # try:
+        #     broadcaster = Broadcaster.objects.get(callsign=station)
+        #     signup.broadcaster = broadcaster
+        # except Broadcaster.DoesNotExist as e:
+        #     pass
         signup.share_checkbox = share_checkbox or False
         try:
             signup.save()
@@ -57,11 +59,14 @@ class ActionSignupView(View):
 
         if email:
             self.bsd_url += "?source=%s" % request.build_absolute_uri()
-            params = {"email": email, "phone": phone, "firstname": firstname, "lastname": lastname, "custom-1093": station, "custom-1116": share_checkbox}
+            params = { "email": email, "phone": phone,
+                       "firstname": firstname, "lastname": lastname, "custom-1093": station,
+                       "custom-1116": share_checkbox, "state_cd": state, "city": city
+                      }
             response = urllib2.urlopen(self.bsd_url, urllib.urlencode(params)).read()
 
         message_text = render_to_string('volunteers/signup_autoresponse.txt')
-        email_message = EmailMessage('Thank you for signing up to be a Political Ad Sleuth in Wisconsin!',
+        email_message = EmailMessage('Thank you for signing up to be a Political Ad Sleuth!',
                                      message_text, 'adsleuth-noreply@sunlightfoundation.com', (email,),
                                      headers={'Reply-To': SIGNUP_EMAIL_REPLY_TO})
         try:
