@@ -9,7 +9,7 @@ import csv
 from optparse import make_option
 
 class Command(BaseCommand):
-    option_list = Command.option_list + (
+    option_list = BaseCommand.option_list + (
         make_option('-f', '--file', default='volunteer_signups.csv', dest='filename', type="string",
                 help='Set the destination path for the output file. This will overwrite an existing file'),
         make_option('-a', '--all', action="store_true", default=False, dest='output_all',
