@@ -1,16 +1,26 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %}
 {% block bodyclass %}broadcaster-detail{% endblock bodyclass %}
-{% block pagetitle %}{{ broadcaster.callsign }} {% endblock pagetitle %}
+{% block pagetitle %}{{ obj.broadcaster.callsign }} {% endblock pagetitle %}
 {% block content %}
-    <h2>{{ broadcaster.callsign }}</h2>
+    <h2>{{ obj.broadcaster.callsign }} {{ obj.broadcaster.channel }} {{ obj.broadcaster.network_affiliate }}</h2>
     <div class='broadcaster-info'>
-        <p>Channel: {{ broadcaster.channel }}</p>
+        <p>Nielsen Designated Market Area:  {{ obj.broadcaster.nielsen_dma }}</p>
     </div>
     <div class="postal-address">
-        {% if broadcaster.addresses.1.address1 %}<p class="street">{{ broadcaster.addresses.1.address1|title }}</p>{% endif %}
-        {% if broadcaster.addresses.1.address2 %}<p class="street">{{ broadcaster.addresses.1.address2|title  }}</p>{% endif %}
-        <p><span class="city">{{ broadcaster.addresses.1.city|title  }}</span>, <span class="state">{{ broadcaster.addresses.1.state }}</span> <span class="zipcode">{{ broadcaster.addresses.1.zip1 }}</span></p>
+        {% if obj.address.address1 %}<p class="street">{{ obj.address.address1|title }}</p>{% endif %}
+        {% if obj.address.address2 %}<p class="street">{{ obj.address.address2|title  }}</p>{% endif %}
+        <p><span class="city">{{ obj.address.city|title  }}</span>, <span class="state">{{ obj.address.state }}</span> <span class="zipcode">{{ obj.address.zipcode }}</span></p>
     </div>
+    {% comment %}
+    {% for bca in broadcaster.broadcasteraddress_set.all %}
+    <div class="postal-address">
+        <p>{{ bca.label.name }}</p>
+        {% if bca.address.address1 %}<p class="street">{{ bca.address.address1|title }}</p>{% endif %}
+        {% if bca.address.address2 %}<p class="street">{{ bca.address.address2|title  }}</p>{% endif %}
+        <p><span class="city">{{ bca.address.city|title  }}</span>, <span class="state">{{ bca.address.state }}</span> <span class="zipcode">{{ bca.address.zipcode }}</span></p>
+    </div>
+    {% endfor %}
+{% endcomment %}
     <div id="map-box">
         <div id="map_canvas" style="width:100%; height:100%"></div>
     </div>
@@ -23,16 +33,13 @@
 
 {% block js %}
     {{ block.super }}
-    // <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
-    // <script>
-    //     var startPos = {{ broadcaster.addresses.1.pos|default:"[0,0]" }};
-    //     var locations = [ {{ broadcaster.as_json|safe }} ];
-    //     var userMarker_url = "{% static 'img/sll_map_marker_purple.png' %}";
-    //     var stationMarker_url = "{% static 'img/sll_map_marker_blue.png' %}";
-    //     $(document).ready(function() {
-    //         if (!("autofocus" in document.createElement("input"))) {
-    //               $("#address").focus();
-    //         }
-    //     });
+    <script>
+        var startPos = [{{ obj.address.lng }},{{ obj.address.lat }}];
+        var initialLocations = [
+            {% include "fccpublicfiles/_broadcaster_obj.json" with obj=obj %}
+        ];
+        var userMarker_url = "{% static 'img/sll_map_marker_purple.png' %}";
+        var stationMarker_url = "{% static 'img/sll_map_marker_blue.png' %}";
     </script>
+    <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
 {% endblock js %}

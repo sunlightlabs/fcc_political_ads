@@ -3,10 +3,17 @@ from django.http import HttpResponse, Http404, HttpResponsePermanentRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.localflavor.us import us_states
 from django.conf import settings
+from django.core import serializers
 
-from .models import PoliticalBuy, PoliticalSpot, Broadcaster, Address, AddressLabel
+from .models import PoliticalBuy, PoliticalSpot, Broadcaster, Address, BroadcasterAddress, AddressLabel
 
 from geopy import distance
+from geopy.point import Point
+
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 STATES_DICT = dict(us_states.US_STATES)
 FEATURED_BROADCASTER_STATE = getattr(settings, 'FEATURED_BROADCASTER_STATE', 'OH')
@@ -24,11 +31,12 @@ def state_broadcaster_list(request, state_id):
 def broadcaster_detail(request, callsign):
     if not callsign.isupper():
         return HttpResponsePermanentRedirect(reverse('broadcaster_detail', kwargs={'callsign': callsign.upper()}))
-    broadcaster = Broadcaster.objects.get(callsign=callsign.upper())
-    if broadcaster:
-        return render(request, 'fccpublicfiles/broadcaster_detail.html', {'broadcaster': broadcaster})
-    else:
-        raise Http404('Broadcaster with "{callsign}" not found.'.format(callsign=callsign))
+    try:
+        obj = BroadcasterAddress.objects.get(broadcaster__callsign=callsign.upper(), label__name__iexact='studio')
+
+        return render(request, 'fccpublicfiles/broadcaster_detail.html', {'obj': obj})
+    except Broadcaster.DoesNotExist:
+        raise Http404('Broadcaster with callsign "{callsign}" not found.'.format(callsign=callsign))
 
 
 def featured_broadcasters(request):
@@ -45,17 +53,43 @@ def featured_broadcasters(request):
 
 def nearest_broadcasters_list(request):
     radius = int(request.GET['radius']) if 'radius' in request.GET else 20
-    radian_dist = radius/EARTH_RADIUS_MILES
     if 'lat' in request.GET and 'lon' in request.GET:
         lat = float(request.GET['lat'])
-        lon = float(request.GET['lon'])
-        # cursor = mongo_conn.fccads.command(SON([ ('geoNear', 'broadcaster'), ('near', [lon, lat]), ('spherical', True), ('maxDistance', radian_dist) ]))
-        results = []
-        for item in cursor['results']:
-            item['obj']['distance'] = item['dis'] * EARTH_RADIUS_MILES
-            del(item['dis'])
-            results.append(item['obj'])
-        jsonout = json.dumps(results, default=encode_model)
-        return HttpResponse(jsonout, content_type='application/javascript')
+        lng = float(request.GET['lon'])
+        search_point = Point(lat, lng)
+
+        # a degree of latitude is between 68.703 and 69.407 miles
+        # a degree of longitude is about 53 miles at the 40th parallel
+        # This roughly narrows down the search to 200 miles. I like fudge. Do you?
+        max_dist = Point(lat + 2, lng + 2.8)
+        min_dist = Point(lat - 2, lng - 2.8)
+        nearby_broadcaster_list = BroadcasterAddress.objects.filter(label__name='studio',
+                                                                    address__lat__range=(min_dist.latitude,max_dist.latitude),
+                                                                    address__lng__range=(min_dist.longitude, max_dist.longitude)).distinct()
+
+        obj_list = []
+        for obj in nearby_broadcaster_list:
+            pt = Point(obj.address.lat, obj.address.lng)
+            miles_away = distance.distance(search_point, pt).miles
+            if miles_away < radius:
+                obj_list.append({
+                        'distance': miles_away,
+                        'broadcaster': {
+                            'callsign': obj.broadcaster.callsign,
+                            'channel': obj.broadcaster.channel,
+                            'network_affiliate': obj.broadcaster.network_affiliate
+                        },
+                        'combined_address': obj.address.combined_address,
+                        'address': {
+                            'address1': obj.address.address1,
+                            'address2': obj.address.address2 or None,
+                            'city': obj.address.city,
+                            'state': obj.address.state,
+                            'zipcode': obj.address.zipcode
+                        }
+                    })
+        sorted_obj_list = sorted(obj_list, key=lambda x: x['distance'])
+        jsonout = json.dumps(sorted_obj_list)
+        return HttpResponse(jsonout, content_type='application/json')
     else:
         return HttpResponseBadRequest('You must include lat, lon args')
