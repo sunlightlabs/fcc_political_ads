@@ -18,6 +18,7 @@ POLITICAL_SPOT_FIELDS = (('airing_start_date', 'airing_end_date', 'airing_days',
 
 class BroadcasterAddressInlineAdmin(admin.StackedInline):
     model = BroadcasterAddress
+    extra = 1
 
 
 class BroadcasterAddressAdmin(admin.ModelAdmin):
@@ -36,6 +37,7 @@ class BroadcasterAdmin(admin.ModelAdmin):
     search_fields = ('callsign', 'community_city', 'community_state')
     filter_vertical = ('addresses',)
     readonly_fields = ('facility_id', 'facility_type')
+    inlines = [BroadcasterAddressInlineAdmin,]
     fieldsets = (
         (None, {'fields': ('callsign', 'channel', 'network_affiliate')}),
         ('FCC DB fields', {
