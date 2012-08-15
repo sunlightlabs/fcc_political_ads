@@ -15,8 +15,26 @@ try:
 except ImportError:
     import json
 
+import copy
+
 STATES_DICT = dict(us_states.US_STATES)
 FEATURED_BROADCASTER_STATE = getattr(settings, 'FEATURED_BROADCASTER_STATE', 'OH')
+
+
+def _make_broadcasteraddress_dict(bc_ad_obj):
+    '''
+    Transform a BroadcasterAddress into a dictionary that can be modified and serialized to json
+    '''
+    obj_dict = {
+                'broadcaster': dict(copy.copy(bc_ad_obj.broadcaster.__dict__)),
+                'combined_address': bc_ad_obj.address.combined_address,
+                'address': dict(copy.copy(bc_ad_obj.address.__dict__))
+            }
+    obj_dict['broadcaster'].pop('id')
+    obj_dict['broadcaster'].pop('_state')
+    obj_dict['address'].pop('id')
+    obj_dict['address'].pop('_state')
+    return obj_dict
 
 
 def state_broadcaster_list(request, state_id):
@@ -33,10 +51,18 @@ def broadcaster_detail(request, callsign):
         return HttpResponsePermanentRedirect(reverse('broadcaster_detail', kwargs={'callsign': callsign.upper()}))
     try:
         obj = BroadcasterAddress.objects.get(broadcaster__callsign=callsign.upper(), label__name__iexact='studio')
-
-        return render(request, 'fccpublicfiles/broadcaster_detail.html', {'obj': obj})
-    except Broadcaster.DoesNotExist:
-        raise Http404('Broadcaster with callsign "{callsign}" not found.'.format(callsign=callsign))
+        obj_json = json.dumps(_make_broadcasteraddress_dict(obj))
+        return render(request, 'fccpublicfiles/broadcaster_detail.html', {'obj': obj, 'obj_json': obj_json})
+    except BroadcasterAddress.DoesNotExist:
+        try:
+            broadcaster = Broadcaster.objects.get(callsign=callsign.upper())
+            obj = {
+                'broadcaster': broadcaster,
+            }
+            obj_json = None
+            return render(request, 'fccpublicfiles/broadcaster_detail.html', {'obj': obj, 'obj_json': obj_json})
+        except Broadcaster.DoesNotExist:
+            raise Http404('Broadcaster with callsign "{callsign}" not found.'.format(callsign=callsign))
 
 
 def featured_broadcasters(request):
@@ -72,22 +98,9 @@ def nearest_broadcasters_list(request):
             pt = Point(obj.address.lat, obj.address.lng)
             miles_away = distance.distance(search_point, pt).miles
             if miles_away < radius:
-                obj_list.append({
-                        'distance': miles_away,
-                        'broadcaster': {
-                            'callsign': obj.broadcaster.callsign,
-                            'channel': obj.broadcaster.channel,
-                            'network_affiliate': obj.broadcaster.network_affiliate
-                        },
-                        'combined_address': obj.address.combined_address,
-                        'address': {
-                            'address1': obj.address.address1,
-                            'address2': obj.address.address2 or None,
-                            'city': obj.address.city,
-                            'state': obj.address.state,
-                            'zipcode': obj.address.zipcode
-                        }
-                    })
+                obj_dict = _make_broadcasteraddress_dict(obj)
+                obj_dict['distance'] = miles_away
+                obj_list.append(obj_dict)
         sorted_obj_list = sorted(obj_list, key=lambda x: x['distance'])
         jsonout = json.dumps(sorted_obj_list)
         return HttpResponse(jsonout, content_type='application/json')
