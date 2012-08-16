@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import PoliticalSpot, PoliticalBuy, Role, Address, Organization, \
-        Person, CALLSIGNS
+from .models import PoliticalSpot, PoliticalBuy, Role, Organization, Person
 
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
@@ -11,8 +10,6 @@ from moderation.admin import ModerationAdmin
 from moderation.forms import BaseModeratedObjectForm
 
 import weekday_field
-
-CALLSIGNS_LIST = map(lambda x: x[1], CALLSIGNS)
 
 POLITICAL_SPOT_FIELDS = (('airing_start_date', 'airing_end_date', 'airing_days',), ('timeslot_begin', 'timeslot_end'), 'show_name', ('broadcast_length', 'num_spots', 'rate'))
 
@@ -62,11 +59,11 @@ class PoliticalBuyAdmin(ModerationAdmin, VersionAdmin):
                           'advertiser': 'advertiser',
                           'advertiser_signatory': 'person',
                           'bought_by': 'media_buyer',
-                          'station': 'callsign',
+                          # 'broadcasters': 'callsign',
                           'documentcloud_doc': 'doccloud'
                           })
     save_on_top = True
-    list_display = ('documentcloud_doc', 'station', 'advertiser', 'advertiser_signatory', 'bought_by')
+    list_display = ('documentcloud_doc', 'advertiser', 'advertiser_signatory', 'bought_by')
     search_fields = ['advertiser__name', 'bought_by__name', 'station']
     inlines = [PoliticalSpotInline, ]
 
@@ -86,16 +83,10 @@ class RoleAdmin(AjaxSelectAdmin, ModerationAdmin, VersionAdmin):
 admin.site.register(Role, RoleAdmin)
 
 
-class AddressAdmin(AjaxSelectAdmin, ModerationAdmin, VersionAdmin):
-    list_display = ('__unicode__', 'city', 'state')
-    list_filter = ('state',)
-admin.site.register(Address, AddressAdmin)
-
-
 class OrganizationAdmin(AjaxSelectAdmin, ModerationAdmin, VersionAdmin):
     list_display = ('name', 'fec_id', 'organization_type')
     search_fields = ['name', 'fec_id']
-    form = make_ajax_form(Organization, {'addresses': 'address'})
+    # form = make_ajax_form(Organization, {'addresses': 'address'})
     inlines = [RoleAdminInline, ]
 
 
