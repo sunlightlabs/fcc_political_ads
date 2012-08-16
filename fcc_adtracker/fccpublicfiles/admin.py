@@ -25,7 +25,7 @@ class BroadcasterAddressAdmin(admin.ModelAdmin):
     model = BroadcasterAddress
     list_display = ('__unicode__', 'address', 'label')
     list_filter = ('label',)
-    search_fields = ('broadcaster', 'address')
+    search_fields = ('broadcaster__callsign', 'label__name')
 
 admin.site.register(BroadcasterAddress, BroadcasterAddressAdmin)
 
@@ -139,7 +139,7 @@ admin.site.register(AddressLabel, AddressLabelAdmin)
 
 
 class AddressAdmin(AjaxSelectAdmin, ModerationAdmin, VersionAdmin):
-    list_display = ('__unicode__', 'city', 'state', 'get_labels_display', 'lat', 'lng')
+    list_display = ('__unicode__', 'city', 'state', 'lat', 'lng')
     list_filter = ('state',)
 admin.site.register(Address, AddressAdmin)
 
