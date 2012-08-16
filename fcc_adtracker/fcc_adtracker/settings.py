@@ -158,6 +158,7 @@ INSTALLED_APPS = (
     'registration',
     'social_auth',
 
+    'locations',
     'fccpublicfiles',
     'broadcasters',
     'volunteers',
