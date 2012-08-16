@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.localflavor.us import us_states
 from django.contrib.localflavor.us.models import USStateField
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
@@ -26,69 +25,14 @@ ORGANIZATION_TYPES = (
 DOCUMENTCLOUD_META = getattr(settings, 'DOCUMENTCLOUD_META', {})
 
 
-class Broadcaster(models.Model):
-    """Broadcaster, based on FCC's CDBS facility table"""
-    callsign = models.CharField(max_length=12, unique=True)
-    channel = models.PositiveSmallIntegerField(null=True, blank=True)
-    nielsen_dma = models.CharField(max_length=60, blank=True, null=True, help_text='Nielsen Designated Market Area')
-    network_affiliate = models.CharField(max_length=100, blank=True, null=True)
-    facility_id = models.PositiveIntegerField(blank=True, null=True, unique=True, editable=False, help_text='FCC assigned id')
-    facility_type = models.CharField(max_length=3, blank=True, null=True, help_text='FCC assigned facility_type')
-    community_city = models.CharField(max_length=20, blank=True, null=True)
-    community_state = USStateField(choices=us_states.US_STATES, blank=True, null=True)
-    addresses = models.ManyToManyField('Address', through='BroadcasterAddress', blank=True, null=True)
-
-    class Meta:
-        ordering = ('community_state', 'community_city', 'callsign')
-
-    def fcc_profile_url():
-        def fget(self):
-            return u'https://stations.fcc.gov/station-profile/{0}'.format(self.callsign.lower())
-        return locals()
-    fcc_profile_url = property(**fcc_profile_url())
-
-    @models.permalink
-    def get_absolute_url(self):
-        return ('fccpublicfiles.views.broadcaster_detail', (), {'callsign': self.callsign})
-
-    def __unicode__(self):
-        if self.callsign:
-            disp_name = self.callsign
-            disp_elements = ('community_state', 'network_affiliate', 'channel')
-            extra_info = ', '.join([str(val) for val in [self.__getattribute__(el) for el in disp_elements] if val != None])
-            return '{0} [{1}]'.format(disp_name, extra_info)
-        return u"Broadcaster"
-
-
 class PublicDocument(models.Model):
-    broadcasters = models.ManyToManyField(Broadcaster)
+    station = models.CharField(choices=CALLSIGNS, max_length=12, verbose_name="Station Callsign")
     documentcloud_doc = models.ForeignKey(Document)
 
     def __unicode__(self):
         if self.documentcloud_doc:
-            return u"{0}: {1}".format(', '.join([x.callsign for x in self.broadcasters.all()[:5]]), self.documentcloud_doc)
+            return u"{0}: {1}".format(self.station, self.documentcloud_doc)
         return u"PublicDocument"
-
-
-class AddressLabel(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    slug = models.SlugField()
-
-    def __unicode__(self):
-        return self.name
-
-
-class BroadcasterAddress(models.Model):
-    broadcaster = models.ForeignKey('Broadcaster')
-    address = models.ForeignKey('Address')
-    label = models.ForeignKey('AddressLabel')
-
-    class Meta:
-        verbose_name_plural = u'Broadcaster Addresses'
-        unique_together = (('broadcaster', 'address', 'label'),)
-
-    def __unicode__(self):
-        return u"{0}'s '{1}' address".format(self.broadcaster.callsign, self.label)
 
 
 class Address(models.Model):
@@ -97,20 +41,16 @@ class Address(models.Model):
     city = models.CharField(max_length=50)
     state = USStateField()
     zipcode = models.CharField(blank=True, null=True, max_length=10)
-    lat = models.FloatField(blank=True, null=True)
-    lng = models.FloatField(blank=True, null=True)
-    # address_labels = models.ManyToManyField(AddressLabel)
 
     class Meta:
-        verbose_name_plural = u"Addresses"
-        unique_together = ('address1', 'address2', 'city', 'state', 'zipcode')
+        verbose_name_plural = "Addresses"
 
     def _combined_address(self):
         address_bits = [self.city, self. state]
         for street in (self.address2, self.address1):
             if street != '':
                 address_bits.insert(0, street)
-        return u'{0} {1}'.format(u', '.join(address_bits), self.zipcode or u'')
+        return u', '.join(address_bits) + ' ' + self.zipcode
 
     def combined_address():
         doc = "The combined_address property."
@@ -197,13 +137,12 @@ class PoliticalBuy(PublicDocument):
 #     doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
 #     doccloud_data['callsign'] = instance.station
 
-# Can we check docdata update?
 @receiver(post_save, sender=PublicDocument)
 @receiver(post_save, sender=PoliticalBuy)
 def set_doccloud_data(sender, instance, signal, *args, **kwargs):
     doc = instance.documentcloud_doc
     doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
-    doccloud_data['callsign'] = instance.broadcasters.latest('id').callsign
+    doccloud_data['callsign'] = instance.station
     if doc.dc_data != doccloud_data:
         doc.dc_data = doccloud_data
 
@@ -246,8 +185,8 @@ class PoliticalSpot(models.Model):
         name_string = u'PoliticalSpot'
         if self.document and self.document.advertiser:
             name_string = u'{0}'.format(self.document.advertiser)
-            # if self.document.station:
-                # name_string = u'{0} on {1}'.format(name_string, self.document.station)
+            if self.document.station:
+                name_string = u'{0} on {1}'.format(name_string, self.document.station)
         if self.show_name:
                 name_string = u'{0}: "{1}"'.format(name_string, self.show_name)
         if self.airing_start_date:
@@ -263,4 +202,3 @@ reversion.register(Organization, follow=['employees', 'role_set'])
 reversion.register(PublicDocument)
 reversion.register(PoliticalBuy, follow=['publicdocument_ptr'])
 reversion.register(PoliticalSpot)
-# reversion.register(Broadcaster, follow=['broadcaster_set'])

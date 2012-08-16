@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
-from .models import PoliticalSpot, PoliticalBuy, Role, Address, AddressLabel, Organization, \
-        Person, Broadcaster, BroadcasterAddress
+from .models import PoliticalSpot, PoliticalBuy, Role, Address, Organization, \
+        Person, CALLSIGNS
 
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
@@ -12,54 +12,10 @@ from moderation.forms import BaseModeratedObjectForm
 
 import weekday_field
 
+CALLSIGNS_LIST = map(lambda x: x[1], CALLSIGNS)
 
 POLITICAL_SPOT_FIELDS = (('airing_start_date', 'airing_end_date', 'airing_days',), ('timeslot_begin', 'timeslot_end'), 'show_name', ('broadcast_length', 'num_spots', 'rate'))
 
-
-class BroadcasterAddressInlineAdmin(admin.StackedInline):
-    model = BroadcasterAddress
-    extra = 1
-
-
-class BroadcasterAddressAdmin(admin.ModelAdmin):
-    model = BroadcasterAddress
-    list_display = ('__unicode__', 'address', 'label')
-    list_filter = ('label',)
-    search_fields = ('broadcaster__callsign', 'label__name')
-
-admin.site.register(BroadcasterAddress, BroadcasterAddressAdmin)
-
-
-class BroadcasterAdmin(admin.ModelAdmin):
-    model = Broadcaster
-    list_display = ('callsign', 'channel', 'network_affiliate', 'community_city', 'community_state', 'display_fcc_profile_url')
-    list_filter = ('community_state',)
-    search_fields = ('callsign', 'community_city', 'community_state')
-    filter_vertical = ('addresses',)
-    readonly_fields = ('facility_id', 'facility_type')
-    inlines = [BroadcasterAddressInlineAdmin,]
-    fieldsets = (
-        (None, {'fields': ('callsign', 'channel', 'network_affiliate')}),
-        ('FCC DB fields', {
-            'classes': ['collapse',],
-            'fields': ('facility_id', 'facility_type')
-        }),
-        (None, {
-            'fields': ('community_city', 'community_state')
-        }),
-        # (None, {
-        #     'classes': ['wide',],
-        #     'fields': {'addresses'}
-        # })
-
-    )
-
-    def display_fcc_profile_url(self, obj):
-        return u"<a target='_blank' href='{0}'>{1} FCC profile page</a>".format(obj.fcc_profile_url, obj.callsign)
-    display_fcc_profile_url.short_description = u'FCC Profile Page'
-    display_fcc_profile_url.allow_tags = True
-
-admin.site.register(Broadcaster, BroadcasterAdmin)
 
 class PoliticalSpotAdminForm(BaseModeratedObjectForm):
     class Meta:
@@ -106,13 +62,12 @@ class PoliticalBuyAdmin(ModerationAdmin, VersionAdmin):
                           'advertiser': 'advertiser',
                           'advertiser_signatory': 'person',
                           'bought_by': 'media_buyer',
-                          # 'station': 'callsign',
+                          'station': 'callsign',
                           'documentcloud_doc': 'doccloud'
                           })
     save_on_top = True
-    list_display = ('documentcloud_doc', 'advertiser', 'advertiser_signatory', 'bought_by')
-    filter_horizontal = ('broadcasters',)
-    search_fields = ['advertiser__name', 'bought_by__name', 'broadcasters__callsign']
+    list_display = ('documentcloud_doc', 'station', 'advertiser', 'advertiser_signatory', 'bought_by')
+    search_fields = ['advertiser__name', 'bought_by__name', 'station']
     inlines = [PoliticalSpotInline, ]
 
 admin.site.register(PoliticalBuy, PoliticalBuyAdmin)
@@ -131,15 +86,8 @@ class RoleAdmin(AjaxSelectAdmin, ModerationAdmin, VersionAdmin):
 admin.site.register(Role, RoleAdmin)
 
 
-class AddressLabelAdmin(admin.ModelAdmin):
-    model = AddressLabel
-    prepopulated_fields = {"slug": ("name",)}
-
-admin.site.register(AddressLabel, AddressLabelAdmin)
-
-
 class AddressAdmin(AjaxSelectAdmin, ModerationAdmin, VersionAdmin):
-    list_display = ('__unicode__', 'city', 'state', 'lat', 'lng')
+    list_display = ('__unicode__', 'city', 'state')
     list_filter = ('state',)
 admin.site.register(Address, AddressAdmin)
 
