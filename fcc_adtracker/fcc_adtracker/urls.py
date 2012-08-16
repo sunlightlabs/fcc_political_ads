@@ -11,7 +11,7 @@ admin.autodiscover()
 
 
 urlpatterns = patterns('',
-    url(r'^broadcasters/', include('broadcasters.urls')),
+    url(r'', include('broadcasters.urls')),
     url(r'', include('volunteers.urls')),
     # url(r'^publicfiles/', include('fccpublicfiles.urls')),
     url(r'', include('sfapp.urls')),
