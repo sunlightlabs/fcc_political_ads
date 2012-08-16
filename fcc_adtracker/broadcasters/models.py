@@ -1,79 +1,56 @@
 from __future__ import division
+from django.db import models
 from django.contrib.localflavor.us import us_states
-
-from mongoengine import *
-from mongo_utils.serializer import encode_model
+from django.contrib.localflavor.us.models import USStateField
 import datetime
-try:
-    import simplejson as json
-except ImportError, e:
-    import json
-
 
 
 STATES_DICT = dict(us_states.US_STATES)
 
-EARTH_RADIUS_MILES = float(3959)
 
-
-class Address(EmbeddedDocument):
-    """Postal Address"""
-    title = StringField(max_length=80)
-    address1 = StringField(max_length=40)
-    address2 = StringField(max_length=40)
-    city = StringField(max_length=20)
-    state = StringField(max_length=2, choices=us_states.US_STATES)
-    zip1 = StringField(max_length=5)
-    zip2 = StringField(max_length=4)
-    pos = ListField()
-
-    def as_json(self):
-        return json.dumps(self, default=encode_model)
-
-    meta = {
-        'allow_inheritance': False,
-        'indexes': [ '*pos', ],
-    }
-
-    def __unicode__(self):
-        return u"Address"
-
-
-class Broadcaster(DynamicDocument):
+class Broadcaster(models.Model):
     """Broadcaster, based on FCC's CDBS facility table"""
-    addresses = ListField(EmbeddedDocumentField(Address))
-    callsign = StringField(max_length=12, unique=True)
-    channel = IntField()
-    nielsen_dma = StringField(max_length=60)
-    network_affiliate = StringField(max_length=100)
-    facility_type = StringField(max_length=3)
-    community_city = StringField(max_length=20)
-    community_state = StringField(max_length=2, choices=us_states.US_STATES)
+    callsign = models.CharField(max_length=12, unique=True)
+    channel = models.PositiveSmallIntegerField(null=True, blank=True)
+    nielsen_dma = models.CharField(max_length=60, blank=True, null=True, help_text='Nielsen Designated Market Area')
+    network_affiliate = models.CharField(max_length=100, blank=True, null=True)
+    facility_id = models.PositiveIntegerField(blank=True, null=True, unique=True, editable=False, help_text='FCC assigned id')
+    facility_type = models.CharField(max_length=3, blank=True, null=True, help_text='FCC assigned facility_type')
+    community_city = models.CharField(max_length=20, blank=True, null=True)
+    community_state = USStateField(choices=us_states.US_STATES, blank=True, null=True)
+    addresses = models.ManyToManyField('Address', through='BroadcasterAddress', blank=True, null=True)
 
-    def as_json(self):
-        return json.dumps(self, default=encode_model)
+    class Meta:
+        ordering = ('community_state', 'community_city', 'callsign')
 
-    meta = {'allow_inheritance': False}
+    def fcc_profile_url():
+        def fget(self):
+            return u'https://stations.fcc.gov/station-profile/{0}'.format(self.callsign.lower())
+        return locals()
+    fcc_profile_url = property(**fcc_profile_url())
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('fccpublicfiles.views.broadcaster_detail', (), {'callsign': self.callsign})
 
     def __unicode__(self):
         if self.callsign:
             disp_name = self.callsign
             disp_elements = ('community_state', 'network_affiliate', 'channel')
             extra_info = ', '.join([str(val) for val in [self.__getattribute__(el) for el in disp_elements] if val != None])
-            # for el in disp_elements:
-                # val = self.__getitem__(el)
-                # if val and val != '':
-                    # disp_name += ' | ' + str(val)
-            # if self.community_state: disp_elements.append(self.community_state)
-            # disp_elements.append(self.network_affiliate) if self.network_affiliate
-            # disp_elements.append(self.channel) if self.channel
-            # if len(disp_elements) > 0:
-            #     disp_name += '[' + ' '.join(disp_elements) +']'
-            return disp_name + ' ['+ extra_info + ']'
+            return '{0} [{1}]'.format(disp_name, extra_info)
         return u"Broadcaster"
 
 
 
-def get_callsigns():
-    return [b.callsign for b in Broadcaster.objects.only('callsign').all().order_by('callsign')]
+class BroadcasterAddress(models.Model):
+    broadcaster = models.ForeignKey('Broadcaster')
+    address = models.ForeignKey('Address')
+    label = models.ForeignKey('AddressLabel')
 
+    class Meta:
+        verbose_name_plural = u'Broadcaster Addresses'
+        unique_together = (('broadcaster', 'address', 'label'),)
+
+    def __unicode__(self):
+        return u"{0}'s '{1}' address".format(self.broadcaster.callsign, self.label)

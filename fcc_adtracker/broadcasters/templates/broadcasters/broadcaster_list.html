@@ -1,7 +1,35 @@
-{% extends "fcc-base.html" %}{% load static from staticfiles %}
+{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load url from future %}
 {% block bodyclass %}broadcasters{% endblock bodyclass %}
+{% block pagetitle %}{{ state_name }} Broadcasters{% endblock pagetitle %}
 {% block content %}
     <h2>{{ state_name }} ({{ broadcaster_list|length }} stations)</h2>
+    {% regroup broadcaster_list by community_city as community_broadcaster_list %}
+    <ul>
+        {% for community_group in community_broadcaster_list %}
+            <li><p>{{ community_group.grouper }}</p>
+            <ul>
+                {% for broadcaster in community_group.list %}
+                <li><a href='{{ broadcaster.get_absolute_url }}'>{{ broadcaster.callsign }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </ul>
+    {% comment %}
+    {% for broadcaster in broadcaster_list %}
+        <h3>{{ broadcaster.callsign }}</h3>
+        {% for bca in broadcaster.broadcasteraddress_set.all %}
+            <div class="adr">
+                <p>{{ bca.label.name|upper }}</p>
+                <p>{{ bca.address.combined_address }}</p>
+                <p>{{ bca.address.lat }}, {{ bca.address.lng }}</p>
+                {# {% if address.address1 %}<p class="street">{{ address.address1|title }}</p>{% endif %} #}
+                {# {% if address.address2 %}<p class="street">{{ address.address2|title  }}</p>{% endif %} #}
+                {# <p><span class="locality">{{ address.city|title  }}</span>, <span class="region">{{ address.state }}</span> <span class="postal-code">{{ address.zipcode }}</span></p> #}
+            </div>
+            {# <p>{{ address.combined_address }}</p> #}
+        {% endfor %}
+    {% endfor %}
+    {% endcomment %}
     <div>
         <p>Find stations near you! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
         {% include 'broadcasters/_map_searchform.html' %}
@@ -25,23 +53,29 @@
 
 {% block js %}
     {{ block.super }}
+    <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
     <script>
-        var startPos = {{ broadcaster_list.0.addresses.1.pos|default:"[0,0]" }};
-        var initialLocations = [
-            {% for broadcaster in broadcaster_list %}{{ broadcaster.as_json|safe }}{% if not forloop.last %},{% endif %}
-            {% endfor %}
-        ];
+        var startPos = [{{ state_geocenter.lng|default:0 }}, {{ state_geocenter.lat|default:0 }}];
+        var initialLocations = [];
+        var locations_endpoint_url = "{% url 'fccpublicfiles.views.state_broadcaster_addresses' state_id=broadcaster_list.0.community_state label_slug='studio' %}";
         var userMarker_url = "{% static 'img/sll_map_marker_purple.png' %}";
         var stationMarker_url = "{% static 'img/sll_map_marker_blue.png' %}";
         $(document).ready(function() {
+            locationsData = jQuery.getJSON(locations_endpoint_url, function(json, textStatus) {
+                if (textStatus == "success")
+                {
+                    initialLocations = json;
+                    if ('SLF' in window)
+                    {
+                         if('locations' in SLF) SLF.locations = json;
+                         SLF.updateMapApp();
+                    }
+                }
+            });
+
             if (!("autofocus" in document.createElement("input"))) {
                   $("#address").focus();
             }
-            if(!Modernizr.inputtypes.number) {
-                
-            }
         });
-        
     </script>
-    <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
 {% endblock js %}

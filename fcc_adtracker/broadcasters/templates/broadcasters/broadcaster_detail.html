@@ -1,15 +1,31 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %}
 {% block bodyclass %}broadcaster-detail{% endblock bodyclass %}
+{% block pagetitle %}{{ obj.broadcaster.callsign }} {% endblock pagetitle %}
 {% block content %}
-    <h2>{{ broadcaster.callsign }}</h2>
-    <div class="postal-address">
-        {% if broadcaster.addresses.1.address1 %}<p class="street">{{ broadcaster.addresses.1.address1|title }}</p>{% endif %}
-        {% if broadcaster.addresses.1.address2 %}<p class="street">{{ broadcaster.addresses.1.address2|title  }}</p>{% endif %}
-        <p><span class="city">{{ broadcaster.addresses.1.city|title  }}</span>, <span class="state">{{ broadcaster.addresses.1.state }}</span> <span class="zipcode">{{ broadcaster.addresses.1.zip1 }}</span></p>
+    <h2>{{ obj.broadcaster.callsign }}</h2>
+    <p><a href="{{ obj.broadcaster.fcc_profile_url }}" title="{{ obj.broadcaster.callsign }}'s FCC TV Station profile">FCC Station profile</a></p>
+    <dl class="moduleSm floatedList clearfix">
+        <dt>Network:</dt> <dd>{{obj.broadcaster.network_affiliate}}</dd>
+        <dt>Channel:</dt> <dd>{{obj.broadcaster.channel}}</dd>
+        {% if obj.broadcaster.nielsen_dma %}
+        <dt>Nielsen Designated Market Area:</dt> <dd>{{ obj.broadcaster.nielsen_dma }}</dd>
+        {% endif %}
+    </dl>
+    <div class='addresses'>
+    {% for bca in obj.broadcaster.broadcasteraddress_set.all %}
+        <div class="adr">
+            <p>{{ bca.label.name|upper }}</p>
+            {% if bca.address.address1 %}<p class="street">{{ bca.address.address1|title }}</p>{% endif %}
+            {% if bca.address.address2 %}<p class="street">{{ bca.address.address2|title  }}</p>{% endif %}
+            <p><span class="locality">{{ bca.address.city|title  }}</span>, <span class="region">{{ bca.address.state }}</span> <span class="postal-code">{{ bca.address.zipcode }}</span></p>
+        </div>
+    {% endfor %}
     </div>
+    {% if obj_json %}
     <div id="map-box">
         <div id="map_canvas" style="width:100%; height:100%"></div>
     </div>
+    {% endif %}
 {% endblock content %}
 
 {% block head %}
@@ -19,17 +35,26 @@
 
 {% block js %}
     {{ block.super }}
+    {% if obj_json %}
     <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
     <script>
-        var startPos = {{ broadcaster.addresses.1.pos|default:"[0,0]" }};
-        var locations = [ {{ broadcaster.as_json|safe }} ];
+        var startPos = [{{ obj.address.lng }},{{ obj.address.lat }}];
+        var initialLocations = [
+            {{ obj_json|safe }}
+        ];
+        var mapMaxZoom = undefined;
         var userMarker_url = "{% static 'img/sll_map_marker_purple.png' %}";
         var stationMarker_url = "{% static 'img/sll_map_marker_blue.png' %}";
-        $(document).ready(function() {
-            if (!("autofocus" in document.createElement("input"))) {
-                  $("#address").focus();
-            }
-        });
-        
+        /*
+            Get to the action.
+        */
+        try {
+            SLF.updateMapApp(SLF.locations);
+        }
+        catch (e) {
+            if (SLF.DEBUG) window.log(e);
+        }
+
     </script>
+    {% endif %}
 {% endblock js %}
