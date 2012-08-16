@@ -8,6 +8,7 @@ var SLF = {
     nearby: null,
     list_elem: null,
     amile: function () { return 1609.344; },
+    mapMaxZoom: null,
     userMarkerImage: null,
     stationMarkerImage: null,
     currentInfoWindow: null,
@@ -15,10 +16,11 @@ var SLF = {
 };
 
 jQuery(document).ready(function() {
+    SLF.mapMaxZoom = ('mapMaxZoom' in window) ? mapMaxZoom : 14;
     var gm = google.maps, myOptions = {
         center: new gm.LatLng(startPos[1], startPos[0]),
         zoom: 8,
-        maxZoom: 14,
+        maxZoom: SLF.mapMaxZoom,
         minZoom: 3,
         mapTypeId: gm.MapTypeId.ROADMAP,
         scaleControl: true
@@ -36,17 +38,17 @@ jQuery(document).ready(function() {
         for (var key in SLF.markers) { SLF.markers[key].setMap(); }
         SLF.markers = {};
     };
-    
+
     SLF.attachInfoWindow = function (marker, content, open) {
         var infowindow = new gm.InfoWindow({ content: content });
-        gm.event.addListener(marker, 'click', function() { 
+        gm.event.addListener(marker, 'click', function() {
             if (SLF.currentInfoWindow !== null) SLF.currentInfoWindow.close();
-            infowindow.open(marker.get('map'), marker); 
+            infowindow.open(marker.get('map'), marker);
             SLF.currentInfoWindow = infowindow;
         });
         if (open) infowindow.open(marker.get('map'), marker);
     };
-    
+
     SLF.addMarker = function(id, pos, infoContent, markerImage) {
         var marker = new gm.Marker({
             position:  new gm.LatLng(pos[1], pos[0]),
@@ -58,21 +60,22 @@ jQuery(document).ready(function() {
         SLF.attachInfoWindow(marker, infoContent);
         return marker;
     };
-    
+
     SLF.generateDescriptionHTML = function(element) {
+        var bc = element.broadcaster;
         var snippet = $('<div class="vcard"></div>');
-        snippet.append($('<h5 class="org withTip"></h5>').text(element.callsign));
+        snippet.append($('<h5 class="org withTip"></h5>').text(bc.callsign));
         var dl = $('<dl class="moduleSm floatedList clearfix"></dl>');
-        if (element.network_affiliate) dl.append($('<dt>Network:</dt> <dd>' + element.network_affiliate + '</dd>'));
-        if (element.channel) dl.append($('<dt>Channel:</dt> <dd>' + element.channel + '</dd>'));
+        if (bc.network_affiliate) dl.append($('<dt>Network:</dt> <dd>' + bc.network_affiliate + '</dd>'));
+        if (bc.channel) dl.append($('<dt>Channel:</dt> <dd>' + bc.channel + '</dd>'));
         snippet.append(dl);
-        if (element.addresses.length > 1) {
+        if (element.address) {
             var addr = $('<div class="adr tip"></div>');
-            $('<span class="street-address">').text(element.addresses[1].address1).appendTo(addr);
-            if(element.addresses[1].address2) $('<span class="street-address">').text(element.addresses[1].address2).appendTo(addr);
-            var city = $('<span class="locality"></span>').text(element.addresses[1].city);
-            var state = $('<span class="region"></span>').text(element.addresses[1].state);
-            var zip1 = $('<span class="postal-code"></span>').text(element.addresses[1].zip1);
+            $('<span class="street-address">').text(element.address.address1).appendTo(addr);
+            if(element.address.address2) $('<span class="street-address">').text(element.address.address2).appendTo(addr);
+            var city = $('<span class="locality"></span>').text(element.address.city);
+            var state = $('<span class="region"></span>').text(element.address.state);
+            var zip1 = $('<span class="postal-code"></span>').text(element.address.zip1);
             snippet.append(addr.append(city, ', ', state, ' ', zip1));
         }
         if (element.distance) {
@@ -80,14 +83,14 @@ jQuery(document).ready(function() {
         }
         return snippet[0];
     };
-    
+
     SLF.revealList = function() {
         var li_els = SLF.list_elem.children('li');
         $(li_els).each(function(index, element) {
             $(element).delay(index*100).fadeIn('slow');
         });
     };
-    
+
     SLF.updateStationSelect = function() {
         var station_sel = $('select#station');
         var selected = $('select#station :selected');
@@ -99,14 +102,14 @@ jQuery(document).ready(function() {
             station_sel.append(opt);
         }
     };
-    
+
     SLF.revealMarkers = function(callback) {
-        for(var key in SLF.markers) { 
+        for(var key in SLF.markers) {
             SLF.markers[key].setMap(SLF.map);
         }
         callback();
     };
-    
+
     SLF.updateMapApp = function () {
         SLF.removeStationMarkers();
         SLF.list_elem.empty();
@@ -114,10 +117,10 @@ jQuery(document).ready(function() {
         if (SLF.userMarker !== null) mapBounds.extend(SLF.userMarker.getPosition());
         for (var i=0; i < SLF.locations.length; i++) {
             var element = SLF.locations[i];
-            var pos = (element.addresses[1] && element.addresses[1].pos) ? element.addresses[1].pos : null;
+            var pos = ('address' in element && element.address.lng != null) ? [element.address.lng, element.address.lat] : null;
             var descriptionHTML = SLF.generateDescriptionHTML(element);
             if (pos !== null) {
-                var marker= SLF.addMarker(element.callsign, pos, descriptionHTML, SLF.stationMarkerImage);
+                var marker= SLF.addMarker(element.broadcaster.callsign, pos, descriptionHTML, SLF.stationMarkerImage);
                 mapBounds.extend(marker.getPosition());
             }
             var elem = $('<li></li>').append(descriptionHTML);
@@ -126,23 +129,23 @@ jQuery(document).ready(function() {
             // elem.delay(i*100).fadeIn('slow');
         }
         gm.event.addListenerOnce(SLF.map, 'bounds_changed', function() {
-            SLF.revealMarkers(SLF.revealList);    
+            SLF.revealMarkers(SLF.revealList);
         });
         if( SLF.locations.length === 0) SLF.list_elem.append($('<li>').text('No results found with those search parameters!'));
-        if (  SLF.locations.length == 1) {  SLF.map.setZoom(12); } else { SLF.map.fitBounds(mapBounds); }
-        SLF.updateStationSelect();
+        if ( SLF.locations.length == 1) {  SLF.map.setZoom(12); } else { SLF.map.fitBounds(mapBounds); }
+        // SLF.updateStationSelect();
     };
-    
+
     SLF.handleNearbySuccess = function(data, textStatus) {
         if (SLF.DEBUG) window.log('handleNearbySuccess: ' + textStatus);
         SLF.locations = data;
         if (SLF.locations instanceof Array) SLF.updateMapApp();
     };
-    
+
     SLF.handleNearbyComplete = function(jqXHR, textStatus) {
         if (SLF.DEBUG) window.log('handleNearbyComplete: ' + textStatus);
     };
-    
+
     SLF.setselectedGeocoderResult = function(location) {
         if (SLF.userMarker !== null) SLF.userMarker.setMap(null);
         SLF.selectedGeocoderResult = location;
@@ -157,20 +160,20 @@ jQuery(document).ready(function() {
         marker.setTitle(SLF.selectedGeocoderResult.formatted_address);
         SLF.userMarker = marker;
     };
-    
+
     SLF.findNearbyLocations = function() {
-        var radius = $("form#map_form select#radius").val();                    
+        var radius = $("form#map_form select#radius").val();
         if (SLF.DEBUG) window.log('SLF.findNearbyLocations with radius: ' + radius);
         $.ajax({
-            url: '/broadcasters/nearby.json',
+            url: '/stations/nearby.json',
             dataType: 'json',
             data: {'lon': SLF.selectedGeocoderResult.geometry.location.lng(), 'lat': SLF.selectedGeocoderResult.geometry.location.lat(), 'radius': radius},
             success: SLF.handleNearbySuccess,
             complete: SLF.handleNearbyComplete
         });
     };
-    
-    
+
+
     SLF.generateModal = function(title, body_html) {
         var modal = $('<div class="modal"></div>');
         modal.append($('<div class="modal-header"></div>').html('<button type="button" class="close" data-dismiss="modal">&times;</button><h3>' + title + '</h3>'));
@@ -180,15 +183,15 @@ jQuery(document).ready(function() {
         $(modal).modal({'backdrop': false, show: false });
         return modal;
     };
-    
+
     $("form#map_form").submit(function(event) {
         var address = $("form#map_form input#address");
         var city = $("form#map_form input#city");
         var state = $("form#map_form #state");
         var full_address = address.val() + ' ' + city.val() + ', ' + state.text();
-        SLF.geocoder.geocode( {'address': full_address}, function(results, status) 
+        SLF.geocoder.geocode( {'address': full_address}, function(results, status)
         {
-            if (status == gm.GeocoderStatus.OK) 
+            if (status == gm.GeocoderStatus.OK)
             {
                 if (SLF.DEBUG) window.log('GeocoderStatus.OK results:');
                 if (SLF.DEBUG) window.log(results);
@@ -233,18 +236,8 @@ jQuery(document).ready(function() {
                 $(fail_modal).modal('show');
             }
         });
-        
+
         return false;
     });
-    
-    /*
-        Get to the action.
-    */ 
-    try {
-        SLF.updateMapApp(SLF.locations);
-    }
-    catch (e) {
-        if (SLF.DEBUG) window.log(e);
-    }
 
 });

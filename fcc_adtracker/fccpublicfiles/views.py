@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, Http404, HttpResponsePermanentRedirect
+from django.http import HttpResponse, Http404, HttpResponseNotFound, HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.localflavor.us import us_states
 from django.conf import settings
@@ -10,6 +10,7 @@ from .models import PoliticalBuy, PoliticalSpot, Broadcaster, Address, Broadcast
 from geopy import distance
 from geopy.point import Point
 
+import os.path
 try:
     import simplejson as json
 except ImportError:
@@ -20,6 +21,12 @@ import copy
 STATES_DICT = dict(us_states.US_STATES)
 FEATURED_BROADCASTER_STATE = getattr(settings, 'FEATURED_BROADCASTER_STATE', 'OH')
 
+STATES_GEOCENTERS_JSON_FILE = getattr(settings, 'STATES_GEOCENTERS_JSON_FILE', None)
+if STATES_GEOCENTERS_JSON_FILE:
+    try:
+        states_geocenters = json.load(open(STATES_GEOCENTERS_JSON_FILE, 'r'))
+    except IOError, e:
+        states_geocenters = None
 
 def _make_broadcasteraddress_dict(bc_ad_obj):
     '''
@@ -34,14 +41,21 @@ def _make_broadcasteraddress_dict(bc_ad_obj):
     obj_dict['broadcaster'].pop('_state')
     obj_dict['address'].pop('id')
     obj_dict['address'].pop('_state')
+    obj_dict['address']['label'] = bc_ad_obj.label.name
     return obj_dict
 
 
 def state_broadcaster_list(request, state_id):
-    state_name = STATES_DICT.get(state_id.upper(), None)
+    state_id = state_id.upper()
+    state_name = STATES_DICT.get(state_id, None)
+    if states_geocenters:
+        state_geocenter = states_geocenters.get(state_id, None)
+    else:
+        state_geocenter = None
     if state_name:
-        broadcaster_list = Broadcaster.objects.filter(community_state=state_id.upper())
-        return render(request, 'fccpublicfiles/broadcaster_list.html', {'broadcaster_list': broadcaster_list, 'state_name': state_name})
+        # Want to grab broadcasters with/without addresses, then the addresses themselves...
+        broadcaster_list = Broadcaster.objects.filter(community_state=state_id).prefetch_related('broadcasteraddress_set')
+        return render(request, 'fccpublicfiles/broadcaster_list.html', {'broadcaster_list': broadcaster_list, 'state_name': state_name, 'state_geocenter': state_geocenter})
     else:
         raise Http404('State with abbrevation "{state_id}" not found.'.format(state_id=state_id))
 
@@ -75,6 +89,31 @@ def featured_broadcasters(request):
         'sfapp_base_template': 'sfapp/base-full.html'
     }
     return render(request, 'fccpublicfiles/broadcasters_featured.html', resp_obj)
+
+
+def state_broadcaster_addresses(request, state_id, label_slug):
+    state_id = state_id.upper()
+    state_name = STATES_DICT.get(state_id, None)
+
+    if state_name is None:
+        return HttpResponseNotFound(json.dumps({'error': 'No state found for "{0}"'.format(state_id)}), content_type='application/json')
+    if label_slug == 'all':
+        label_list = AddressLabel.objects.all()
+    else:
+        try:
+            label_list = [AddressLabel.objects.get(slug=label_slug)]
+        except AddressLabel.DoesNotExist:
+            return HttpResponseNotFound(json.dumps({'error': '{0} is not in the list of address labels.'.format(label_slug)}), content_type='application/json')
+
+    state_broadcaster_list = BroadcasterAddress.objects.filter(label__in=label_list, broadcaster__community_state=state_id).distinct()
+    if len(state_broadcaster_list) == 0:
+        return HttpResponseNotFound(json.dumps({'error': 'No broadcaster addresses labeled "{0}" in {1}'.format(label_slug, state_name)}), content_type='application/json')
+    obj_list = []
+    for obj in state_broadcaster_list:
+        obj_dict = _make_broadcasteraddress_dict(obj)
+        obj_list.append(obj_dict)
+    jsonout = json.dumps(obj_list)
+    return HttpResponse(jsonout, content_type='application/json')
 
 
 def nearest_broadcasters_list(request):
