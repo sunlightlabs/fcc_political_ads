@@ -21,7 +21,7 @@
         </div>
     {% endfor %}
     </div>
-    {% if obj_json %}
+    {% if obj_json and obj.address.lng %}
     <div id="map-box">
         <div id="map_canvas" style="width:100%; height:100%"></div>
     </div>
@@ -35,10 +35,11 @@
 
 {% block js %}
     {{ block.super }}
-    {% if obj_json %}
+    {% if obj_json and obj.address.lng %}
     <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
     <script>
         var startPos = [{{ obj.address.lng }},{{ obj.address.lat }}];
+        var startPos = null;
         var initialLocations = [
             {{ obj_json|safe }}
         ];
@@ -48,13 +49,14 @@
         /*
             Get to the action.
         */
-        try {
-            SLF.updateMapApp(SLF.locations);
-        }
-        catch (e) {
-            if (SLF.DEBUG) window.log(e);
-        }
-
+        jQuery(document).ready(function() {
+            try {
+                SLF.updateMapApp();
+            }
+            catch (e) {
+                if (SLF.DEBUG) window.log(e);
+            }
+        });
     </script>
     {% endif %}
 {% endblock js %}

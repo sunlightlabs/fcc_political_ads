@@ -4,6 +4,8 @@ from django.contrib.localflavor.us import us_states
 from django.contrib.localflavor.us.models import USStateField
 import datetime
 
+from locations.models import Address, AddressLabel
+
 
 STATES_DICT = dict(us_states.US_STATES)
 
@@ -18,7 +20,6 @@ class Broadcaster(models.Model):
     facility_type = models.CharField(max_length=3, blank=True, null=True, help_text='FCC assigned facility_type')
     community_city = models.CharField(max_length=20, blank=True, null=True)
     community_state = USStateField(choices=us_states.US_STATES, blank=True, null=True)
-    addresses = models.ManyToManyField('Address', through='BroadcasterAddress', blank=True, null=True)
 
     class Meta:
         ordering = ('community_state', 'community_city', 'callsign')
@@ -45,8 +46,8 @@ class Broadcaster(models.Model):
 
 class BroadcasterAddress(models.Model):
     broadcaster = models.ForeignKey('Broadcaster')
-    address = models.ForeignKey('Address')
-    label = models.ForeignKey('AddressLabel')
+    address = models.ForeignKey(Address)
+    label = models.ForeignKey(AddressLabel)
 
     class Meta:
         verbose_name_plural = u'Broadcaster Addresses'

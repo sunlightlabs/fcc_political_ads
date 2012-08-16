@@ -8,14 +8,14 @@ from doccloud.models import Document
 
 import reversion
 
-from broadcasters.models import get_callsigns
+from locations.models import Address
+from broadcasters.models import Broadcaster
 import datetime
 import timedelta
 from weekday_field import fields as wf_fields
 
 import copy
 
-CALLSIGNS = [(c, c) for c in get_callsigns()]
 
 ORGANIZATION_TYPES = (
     (u'MB', u'MediaBuyer'),
@@ -26,42 +26,13 @@ DOCUMENTCLOUD_META = getattr(settings, 'DOCUMENTCLOUD_META', {})
 
 
 class PublicDocument(models.Model):
-    station = models.CharField(choices=CALLSIGNS, max_length=12, verbose_name="Station Callsign")
+    broadcasters = models.ManyToManyField(Broadcaster)
     documentcloud_doc = models.ForeignKey(Document)
 
     def __unicode__(self):
         if self.documentcloud_doc:
-            return u"{0}: {1}".format(self.station, self.documentcloud_doc)
+            return u"{0}: {1}".format(', '.join([x.callsign for x in self.broadcasters.all()[:5]]), self.documentcloud_doc)
         return u"PublicDocument"
-
-
-class Address(models.Model):
-    address1 = models.CharField(blank=True, null=True, max_length=100)
-    address2 = models.CharField(blank=True, null=True, max_length=100)
-    city = models.CharField(max_length=50)
-    state = USStateField()
-    zipcode = models.CharField(blank=True, null=True, max_length=10)
-
-    class Meta:
-        verbose_name_plural = "Addresses"
-
-    def _combined_address(self):
-        address_bits = [self.city, self. state]
-        for street in (self.address2, self.address1):
-            if street != '':
-                address_bits.insert(0, street)
-        return u', '.join(address_bits) + ' ' + self.zipcode
-
-    def combined_address():
-        doc = "The combined_address property."
-
-        def fget(self):
-            return self._combined_address()
-        return locals()
-    combined_address = property(**combined_address())
-
-    def __unicode__(self):
-        return self.combined_address
 
 
 class Person(models.Model):
@@ -137,14 +108,14 @@ class PoliticalBuy(PublicDocument):
 #     doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
 #     doccloud_data['callsign'] = instance.station
 
-@receiver(post_save, sender=PublicDocument)
-@receiver(post_save, sender=PoliticalBuy)
-def set_doccloud_data(sender, instance, signal, *args, **kwargs):
-    doc = instance.documentcloud_doc
-    doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
-    doccloud_data['callsign'] = instance.station
-    if doc.dc_data != doccloud_data:
-        doc.dc_data = doccloud_data
+# @receiver(post_save, sender=PublicDocument)
+# @receiver(post_save, sender=PoliticalBuy)
+# def set_doccloud_data(sender, instance, signal, *args, **kwargs):
+#     doc = instance.documentcloud_doc
+#     doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
+#     doccloud_data['callsign'] = instance.broadcasters.latest('id').callsign
+#     if doc.dc_data != doccloud_data:
+#         doc.dc_data = doccloud_data
 
 
 @receiver(pre_delete, sender=PublicDocument)
@@ -185,8 +156,8 @@ class PoliticalSpot(models.Model):
         name_string = u'PoliticalSpot'
         if self.document and self.document.advertiser:
             name_string = u'{0}'.format(self.document.advertiser)
-            if self.document.station:
-                name_string = u'{0} on {1}'.format(name_string, self.document.station)
+            # if self.document.station:
+                # name_string = u'{0} on {1}'.format(name_string, self.document.station)
         if self.show_name:
                 name_string = u'{0}: "{1}"'.format(name_string, self.show_name)
         if self.airing_start_date:
@@ -195,7 +166,6 @@ class PoliticalSpot(models.Model):
 
 
 
-reversion.register(Address, follow=['organization_set'])
 reversion.register(Person, follow=['role_set', 'organization_set', 'politicalbuy_set'])
 reversion.register(Role, follow=['person', 'organization'])
 reversion.register(Organization, follow=['employees', 'role_set'])
