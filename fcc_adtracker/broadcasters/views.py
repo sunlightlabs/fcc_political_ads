@@ -28,6 +28,9 @@ if STATES_GEOCENTERS_JSON_FILE:
         states_geocenters = json.load(open(STATES_GEOCENTERS_JSON_FILE, 'r'))
     except IOError, e:
         states_geocenters = None
+else:
+    states_geocenters = None
+
 
 def _make_broadcasteraddress_dict(bc_ad_obj):
     '''
