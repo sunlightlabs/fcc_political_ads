@@ -47,6 +47,10 @@ class Broadcaster(models.Model):
         return locals()
     fcc_profile_url = property(**fcc_profile_url())
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('fccpublicfiles.views.broadcaster_detail', (), {'callsign': self.callsign})
+
     def __unicode__(self):
         if self.callsign:
             disp_name = self.callsign
@@ -79,6 +83,10 @@ class BroadcasterAddress(models.Model):
     address = models.ForeignKey('Address')
     label = models.ForeignKey('AddressLabel')
 
+    class Meta:
+        verbose_name_plural = u'Broadcaster Addresses'
+        unique_together = (('broadcaster', 'address', 'label'),)
+
     def __unicode__(self):
         return u"{0}'s '{1}' address".format(self.broadcaster.callsign, self.label)
 
@@ -93,19 +101,9 @@ class Address(models.Model):
     lng = models.FloatField(blank=True, null=True)
     # address_labels = models.ManyToManyField(AddressLabel)
 
-    _get_labels_display = None
-
     class Meta:
-        verbose_name_plural = "Addresses"
+        verbose_name_plural = u"Addresses"
         unique_together = ('address1', 'address2', 'city', 'state', 'zipcode')
-
-    def get_labels_display():
-        def fget(self):
-            if not self._get_labels_display:
-                self._get_labels_display = ', '.join([label.name for label in self.address_labels.all()[:10]])
-            return self._get_labels_display
-        return locals()
-    get_labels_display = property(**get_labels_display())
 
     def _combined_address(self):
         address_bits = [self.city, self. state]
