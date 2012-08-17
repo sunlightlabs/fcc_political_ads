@@ -7,6 +7,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ("locations", "0002_auto__add_addresslabel__add_field_address_lat__add_field_address_lng"),
+    )
+
     def forwards(self, orm):
         # Adding model 'Broadcaster'
         db.create_table('broadcasters_broadcaster', (

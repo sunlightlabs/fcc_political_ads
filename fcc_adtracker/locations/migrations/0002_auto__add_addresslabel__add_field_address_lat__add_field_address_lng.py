@@ -8,22 +8,6 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Address'
-        db.create_table('locations_address', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('address1', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
-            ('address2', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
-            ('city', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('state', self.gf('django.contrib.localflavor.us.models.USStateField')(max_length=2)),
-            ('zipcode', self.gf('django.db.models.fields.CharField')(max_length=10, null=True, blank=True)),
-            ('lat', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
-            ('lng', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
-        ))
-        db.send_create_signal('locations', ['Address'])
-
-        # Adding unique constraint on 'Address', fields ['address1', 'address2', 'city', 'state', 'zipcode']
-        db.create_unique('locations_address', ['address1', 'address2', 'city', 'state', 'zipcode'])
-
         # Adding model 'AddressLabel'
         db.create_table('locations_addresslabel', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -32,16 +16,26 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('locations', ['AddressLabel'])
 
+        # Adding field 'Address.lat'
+        db.add_column('locations_address', 'lat',
+                      self.gf('django.db.models.fields.FloatField')(null=True, blank=True),
+                      keep_default=False)
+
+        # Adding field 'Address.lng'
+        db.add_column('locations_address', 'lng',
+                      self.gf('django.db.models.fields.FloatField')(null=True, blank=True),
+                      keep_default=False)
+
 
     def backwards(self, orm):
-        # Removing unique constraint on 'Address', fields ['address1', 'address2', 'city', 'state', 'zipcode']
-        db.delete_unique('locations_address', ['address1', 'address2', 'city', 'state', 'zipcode'])
-
-        # Deleting model 'Address'
-        db.delete_table('locations_address')
-
         # Deleting model 'AddressLabel'
         db.delete_table('locations_addresslabel')
+
+        # Deleting field 'Address.lat'
+        db.delete_column('locations_address', 'lat')
+
+        # Deleting field 'Address.lng'
+        db.delete_column('locations_address', 'lng')
 
 
     models = {
