@@ -32,7 +32,7 @@ class Broadcaster(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('fccpublicfiles.views.broadcaster_detail', (), {'callsign': self.callsign})
+        return ('broadcasters.views.broadcaster_detail', (), {'callsign': self.callsign})
 
     def __unicode__(self):
         if self.callsign:
