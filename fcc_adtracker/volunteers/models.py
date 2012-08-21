@@ -12,7 +12,7 @@ try:
 except ImportError, e:
     import json
 
-from broadcasters.models import Broadcaster
+# from broadcasters.models import Broadcaster
 
 
 IS_A_CHOICES = (
@@ -48,7 +48,7 @@ class Signup(Document):
         return locals()
     share_checkbox = property(**share_checkbox())
 
-Signup.register_delete_rule(Broadcaster, 'bar', NULLIFY)
+# Signup.register_delete_rule(Broadcaster, 'bar', NULLIFY)
 
 
 class Profile(models.Model):
