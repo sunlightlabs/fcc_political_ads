@@ -26,7 +26,7 @@ DOCUMENTCLOUD_META = getattr(settings, 'DOCUMENTCLOUD_META', {})
 
 
 class PublicDocument(models.Model):
-    broadcasters = models.ManyToManyField(Broadcaster)
+    broadcasters = models.ManyToManyField(Broadcaster, null=True)
     documentcloud_doc = models.ForeignKey(Document)
 
     def __unicode__(self):
