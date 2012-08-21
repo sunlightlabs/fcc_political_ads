@@ -43,9 +43,10 @@ class ActionSignupView(View):
         station = request.POST.get("custom-1093", "")
         city = request.POST.get("city", "")
         state = request.POST.get("state_cd", "")
+        zipcode = request.POST.get("zip", "")
         share_checkbox = request.POST.get("custom-1116", "")
 
-        signup = Signup(email=email, phone=phone, firstname=firstname, lastname=lastname, city=city, state=state, broadcaster=station)
+        signup = Signup(email=email, phone=phone, firstname=firstname, lastname=lastname, city=city, state=state, broadcaster=station, zipcode=zipcode)
         # try:
         #     broadcaster = Broadcaster.objects.get(callsign=station)
         #     signup.broadcaster = broadcaster
@@ -59,9 +60,9 @@ class ActionSignupView(View):
 
         if email:
             self.bsd_url += "?source=%s" % request.build_absolute_uri()
-            params = { "email": email, "phone": phone,
+            params = {"email": email, "phone": phone,
                        "firstname": firstname, "lastname": lastname, "custom-1093": station,
-                       "custom-1116": share_checkbox, "state_cd": state, "city": city
+                       "custom-1116": share_checkbox, "state_cd": state, "city": city, "zip": zipcode
                       }
             response = urllib2.urlopen(self.bsd_url, urllib.urlencode(params)).read()
 

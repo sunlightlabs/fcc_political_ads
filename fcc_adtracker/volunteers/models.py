@@ -32,6 +32,7 @@ class Signup(Document):
     lastname = StringField()
     state = StringField()
     city = StringField()
+    zipcode = StringField()
     # broadcaster = ReferenceField('Broadcaster')
     broadcaster = StringField()
     _share_info = BooleanField(default=False)

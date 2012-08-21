@@ -48,11 +48,11 @@
                 </li>
                 <li>
                     <label>First Name</label>
-                    <input type="text" name="firstname" value="" placeholder="First Name" id="firstname">
+                    <input type="text" name="firstname" value="" placeholder="First Name" id="firstname" required="required">
                 </li>
                 <li>
                     <label>Last Name</label>
-                    <input type="text" name="lastname" value="" id="lastname" placeholder="Last Name">
+                    <input type="text" name="lastname" value="" id="lastname" placeholder="Last Name" required="required">
                 </li>
                 <li>
                     <label>Phone</label>
@@ -64,12 +64,16 @@
                 </li>
                 <li>
                     <label>State</label>
-                    <select id="state" size="1"  name="state_cd">
+                    <select id="state" size="1"  name="state_cd" required="required">
                         <option selected="selected" value="">----------------</option>
                     {% for k,v in states_dict %}
                         <option value="{{ k }}">{{ v }}</option>
                     {% endfor %}
                     </select>
+                </li>
+                <li>
+                    <label>Zip Code</label>
+                    <input type="text" name="zip" id="zip" maxlength="8" placeholder="Zip Code" required="required">
                 </li>
                 <li class="clearfix">
                     <label>Station I Plan to Visit (optional)</label>
@@ -110,18 +114,33 @@
 
 {% block js %}
     {{ block.super }}
+    {# // <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script> #}
+    <script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
     <script type="text/javascript">
-            $(document).ready(function() {
-            $('#action_signup').submit(function(event) {
-                var theform = $(this);
-                var data = theform.serialize();
-                jQuery.post("{% url action_signup %}",data, function(resp, textStatus) {
-                    var $p = $('<p class="alert alert-success">').text(resp.message).hide();
-                    theform.slideUp('fast', function() {
-                        theform.after($p);
-                        $p.slideDown();
+        $(document).ready(function() {
+            var submitted = false;
+            var submit_btn = $('#action_signup input[type=submit]');
+            submit_btn.removeAttr('disabled');
+            $('#action_signup').validator({
+                'position': 'bottom left',
+                'messageClass': 'alert-error'
+            }).submit(function(event) {
+                var formObj = $(this);
+                var isValid = formObj.data("validator").checkValidity();
+                if (submitted == false && isValid) {
+                    submitted = true;
+                    submit_btn.attr('disabled', 'disabled');
+                    var data = formObj.serialize();
+                    jQuery.post("{% url action_signup %}", data, function(resp, textStatus) {
+                        var $p = $('<p class="alert alert-success">');
+                        $p.text(resp.message);
+                        $p.hide();
+                        formObj.slideUp('fast', function() {
+                            formObj.after($p);
+                            $p.slideDown();
+                        });
                     });
-                });
+                }
                 event.preventDefault();
                 return false;
             });
