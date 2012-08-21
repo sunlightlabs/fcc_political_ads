@@ -3,7 +3,6 @@ from volunteers.models import Signup
 from django.conf import settings
 
 from mongoengine import *
-from mongo_utils import serializer
 
 import csv
 from tempfile import NamedTemporaryFile
@@ -16,6 +15,7 @@ import gdata.data
 GOOGLE_DOCS_ACCOUNT = getattr(settings, 'GOOGLE_DOCS_ACCOUNT', None)
 GOOGLE_DOCS_PASSWORD = getattr(settings, 'GOOGLE_DOCS_PASSWORD', None)
 GOOGLE_DOCS_RESOURCE_ID = getattr(settings, 'GOOGLE_DOCS_RESOURCE_ID', None)
+
 
 class Command(NoArgsCommand):
     option_list = NoArgsCommand.option_list + (
@@ -34,7 +34,6 @@ class Command(NoArgsCommand):
         output_all = options.get('output_all')
         fields = ('email', 'firstname', 'lastname', 'phone', 'city', 'state', 'station', 'date_submitted', 'share_info')
 
-
         signup_list = Signup.objects.all().order_by('-date_submitted')
         if not output_all:
             signup_list.filter(_share_info=True)
@@ -45,6 +44,8 @@ class Command(NoArgsCommand):
             writer.writeheader()
 
             for signup in signup_list:
+                if verbosity >= 2:
+                    self.stdout.write('Recording {0} whose share_info is {1}'.format(signup.email, signup._share_info))
                 output = {
                     'email': signup.email,
                     'firstname': signup.firstname,
@@ -52,7 +53,7 @@ class Command(NoArgsCommand):
                     'phone': signup.phone,
                     'city': signup.city,
                     'state': signup.state,
-                    'station': signup.broadcaster.callsign if signup.broadcaster else None,
+                    'station': signup.broadcaster,
                     'date_submitted': signup.date_submitted.strftime('%m/%d/%Y %H:%M:%S'),
                     'share_info': signup._share_info
                 }
@@ -66,12 +67,11 @@ class Command(NoArgsCommand):
             media = gdata.data.MediaSource(file_path=fp.name, content_type='text/csv')
             try:
                 resource = client.get_resource_by_id(GOOGLE_DOCS_RESOURCE_ID)
-                updated_resource = client.update_resource(resource, media=media,update_metadata=False, new_revision=True)
+                updated_resource = client.update_resource(resource, media=media, update_metadata=False, new_revision=True)
                 self.stdout.write('Data uploaded to "%s"\n'.format(updated_resource.title.text))
             except gdata.client.RequestError as e:
                 self.stderr.write(e.message + '\n')
                 self.stdout.write('****Upload may have succeeded despite an InvalidEntryException error****\n')
-
 
             fp.unlink(fp.name)
         else:
