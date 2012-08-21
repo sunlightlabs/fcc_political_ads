@@ -38,8 +38,7 @@
     {% if obj_json and obj.address.lng %}
     <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
     <script>
-        var startPos = [{{ obj.address.lng }},{{ obj.address.lat }}];
-        var startPos = null;
+        var startPos = {% if obj.address %}[{{ obj.address.lng }},{{ obj.address.lat }}]{% else %}null;{% endif %}
         var initialLocations = [
             {{ obj_json|safe }}
         ];
