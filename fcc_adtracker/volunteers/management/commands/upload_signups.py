@@ -3,6 +3,8 @@ from volunteers.models import Signup
 from django.conf import settings
 
 from mongoengine import *
+from pymongo.dbref import DBRef
+from bson.objectid import ObjectId
 
 import csv
 from tempfile import NamedTemporaryFile
@@ -43,9 +45,21 @@ class Command(NoArgsCommand):
             writer = csv.DictWriter(fp, fields)
             writer.writeheader()
 
+            db = connection.get_db()
             for signup in signup_list:
                 if verbosity >= 2:
                     self.stdout.write('Recording {0} whose share_info is {1}'.format(signup.email, signup._share_info))
+                if signup.broadcaster:
+                    if signup.broadcaster.startswith('DBRef'):
+                        ref = eval(signup.broadcaster)
+                        doc = db.dereference(ref)
+                        callsign = doc.get('callsign', '')
+                    else:
+                        callsign = signup.broadcaster
+                else:
+                    callsign = ''
+                if verbosity >= 2:
+                    self.stdout.write('Recording callsign {0}'.format(callsign))
                 output = {
                     'email': signup.email,
                     'firstname': signup.firstname,
@@ -53,7 +67,7 @@ class Command(NoArgsCommand):
                     'phone': signup.phone,
                     'city': signup.city,
                     'state': signup.state,
-                    'station': signup.broadcaster,
+                    'station': callsign,
                     'date_submitted': signup.date_submitted.strftime('%m/%d/%Y %H:%M:%S'),
                     'share_info': signup._share_info
                 }
