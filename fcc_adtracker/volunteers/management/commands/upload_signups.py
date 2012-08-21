@@ -45,7 +45,7 @@ class Command(NoArgsCommand):
         verbosity = int(options.get('verbosity', 1))
         dry_run = int(options.get('dry_run', 1))
         output_all = options.get('output_all')
-        fields = ('email', 'firstname', 'lastname', 'phone', 'city', 'state', 'station', 'date_submitted', 'share_info')
+        fields = ('email', 'firstname', 'lastname', 'phone', 'city', 'state', 'zipcode' 'station', 'date_submitted', 'share_info')
 
         signup_list = Signup.objects.all().order_by('-date_submitted')
         if not output_all:
@@ -88,9 +88,12 @@ class Command(NoArgsCommand):
                     'city': signup.city,
                     'state': signup.state,
                     'station': callsign,
+                    'zipcode': signup.zipcode if signup.zipcode else None,
                     'date_submitted': signup.date_submitted.strftime('%m/%d/%Y %H:%M:%S'),
                     'share_info': signup._share_info
                 }
+                if verbosity > 2:
+                    print(repr(output))
                 if not dry_run:
                     writer.writerow(output)
             if not dry_run:
