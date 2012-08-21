@@ -1,12 +1,18 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.localflavor.us.forms import USPhoneNumberField, USStateField, USStateSelect
+from django.contrib.localflavor.us.forms import USPhoneNumberField, USStateField, USStateSelect, USZipCodeField
 # from django.contrib.localflavor.us import us_states
 
 
 from registration.forms import RegistrationFormUniqueEmail
 
-from .models import Profile, IS_A_CHOICES
+from volunteers.models import NonUserProfile, IS_A_CHOICES
+
+
+class NonUserProfileForm(forms.ModelForm):
+    class Meta:
+        model = NonUserProfile
+    zipcode = USZipCodeField()
 
 
 class ProfileForm(forms.Form):
