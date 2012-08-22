@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.localflavor.us.models import USStateField
-from django.db.models.signals import post_save, pre_delete
+from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.conf import settings
 
@@ -14,8 +13,6 @@ import datetime
 import timedelta
 from weekday_field import fields as wf_fields
 
-import copy
-
 
 ORGANIZATION_TYPES = (
     (u'MB', u'MediaBuyer'),
@@ -23,16 +20,6 @@ ORGANIZATION_TYPES = (
 )
 
 DOCUMENTCLOUD_META = getattr(settings, 'DOCUMENTCLOUD_META', {})
-
-
-class PublicDocument(models.Model):
-    broadcasters = models.ManyToManyField(Broadcaster, null=True)
-    documentcloud_doc = models.ForeignKey(Document)
-
-    def __unicode__(self):
-        if self.documentcloud_doc:
-            return u"{0}: {1}".format(', '.join([x.callsign for x in self.broadcasters.all()[:5]]), self.documentcloud_doc)
-        return u"PublicDocument"
 
 
 class Person(models.Model):
@@ -87,8 +74,9 @@ class Role(models.Model):
         return u"<" + self.person.__unicode__() + ": " + self.title + " >"
 
 
-class PoliticalBuy(PublicDocument):
+class PoliticalBuy(models.Model):
     """A subset of PublicFile, the PoliticalBuy records purchases of air time (generally for political ads)"""
+    documentcloud_doc = models.ForeignKey(Document)
     contract_number = models.CharField(blank=True, max_length=100)
     advertiser = models.ForeignKey('Organization', blank=True, null=True, related_name='advertiser_politicalbuys', limit_choices_to={'organization_type': u'AD'})
     advertiser_signatory = models.ForeignKey('Person', blank=True, null=True)
@@ -97,9 +85,16 @@ class PoliticalBuy(PublicDocument):
                                   limit_choices_to={'organization_type': u'MB'},
                                   help_text="The media buyer"
                                   )
-    contract_start_date = models.DateField(blank=True, null=True, default=datetime.datetime.today)
-    contract_end_date = models.DateField(blank=True, null=True, default=datetime.datetime.today)
+    contract_start_date = models.DateField(blank=True, null=True, default=datetime.date.today)
+    contract_end_date = models.DateField(blank=True, null=True, default=datetime.date.today)
     lowest_unit_price = models.NullBooleanField(default=None, blank=True, null=True)
+
+    broadcasters = models.ManyToManyField(Broadcaster, null=True)
+
+    def __unicode__(self):
+        if self.documentcloud_doc:
+            return u"{0}: {1}".format(', '.join([x.callsign for x in self.broadcasters.all()[:5]]), self.documentcloud_doc)
+        return u"PoliticalBuy"
 
 
 # Maybe update doccloud with fec_id if we have one?
@@ -108,7 +103,6 @@ class PoliticalBuy(PublicDocument):
 #     doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
 #     doccloud_data['callsign'] = instance.station
 
-# @receiver(post_save, sender=PublicDocument)
 # @receiver(post_save, sender=PoliticalBuy)
 # def set_doccloud_data(sender, instance, signal, *args, **kwargs):
 #     doc = instance.documentcloud_doc
@@ -118,10 +112,9 @@ class PoliticalBuy(PublicDocument):
 #         doc.dc_data = doccloud_data
 
 
-@receiver(pre_delete, sender=PublicDocument)
 @receiver(pre_delete, sender=PoliticalBuy)
 def set_privacy_for_deassociated_docs(sender, instance, *args, **kwargs):
-    # Caution when PoliticalBuy or PublicDocument models are deleted: Make DocumentCloud doc private, but don't delete.
+    # Caution when PoliticalBuy or Document(Cloud) models are deleted: Make DocumentCloud doc private, but don't delete.
     doc = instance.documentcloud_doc
     doc.access_level = 'private'
     doc.dc_properties.update_access(doc.access_level)
@@ -165,10 +158,9 @@ class PoliticalSpot(models.Model):
         return name_string
 
 
-
 reversion.register(Person, follow=['role_set', 'organization_set', 'politicalbuy_set'])
 reversion.register(Role, follow=['person', 'organization'])
 reversion.register(Organization, follow=['employees', 'role_set'])
-reversion.register(PublicDocument)
-reversion.register(PoliticalBuy, follow=['publicdocument_ptr'])
+#reversion.register(Document)
+reversion.register(PoliticalBuy)
 reversion.register(PoliticalSpot)

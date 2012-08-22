@@ -1,0 +1,34 @@
+{% extends "fcc-base.html" %}{% load static from staticfiles %}
+{% block title %}Submit Document{% endblock title %}
+
+{% block content %}
+<div style="display:block; height: 1200px;">
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form enctype="multipart/form-data" method="post" action=".">
+        {% csrf_token %}
+        {{ form }}
+        <p>
+        <input type="submit" value="Submit" name="Submit"/>
+        </p>
+    </form>
+</div>
+{% endblock content %}
+
+{% block sidebar %}
+{% endblock sidebar %}
+
+{% block head %}
+    {{ block.super }}
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBJAvCwnDreQHJ_cAlbXAm9Fb_LmjvlaTI&sensor=true&libraries=geometry"></script>
+{% endblock head %}
+
+{% block js %}
+    <script src="{% static "js/fcc_site.js" %}" type="text/javascript" charset="utf-8"></script>
+{% endblock js %}
