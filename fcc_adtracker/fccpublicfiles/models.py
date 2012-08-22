@@ -74,6 +74,11 @@ class Role(models.Model):
         return u"<" + self.person.__unicode__() + ": " + self.title + " >"
 
 
+class GenericPublicDocument(models.Model):
+    documentcloud_doc = models.ForeignKey(Document)
+    broadcasters = models.ManyToManyField(Broadcaster, null=True)
+
+
 class PoliticalBuy(models.Model):
     """A subset of PublicFile, the PoliticalBuy records purchases of air time (generally for political ads)"""
     documentcloud_doc = models.ForeignKey(Document)
