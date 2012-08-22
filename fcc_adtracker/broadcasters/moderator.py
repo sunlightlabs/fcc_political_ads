@@ -6,5 +6,5 @@ from broadcasters.models import Broadcaster, BroadcasterAddress
 class DefaultModerator(GenericModerator):
     auto_approve_for_staff = False
 
-moderation.register(Broadcaster, DefaultModerator)
-moderation.register(BroadcasterAddress, DefaultModerator)
+#moderation.register(Broadcaster, DefaultModerator)
+#moderation.register(BroadcasterAddress, DefaultModerator)
