@@ -1,13 +1,13 @@
 {% extends "fcc-base.html" %}
 
-{% block pagetitle %}Create your new account{% endblock pagetitle %}
+{% block pagetitle %}Create your profile{% endblock pagetitle %}
 
 {% block content %}
-    <h2>Create your new account</h2>
+    <h2>Create your profile</h2>
     <form action="." method="post" class="form-vertical">
         {% csrf_token %}
         <fieldset>
-            <legend>Your account</legend>
+            <legend>Your account profile</legend>
             <ul>
                 <li>
                     {{ form.username.errors }}
@@ -40,14 +40,29 @@
             <legend>About You</legend>
             <ul>
                 <li>
+                    {{ form.city.errors }}
+                    <label for="id_city">City</label>
+                    {{ form.city }}
+                </li>
+                <li>
                     {{ form.state.errors }}
                     <label for="id_state">State (where you can collect files)</label>
                     {{ form.state }}
+                </li>
+                                <li>
+                    {{ form.zipcode.errors }}
+                    <label for="id_zipcode">Your zipcode</label>
+                    {{ form.zipcode }}
                 </li>
                 <li>
                     {{ form.is_a.errors }}
                     <label for="id_is_a">What best describes your role?</label>
                     {{ form.is_a }}
+                </li>
+                <li>
+                    {{ form.share_info.errors }}
+                    <label for="id_share_info">May we share your contact information with Free Press?</label>
+                    {{ form.share_info }}
                 </li>
                 <li>
                     <button class="btn btn-sunlight" type="submit">Create Account</button>
