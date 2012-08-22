@@ -12,12 +12,12 @@ from fccpublicfiles.models import PoliticalBuy
 
 
 class Command(NoArgsCommand):
-    help = """Create PublicDocuments from DocumentCloud Documents"""
+    help = """Create PoliticalBuys from DocumentCloud Documents"""
     can_import_settings = True
 
     def handle_noargs(self, **options):
-        orphan_docs = Document.objects.filter(publicdocument__isnull=True)
-        self.stdout.write('Found {0} orphan docs (not  attached to PoliticalBuy records)\n'.format(orphan_docs.count()))
+        orphan_docs = Document.objects.filter(politicalbuy__isnull=True)
+        self.stdout.write('Found {0} orphan docs (not attached to PoliticalBuy records)\n'.format(orphan_docs.count()))
         for orphan_obj in orphan_docs:
             doc_meta = orphan_obj.dc_data
             callsign = doc_meta.get('callsign')
@@ -34,7 +34,8 @@ class Command(NoArgsCommand):
                 continue
             else:
                 try:
-                    pb_obj = PoliticalBuy(documentcloud_doc=orphan_obj, station=broadcaster.callsign)
+                    pb_obj = PoliticalBuy(documentcloud_doc=orphan_obj)
+                    pb_obj.broadcasters.add(broadcaster)
                     try:
                         pb_obj.full_clean()
                     except ValidationError, e:
