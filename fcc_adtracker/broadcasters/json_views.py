@@ -1,8 +1,9 @@
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.contrib.localflavor.us import us_states
+from django.core import serializers
 
 from locations.models import AddressLabel
-from broadcasters.models import BroadcasterAddress
+from broadcasters.models import Broadcaster, BroadcasterAddress
 
 from geopy import distance
 from geopy.point import Point
@@ -16,6 +17,14 @@ import copy
 
 STATES_DICT = dict(us_states.US_STATES)
 
+BROADCASTER_SERIALIZED_FIELDS = ('channel', 'community_city', 'community_state')
+
+def _sanitize_broadcaster_for_serliazation(broadcaster):
+    """docstring for _sanitize_broadcaster_json"""
+    broadcaster = dict(copy.copy(broadcaster.__dict__))
+    broadcaster.pop('id')
+    broadcaster.pop('_state')
+    return broadcaster
 
 def _make_broadcasteraddress_dict(bc_ad_obj):
     '''
@@ -32,6 +41,19 @@ def _make_broadcasteraddress_dict(bc_ad_obj):
     obj_dict['address'].pop('_state')
     obj_dict['address']['label'] = bc_ad_obj.label.name
     return obj_dict
+
+
+# Will probably go away once API implemented.
+def state_broadcasters_json(request, state_id):
+    state_id = state_id.upper()
+    state_name = STATES_DICT.get(state_id, None)
+    if state_name:
+        state_broadcaster_list = Broadcaster.objects.filter(community_state=state_id).order_by('callsign')
+        obj_list = [ _sanitize_broadcaster_for_serliazation(bc) for bc in state_broadcaster_list]
+        jsonout = json.dumps(obj_list)
+        return HttpResponse(jsonout, content_type='application/json')
+    else:
+        return HttpResponseNotFound(json.dumps({'error': '"{0}" does not match a valid state abbreviation'.format(state_id)}), content_type='application/json')
 
 
 def nearest_broadcasters_list(request):
