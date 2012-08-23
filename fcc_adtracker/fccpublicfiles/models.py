@@ -93,6 +93,7 @@ class PoliticalBuy(models.Model):
     contract_start_date = models.DateField(blank=True, null=True, default=datetime.date.today)
     contract_end_date = models.DateField(blank=True, null=True, default=datetime.date.today)
     lowest_unit_price = models.NullBooleanField(default=None, blank=True, null=True)
+    total_spent_raw = models.IntegerField(blank=True, null=True)
 
     broadcasters = models.ManyToManyField(Broadcaster, null=True)
 
@@ -100,6 +101,11 @@ class PoliticalBuy(models.Model):
         if self.documentcloud_doc:
             return u"{0}: {1}".format(', '.join([x.callsign for x in self.broadcasters.all()[:5]]), self.documentcloud_doc)
         return u"PoliticalBuy"
+
+    def total_spent(self):
+        """ Returns a total spent figure, from either the grand total on the document, or calculated from ad buys. """
+        # TODO: we may want to have this also return a calculation if available, if the raw total is not filled in
+        return self.total_spent_raw
 
 
 # Maybe update doccloud with fec_id if we have one?
