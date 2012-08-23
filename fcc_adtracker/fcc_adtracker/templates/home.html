@@ -1,20 +1,148 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %}
-{% block title %}FCC Ad Tracker{% endblock title %}
+{% block bodyclass %}broadcasters-featured{% endblock bodyclass %}
+
+{% block pagenav %}
+<nav class="clearfix">
+    <ul class="account listNav unstyled">
+        <li>
+            <a href="#feedback">Questions</a>
+        </li>
+        <li class="first">
+            <a href="#get_involved">Get Involved</a>
+        </li>
+    </ul>
+</nav>
+{% endblock pagenav %}
 
 {% block content %}
-<div style="display:block; height: 1200px;">
-    
+<div class="hero-unit module clearfix">
+    <div class="span7">
+        <h2 id='page-intro'>Who's trying to influence your vote?<br /> Help us find out!</h2>
+        <div class="featureText">
+            <p>New campaign finance rules mean that the airwaves this election year will be dominated by outside groups, many of which don’t have to disclose the sources of their funding.</p>
+            <p>But there is one place where they will leave a paper trail: At the TV stations where they buy their ads. For the first time, the Federal Communications Commission (FCC) has ordered television stations to put their public and political files online. But this year, only stations affiliated with the major networks (NBC, ABC, FOX, CBS) in the top 50 markets will have to put their political files online -- and only beginning August 2.</p>
+            <p>This leaves out much of the spending that already has occurred this year and will <a href="http://reporting.sunlightfoundation.com/2012/fcc-ruling-would-exempt-160-markets-posting-requirements/">cover only a fraction</a> of the markets in swing states where the majority of political ad spending will occur. <strong>We need your help to unlock the rest of the political files and post the information online</strong>.</p>
+            <p>This nationwide effort is already underway and we need your help! Sign up below to receive more information and enroll as a Political Ad Sleuth!</p>
+        </div>
+        <div class="row">
+            <ul id="sponsorLogos" class="floatList">
+                <li id="freepress" class="textReplace"><a href="http://www.freepress.net/">Free Press></a></li>
+                <li id="newAmerica" class="last textReplace"><a href="http://newamerica.net/">New America Foundation></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="span3 featureImg">
+        <img src="{% static 'img/img_fccBallot.png' %}" alt="Ballot Box">
+    </div>
 </div>
+<div class="row module">
+    <div id="get_involved" class="span7">
+        <h3 class="withTip">Take Action!</h3>
+        <p class="tip">Sign up to unlock the political files and find out who's trying to influence your vote.</p>
+        <form id='action_signup' class='form-horizontal' action="{% url action_signup %}" method="post" accept-charset="utf-8">
+            {% csrf_token %}
+            <ul>
+                <li>
+                    <label>Email</label>
+                    <input type="email" name="email" value="" placeholder="Email" required="required">
+                </li>
+                <li>
+                    <label>First Name</label>
+                    <input type="text" name="firstname" value="" placeholder="First Name" id="firstname" required="required">
+                </li>
+                <li>
+                    <label>Last Name</label>
+                    <input type="text" name="lastname" value="" id="lastname" placeholder="Last Name" required="required">
+                </li>
+                <li>
+                    <label>Phone</label>
+                    <input type="text" name="phone" value="" placeholder="Phone" id="phone">
+                </li>
+                <li>
+                    <label>City</label>
+                    <input type="text" name="city" value="" placeholder="City" id="city">
+                </li>
+                <li>
+                    <label>State</label>
+                    <select id="state" size="1"  name="state_cd" required="required">
+                        <option selected="selected" value="">----------------</option>
+                    {% for k,v in states_dict %}
+                        <option value="{{ k }}">{{ v }}</option>
+                    {% endfor %}
+                    </select>
+                </li>
+                <li>
+                    <label>Zip Code</label>
+                    <input type="text" name="zip" id="zip" maxlength="8" placeholder="Zip Code" required="required">
+                </li>
+                <li class="clearfix">
+                    <label>Station I Plan to Visit (optional)</label>
+                    <input type="text" name="custom-1093" value="" placeholder="Station" id="station">
+                </li>
+                <li class="clearfix">
+                    <label>Share with Free Press</label>
+                    <label class="tip asInput checkbox"><input type="checkbox" name="custom-1116" id="optin" checked="checked" />Yes, I would like to receive email alerts from Free Press</label>
+                </li>
+                <li class="last">
+                    <input type="submit" class="btn btn-sunlight" value="Sign up &rarr;">
+                </li>
+            </ul>
+        </form>
+    </div>
+    <div class="span4">
+        <div id="feedback" class="module">
+            <h4 class="withTip">Questions, Comments, Etc.</h4>
+            <p class="tip">Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? <a href="mailto:politicaladsleuth@sunlightfoundation.com?subject=Question%20or%20comment%20about%20Political%20Ad%20Sleuth">Please email us!</a></p>
+        </div>
+        <div class="boxCallout resources">
+            <h3>Resources</h3>
+            <ul class='slf-list'>
+                <li>
+                    <h5 class="withTip">How to inspect public political files</h5>
+                    <p>This <a href="http://www.freepress.net/resource/98445/inspecting-broadcasters-public-and-political-files">handy how-to guide</a> from Free Press provides step-by-step information on how to free the files from your local broadcaster. (<a href="http://www.freepress.net/files/publicfiles-howto.pdf">pdf version</a>)</p>
+                </li>
+                <li>
+                    <h5 class="withTip">Public Files Inspection Checklist</h5>
+                    <p>Ready to go to the station? <a href='http://www.freepress.net/files/publicfiles-checklist.pdf'>Print this checklist</a> and the <a href='{% static 'files/FCC_public_files_excerpt.pdf' %}'>political files excerpt</a> from FCC’s manual and bring it with you.</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 {% endblock content %}
 
-{% block sidebar %}
-{% endblock sidebar %}
-
-{% block head %}
-    {{ block.super }}
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBJAvCwnDreQHJ_cAlbXAm9Fb_LmjvlaTI&sensor=true&libraries=geometry"></script>
-{% endblock head %}
-
 {% block js %}
-    <script src="{% static "js/fcc_site.js" %}" type="text/javascript" charset="utf-8"></script>
+    {{ block.super }}
+    <script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var submitted = false;
+            var submit_btn = $('#action_signup input[type=submit]');
+            submit_btn.removeAttr('disabled');
+            $('#action_signup').validator({
+                'position': 'bottom left',
+                'messageClass': 'alert-error'
+            }).submit(function(event) {
+                var formObj = $(this);
+                var isValid = formObj.data("validator").checkValidity();
+                if (submitted == false && isValid) {
+                    submitted = true;
+                    submit_btn.attr('disabled', 'disabled');
+                    var data = formObj.serialize();
+                    jQuery.post("{% url action_signup %}", data, function(resp, textStatus) {
+                        var $p = $('<p class="alert alert-success">');
+                        $p.text(resp.message);
+                        $p.hide();
+                        formObj.slideUp('fast', function() {
+                            formObj.after($p);
+                            $p.slideDown();
+                        });
+                    });
+                }
+                event.preventDefault();
+                return false;
+            });
+        });
+    </script>
 {% endblock js %}
