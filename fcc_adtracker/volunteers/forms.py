@@ -17,7 +17,9 @@ class NonUserProfileForm(forms.ModelForm):
 
 class ProfileForm(forms.Form):
     phone = USPhoneNumberField(required=False)
+    city = forms.CharField()
     state = USStateField(widget=USStateSelect, help_text="Please select the state you will volunteer in.")
+    zipcode = USZipCodeField()
     is_a = forms.ChoiceField(required=False, choices=IS_A_CHOICES, label='I am a:')
 
 

@@ -19,8 +19,19 @@ IS_A_CHOICES = (
     ('nonprofit', 'Non-profit'),
 )
 
+# add introspection for social_auth
+try:
+    import south
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules([], ["^social_auth\.fields\.JSONField"])
+except:
+    pass
+
 
 class BaseProfile(models.Model):
+    '''
+        Common fields for profiles
+    '''
     phone = PhoneNumberField(blank=True, null=True)
     city = models.CharField(max_length=20, blank=True, null=True)
     state = USStateField(choices=us_states.US_STATES, null=True)
@@ -35,7 +46,7 @@ class BaseProfile(models.Model):
         )
 
     def __unicode__(self):
-        return u'<{0}: {1}, {2}>'.format(self.id, self.city, self.state)
+        return u'{0}: {1}, {2}'.format(self.id, self.city, self.state)
 
 
 class NonUserProfile(BaseProfile):
@@ -51,12 +62,15 @@ class NonUserProfile(BaseProfile):
         ordering = ['-date_created']
 
     def __unicode__(self):
-        return u'NonUserProfile: ' + self.email
+        return u'{0}, {1}: {2}'.format(self.first_name, self.last_name, self.email)
 
 # User model records first_name, last_name, and email...
 
 
 class Profile(BaseProfile):
+    '''
+        attaches the fields from BaseProfile to a user account
+    '''
     user = models.OneToOneField(User)
 
     def __unicode__(self):

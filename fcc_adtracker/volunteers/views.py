@@ -1,90 +1,81 @@
 from django.shortcuts import render, redirect
-from django.views.generic import View
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotAllowed
+from django.template.loader import render_to_string
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.conf import settings
-from django.template.loader import render_to_string
+from django.contrib.localflavor.us.forms import USStateSelect
+from django.contrib.auth.models import User
 
 from registration.views import register
 
-from mongoengine import *
-
-from .models import *
-from .forms import RegistrationProfileUniqueEmail, SocialProfileForm
+from volunteers.models import Profile
+from volunteers.forms import RegistrationFormUniqueEmail, SocialProfileForm, NonUserProfileForm
 
 import logging
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-
 import urllib
 import urllib2
+
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 from smtplib import SMTPException
 
 SIGNUP_EMAIL_REPLY_TO = getattr(settings, 'SIGNUP_EMAIL_REPLY_TO', 'admin@localhost')
 
 
-class ActionSignupView(View):
+def noaccount_signup(request):
+    # bsd_url = 'http://bsd.sunlightfoundation.com/page/s/fcc-public-files'
+    success_message = 'Thank you for signing up to be a Political Ad Sleuth!'
+    if request.method == 'POST':
+        form = NonUserProfileForm(request.POST)
+        if form.is_valid():
+            profile_obj = form.save()
 
-    bsd_url = 'http://bsd.sunlightfoundation.com/page/s/fcc-public-files'
-    success_message = 'Thanks for registering!'
+            if profile_obj.email:
+                # self.bsd_url += "?source=%s" % request.build_absolute_uri()
+                # params = { "email": email, "phone": phone,
+                #            "firstname": firstname, "lastname": lastname, "custom-1093": station,
+                #            "custom-1116": share_checkbox, "state_cd": state, "city": city
+                #           }
+                # response = urllib2.urlopen(self.bsd_url, urllib.urlencode(params)).read()
 
-    def get(self, request, *args, **kwargs):
-        return HttpResponseNotAllowed(('POST',))
+                message_text = render_to_string('volunteers/signup_autoresponse.txt')
+                email_message = EmailMessage(success_message,
+                                             message_text, 'adsleuth-noreply@sunlightfoundation.com', (profile_obj.email,),
+                                             headers={'Reply-To': SIGNUP_EMAIL_REPLY_TO})
+                try:
+                    email_message.send()
+                except SMTPException as e:
+                    if hasattr(e, 'message'):
+                        logger.error('SMTPException: ' + e.message)
+                    else:
+                        logger.error('SMTPException error!')
 
-    def post(self, request, *args, **kwargs):
-        email = request.POST.get("email", "")
-        phone = request.POST.get("phone", "")
-        firstname = request.POST.get("firstname", "")
-        lastname = request.POST.get("lastname", "")
-        station = request.POST.get("custom-1093", "")
-        city = request.POST.get("city", "")
-        state = request.POST.get("state_cd", "")
-        share_checkbox = request.POST.get("custom-1116", "")
+            request.session['nonuser_profile'] = form.cleaned_data
 
-        signup = Signup(email=email, phone=phone, firstname=firstname, lastname=lastname, city=city, state=state, broadcaster=station)
-        # try:
-        #     broadcaster = Broadcaster.objects.get(callsign=station)
-        #     signup.broadcaster = broadcaster
-        # except Broadcaster.DoesNotExist as e:
-        #     pass
-        signup.share_checkbox = share_checkbox or False
-        try:
-            signup.save()
-        except ValidationError as e:
-            return HttpResponse(json.dumps(e.to_dict()), content_type='application/json')
+            if request.is_ajax():
+                content_str = render_to_string('volunteers/_nonuser_postsignup_message.html', {'profile': profile_obj})
+                resp = {'message': success_message, 'content': content_str}
+                return HttpResponse(json.dumps(resp), content_type='application/json')
 
-        if email:
-            self.bsd_url += "?source=%s" % request.build_absolute_uri()
-            params = { "email": email, "phone": phone,
-                       "firstname": firstname, "lastname": lastname, "custom-1093": station,
-                       "custom-1116": share_checkbox, "state_cd": state, "city": city
-                      }
-            response = urllib2.urlopen(self.bsd_url, urllib.urlencode(params)).read()
+            messages.success(request, success_message)
+            referrer = request.META.get('HTTP_REFERER', None)
+            return HttpResponseRedirect(referrer or '/')
+    else:
+        form = NonUserProfileForm()
 
-        message_text = render_to_string('volunteers/signup_autoresponse.txt')
-        email_message = EmailMessage('Thank you for signing up to be a Political Ad Sleuth!',
-                                     message_text, 'adsleuth-noreply@sunlightfoundation.com', (email,),
-                                     headers={'Reply-To': SIGNUP_EMAIL_REPLY_TO})
-        try:
-            email_message.send()
-        except SMTPException as e:
-            if hasattr(e, 'message'):
-                logger.error('SMTPException: ' + e.message)
-            else:
-                logger.error('SMTPException error!')
-
-        if request.is_ajax():
-            resp = {'message': self.success_message}
-            return HttpResponse(json.dumps(resp), content_type='application/json')
-
-        messages.success(request, self.success_message)
-        referrer = request.META.get('HTTP_REFERER', None)
-
-        return HttpResponseRedirect(referrer or '/')
+    if request.is_ajax():
+        form_html = render_to_string('volunteers/_nonuser_profile_form.html', {'form': form})
+        resp = {'message': 'Error filling out form', 'content': form_html}
+        return HttpResponse(json.dumps(resp), content_type='application/json')
+    return render(request, 'volunteers/nonuser_profile_edit.html', {'form': form})
 
 
 def setup_profile(request):
@@ -110,7 +101,13 @@ def setup_profile(request):
 
 
 def register_volunteer(request, *args, **kwargs):
-    resp = register(request, backend='registration.backends.default.DefaultBackend', form_class=RegistrationProfileUniqueEmail)
+    if 'nonuser_profile' in request.session:
+        nonuser_profile = request.session['nonuser_profile']
+    else:
+        nonuser_profile = {}
+    prerendered_select = USStateSelect(attrs={'required': 'required', 'id': 'state'}).render('state', nonuser_profile.get('state', ''))
+    resp = register(request, backend='registration.backends.default.DefaultBackend',
+                    form_class=RegistrationFormUniqueEmail, extra_context={'nonuser_profile': nonuser_profile, 'prerendered_select': prerendered_select})
 
     if request.method == 'POST':
 
@@ -124,13 +121,12 @@ def register_volunteer(request, *args, **kwargs):
 
         except Profile.DoesNotExist:
 
-            data = request.POST
-
             profile = Profile(
                 user=user,
-                phone=data.get('phone', ''),
-                state=data.get('state', ''),
-                is_a=data.get('is_a', ''),
+                phone=request.POST.get('phone', ''),
+                state=request.POST.get('state', ''),
+                zipcode=request.POST.get('zipcode', ''),
+                is_a=request.POST.get('is_a', ''),
             )
             profile.save()
 
@@ -142,7 +138,7 @@ def profile(request):
         return HttpResponseRedirect('/account/login/')
     try:
         profile = request.user.get_profile()
-    except Profile.DoesNotExist as e:
+    except Profile.DoesNotExist:
         profile = None
     return render(request, 'volunteers/profile.html', {'profile': profile})
 

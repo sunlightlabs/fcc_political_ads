@@ -1,8 +1,7 @@
 from django.conf.urls import patterns, include, url
-from .views import ActionSignupView
 
 urlpatterns = patterns('',
-    url(r'^action_signup/', ActionSignupView.as_view(), name='action_signup'),
+    url(r'^signup/$', 'volunteers.views.noaccount_signup', name='noaccount_signup'),
     url(r'^account/register/$', 'volunteers.views.register_volunteer', name='register_volunteer'),
     url(r'^account/setup-profile/$', 'volunteers.views.setup_profile', name='setup_profile'),
     url(r'^account/profile/$', 'volunteers.views.profile', name='profile'),
