@@ -1,0 +1,56 @@
+{% comment %}
+    This form pairs with "_nonuser_profile_form.js"
+
+    Form validation and other magic relies on the id of this form as well as
+        name attribute of many of these elements, 'broadcasters' in particular
+
+{% endcomment %}
+<form id='noaccount_signup' class='form-horizontal' action="{% url noaccount_signup %}" method="post" accept-charset="utf-8">
+    {% csrf_token %}
+    <ul>
+        <li>
+            <label>Email</label>
+            <input type="email" name="{{ form.email.html_name }}" value="" placeholder="Email" required="required">
+        </li>
+        <li>
+            <label>First Name</label>
+            <input type="text" name="{{ form.first_name.html_name }}" value="" placeholder="First Name" id="firstname" required="required">
+        </li>
+        <li>
+            <label>Last Name</label>
+            <input type="text" name="{{ form.last_name.html_name }}" value="" id="lastname" placeholder="Last Name" required="required">
+        </li>
+        <li>
+            <label>Phone</label>
+            <input type="text" name="{{ form.phone.html_name }}" value="" pattern="\d{3}(\-)?\d{3}(\-)?\d{4}" title="10 digit phone number, with or without dashes" placeholder="Phone" id="phone">
+        </li>
+        <li>
+            <label>City</label>
+            <input type="text" name="{{ form.city.html_name }}" value="" maxlength="20" placeholder="City" id="city">
+        </li>
+        <li>
+            <label>State</label>
+            <select id="state" size="1"  name="{{ form.state.html_name }}" required="required">
+                <option selected="selected" value="">----------------</option>
+            {% for k,v in states_dict %}
+                <option value="{{ k }}">{{ v }}</option>
+            {% endfor %}
+            </select>
+        </li>
+        <li>
+            <label>Zip Code</label>
+            <input type="text" name="{{ form.zipcode.html_name }}" id="zip" pattern="\d{5}" title="5 digit zip code" placeholder="Zip Code" required="required">
+        </li>
+        <li class="clearfix">
+            <label>Stations I Plan to Visit (optional)</label>
+            <input type="text" name="broadcasters" value="" placeholder="Stations" id="broadcasters">
+        </li>
+        <li class="clearfix">
+            <label>Share with Free Press</label>
+            <label class="tip asInput checkbox"><input type="checkbox" name="{{ form.share_info.html_name }}" id="optin" checked="checked" />Yes, I would like to receive email alerts from Free Press</label>
+        </li>
+        <li class="last">
+            <input type="submit" class="btn btn-sunlight" value="Sign up &rarr;">
+        </li>
+    </ul>
+</form>

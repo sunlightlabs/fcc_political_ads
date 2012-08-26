@@ -1,0 +1,10 @@
+{% extends "fcc-base.html" %}
+
+{% block content %}
+    {% include "volunteers/_nonuser_profile_form.html" %}
+{% endblock content %}
+
+{% block js %}
+    {{ block.super }}
+    {% include "volunteers/_nonuser_profile_form.js" %}
+{% endblock js %}
