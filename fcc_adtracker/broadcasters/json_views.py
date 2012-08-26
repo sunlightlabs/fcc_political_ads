@@ -21,10 +21,11 @@ BROADCASTER_SERIALIZED_FIELDS = ('channel', 'community_city', 'community_state')
 
 def _sanitize_broadcaster_for_serliazation(broadcaster):
     """docstring for _sanitize_broadcaster_json"""
-    broadcaster = dict(copy.copy(broadcaster.__dict__))
-    broadcaster.pop('id')
-    broadcaster.pop('_state')
-    return broadcaster
+    bc_dict = dict(copy.copy(broadcaster.__dict__))
+    bc_dict.pop('id')
+    bc_dict.pop('_state')
+    bc_dict['combined_name'] = '{0} [{1} {2}]'.format(broadcaster.callsign, broadcaster.network_affiliate, broadcaster.channel)
+    return bc_dict
 
 def _make_broadcasteraddress_dict(bc_ad_obj):
     '''
