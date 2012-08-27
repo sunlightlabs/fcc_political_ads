@@ -11,9 +11,11 @@ admin.autodiscover()
 
 
 urlpatterns = patterns('',
+    url(r'^account/dashboard/$', 'fcc_adtracker.views.user_dashboard', name='user_dashboard'),
+    url(r'^account/$', 'fcc_adtracker.views.account_to_dashboard_landing', name='account_to_dashboard'),
     url(r'', include('volunteers.urls')),
     # url(r'^publicfiles/', include('fccpublicfiles.urls')),
-    url(r'^stations/', include(json_urlpatterns)),
+    url(r'^broadcasters/', include(json_urlpatterns)),
     url(r'^states/(?P<state_id>\w{2})/$', 'broadcasters.views.state_broadcaster_list', name='state_broadcaster_list'),
     url(r'^$', 'fcc_adtracker.views.home_view', name='home'),
     (r'^admin/lookups/', include(ajax_select_urls)),
