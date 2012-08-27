@@ -12,6 +12,8 @@ class Address(models.Model):
     lat = models.FloatField(blank=True, null=True)
     lng = models.FloatField(blank=True, null=True)
 
+    is_visible = models.BooleanField(default=False)
+
     class Meta:
         verbose_name_plural = u"Addresses"
         unique_together = ('address1', 'address2', 'city', 'state', 'zipcode')
@@ -38,6 +40,8 @@ class Address(models.Model):
 class AddressLabel(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField()
+
+    is_visible = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name

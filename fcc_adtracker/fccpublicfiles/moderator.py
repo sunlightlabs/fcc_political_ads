@@ -9,6 +9,7 @@ class DefaultModerator(GenericModerator):
     auto_approve_for_staff = False
     notify_user = False
     notify_moderator = False
+    visibility_column = 'is_visible'
 
 class PoliticalBuyModerator(DefaultModerator):
     fields_exclude = ['broadcasters']

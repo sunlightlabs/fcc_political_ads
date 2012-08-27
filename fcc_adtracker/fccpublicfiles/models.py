@@ -28,6 +28,8 @@ class Person(models.Model):
     last_name = models.CharField(max_length=40)
     suffix = models.CharField(max_length=10, blank=True, null=True)
 
+    is_visible = models.BooleanField(default=False)
+
     class Meta:
         verbose_name_plural = "People"
         ordering = ('last_name', 'first_name',)
@@ -56,6 +58,8 @@ class Organization(models.Model):
     employees = models.ManyToManyField(Person, through='Role')
     fec_id = models.CharField(max_length=9, blank=True)
 
+    is_visible = models.BooleanField(default=False)
+
     class Meta:
         ordering = ('name',)
 
@@ -70,6 +74,8 @@ class Role(models.Model):
     organization = models.ForeignKey(Organization)
     title = models.CharField(max_length=100, help_text="Job title or descriptor for position they hold.")
 
+    is_visible = models.BooleanField(default=False)
+
     def __unicode__(self):
         return u"<" + self.person.__unicode__() + ": " + self.title + " >"
 
@@ -77,6 +83,8 @@ class Role(models.Model):
 class GenericPublicDocument(models.Model):
     documentcloud_doc = models.ForeignKey(Document)
     broadcasters = models.ManyToManyField(Broadcaster, null=True)
+
+    is_visible = models.BooleanField(default=False)
 
 
 class PoliticalBuy(models.Model):
@@ -94,6 +102,8 @@ class PoliticalBuy(models.Model):
     contract_end_date = models.DateField(blank=True, null=True, default=datetime.date.today)
     lowest_unit_price = models.NullBooleanField(default=None, blank=True, null=True)
     total_spent_raw = models.IntegerField(blank=True, null=True)
+
+    is_visible = models.BooleanField(default=False)
 
     broadcasters = models.ManyToManyField(Broadcaster, null=True)
 
@@ -145,6 +155,8 @@ class PoliticalSpot(models.Model):
     num_spots = models.IntegerField(blank=True, null=True, verbose_name="Number of Spots")
     rate = models.DecimalField(blank=True, null=True, max_digits=9, decimal_places=2, help_text="Dollar cost for each spot")
     preemptable = models.NullBooleanField(default=None, blank=True, null=True)
+
+    is_visible = models.BooleanField(default=False)
 
     def documentcloud_doc():
         doc = "The documentcloud_doc property."
