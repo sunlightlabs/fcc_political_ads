@@ -38,6 +38,7 @@ def create_profile(request, user=None, *args, **kwargs):
             profile = Profile(
                 user=user,
                 phone=settings['phone'],
+                city=settings['city'],
                 state=settings['state'],
                 is_a=settings['is_a']
             )

@@ -1,9 +1,9 @@
 {% extends "fcc-base.html" %}
 
-{% block pagetitle %}Create your profile{% endblock pagetitle %}
+{% block pagetitle %}Edit your profile{% endblock pagetitle %}
 
 {% block content %}
-    <h2>Create your profile</h2>
+    <h2>Edit your profile</h2>
     <form action="." method="post" class="form-vertical">
         {% csrf_token %}
         <fieldset>
@@ -36,6 +36,17 @@
                 </li>
             </ul>
         </fieldset>
+        <fieldset class="module">
+            <legend>Change your password</legend>
+            <p class="tip">Enter a new password in the field below to change your password</p>
+            <ul>
+                <li>
+                    {{ form.new_password.errors }}
+                    <label for="id_new_password">New password</label>
+                    {{ form.new_password }}
+                </li>
+            </ul>
+        </fieldset>
         <fieldset>
             <legend>About You</legend>
             <ul>
@@ -60,7 +71,7 @@
                     {{ form.is_a }}
                 </li>
                 <li>
-                    <button class="btn btn-sunlight" type="submit">Create Account</button>
+                    <button class="btn btn-sunlight" type="submit">Save Changes</button>
                 </li>
             </ul>
         </fieldset>

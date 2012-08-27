@@ -6,11 +6,12 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 from django.contrib.localflavor.us.forms import USStateSelect
 from django.contrib.auth.models import User
+# from django.contrib.auth.views import logout
 
 from registration.views import register
 
 from volunteers.models import Profile
-from volunteers.forms import RegistrationFormUniqueEmail, SocialProfileForm, NonUserProfileForm
+from volunteers.forms import RegistrationFormUniqueEmail, SocialProfileForm, AccountProfileForm, NonUserProfileForm
 
 import logging
 
@@ -31,6 +32,7 @@ SIGNUP_EMAIL_REPLY_TO = getattr(settings, 'SIGNUP_EMAIL_REPLY_TO', 'admin@localh
 
 
 def noaccount_signup(request):
+    """ Initial signup that gets us user info but does not create an account."""
     # bsd_url = 'http://bsd.sunlightfoundation.com/page/s/fcc-public-files'
     success_message = 'Thank you for signing up to be a Political Ad Sleuth!'
     if request.method == 'POST':
@@ -59,7 +61,6 @@ def noaccount_signup(request):
                         logger.error('SMTPException error!')
 
             request.session['nonuser_profile'] = form.cleaned_data
-
             if request.is_ajax():
                 content_str = render_to_string('volunteers/_nonuser_postsignup_message.html', {'profile': profile_obj})
                 resp = {'message': success_message, 'content': content_str}
@@ -79,6 +80,7 @@ def noaccount_signup(request):
 
 
 def setup_profile(request):
+    """Part of social_auth pipeline."""
     if 'partial_pipeline' not in request.session:
         return HttpResponseRedirect('/')
 
@@ -95,12 +97,106 @@ def setup_profile(request):
             return redirect('socialauth_complete', backend=pipeline['backend'])
 
     else:
-        form = SocialProfileForm(initial=pipeline['kwargs']['details'])
+        if 'nonuser_profile' in request.session:
+            initial_data = request.session['nonuser_profile'].copy()
+            cleaned_details = dict([(k, v) for k, v in pipeline['kwargs']['details'].iteritems() if v != ''])
+            initial_data.update(cleaned_details)
+        else:
+            initial_data = pipeline['kwargs']['details']
+        form = SocialProfileForm(initial=initial_data)
 
     return render(request, 'volunteers/profile_setup.html', {'form': form})
 
 
+def view_profile(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/account/login/')
+    try:
+        profile = request.user.get_profile()
+    except Profile.DoesNotExist:
+        profile = None
+    return render(request, 'volunteers/profile.html', {'profile': profile})
+
+
+def edit_profile(request):
+    """Edit an existing profile"""
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/account/login/')
+    user = request.user
+    if request.method == 'POST':
+        form = AccountProfileForm(request.POST)
+        if form.is_valid():
+            still_valid = True
+
+            qs = User.objects.exclude(pk=user.pk)
+
+            if qs.filter(email=form.cleaned_data['email']).exists():
+                form.errors['email'] = ['Email address has been used by another account']
+                still_valid = False
+
+            if qs.filter(username=form.cleaned_data['username']).exists():
+                form.errors['username'] = ['Username has been used by another account']
+                still_valid = False
+
+            if still_valid:
+
+                # set user attributes
+
+                user.username = form.cleaned_data['username']
+                user.first_name = form.cleaned_data['first_name']
+                user.last_name = form.cleaned_data['last_name']
+                user.email = form.cleaned_data['email']
+
+                if 'new_password' in form.cleaned_data:
+                    user.set_password(form.cleaned_data['new_password'])
+
+                user.save()
+
+                # set profile attributes
+
+                try:
+
+                    profile = user.get_profile()
+
+                    profile.phone = form.cleaned_data['phone']
+                    profile.city = form.cleaned_data['city']
+                    profile.state = form.cleaned_data['state']
+                    profile.zipcode = form.cleaned_data['zipcode']
+                    profile.is_a = form.cleaned_data['is_a']
+
+                    profile.save()
+
+                except Profile.DoesNotExist:
+                    messages.warning(request, 'Your account does not have a profile. Please contact us to let us know.')
+
+                messages.success(request, 'Your account has been updated.')
+
+                return HttpResponseRedirect('/account/')
+    else:
+        initial_data = {
+            'username': user.username,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email
+        }
+        try:
+            profile = request.user.get_profile()
+            initial_data['phone'] = profile.phone
+            initial_data['city'] = profile.city
+            initial_data['state'] = profile.state
+            initial_data['zipcode'] = profile.zipcode
+            initial_data['is_a'] = profile.is_a
+            initial_data['share_info'] = profile.share_info
+        except Profile.DoesNotExist:
+            profile = None
+        form = AccountProfileForm(initial=initial_data)
+    return render(request, 'volunteers/profile_edit.html', {'form': form})
+
+
 def register_volunteer(request, *args, **kwargs):
+    """Override of default django-registration register, adding
+    NonUserProfile data to profile
+    """
     if 'nonuser_profile' in request.session:
         nonuser_profile = request.session['nonuser_profile']
     else:
@@ -114,33 +210,46 @@ def register_volunteer(request, *args, **kwargs):
         try:
 
             user = User.objects.get(username=request.POST['username'])
+            user.first_name = nonuser_profile.get('first_name', request.POST.get('first_name', ''))
+            user.last_name = nonuser_profile.get('last_name', request.POST.get('last_name', ''))
+            user.save()
             user.get_profile()
 
         except User.DoesNotExist:
             pass
 
         except Profile.DoesNotExist:
-
             profile = Profile(
                 user=user,
-                phone=request.POST.get('phone', ''),
-                state=request.POST.get('state', ''),
-                zipcode=request.POST.get('zipcode', ''),
-                is_a=request.POST.get('is_a', ''),
+                phone=nonuser_profile.get('phone', request.POST.get('phone', '')),
+                city=nonuser_profile.get('city', request.POST.get('city', '')),
+                state=nonuser_profile.get('state', request.POST.get('state', '')),
+                zipcode=nonuser_profile.get('zipcode', request.POST.get('zipcode', '')),
+                is_a=nonuser_profile.get('is_a', request.POST.get('is_a', '')),
             )
             profile.save()
 
     return resp
 
 
-def profile(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/account/login/')
-    try:
-        profile = request.user.get_profile()
-    except Profile.DoesNotExist:
-        profile = None
-    return render(request, 'volunteers/profile.html', {'profile': profile})
+# def delete_account(request):
+
+#     if request.user.is_staff:
+#         messages.warning(request,
+#             'Unable to delete account. Staff accounts must be deleted by an administrator.')
+#         return HttpResponseRedirect('/account/')
+
+#     if request.method == 'POST':
+
+#         if 'iamreallysure' in request.POST:
+
+#             user = request.user
+#             resp = logout(request, next_page='/')
+#             user.delete()
+
+#             return resp
+
+#     return render(request, 'volunteers/account_delete.html')
 
 
 def account_landing(request):
@@ -148,4 +257,3 @@ def account_landing(request):
         return HttpResponseRedirect('/account/login/')
 
     return HttpResponseRedirect('/account/profile/')
-    # return render(request, 'volunteers/account')
