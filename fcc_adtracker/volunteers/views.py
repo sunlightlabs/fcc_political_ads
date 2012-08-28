@@ -35,7 +35,6 @@ def noaccount_signup(request):
     success_message = 'Thank you for signing up to be a Political Ad Sleuth!'
     if request.method == 'POST':
         form = NonUserProfileForm(request.POST)
-
         if form.is_valid():
             profile_obj = form.save()
             if SIGNUP_EXTRA_FIELDS:
@@ -43,7 +42,7 @@ def noaccount_signup(request):
                 for extra_field in SIGNUP_EXTRA_FIELDS:
                     if extra_field in request.POST:
                         extra_field_data[extra_field] = request.POST.getlist(extra_field)
-                profile_obj.extra_data = extra_field_data
+                profile_obj.extra_fields = extra_field_data
                 profile_obj.save()
             if profile_obj.email:
 
@@ -60,7 +59,7 @@ def noaccount_signup(request):
                         logger.error('SMTPException error!')
 
             request.session['nonuser_profile'] = form.cleaned_data
-            request.session['nonuser_profile']['extra_data'] = profile_obj.extra_data
+            request.session['nonuser_profile']['extra_fields'] = profile_obj.extra_fields
             if request.is_ajax():
                 content_str = render_to_string('volunteers/_nonuser_postsignup_message.html', {'profile': profile_obj})
                 resp = {'message': success_message, 'content': content_str}
