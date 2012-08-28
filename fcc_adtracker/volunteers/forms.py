@@ -36,18 +36,19 @@ class RegistrationProfileUniqueEmail(RegistrationFormUniqueEmail, ProfileRegistr
     pass
 
 
-class SocialProfileForm(BaseProfileForm):
+class UserProfileForm(BaseProfileForm):
     username = forms.CharField(max_length=64)
     email = forms.EmailField()
     first_name = forms.CharField(required=False, max_length=64)
     last_name = forms.CharField(required=False, max_length=64)
+    notify = forms.BooleanField(required=False, initial=True)
 
 
-class AccountProfileForm(SocialProfileForm):
+class AccountProfileForm(UserProfileForm):
     new_password = forms.CharField(required=False, widget=forms.PasswordInput)
 
 
-class SetupSocialProfileForm(SocialProfileForm):
+class SetupSocialProfileForm(UserProfileForm):
 
     def clean(self):
         cleaned_data = super(SetupSocialProfileForm, self).clean()

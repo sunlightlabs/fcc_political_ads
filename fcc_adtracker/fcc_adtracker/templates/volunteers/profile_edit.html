@@ -4,7 +4,7 @@
 
 {% block content %}
     <h2>Edit your profile</h2>
-    <form action="." method="post" class="form-vertical">
+    <form action="." method="post" class="form-horizontal">
         {% csrf_token %}
         <fieldset>
             <legend>Your account profile</legend>
@@ -34,11 +34,20 @@
                     <label for="id_phone">Phone Number</label>
                     {{ form.phone }}
                 </li>
+                <li>
+                    {{form.notify.errors }}
+                    <label for="notify" class="tip asInput checkbox">{{ form.notify }} Receive email updates from Political Ad Sleuth</label>
+                </li>
             </ul>
         </fieldset>
         <fieldset class="module">
             <legend>Change your password</legend>
             <p class="tip">Enter a new password in the field below to change your password</p>
+            {% if not request.user.has_usable_password %}
+                <div class="alert">
+                    <p><strong>Warning!</strong> You do not have a password set for this account. We recommend setting a new password in case your associated accounts become disconnected.</p>
+                </div>
+            {% endif %}
             <ul>
                 <li>
                     {{ form.new_password.errors }}
@@ -76,4 +85,34 @@
             </ul>
         </fieldset>
     </form>
+    <div>
+        <h3>Associated Accounts</h3>
+        <p>
+            {% if social_auth.twitter %}
+                <a class="btn btn-warning" href="{% url socialauth_disconnect 'twitter' %}">
+                    <i class="icon-remove-circle icon-white"></i>
+                    Unlink Twitter
+                </a>
+            {% else %}
+                <a class="btn" href="{% url socialauth_associate_begin 'twitter' %}">
+                    <i class="icon-repeat"></i>
+                    Link with Twitter
+                </a>
+            {% endif %}
+        </p>
+
+        <p>
+            {% if social_auth.facebook %}
+                <a class="btn btn-warning" href="{% url socialauth_disconnect 'facebook' %}">
+                    <i class="icon-remove-circle icon-white"></i>
+                    Unlink Facebook
+                </a>
+            {% else %}
+                <a class="btn" href="{% url socialauth_associate_begin 'facebook' %}">
+                    <i class="icon-repeat"></i>
+                    Link with Facebook
+                </a>
+            {% endif %}
+        </p>
+    </div>
 {% endblock content %}

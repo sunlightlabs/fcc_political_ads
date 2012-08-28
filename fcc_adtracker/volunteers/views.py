@@ -11,15 +11,12 @@ from django.contrib.auth.models import User
 from registration.views import register
 
 from volunteers.models import Profile
-from volunteers.forms import RegistrationFormUniqueEmail, SocialProfileForm, AccountProfileForm, NonUserProfileForm
+from volunteers.forms import RegistrationFormUniqueEmail, UserProfileForm, AccountProfileForm, NonUserProfileForm
 
 import logging
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
-
-import urllib
-import urllib2
 
 try:
     import simplejson as json
@@ -29,6 +26,7 @@ except ImportError:
 from smtplib import SMTPException
 
 SIGNUP_EMAIL_REPLY_TO = getattr(settings, 'SIGNUP_EMAIL_REPLY_TO', 'admin@localhost')
+SIGNUP_EXTRA_FIELDS = getattr(settings, 'SIGNUP_EXTRA_FIELDS', None)
 
 
 def noaccount_signup(request):
@@ -37,16 +35,17 @@ def noaccount_signup(request):
     success_message = 'Thank you for signing up to be a Political Ad Sleuth!'
     if request.method == 'POST':
         form = NonUserProfileForm(request.POST)
+
         if form.is_valid():
             profile_obj = form.save()
-
+            if SIGNUP_EXTRA_FIELDS:
+                extra_field_data = {}
+                for extra_field in SIGNUP_EXTRA_FIELDS:
+                    if extra_field in request.POST:
+                        extra_field_data[extra_field] = request.POST.getlist(extra_field)
+                profile_obj.extra_data = extra_field_data
+                profile_obj.save()
             if profile_obj.email:
-                # self.bsd_url += "?source=%s" % request.build_absolute_uri()
-                # params = { "email": email, "phone": phone,
-                #            "firstname": firstname, "lastname": lastname, "custom-1093": station,
-                #            "custom-1116": share_checkbox, "state_cd": state, "city": city
-                #           }
-                # response = urllib2.urlopen(self.bsd_url, urllib.urlencode(params)).read()
 
                 message_text = render_to_string('volunteers/signup_autoresponse.txt')
                 email_message = EmailMessage(success_message,
@@ -61,6 +60,7 @@ def noaccount_signup(request):
                         logger.error('SMTPException error!')
 
             request.session['nonuser_profile'] = form.cleaned_data
+            request.session['nonuser_profile']['extra_data'] = profile_obj.extra_data
             if request.is_ajax():
                 content_str = render_to_string('volunteers/_nonuser_postsignup_message.html', {'profile': profile_obj})
                 resp = {'message': success_message, 'content': content_str}
@@ -85,10 +85,9 @@ def setup_profile(request):
         return HttpResponseRedirect('/')
 
     pipeline = request.session['partial_pipeline']
-
     if request.method == 'POST':
 
-        form = SocialProfileForm(request.POST)
+        form = UserProfileForm(request.POST)
 
         if form.is_valid():
 
@@ -103,7 +102,7 @@ def setup_profile(request):
             initial_data.update(cleaned_details)
         else:
             initial_data = pipeline['kwargs']['details']
-        form = SocialProfileForm(initial=initial_data)
+        form = UserProfileForm(initial=initial_data)
 
     return render(request, 'volunteers/profile_setup.html', {'form': form})
 
@@ -225,7 +224,7 @@ def register_volunteer(request, *args, **kwargs):
                 city=nonuser_profile.get('city', request.POST.get('city', '')),
                 state=nonuser_profile.get('state', request.POST.get('state', '')),
                 zipcode=nonuser_profile.get('zipcode', request.POST.get('zipcode', '')),
-                is_a=nonuser_profile.get('is_a', request.POST.get('is_a', '')),
+                is_a=nonuser_profile.get('is_a', request.POST.get('is_a', ''))
             )
             profile.save()
 
@@ -250,6 +249,10 @@ def register_volunteer(request, *args, **kwargs):
 #             return resp
 
 #     return render(request, 'volunteers/account_delete.html')
+
+def account_error(request):
+    """For account errors. social_auth requires this in their config."""
+    return render(request, 'volunteers/account_error.html',)
 
 
 def account_landing(request):

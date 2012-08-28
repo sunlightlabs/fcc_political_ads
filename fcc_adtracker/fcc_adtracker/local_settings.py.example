@@ -27,6 +27,13 @@ MONGO_PASSWORD = ''
 #EMAIL_HOST_USER = ''
 #EMAIL_PORT = ''
 
+# For emails sent to admins or managers
+EMAIL_SUBJECT_PREFIX = '[Political Ad Sleuth] '
+
+SIGNUP_EMAIL_REPLY_TO = ''
+# Tuple of extra fields to serialize and save in volunteers
+SIGNUP_EXTRA_FIELDS = ()
+
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 AWS_QUERYSTRING_AUTH = False  # We don't want auth in the querystring

@@ -34,6 +34,10 @@
                     <label for="id_phone">Phone Number</label>
                     {{ form.phone }}
                 </li>
+                <li>
+                    {{form.notify.errors }}
+                    <label for="notify" class="tip asInput checkbox">{{ form.notify }} Receive email updates from Political Ad Sleuth</label>
+                </li>
             </ul>
         </fieldset>
         <fieldset>

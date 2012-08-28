@@ -9,6 +9,7 @@ try:
 except ImportError, e:
     import json
 
+import jsonfield  # social_auth has JSONField, but this looks more mature
 
 IS_A_CHOICES = (
     ('other', 'Other'),
@@ -21,7 +22,6 @@ IS_A_CHOICES = (
 
 # add introspection for social_auth
 try:
-    import south
     from south.modelsinspector import add_introspection_rules
     add_introspection_rules([], ["^social_auth\.fields\.JSONField"])
 except:
@@ -57,6 +57,7 @@ class NonUserProfile(BaseProfile):
     last_name = models.CharField(_('last name'), max_length=30, blank=True)
     email = models.EmailField(_('e-mail address'))
     date_created = models.DateTimeField(auto_now_add=True)
+    extra_fields = jsonfield.JSONField(blank=True, null=True)
 
     class Meta:
         ordering = ['-date_created']
@@ -72,6 +73,7 @@ class Profile(BaseProfile):
         attaches the fields from BaseProfile to a user account
     '''
     user = models.OneToOneField(User)
+    notify = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'Profile: ' + self.user.username
