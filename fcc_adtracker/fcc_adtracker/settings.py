@@ -1,5 +1,4 @@
 # Django settings for fcc_adtracker project.
-from mongoengine import connect
 from django.template.defaultfilters import slugify
 import os
 
@@ -24,15 +23,6 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-
-# MongoEngine settings
-# Typically set in local_settings.py
-MONGO_HOST = 'localhost'
-MONGO_PORT = 27017
-MONGO_DATABASE = ''
-MONGO_USERNAME = ''
-MONGO_PASSWORD = ''
-
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -205,7 +195,7 @@ AJAX_LOOKUP_CHANNELS = {
     'doccloud': ('fccpublicfiles.lookups', 'DocumentCloudLookup'),
     'address': ('fccpublicfiles.lookups', 'AddressLookup'),
     'show_name': ('fccpublicfiles.lookups', 'ShowNameLookup'),
-    'callsign': ('broadcasters.lookups', 'BroadcasterLookup'),
+    'broadcaster': ('broadcasters.lookups', 'BroadcasterLookup'),
 }
 # magically include jqueryUI/js/css
 AJAX_SELECT_BOOTSTRAP = False
@@ -263,6 +253,3 @@ try:
     from local_settings import *
 except Exception, e:
     pass
-
-
-mongo_conn = connect(MONGO_DATABASE, host=MONGO_HOST, port=MONGO_PORT, username=MONGO_USERNAME, password=MONGO_PASSWORD)
