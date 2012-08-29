@@ -209,8 +209,8 @@ AJAX_LOOKUP_CHANNELS = {
     'callsign': ('broadcasters.lookups', 'BroadcasterLookup'),
 }
 # magically include jqueryUI/js/css
-AJAX_SELECT_BOOTSTRAP = False
-AJAX_SELECT_INLINES = False
+AJAX_SELECT_BOOTSTRAP = True
+AJAX_SELECT_INLINES = 'inline'
 
 # DocumentCloud
 DOCUMENTS_PATH = ''

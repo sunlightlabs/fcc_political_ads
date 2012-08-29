@@ -20,5 +20,5 @@ django-extensions==0.8
 -e git://github.com/sunlightlabs/django-doccloud.git#egg=django_doccloud-dev
 -e git://github.com/dominno/django-moderation.git#egg=django-moderation
 django-reversion==1.6.0
-django-ajax-selects==1.2.4
+django-ajax-selects==1.2.5
 geopy

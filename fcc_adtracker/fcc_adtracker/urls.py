@@ -16,12 +16,11 @@ urlpatterns = patterns('',
     url(r'', include('volunteers.urls')),
     # url(r'^publicfiles/', include('fccpublicfiles.urls')),
     url(r'', include('sfapp.urls')),
+    url(r'', include('fccpublicfiles.urls')),
+
     url(r'^$', 'broadcasters.views.featured_broadcasters', name='home'),
-    
+
     # url(r'autocomplete/', include('autocomplete_light.urls')),
     (r'^admin/lookups/', include(ajax_select_urls)),
-    url(r'^admin/fccpublicfiles/', include('fccpublicfiles.admin_urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^document/submit/', 'fccpublicfiles.views.prelim_doc_form', name='document_submit'),
-    url(r'^document/success/', 'fccpublicfiles.views.doc_success', name='document_success'),
 )

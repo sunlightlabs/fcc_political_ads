@@ -3,14 +3,23 @@
 
 {% block ga %}UA-22821126-17{% endblock ga %}
 
-{% block head %}    <script src="{% static "js/libs/modernizr-2.5.3.min.js" %}"></script>{% endblock head %}
+{% block head %}
+<script src="{% static "js/libs/modernizr-2.5.3.min.js" %}"></script>
+<script src="{% static "js/jquery-1.7.2.min.js" %}"></script>
+{% endblock head %}
+{% block js %}
+<script src="{% static 'js/fcc_site.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'js/bootstrap.min.js' %}" type="text/javascript" charset="utf-8"></script>
+{% endblock js %}
 
-{% block css %}    <link rel="stylesheet" href="{% static 'css/fcc_main.css' %}">{% endblock css %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/fcc_main.css' %}">
+{% endblock css %}
 
 {% block container %}
 <header>
     <div class="span4 offset8">
-    {% block pagenav %}{% endblock pagenav %}        
+    {% block pagenav %}{% endblock pagenav %}
         <div id="user-status">
             {% if user.is_authenticated %}
                 <p>Welcome, <strong>{{ user.username }}</strong>.</p>
@@ -25,5 +34,3 @@
 {{ block.super }}
 {% endblock container %}
 
-{% block js %}<script src="{% static 'js/fcc_site.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'js/bootstrap.min.js' %}" type="text/javascript" charset="utf-8"></script>{% endblock js %}

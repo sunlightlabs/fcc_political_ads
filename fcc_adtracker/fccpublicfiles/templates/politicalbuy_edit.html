@@ -1,0 +1,47 @@
+{% extends "fcc-base.html" %}{% load static from staticfiles %}
+{% block title %}Edit a Political Buy{% endblock title %}
+
+{% block head %}{% endblock head %}
+
+{% block content %}
+<div style="display:block; height: 1200px;">
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form enctype="multipart/form-data" method="post" action="." style="display: block; float: left">
+        {% csrf_token %}
+        {{ form }}
+        <p>
+        <button class="btn btn-sunlight" value="Submit">Submit</button>
+        </p>
+    </form>
+    <div id="DV-viewer-413005-test-pdf" class="DV-container" style="float: right"></div>
+    <script src="//s3.amazonaws.com/s3.documentcloud.org/viewer/loader.js"></script>
+    <script>
+      DV.load("//www.documentcloud.org/documents/413005-test-pdf.js", {
+        width: 500,
+        height: 720,
+        sidebar: false,
+        container: "#DV-viewer-413005-test-pdf"
+      });
+    </script>
+    <noscript>
+      <a href="https://www.documentcloud.org/documents/413005/test-pdf.pdf">test.pdf (PDF)</a>
+      <br />
+      <a href="https://www.documentcloud.org/documents/413005/test-pdf.txt">test.pdf (Text)</a>
+    </noscript>
+</div>
+
+{% endblock content %}
+
+{% block sidebar %}
+{% endblock sidebar %}
+
+{% block js %}
+    <script src="{% static "js/fcc_site.js" %}" type="text/javascript" charset="utf-8"></script>
+{% endblock js %}
