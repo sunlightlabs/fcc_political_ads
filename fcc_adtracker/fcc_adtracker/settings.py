@@ -115,7 +115,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.contrib.messages.context_processors.messages',
     'social_auth.context_processors.social_auth_by_name_backends',
-    'social_auth.context_processors.social_auth_backends',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -233,7 +232,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 LOGIN_URL = '/account/login/'
-LOGIN_REDIRECT_URL = '/account/profile/'
+LOGIN_REDIRECT_URL = '/account/dashboard/'
 LOGIN_ERROR_URL = '/account/error/'
 
 SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
@@ -243,7 +242,6 @@ SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = '/account/'
 SOCIAL_AUTH_BACKEND_ERROR_URL = '/account/error/'
 SOCIAL_AUTH_ERROR_KEY = 'social_errors'
 SOCIAL_AUTH_DEFAULT_USERNAME = lambda u: slugify(u)
-SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
 SOCIAL_AUTH_PIPELINE = (
     'social_auth.backends.pipeline.social.social_auth_user',
     'social_auth.backends.pipeline.associate.associate_by_email',

@@ -1,6 +1,5 @@
 from django.conf.urls import patterns, include, url
-from django.views.generic import TemplateView
-from fcc_adtracker.views import HomePageView
+from broadcasters.urls import json_urlpatterns
 from ajax_select import urls as ajax_select_urls
 from fccpublicfiles.views import prelim_doc_form
 
@@ -12,13 +11,13 @@ admin.autodiscover()
 
 
 urlpatterns = patterns('',
-    url(r'', include('broadcasters.urls')),
+    url(r'^account/dashboard/$', 'fcc_adtracker.views.user_dashboard', name='user_dashboard'),
+    url(r'^account/$', 'fcc_adtracker.views.account_to_dashboard_landing', name='account_to_dashboard'),
     url(r'', include('volunteers.urls')),
     # url(r'^publicfiles/', include('fccpublicfiles.urls')),
-    url(r'', include('sfapp.urls')),
-    url(r'^$', 'broadcasters.views.featured_broadcasters', name='home'),
-    
-    # url(r'autocomplete/', include('autocomplete_light.urls')),
+    url(r'^broadcasters/', include(json_urlpatterns)),
+    url(r'^states/(?P<state_id>\w{2})/$', 'broadcasters.views.state_broadcaster_list', name='state_broadcaster_list'),
+    url(r'^$', 'fcc_adtracker.views.home_view', name='home'),
     (r'^admin/lookups/', include(ajax_select_urls)),
     url(r'^admin/fccpublicfiles/', include('fccpublicfiles.admin_urls')),
     url(r'^admin/', include(admin.site.urls)),

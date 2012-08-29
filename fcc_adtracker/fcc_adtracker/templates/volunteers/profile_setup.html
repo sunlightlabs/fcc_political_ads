@@ -1,13 +1,13 @@
 {% extends "fcc-base.html" %}
 
-{% block pagetitle %}Create your new account{% endblock pagetitle %}
+{% block pagetitle %}Create your profile{% endblock pagetitle %}
 
 {% block content %}
-    <h2>Create your new account</h2>
+    <h2>Create your profile</h2>
     <form action="." method="post" class="form-vertical">
         {% csrf_token %}
         <fieldset>
-            <legend>Your account</legend>
+            <legend>Your account profile</legend>
             <ul>
                 <li>
                     {{ form.username.errors }}
@@ -34,15 +34,29 @@
                     <label for="id_phone">Phone Number</label>
                     {{ form.phone }}
                 </li>
+                <li>
+                    {{form.notify.errors }}
+                    <label for="notify" class="tip asInput checkbox">{{ form.notify }} Receive email updates from Political Ad Sleuth</label>
+                </li>
             </ul>
         </fieldset>
         <fieldset>
             <legend>About You</legend>
             <ul>
                 <li>
+                    <label>City</label>
+                    <input type="text" name="{{ form.city.html_name }}" value="{{ form.city.value }}" maxlength="20" placeholder="City" id="city">
+                      {{ form.city.errors }}
+                </li>
+                <li>
                     {{ form.state.errors }}
                     <label for="id_state">State (where you can collect files)</label>
                     {{ form.state }}
+                </li>
+                <li>
+                    {{ form.zipcode.errors }}
+                    <label for="id_zipcode">Your zipcode</label>
+                    {{ form.zipcode }}
                 </li>
                 <li>
                     {{ form.is_a.errors }}

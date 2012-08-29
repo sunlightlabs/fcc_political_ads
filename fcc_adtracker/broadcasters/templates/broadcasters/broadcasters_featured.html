@@ -50,7 +50,7 @@
     <div id="get_involved" class="span3">
         <h3 class="withTip">Take Action!</h3>
         <p class="tip">Sign up to help us create a more transparent government!</p>
-        <form id='action_signup' class='form-vertical' action="{% url action_signup %}" method="post" accept-charset="utf-8">
+        <form id='noaccount_signup' class='form-vertical' action="{% url noaccount_signup %}" method="post" accept-charset="utf-8">
             <ul>
                 {% csrf_token %}
                 <li>
@@ -124,10 +124,10 @@
         var userMarker_url = "{% static 'img/sll_map_marker_purple.png' %}";
         var stationMarker_url = "{% static 'img/sll_map_marker_blue.png' %}";
         $(document).ready(function() {
-            $('#action_signup').submit(function(event) {
+            $('#noaccount_signup').submit(function(event) {
                 var theform = $(this);
                 var data = theform.serialize();
-                jQuery.post("{% url action_signup %}",data, function(resp, textStatus) {
+                jQuery.post("{% url noaccount_signup %}",data, function(resp, textStatus) {
                     var $p = $('<p class="alert alert-success">').text(resp.message).hide();
                     theform.slideUp('fast', function() {
                         theform.after($p);

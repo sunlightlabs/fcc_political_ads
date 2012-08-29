@@ -3,13 +3,75 @@
 
 {% block content %}
 <h2>Register an account so you can upload and enter political ad buys!</h2>
-<form class="form-vertical" action="." method="post" accept-charset="utf-8">
+<form class="form-horizontal" action="." method="post" accept-charset="utf-8">
     {% csrf_token %}
     <ul>
-        {{ form.as_ul }}
+        <li>
+            <label>Username</label>
+            <input type="text" maxlength="30" name="username" required="required" placeholder="Username" id="id_username">
+            {{ form.username.errors }}
+        </li>
+        <li>
+            <label>Email</label>
+            <input type="email" name="{{ form.email.html_name }}" value="{{ nonuser_profile.email }}" placeholder="Email" required="required">
+            {{ form.email.errors }}
+        </li>
+        <li>
+            <label for="id_password1">Password</label>
+            <input type="password" name="password1" class="required" placeholder="Password" id="id_password1">
+            {{ form.password.errors }}
+        </li>
+        <li>
+            <label for="id_password2">Password (again)</label>
+            <input type="password" name="password2" class="required" placeholder="Password (again)" id="id_password2">
+            {{ form.password2.errors }}
+        </li>
+        {% if form.first_name %}
+        <li>
+            <label>First Name</label>
+            <input type="text" name="{{ form.first_name.html_name }}" value="{{ nonuser_profile.first_name }}" placeholder="First Name" id="firstname" required="required">
+            {{ form.first_name.errors }}
+        </li>
+        {% endif %}
+        {% if form.last_name %}
+        <li>
+            <label>Last Name</label>
+            <input type="text" name="{{ form.last_name.html_name }}" value="{{ nonuser_profile.last_name }}" id="lastname" placeholder="Last Name" required="required">
+             {{ form.last_name.errors }}
+       </li>
+        {% endif %}
+        {% if form.phone %}
+        <li>
+            <label>Phone</label>
+            <input type="text" name="{{ form.phone.html_name }}" value="{{ nonuser_profile.phone }}" pattern="\d{3}(\-)?\d{3}(\-)?\d{4}" title="10 digit phone number, with or without dashes" placeholder="Phone" id="phone">
+              {{ form.phone.errors }}
+       </li>
+        {% endif %}
+        {% if form.city %}
+        <li>
+            <label>City</label>
+            <input type="text" name="{{ form.city.html_name }}" value="{{ nonuser_profile.city }}" maxlength="20" placeholder="City" id="city">
+              {{ form.city.errors }}
+        </li>
+        {% endif %}
+        {% if form.state %}
+        <li>
+            <label>State</label>
+            {{ prerendered_select }}
+              {{ form.state.errors }}
+        </li>
+        {% endif %}
+        {% if form.zipcode %}
+        <li>
+            <label>Zip Code</label>
+            <input type="text" name="{{ form.zipcode.html_name }}" id="zip" value="{{ nonuser_profile.zipcode }}" pattern="\d{5}" title="5 digit zip code" placeholder="Zip Code" required="required">
+              {{ form.zipcode.errors }}
+        </li>
+        {% endif %}
         <li>
             <button class="btn btn-sunlight" type="submit">Register</button>
         </li>
     </ul>
 </form>
+{{nonuser_form.as_ul}}
 {% endblock content %}
