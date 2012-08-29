@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.contrib.localflavor.us.forms import USStateSelect
@@ -31,7 +32,6 @@ SIGNUP_EXTRA_FIELDS = getattr(settings, 'SIGNUP_EXTRA_FIELDS', None)
 
 def noaccount_signup(request):
     """ Initial signup that gets us user info but does not create an account."""
-    # bsd_url = 'http://bsd.sunlightfoundation.com/page/s/fcc-public-files'
     success_message = 'Thank you for signing up to be a Political Ad Sleuth!'
     if request.method == 'POST':
         form = NonUserProfileForm(request.POST)
@@ -106,9 +106,8 @@ def setup_profile(request):
     return render(request, 'volunteers/profile_setup.html', {'form': form})
 
 
+@login_required
 def view_profile(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/account/login/')
     try:
         profile = request.user.get_profile()
     except Profile.DoesNotExist:
@@ -116,10 +115,9 @@ def view_profile(request):
     return render(request, 'volunteers/profile.html', {'profile': profile})
 
 
+@login_required
 def edit_profile(request):
     """Edit an existing profile"""
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/account/login/')
     user = request.user
     if request.method == 'POST':
         form = AccountProfileForm(request.POST)
@@ -254,8 +252,6 @@ def account_error(request):
     return render(request, 'volunteers/account_error.html',)
 
 
+@login_required
 def account_landing(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/account/login/')
-
     return HttpResponseRedirect('/account/profile/')
