@@ -5,7 +5,7 @@ from .models import Profile
 def account_details(request, user=None, *args, **kwargs):
 
     if 'account_profile' not in request.session and user is None:
-        return HttpResponseRedirect('/account/setup/')
+        return HttpResponseRedirect('/account/setup-profile/')
 
 
 def set_account_details(request, user=None, *args, **kwargs):
@@ -38,6 +38,7 @@ def create_profile(request, user=None, *args, **kwargs):
             profile = Profile(
                 user=user,
                 phone=settings['phone'],
+                city=settings['city'],
                 state=settings['state'],
                 is_a=settings['is_a']
             )

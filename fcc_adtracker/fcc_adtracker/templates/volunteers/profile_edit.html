@@ -1,0 +1,118 @@
+{% extends "fcc-base.html" %}
+
+{% block pagetitle %}Edit your profile{% endblock pagetitle %}
+
+{% block content %}
+    <h2>Edit your profile</h2>
+    <form action="." method="post" class="form-horizontal">
+        {% csrf_token %}
+        <fieldset>
+            <legend>Your account profile</legend>
+            <ul>
+                <li>
+                    {{ form.username.errors }}
+                    <label for="id_username">Username</label>
+                    {{ form.username }}
+                </li>
+                <li>
+                    {{ form.first_name.errors }}
+                    <label for="id_first_name">First name</label>
+                    {{ form.first_name }}
+                </li>
+                <li>
+                    {{ form.last_name.errors }}
+                    <label for="id_phone">Last name</label>
+                    {{ form.last_name }}
+                </li>
+                <li>
+                    {{ form.email.errors }}
+                    <label for="id_email">Email</label>
+                    {{ form.email }}
+                </li>
+                <li>
+                    {{ form.phone.errors }}
+                    <label for="id_phone">Phone Number</label>
+                    {{ form.phone }}
+                </li>
+                <li>
+                    {{form.notify.errors }}
+                    <label for="notify" class="tip asInput checkbox">{{ form.notify }} Receive email updates from Political Ad Sleuth</label>
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset class="module">
+            <legend>Change your password</legend>
+            <p class="tip">Enter a new password in the field below to change your password</p>
+            {% if not request.user.has_usable_password %}
+                <div class="alert">
+                    <p><strong>Warning!</strong> You do not have a password set for this account. We recommend setting a new password in case your associated accounts become disconnected.</p>
+                </div>
+            {% endif %}
+            <ul>
+                <li>
+                    {{ form.new_password.errors }}
+                    <label for="id_new_password">New password</label>
+                    {{ form.new_password }}
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset>
+            <legend>About You</legend>
+            <ul>
+                <li>
+                    <label>City</label>
+                    <input type="text" name="{{ form.city.html_name }}" value="{{ form.city.value }}" maxlength="20" placeholder="City" id="city">
+                      {{ form.city.errors }}
+                </li>
+                <li>
+                    {{ form.state.errors }}
+                    <label for="id_state">State (where you can collect files)</label>
+                    {{ form.state }}
+                </li>
+                <li>
+                    {{ form.zipcode.errors }}
+                    <label for="id_zipcode">Your zipcode</label>
+                    {{ form.zipcode }}
+                </li>
+                <li>
+                    {{ form.is_a.errors }}
+                    <label for="id_is_a">What best describes your role?</label>
+                    {{ form.is_a }}
+                </li>
+                <li>
+                    <button class="btn btn-sunlight" type="submit">Save Changes</button>
+                </li>
+            </ul>
+        </fieldset>
+    </form>
+    <div>
+        <h3>Associated Accounts</h3>
+        <p>
+            {% if social_auth.twitter %}
+                <a class="btn btn-warning" href="{% url socialauth_disconnect 'twitter' %}">
+                    <i class="icon-remove-circle icon-white"></i>
+                    Unlink Twitter
+                </a>
+            {% else %}
+                <a class="btn" href="{% url socialauth_associate_begin 'twitter' %}">
+                    <i class="icon-repeat"></i>
+                    Link with Twitter
+                </a>
+            {% endif %}
+        </p>
+
+        <p>
+            {% if social_auth.facebook %}
+                <a class="btn btn-warning" href="{% url socialauth_disconnect 'facebook' %}">
+                    <i class="icon-remove-circle icon-white"></i>
+                    Unlink Facebook
+                </a>
+            {% else %}
+                <a class="btn" href="{% url socialauth_associate_begin 'facebook' %}">
+                    <i class="icon-repeat"></i>
+                    Link with Facebook
+                </a>
+            {% endif %}
+        </p>
+    </div>
+{% endblock content %}

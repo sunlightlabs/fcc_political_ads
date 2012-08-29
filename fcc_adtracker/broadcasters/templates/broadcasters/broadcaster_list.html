@@ -57,7 +57,7 @@
     <script>
         var startPos = [{{ state_geocenter.lng|default:0 }}, {{ state_geocenter.lat|default:0 }}];
         var initialLocations = [];
-        var locations_endpoint_url = "{% url 'broadcasters.views.state_broadcaster_addresses' state_id=broadcaster_list.0.community_state label_slug='studio' %}";
+        var locations_endpoint_url = "{% url 'broadcasters.json_views.state_broadcaster_addresses' state_id=broadcaster_list.0.community_state label_slug='studio' %}";
         var userMarker_url = "{% static 'img/sll_map_marker_purple.png' %}";
         var stationMarker_url = "{% static 'img/sll_map_marker_blue.png' %}";
         $(document).ready(function() {

@@ -1,5 +1,4 @@
 # Django settings for fcc_adtracker project.
-from mongoengine import connect
 from django.template.defaultfilters import slugify
 import os
 
@@ -24,15 +23,6 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-
-# MongoEngine settings
-# Typically set in local_settings.py
-MONGO_HOST = 'localhost'
-MONGO_PORT = 27017
-MONGO_DATABASE = ''
-MONGO_USERNAME = ''
-MONGO_PASSWORD = ''
-
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -115,7 +105,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.contrib.messages.context_processors.messages',
     'social_auth.context_processors.social_auth_by_name_backends',
-    'social_auth.context_processors.social_auth_backends',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -206,7 +195,7 @@ AJAX_LOOKUP_CHANNELS = {
     'doccloud': ('fccpublicfiles.lookups', 'DocumentCloudLookup'),
     'address': ('fccpublicfiles.lookups', 'AddressLookup'),
     'show_name': ('fccpublicfiles.lookups', 'ShowNameLookup'),
-    'callsign': ('broadcasters.lookups', 'BroadcasterLookup'),
+    'broadcaster': ('broadcasters.lookups', 'BroadcasterLookup'),
 }
 # magically include jqueryUI/js/css
 AJAX_SELECT_BOOTSTRAP = True
@@ -233,7 +222,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 LOGIN_URL = '/account/login/'
-LOGIN_REDIRECT_URL = '/account/profile/'
+LOGIN_REDIRECT_URL = '/account/dashboard/'
 LOGIN_ERROR_URL = '/account/error/'
 
 SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
@@ -243,7 +232,6 @@ SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = '/account/'
 SOCIAL_AUTH_BACKEND_ERROR_URL = '/account/error/'
 SOCIAL_AUTH_ERROR_KEY = 'social_errors'
 SOCIAL_AUTH_DEFAULT_USERNAME = lambda u: slugify(u)
-SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
 SOCIAL_AUTH_PIPELINE = (
     'social_auth.backends.pipeline.social.social_auth_user',
     'social_auth.backends.pipeline.associate.associate_by_email',
@@ -265,6 +253,3 @@ try:
     from local_settings import *
 except Exception, e:
     pass
-
-
-mongo_conn = connect(MONGO_DATABASE, host=MONGO_HOST, port=MONGO_PORT, username=MONGO_USERNAME, password=MONGO_PASSWORD)

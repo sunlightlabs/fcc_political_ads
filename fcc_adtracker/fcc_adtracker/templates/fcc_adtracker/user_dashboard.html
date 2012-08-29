@@ -1,0 +1,57 @@
+{% extends "fcc-base.html" %}
+
+{% block content %}
+    {% if messages %}
+    <div class="messages">
+        <ul>
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <div class="row">
+        {% if broadcaster_list %}
+        <div id="state_broadcasters" class="span8">
+            <h2>{{ profile.state }} broadcasters</h2>
+            <ul>
+            {% for broadcaster in broadcaster_list %}
+                <li>
+                    <h5>{{ broadcaster.callsign }} {{ broadcaster.network_affiliate }} {{ broadcaster.channel }}</h5>
+                    <table class="politicalbuys">
+                        <thead>
+                            <tr>
+                                <th>Contract No.</th>
+                                <th>Advertiser</th>
+                                <th>Contract Start Date</th>
+                                <th>Contract End Date</th>
+                            </tr>
+                        </thead>
+                    {% for politicalbuy in broadcaster.politicalbuy_set.all|slice:":5" %}
+                        <tr>
+                            <td>{{ politicalbuy.contract_number }}</td>
+                            <td>{{ politicalbuy.advertiser }}</td>
+                            <td>{{ politicalbuy.contract_start_date }}</td>
+                            <td>{{ politicalbuy.contract_end_date }}</td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                    <ul>
+                    </ul>
+                    <p>See the <a href="">full list of political files</a> for {{ broadcaster.callsign }}</p>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <div id="profile" class="span4">
+            <h2>About you:</h2>
+            <p>Username: {{ user.username }}</p>
+            {% if profile %}
+            <p>City: {{ profile.city|default:"Not specified" }}</p>
+            <p>State: {{ profile.state }}</p>
+            {% endif %}
+            <p><a href="{% url edit_profile %}">Edit profile</a></p>
+        </div>
+    </div>
+{% endblock content %}
