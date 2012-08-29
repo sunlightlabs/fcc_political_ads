@@ -2,15 +2,14 @@ from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotAllowed
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
 
 from registration.views import register
 
-from mongoengine import *
-
-from .models import *
+from .models import Signup, ValidationError, json, User, Profile
 from .forms import RegistrationProfileUniqueEmail, SocialProfileForm
 
 import logging
@@ -137,19 +136,17 @@ def register_volunteer(request, *args, **kwargs):
     return resp
 
 
+@login_required
 def profile(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/account/login/')
     try:
         profile = request.user.get_profile()
     except Profile.DoesNotExist as e:
         profile = None
+
     return render(request, 'volunteers/profile.html', {'profile': profile})
 
 
+@login_required
 def account_landing(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/account/login/')
-
     return HttpResponseRedirect('/account/profile/')
     # return render(request, 'volunteers/account')
