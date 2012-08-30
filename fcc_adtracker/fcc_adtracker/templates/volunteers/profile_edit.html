@@ -13,30 +13,43 @@
                     {{ form.username.errors }}
                     <label for="id_username">Username</label>
                     {{ form.username }}
+                    {% for error in form.username.errors %}
+                    <span class="errorlist help-inline">{{error}}</span>
+                    {% endfor %}
                 </li>
                 <li>
-                    {{ form.first_name.errors }}
                     <label for="id_first_name">First name</label>
                     {{ form.first_name }}
+                    {% for error in form.first_name.errors %}
+                    <span class="errorlist help-inline">{{error}}</span>
+                    {% endfor %}
                 </li>
                 <li>
-                    {{ form.last_name.errors }}
                     <label for="id_phone">Last name</label>
                     {{ form.last_name }}
+                    {% for error in form.last_name.errors %}
+                    <span class="errorlist help-inline">{{error}}</span>
+                    {% endfor %}
                 </li>
                 <li>
-                    {{ form.email.errors }}
                     <label for="id_email">Email</label>
                     {{ form.email }}
+                    {% for error in form.email.errors %}
+                    <span class="errorlist help-inline">{{error}}</span>
+                    {% endfor %}
                 </li>
                 <li>
-                    {{ form.phone.errors }}
                     <label for="id_phone">Phone Number</label>
                     {{ form.phone }}
+                    {% for error in form.phone.errors %}
+                    <span class="errorlist help-inline">{{error}}</span>
+                    {% endfor %}
                 </li>
                 <li>
-                    {{form.notify.errors }}
                     <label for="notify" class="tip asInput checkbox">{{ form.notify }} Receive email updates from Political Ad Sleuth</label>
+                    {% for error in form.notify.errors %}
+                    <span class="errorlist help-inline">{{error}}</span>
+                    {% endfor %}
                 </li>
             </ul>
         </fieldset>
@@ -50,9 +63,11 @@
             {% endif %}
             <ul>
                 <li>
-                    {{ form.new_password.errors }}
                     <label for="id_new_password">New password</label>
                     {{ form.new_password }}
+                    {% for error in form.new_password.errors %}
+                    <span class="errorlist help-inline">{{error}}</span>
+                    {% endfor %}
                 </li>
             </ul>
         </fieldset>
@@ -62,22 +77,30 @@
                 <li>
                     <label>City</label>
                     <input type="text" name="{{ form.city.html_name }}" value="{{ form.city.value }}" maxlength="20" placeholder="City" id="city">
-                      {{ form.city.errors }}
+                    {% for error in form.city.errors %}
+                    <span class="errorlist help-inline">{{error}}</span>
+                    {% endfor %}
                 </li>
                 <li>
-                    {{ form.state.errors }}
                     <label for="id_state">State (where you can collect files)</label>
                     {{ form.state }}
+                    {% for error in form.state.errors %}
+                    <span class="errorlist help-inline">{{error}}</span>
+                    {% endfor %}
                 </li>
                 <li>
-                    {{ form.zipcode.errors }}
                     <label for="id_zipcode">Your zipcode</label>
                     {{ form.zipcode }}
+                    {% for error in form.zipcode.errors %}
+                    <span class="errorlist help-inline">{{error}}</span>
+                    {% endfor %}
                 </li>
                 <li>
-                    {{ form.is_a.errors }}
                     <label for="id_is_a">What best describes your role?</label>
                     {{ form.is_a }}
+                    {% for error in form.is_a.errors %}
+                    <span class="errorlist help-inline">{{error}}</span>
+                    {% endfor %}
                 </li>
                 <li>
                     <button class="btn btn-sunlight" type="submit">Save Changes</button>

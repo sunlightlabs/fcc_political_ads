@@ -24,11 +24,11 @@
             {% if user.is_authenticated %}
                 <p>Welcome, <strong>{{ user.username }}</strong>.</p>
             {% else %}
-                <p><a href="{% url auth_login %}">Log in</a> or CALLOUT TO RECRUITMENT(?).</p>
+                <p><a href="{% url auth_login %}">Log in</a>, <a href="{% url register_volunteer %}">register</a>, or sign in with <a class="signinBtn" id="tweetBtn" href="{% url socialauth_begin 'twitter' %}">Twitter</a> or <a class="signinBtn" id="fbBtn" href="{% url socialauth_begin 'facebook' %}">Facebook</a>.</p>
             {% endif %}
         </div>
     </div>
-    <h1 class="textReplace" id="logo">Free the Files</h1>
+    <h1 class="textReplace" id="logo">Political Ad Sleuth</h1>
 
 </header>
 {{ block.super }}
