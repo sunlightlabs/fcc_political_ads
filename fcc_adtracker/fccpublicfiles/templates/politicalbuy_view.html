@@ -1,37 +1,74 @@
-{% extends "fcc-base.html" %}{% load static from staticfiles %}
-{% block pagetitle %}Political Buy{% endblock pagetitle %}
+{% extends "fcc-base.html" %}{% load static from staticfiles %} {% load fccpublicfiles_extras %}
+{% block pagetitle %}Political Buy {% if obj.advertiser %}for {{ obj.advertiser }}{% endif %} :: {{ obj.broadcasters.all|join:", " }}{% endblock pagetitle %}
+
+{% block head %}
+{{ block.super }}
+{% comment %}
+    Putting CSS here for testing/example purposes. Should go in fcc_main.css
+    * Using tablesorter plugin for jQuery: http://mottie.github.com/tablesorter/
+        provides sorting in table. th should have styles that make it appear clickable.
+        We can rename the classes that the js adds (tablesorter-headerSortDown, etc.) via js config.
+        "h:i A" or "g:i A" string format works for sorting on time
+
+        This table needs better layout...
+        Group by "show info" (name, timeslot start & end)
+        and airing info? I'd say multiple tbodies, but I don't think
+        tablesorter supports that in the way we want
+{% endcomment %}
+<style type="text/css">
+    table.sortable > thead th {
+        font-weight: bold;
+        color: #FF0000;
+        cursor: pointer;
+    }
+    table.sortable > thead th:hover {
+        font-weight: bold;
+        color: #00FF00;
+        cursor: pointer;
+    }
+    th.tablesorter-headerSortDown {
+
+    }
+</style>
+{% endblock head %}
 
 {% block content %}
-        <h2>Political Buy made by <strong>{{ obj.advertiser|default:"" }}</strong></h2>
-        <dl class="dl-horizontal">
-            <dt>Stations</dt>
-            {% for broadcaster in obj.broadcasters.all %}
-            <dd>{{ broadcaster.callsign }}, Channel {{ broadcaster.channel }}</dd>
-            {% endfor %}
-            <dt>Contract</dt>
-            <dd>{{obj.contract_number|default:"Not recorded"}}</dd>
-            <dt>Contract Dates</dt>
-            <dd>{{obj.contract_start_date}} - {{ obj.contract_end_date }}</dd>
-            <dt>Total Spent</dt>
-            <dd>{% if obj.total_spent %}${{ obj.total_spent }}{% else %}Value Missing{% endif %}</dd>
-        </dl>
-        <div>
-            {% comment %}
-            This table needs better layout
-            Group by "show info" (name, timeslot start & end) and airing info?
-            {% endcomment %}
+    <div class="row">
+        <div class="span3">
+            <h2>Political Buy: <strong>{{ obj.advertiser|default:"" }}</strong></h2>
+            <dl class="dl-horizontal">
+                <dt>Stations</dt>
+                {% for broadcaster in obj.broadcasters.all %}
+                <dd>{{ broadcaster.callsign }}, Channel {{ broadcaster.channel }}</dd>
+                {% endfor %}
+                <dt>Contract</dt>
+                <dd>{{obj.contract_number|default:"Not recorded"}}</dd>
+                <dt>Contract Dates</dt>
+                <dd>{{obj.contract_start_date}} - {{ obj.contract_end_date }}</dd>
+                <dt>Total Spent</dt>
+                <dd>{% if obj.total_spent %}${{ obj.total_spent }}{% else %}Value Missing{% endif %}</dd>
+            </dl>
+            {% if obj.advertiser.fec_id != '' %}
+            <p id='fec_id'><a href="http://reporting.sunlightfoundation.com/outside-spending/committee/{{obj.advertiser.name|slugify}}/{{ obj.advertiser.fec_id }}/">Follow the Unlimited Money Profile</a></p>
+            {% else %}
+            <p><a href="http://reporting.sunlightfoundation.com/outside-spending/search/?q={{obj.advertiser.name|urlencode}}">Search for {{obj.advertiser.name }}</a> on Follow the Unlimited Money</p>
+            {% endif %}
+            <p><a href="#original_document">Original Document</a></p>
+        </div>
+        <div class="span9">
+            <h3>Ad spots purchased in this ad buy</h3>
             <table class="table table-striped sortable">
                 <thead>
                     <tr>
-                        <th>Airing Start Date</th>
-                        <th>Airing End Date</th>
+                        <th>Airing Start</th>
+                        <th>Airing End</th>
                         <th>Airing Days</th>
-                        <th>Number of spots</th>
+                        <th title="Number of Ad spots">No. of spots</th>
                         <th>Rate</th>
                         <th>Ad length</th>
-                        <th>Show Name</th>
-                        <th>Timeslot Start</th>
-                        <th>Timeslot End</th>
+                        <th>Show</th>
+                        <th data-sorter="time">Start</th>
+                        <th data-sorter="time">End</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,23 +76,33 @@
                     <tr>
                         <td>{{ spot.airing_start_date}}</td>
                         <td>{{ spot.airing_end_date}}</td>
-                        <td>{{ spot.airing_days }}</td>
+                        <td>{{ spot.airing_days|weekday:"D1"|join:", " }}</td>
                         <td>{{ spot.num_spots }}</td>
                         <td>${{ spot.rate }}</td>
                         <td>{{ spot.broadcast_length }}</td>
                         <th scope="row">{{ spot.show_name|default:"Unspecified" }}</th>
-                        <td>{{ spot.timeslot_begin|time:"h:i a" }}</td>
-                        <td>{{ spot.timeslot_end|time:"h:i a" }}</td>
+                        <td>{{ spot.timeslot_begin|time:"h:i A" }}</td>
+                        <td>{{ spot.timeslot_end|time:"h:i A" }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
+    </div>
+    <div class="row">
+        <div class="span12">
+            <h3 id="original_document">Original Document</h3>
+            <div class="documentcloud_embed">
+            {% include "doccloud/_documentcloud_embed.html" with document=obj.documentcloud_doc width=940 height=768 %}
+            </div>
+        </div>
+    </div>
 {% endblock content %}
 
 
 {% block js %}
     <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.widgets.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/sort_table.js' %}"></script>
 
 {% endblock js %}
