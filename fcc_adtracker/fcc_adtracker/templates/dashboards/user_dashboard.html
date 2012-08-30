@@ -1,0 +1,92 @@
+{% extends "fcc-base.html" %}
+{% block pagetitle %}Your Dashboard{% endblock pagetitle %}
+
+{% block content %}
+    {% if messages %}
+    <div class="messages">
+        <ul>
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="span6">
+            <div id="state_broadcasters">
+            {% if not profile.state %}
+                <p>Please <a href="{% url edit_profile %}">fill out your profile</a>, including your city, state and zipcode so we can show you stations in your state!</p>
+            {% else %}
+                <h2>{{ profile.get_state_display }} broadcasters</h2>
+                {% if broadcaster_list %}
+                {% for broadcaster in broadcaster_list %}
+                    <section>
+                        <h5>{{ broadcaster.callsign }} {{ broadcaster.network_affiliate }} {{ broadcaster.channel }}</h5>
+                        <p><a target="_blank" href="{{ broadcaster.fcc_profile_url }}">FCC Profile</a></p>
+                        {% if broadcaster.politicalbuy_set.all %}
+                        {% comment %}
+                        jquery to show/hide tables? Would need toggle button
+                        currently limiting table to 10 docs per station...
+                        {% endcomment %}
+                        <p>Below are some of the files associated with this broadcaster. See the <a href="">full list of political files</a> for <strong>{{ broadcaster.callsign }}</strong></p>
+                        <table class="politicalbuys table">
+                            <thead>
+                                <tr>
+                                    <th>Contract No.</th>
+                                    <th>Advertiser</th>
+                                    <th>Contract Start Date</th>
+                                    <th>Contract End Date</th>
+                                    <th>Total Spent</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                        {% for politicalbuy in broadcaster.politicalbuy_set.all|dictsort:"contract_start_date"|slice:":4" %}
+                            <tr>
+                                <td>{{ politicalbuy.contract_number|default:'Data missing' }}</td>
+                                <td>{{ politicalbuy.advertiser|default:'Data missing' }}</td>
+                                <td>{{ politicalbuy.contract_start_date|default:'Data missing' }}</td>
+                                <td>{{ politicalbuy.contract_end_date|default:'Data missing' }}</td>
+                                <td>{{ politicalbuy.total_spent|default_if_none:'Data missing' }}</td>
+                                <td><a href="" class="btn" title="Edit data for '{{ politicalbuy.documentcloud_doc }}'">Edit</a></td>
+                            </tr>
+                        {% endfor %}
+                            <tfoot></tfoot>
+                        </table>
+                        {% else %}
+                        <p>No political files exist for <strong>{{ broadcaster.callsign }}</strong> yet.</p>
+                        {% endif %}
+                    </section>
+                {% endfor %}
+                {% else %}
+                <p>No broadcasters found for this state.</p>
+                {% endif %}
+            {% endif %}
+            </div>
+        </div>
+        <div class="span5 offset1">
+            {% comment %}  Map on this page?
+            <section id="map">
+                {% include "broadcasters/_map_searchform.html" %}
+            </section>
+            {% endcomment %}
+            <section id="profile" >
+                <h2>About you:</h2>
+                <p>Username: {{ user.username }}</p>
+                {% if profile %}
+                <p>City: {{ profile.city|default:"Not specified" }}</p>
+                <p>State: {{ profile.state }}</p>
+                {% endif %}
+                <p><a href="{% url edit_profile %}">Edit profile</a></p>
+            </section>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+
+        });
+    </script>
+{% endblock js %}

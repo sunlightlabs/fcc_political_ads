@@ -33,7 +33,7 @@ def user_dashboard(request):
             'broadcaster_list': broadcaster_list
         }
         return render(request,
-                'fcc_adtracker/user_dashboard.html', resp_obj)
+                'dashboards/user_dashboard.html', resp_obj)
     else:
         return redirect('auth_login')
 
