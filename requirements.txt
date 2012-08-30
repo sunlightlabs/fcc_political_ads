@@ -7,7 +7,7 @@ django-debug-toolbar
 
 boto==2.5.1
 django-storages==1.1.4
-
+jsonfield
 django-social-auth
 django-registration
 python-documentcloud==0.154
