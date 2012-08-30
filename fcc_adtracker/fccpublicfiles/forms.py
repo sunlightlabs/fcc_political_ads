@@ -31,4 +31,4 @@ class PoliticalBuyFormFull(ModelForm):
         self.fields['advertiser'] = AutoCompleteSelectField('organization', required=False)
         self.fields['advertiser_signatory'] = AutoCompleteSelectField('person', required=False)
         self.fields['bought_by'] = AutoCompleteSelectField('organization', required=False)
-        self.fields['broadcasters'] = AutoCompleteSelectMultipleField('callsign', required=False)
+        self.fields['broadcasters'] = AutoCompleteSelectMultipleField('broadcaster', required=False)

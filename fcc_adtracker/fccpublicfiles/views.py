@@ -51,6 +51,11 @@ def admin_autocomplete_json(request):
     return HttpResponse(json.dumps(obj_list), content_type='application/javascript')
 
 
+def politicalbuy_view(request, buy_id, template_name='politicalbuy_view.html'):
+    obj = get_object_or_404(PoliticalBuy, id=buy_id)
+    return render(request, template_name, {'obj': obj})
+
+
 @login_required
 @transaction.commit_on_success
 def prelim_doc_form(request, template_name='document_submit.html'):
@@ -86,6 +91,7 @@ def prelim_doc_form(request, template_name='document_submit.html'):
 
 def doc_success(request, template_name='document_success.html'):
     return render(request, template_name)
+
 
 @login_required
 def politicalbuy_edit(request, buy_id, template_name='politicalbuy_edit.html'):

@@ -1,0 +1,61 @@
+{% extends "fcc-base.html" %}{% load static from staticfiles %}
+{% block pagetitle %}Political Buy{% endblock pagetitle %}
+
+{% block content %}
+        <h2>Political Buy made by <strong>{{ obj.advertiser|default:"" }}</strong></h2>
+        <dl class="dl-horizontal">
+            <dt>Stations</dt>
+            {% for broadcaster in obj.broadcasters.all %}
+            <dd>{{ broadcaster.callsign }}, Channel {{ broadcaster.channel }}</dd>
+            {% endfor %}
+            <dt>Contract</dt>
+            <dd>{{obj.contract_number|default:"Not recorded"}}</dd>
+            <dt>Contract Dates</dt>
+            <dd>{{obj.contract_start_date}} - {{ obj.contract_end_date }}</dd>
+            <dt>Total Spent</dt>
+            <dd>{% if obj.total_spent %}${{ obj.total_spent }}{% else %}Value Missing{% endif %}</dd>
+        </dl>
+        <div>
+            {% comment %}
+            This table needs better layout
+            Group by "show info" (name, timeslot start & end) and airing info?
+            {% endcomment %}
+            <table class="table table-striped sortable">
+                <thead>
+                    <tr>
+                        <th>Airing Start Date</th>
+                        <th>Airing End Date</th>
+                        <th>Airing Days</th>
+                        <th>Number of spots</th>
+                        <th>Rate</th>
+                        <th>Ad length</th>
+                        <th>Show Name</th>
+                        <th>Timeslot Start</th>
+                        <th>Timeslot End</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for spot in obj.politicalspot_set.all %}
+                    <tr>
+                        <td>{{ spot.airing_start_date}}</td>
+                        <td>{{ spot.airing_end_date}}</td>
+                        <td>{{ spot.airing_days }}</td>
+                        <td>{{ spot.num_spots }}</td>
+                        <td>${{ spot.rate }}</td>
+                        <td>{{ spot.broadcast_length }}</td>
+                        <th scope="row">{{ spot.show_name|default:"Unspecified" }}</th>
+                        <td>{{ spot.timeslot_begin|time:"h:i a" }}</td>
+                        <td>{{ spot.timeslot_end|time:"h:i a" }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+{% endblock content %}
+
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/sort_table.js' %}"></script>
+
+{% endblock js %}
