@@ -64,7 +64,7 @@ class PoliticalBuyAdmin(ModerationAdmin, VersionAdmin):
                           })
     save_on_top = True
     list_display = ('documentcloud_doc', 'advertiser', 'advertiser_signatory', 'bought_by')
-    search_fields = ['advertiser__name', 'bought_by__name', 'station']
+    search_fields = ['advertiser__name', 'bought_by__name', 'broadcasters__callsign']
     inlines = [PoliticalSpotInline, ]
 
 admin.site.register(PoliticalBuy, PoliticalBuyAdmin)
@@ -87,7 +87,7 @@ class OrganizationAdmin(AjaxSelectAdmin, ModerationAdmin, VersionAdmin):
     list_display = ('name', 'fec_id', 'organization_type')
     search_fields = ['name', 'fec_id']
     # form = make_ajax_form(Organization, {'addresses': 'address'})
-    inlines = [RoleAdminInline, ]
+    # inlines = [RoleAdminInline, ]
 
 
 class PersonAdmin(AjaxSelectAdmin, ModerationAdmin, VersionAdmin):
