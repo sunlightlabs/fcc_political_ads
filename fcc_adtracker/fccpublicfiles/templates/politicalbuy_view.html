@@ -14,6 +14,8 @@
         Group by "show info" (name, timeslot start & end)
         and airing info? I'd say multiple tbodies, but I don't think
         tablesorter supports that in the way we want
+
+        tablesorter pager plugin allows us to add a 'pager'
 {% endcomment %}
 <style type="text/css">
     table.sortable > thead th {
@@ -57,6 +59,25 @@
         </div>
         <div class="span9">
             <h3>Ad spots purchased in this ad buy</h3>
+            <div id="pager" class="pager">
+                <form>
+                    <ul>
+                        <li><a href="#" class="first">First</a></li>
+                        <li><a href="#" class="prev">Prev</a></li>
+                        <li><span class="pagedisplay"></span></li>
+                        <li><a href="#" class="next">Next</a></li>
+                        <li><a href="#" class="last">Last</a></li>
+                        <li>
+                            <select class="pagesize">
+                                <option value="10">10</option>
+                                <option selected="selected" value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </li>
+                    </ul>
+                </form>
+            </div>
             <table class="table table-striped sortable">
                 <thead>
                     <tr>
@@ -87,6 +108,7 @@
                 {% endfor %}
                 </tbody>
             </table>
+
         </div>
     </div>
     <div class="row">
@@ -103,6 +125,7 @@
 {% block js %}
     <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.widgets.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.pager.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/sort_table.js' %}"></script>
 
 {% endblock js %}
