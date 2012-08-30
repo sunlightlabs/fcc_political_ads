@@ -31,33 +31,41 @@
     th.tablesorter-headerSortDown {
 
     }
+    #buy-metadata > dt, #buy-metadata > dd {
+        float: left;
+        margin-right: 12px;
+    }
 </style>
 {% endblock head %}
 
 {% block content %}
-    <div class="row">
-        <div class="span3">
+    <div>
             <h2>Political Buy: <strong>{{ obj.advertiser|default:"" }}</strong></h2>
-            <dl class="dl-horizontal">
+            <dl id="buy-metadata" class="clearfix">
                 <dt>Stations</dt>
                 {% for broadcaster in obj.broadcasters.all %}
                 <dd>{{ broadcaster.callsign }}, Channel {{ broadcaster.channel }}</dd>
                 {% endfor %}
                 <dt>Contract</dt>
-                <dd>{{obj.contract_number|default:"Not recorded"}}</dd>
+                <dd>{{obj.contract_number|default:"*****"}}</dd>
                 <dt>Contract Dates</dt>
                 <dd>{{obj.contract_start_date}} - {{ obj.contract_end_date }}</dd>
                 <dt>Total Spent</dt>
-                <dd>{% if obj.total_spent %}${{ obj.total_spent }}{% else %}Value Missing{% endif %}</dd>
+                <dd>{% if obj.total_spent %}${{ obj.total_spent }}{% else %}*****{% endif %}</dd>
+                <dt>Lowest unit price?</dt>
+                <dd>{{ obj.lowest_unit_price|yesno:"Yes,No,*****" }}</dd>
+                <dt>Bought by</dt>
+                <dd>{{obj.bought_by|default:"*****" }}</dd>
             </dl>
-            {% if obj.advertiser.fec_id != '' %}
-            <p id='fec_id'><a href="http://reporting.sunlightfoundation.com/outside-spending/committee/{{obj.advertiser.name|slugify}}/{{ obj.advertiser.fec_id }}/">Follow the Unlimited Money Profile</a></p>
-            {% else %}
-            <p><a href="http://reporting.sunlightfoundation.com/outside-spending/search/?q={{obj.advertiser.name|urlencode}}">Search for {{obj.advertiser.name }}</a> on Follow the Unlimited Money</p>
-            {% endif %}
-            <p><a href="#original_document">Original Document</a></p>
-        </div>
-        <div class="span9">
+            <h3>Links</h3>
+            <ul class="unstyled">
+                {% if obj.advertiser.fec_id != '' %}
+                <li><p id='fec_id'><a href="http://reporting.sunlightfoundation.com/outside-spending/committee/{{obj.advertiser.name|slugify}}/{{ obj.advertiser.fec_id }}/">Follow the Unlimited Money Profile</a></p>
+                {% else %}
+                <li><p><a href="http://reporting.sunlightfoundation.com/outside-spending/search/?q={{obj.advertiser.name|urlencode}}">Search for {{obj.advertiser.name }}</a> on Follow the Unlimited Money</p>
+                {% endif %}
+                <li><p><a href="#original_document">Original Document</a></p>
+            </ul>
             <h3>Ad spots purchased in this ad buy</h3>
             <div id="pager" class="pager">
                 <form>
@@ -108,8 +116,6 @@
                 {% endfor %}
                 </tbody>
             </table>
-
-        </div>
     </div>
     <div class="row">
         <div class="span12">
