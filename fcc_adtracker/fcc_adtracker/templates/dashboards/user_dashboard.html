@@ -13,6 +13,35 @@
     {% endif %}
     <div class="row">
         <div class="span6">
+            <div id="user_contributions">
+                <h2>Your submissions/contributions</h2>
+                {% if politicalbuy_list %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Broadcaster</th>
+                            <th>Advertiser</th>
+                            <th>Contract Start</th>
+                            <th>Contract End</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for politicalbuy in politicalbuy_list %}
+                        <tr class="{% if politicalbuy.is_visible %}live{% else %}not-live{% endif %}">
+                            <td>{{ politicalbuy.broadcasters.all|join:", " }}</td>
+                            <td>{{ politicalbuy.advertiser }}</td>
+                            <td>{{ politicalbuy.contract_start_date|default:'Data missing' }}</td>
+                            <td>{{ politicalbuy.contract_end_date|default:'Data missing' }}</td>
+                            <td><a href="{% url politicalbuy_edit buy_id=politicalbuy.id %}" class="btn" title="Edit data for '{{ politicalbuy.documentcloud_doc }}'">Edit</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>We do not currently have any submissions/contributions associated with your account. Please submit a political file document to get started!</p>
+                {% endif %}
+            </div>
             <div id="state_broadcasters">
             {% if not profile.state %}
                 <p>Please <a href="{% url edit_profile %}">fill out your profile</a>, including your city, state and zipcode so we can show you stations in your state!</p>
@@ -21,21 +50,21 @@
                 {% if broadcaster_list %}
                 {% for broadcaster in broadcaster_list %}
                     <section>
-                        <h5>{{ broadcaster.callsign }} {{ broadcaster.network_affiliate }} {{ broadcaster.channel }}</h5>
-                        <p><a target="_blank" href="{{ broadcaster.fcc_profile_url }}">FCC Profile</a></p>
+                        <h5>{{ broadcaster }}</h5>
+                        <p><a target="_blank" href="{{ broadcaster.fcc_profile_url }}">FCC Profile Page</a></p>
                         {% if broadcaster.politicalbuy_set.all %}
                         {% comment %}
                         jquery to show/hide tables? Would need toggle button
                         currently limiting table to 10 docs per station...
                         {% endcomment %}
                         <p>Below are some of the files associated with this broadcaster. See the <a href="">full list of political files</a> for <strong>{{ broadcaster.callsign }}</strong></p>
-                        <table class="politicalbuys table">
+                        <table class="politicalbuys table table-striped">
                             <thead>
                                 <tr>
                                     <th>Contract No.</th>
                                     <th>Advertiser</th>
-                                    <th>Contract Start Date</th>
-                                    <th>Contract End Date</th>
+                                    <th>Contract Start</th>
+                                    <th>Contract End</th>
                                     <th>Total Spent</th>
                                     <th></th>
                                 </tr>
@@ -64,6 +93,17 @@
             </div>
         </div>
         <div class="span5 offset1">
+            <div id="doc_submit">
+                <h2>Submit a Political File Document</h2>
+                <p class="tip">We are looking for pdfs of political ad buy documents (political&nbsp;files) from television stations. If you have one, please send it to us using the form below.</p>
+                <form enctype="multipart/form-data" method="post" action="{% url document_submit %}">
+                    {% csrf_token %}
+                    {{ form }}
+                    <p>
+                    <input class="btn btn-sunlight" type="submit" value="Submit" name="Submit"/>
+                    </p>
+                </form>
+            </div>
             {% comment %}  Map on this page?
             <section id="map">
                 {% include "broadcasters/_map_searchform.html" %}
