@@ -1,0 +1,32 @@
+<table class="table table-striped sortable">{% load fccpublicfiles_extras %}
+    <thead>
+        <tr>
+            <th>Airing Start</th>
+            <th>Airing End</th>
+            <th>Airing Days</th>
+            <th title="Number of Ad spots">No. of spots</th>
+            <th>Rate</th>
+            <th>Ad length</th>
+            <th>Show</th>
+            <th data-sorter="time">Start</th>
+            <th data-sorter="time">End</th>
+            {% if editable %}<th></th>{% endif %}
+        </tr>
+    </thead>
+    <tbody>
+    {% for spot in politicalspot_list %}
+        <tr>
+            <td class="airing_start_date">{{ spot.airing_start_date}}</td>
+            <td class="airing_end_date">{{ spot.airing_end_date}}</td>
+            <td class="airing_days">{{ spot.airing_days|weekday:"D1"|join:", " }}</td>
+            <td class="num_spots">{{ spot.num_spots }}</td>
+            <td class="rate">${{ spot.rate }}</td>
+            <td class="broadcast_length">{{ spot.broadcast_length }}</td>
+            <th class="show_name" scope="row">{{ spot.show_name|default:"Unspecified" }}</th>
+            <td class="timeslot_begin">{{ spot.timeslot_begin|time:"h:i A" }}</td>
+            <td class="timeslot_end">{{ spot.timeslot_end|time:"h:i A" }}</td>
+            {% if editable %}<td><a href="" class="btn">Edit</a></td>{% endif %}
+       </tr>
+    {% endfor %}
+    </tbody>
+</table>

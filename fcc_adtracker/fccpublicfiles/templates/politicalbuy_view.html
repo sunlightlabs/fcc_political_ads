@@ -86,36 +86,9 @@
                     </ul>
                 </form>
             </div>
-            <table class="table table-striped sortable">
-                <thead>
-                    <tr>
-                        <th>Airing Start</th>
-                        <th>Airing End</th>
-                        <th>Airing Days</th>
-                        <th title="Number of Ad spots">No. of spots</th>
-                        <th>Rate</th>
-                        <th>Ad length</th>
-                        <th>Show</th>
-                        <th data-sorter="time">Start</th>
-                        <th data-sorter="time">End</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for spot in obj.politicalspot_set.all %}
-                    <tr>
-                        <td>{{ spot.airing_start_date}}</td>
-                        <td>{{ spot.airing_end_date}}</td>
-                        <td>{{ spot.airing_days|weekday:"D1"|join:", " }}</td>
-                        <td>{{ spot.num_spots }}</td>
-                        <td>${{ spot.rate }}</td>
-                        <td>{{ spot.broadcast_length }}</td>
-                        <th scope="row">{{ spot.show_name|default:"Unspecified" }}</th>
-                        <td>{{ spot.timeslot_begin|time:"h:i A" }}</td>
-                        <td>{{ spot.timeslot_end|time:"h:i A" }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            {% if obj.politicalspot_set.all %}
+            {% include '_politicalspots_table.html' with politicalspot_list=obj.politicalspot_set.all %}
+            {% endif %}
     </div>
     <div class="row">
         <div class="span12">
@@ -129,6 +102,7 @@
 
 
 {% block js %}
+    {{ block.super }}
     <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.widgets.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.pager.min.js' %}"></script>

@@ -8,7 +8,6 @@ jQuery(document).ready(function($) {
     var rowCount = table_el.children('tbody > tr').length;
     // if (rowCount > pagerOptions.size) {
         table_el.tablesorter({
-             debug: true,
              cssChildRow: "row-child"
         }).tablesorterPager(pagerOptions);
     // }

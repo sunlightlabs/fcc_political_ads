@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.db import transaction
 from django.db.models import Q
 from django.forms import ModelForm
 from django.views.generic import TemplateView
-from django.shortcuts import render_to_response, render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from fccpublicfiles.forms import PrelimDocumentForm, PoliticalBuyFormFull
 from doccloud.models import Document
 from urllib2 import HTTPError
@@ -77,7 +78,7 @@ def prelim_doc_form(request, template_name='document_submit.html'):
         cloud_doc.save()
 
         pol_buy = PoliticalBuy(
-            documentcloud_doc = cloud_doc
+            documentcloud_doc=cloud_doc
         )
         pol_buy.save()
 
@@ -95,17 +96,17 @@ def doc_success(request, template_name='document_success.html'):
 
 @login_required
 def politicalbuy_edit(request, buy_id, template_name='politicalbuy_edit.html'):
-    mymodel = get_object_or_404(PoliticalBuy, pk=buy_id)
+    myobject = get_object_or_404(PoliticalBuy, pk=buy_id)
 
-    form = PoliticalBuyFormFull(request.POST or None, instance=mymodel)
+    form = PoliticalBuyFormFull(request.POST or None, instance=myobject)
 
     if form.is_valid():
-        mymodel = form.save()
-        mymodel.save()
+        myobject = form.save()
+        myobject.save()
         #return redirect('contributor_dashboard')
-        return redirect('document_success')
+        return redirect('politicalbuy_view')
 
-    return render(request, template_name, {'form': form, 'mymodel': mymodel})
+    return render(request, template_name, {'form': form, 'obj': myobject})
 
 # def admin_advertiser_list(request):
 #     obj_list = get_values_for_model_field(PoliticalBuy, 'advertiser')
