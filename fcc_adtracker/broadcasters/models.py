@@ -36,12 +36,17 @@ class Broadcaster(models.Model):
 
     def __unicode__(self):
         if self.callsign:
-            disp_name = self.callsign
-            disp_elements = ('community_state', 'network_affiliate', 'channel')
-            extra_info = ', '.join([str(val) for val in [self.__getattribute__(el) for el in disp_elements] if val != None])
-            return '{0} [{1}]'.format(disp_name, extra_info)
+            disp_elements = {
+                'callsign': self.callsign,
+                'community_state': self.community_state,
+                'network_affiliate': self.network_affiliate,
+                'channel': self.channel
+            }
+            output_str = u'{callsign}'.format(**disp_elements)
+            if disp_elements['network_affiliate'] and disp_elements['channel']:
+                output_str = u'{0} ({network_affiliate} channel {channel})'.format(output_str, **disp_elements)
+            return output_str
         return u"Broadcaster"
-
 
 
 class BroadcasterAddress(models.Model):
