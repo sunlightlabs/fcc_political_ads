@@ -9,5 +9,6 @@ json_urlpatterns = patterns('broadcasters.json_views',
 urlpatterns = patterns('broadcasters.views',
                        url(r'^by-state/(?P<state_id>\w{2})/$', 'state_broadcaster_list', name='state_broadcaster_list'),
                        url(r'^by-state/$', 'state_broadcaster_list', name='broadcaster_state_list'),
-                       url(r'^(?P<callsign>[\w-]+)/$', 'views.broadcaster_detail', name='broadcaster_detail'),
-                       url(r'^json/', include(json_urlpatterns)))
+                       url(r'^json/', include(json_urlpatterns)),
+                       url(r'^(?P<callsign>[\w-]+)/$', 'broadcaster_detail', name='broadcaster_detail'),
+                       )
