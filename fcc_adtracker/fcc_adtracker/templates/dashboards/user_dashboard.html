@@ -23,6 +23,7 @@
                             <th>Advertiser</th>
                             <th>Contract Start</th>
                             <th>Contract End</th>
+                            <th>Total # Spots</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -33,6 +34,7 @@
                             <td>{{ politicalbuy.advertiser }}</td>
                             <td>{{ politicalbuy.contract_start_date|default:'Data missing' }}</td>
                             <td>{{ politicalbuy.contract_end_date|default:'Data missing' }}</td>
+                            <td>{{ politicalbuy.total_num_spots }}</td>
                             <td><a href="{% url politicalbuy_edit buy_id=politicalbuy.id %}" class="btn" title="Edit data for '{{ politicalbuy.documentcloud_doc }}'">Edit</a></td>
                         </tr>
                     {% endfor %}
@@ -61,21 +63,21 @@
                         <table class="politicalbuys table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Contract No.</th>
                                     <th>Advertiser</th>
                                     <th>Contract Start</th>
                                     <th>Contract End</th>
                                     <th>Total Spent</th>
+                                    <th>Total # Spots</th>
                                     <th></th>
                                 </tr>
                             </thead>
                         {% for politicalbuy in broadcaster.politicalbuy_set.all|dictsort:"contract_start_date"|slice:":4" %}
                             <tr>
-                                <td>{{ politicalbuy.contract_number|default:'Data missing' }}</td>
                                 <td>{{ politicalbuy.advertiser|default:'Data missing' }}</td>
                                 <td>{{ politicalbuy.contract_start_date|default:'Data missing' }}</td>
                                 <td>{{ politicalbuy.contract_end_date|default:'Data missing' }}</td>
                                 <td>{{ politicalbuy.total_spent|default_if_none:'Data missing' }}</td>
+                                <td>{{ politicalbuy.total_num_spots }}</td>
                                 <td><a href="" class="btn" title="Edit data for '{{ politicalbuy.documentcloud_doc }}'">Edit</a></td>
                             </tr>
                         {% endfor %}

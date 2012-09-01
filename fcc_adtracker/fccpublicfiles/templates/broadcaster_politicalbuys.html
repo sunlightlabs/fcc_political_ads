@@ -1,0 +1,89 @@
+{% extends "fcc-base.html" %}{% load static from staticfiles %}
+{% block bodyclass %}broadcaster-detail{% endblock bodyclass %}
+{% block pagetitle %}Political Ad Buys at {{ obj.broadcaster.callsign }} {% endblock pagetitle %}
+{% block content %}
+    <h2>{{ obj.broadcaster.callsign }}</h2>
+    <p><a href="{{ obj.broadcaster.fcc_profile_url }}" title="{{ obj.broadcaster.callsign }}'s FCC TV Station profile">FCC Station profile</a></p>
+    <dl class="moduleSm floatedList clearfix">
+        <dt>Network:</dt> <dd>{{obj.broadcaster.network_affiliate}}</dd>
+        <dt>Channel:</dt> <dd>{{obj.broadcaster.channel}}</dd>
+        {% if obj.broadcaster.nielsen_dma %}
+        <dt>Nielsen Designated Market Area:</dt> <dd>{{ obj.broadcaster.nielsen_dma }}</dd>
+        {% endif %}
+    </dl>
+    <div class='addresses'>
+    {% for bca in obj.broadcaster.broadcasteraddress_set.all %}
+        <p class="adr">
+            <span>'{{ bca.label.name|title }}' Address</span>:
+            {% if bca.address.address1 %}<span class="street">{{ bca.address.address1|title }}</span>{% endif %}
+            {% if bca.address.address2 %}<span class="street">{{ bca.address.address2|title  }}</span>{% endif %}
+            <span class="locality">{{ bca.address.city|title  }}</span>, <span class="region">{{ bca.address.state }}</span> <span class="postal-code">{{ bca.address.zipcode }}</span>
+        </p>
+    {% endfor %}
+    </div>
+    {% if obj_json and obj.address.lng %}
+    <div id="map-box">
+        <div id="map_canvas" style="width:100%; height:100%"></div>
+    </div>
+    {% endif %}
+    <div>
+        {% if obj.broadcaster.politicalbuy_set.all %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Advertiser</th>
+                    <th>Total Spent</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for politicalbuy in obj.broadcaster.politicalbuy_set.all %}
+                <tr>
+                    <td><a href="{{ politicalbuy.get_absolute_url }}" title="">View details</a></td>
+                    <td>{{ politicalbuy.advertiser }}</td>
+                    <td>{{ politicalbuy.total_spent }}</td>
+                    <td>{{ politicalbuy.contract_start_date }}</td>
+                    <td>{{ politicalbuy.contract_end_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No ad buys currently received for this station.</p>
+        {% endif %}
+    </div>
+{% endblock content %}
+
+{% block head %}
+    {{ block.super }}
+    {% include "broadcasters/_googlemaps_script_include.html" %}
+{% endblock head %}
+
+{% block js %}
+    {{ block.super }}
+    {% if obj_json and obj.address.lng %}
+    <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script>
+        var startPos = {% if obj.address %}[{{ obj.address.lng }},{{ obj.address.lat }}]{% else %}null;{% endif %}
+        var initialLocations = [
+            {{ obj_json|safe }}
+        ];
+        var mapMaxZoom = undefined;
+        var userMarker_url = "{% static 'img/sll_map_marker_purple.png' %}";
+        var stationMarker_url = "{% static 'img/sll_map_marker_blue.png' %}";
+        /*
+            Get to the action.
+        */
+        jQuery(document).ready(function() {
+            try {
+                SLF.updateMapApp();
+            }
+            catch (e) {
+                if (SLF.DEBUG) window.log(e);
+            }
+        });
+    </script>
+    {% endif %}
+{% endblock js %}

@@ -1,7 +1,9 @@
 from django.db import models
 from django.db.models.signals import pre_delete
+from django.db.models import Sum
 from django.dispatch import receiver
 from django.conf import settings
+from django.template.defaultfilters import slugify
 
 from doccloud.models import Document
 
@@ -109,14 +111,27 @@ class PoliticalBuy(models.Model):
 
     def __unicode__(self):
         if self.documentcloud_doc:
-            return u"{0}: {1}".format(', '.join([x.callsign for x in self.broadcasters.all()[:5]]), self.documentcloud_doc)
+            broadcasters_str = u', '.join([x.callsign for x in self.broadcasters.all()[:5]])
+            date_str = '-'.join([self.contract_start_date.__str__(), self.contract_end_date.__str__()])
+            return u"{0} {1}: {2}".format(broadcasters_str, self.advertiser or '', date_str)
         return u"PoliticalBuy"
+
+    def nonunique_slug(self):
+        return slugify(self.__unicode__())
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('fccpublicfiles.views.politicalbuy_view', (), {'buy_id': self.id, 'slug': self.nonunique_slug()})
 
     def total_spent(self):
         """ Returns a total spent figure, from either the grand total on the document, or calculated from ad buys. """
         # TODO: we may want to have this also return a calculation if available, if the raw total is not filled in
         return self.total_spent_raw
 
+    def total_num_spots(self):
+        """ Returns the sum of the num_spots values for all related political spot objects. """
+        values = self.politicalspot_set.all().aggregate(total_num_spots=Sum('num_spots'))
+        return values['total_num_spots']
 
 # Maybe update doccloud with fec_id if we have one?
 # @receiver(post_save, sender=PoliticalBuy)

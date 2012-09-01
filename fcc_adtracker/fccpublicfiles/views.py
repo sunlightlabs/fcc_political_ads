@@ -52,7 +52,7 @@ def admin_autocomplete_json(request):
     return HttpResponse(json.dumps(obj_list), content_type='application/javascript')
 
 
-def politicalbuy_view(request, buy_id, template_name='politicalbuy_view.html'):
+def politicalbuy_view(request, buy_id, slug='', template_name='politicalbuy_view.html'):
     obj = get_object_or_404(PoliticalBuy, id=buy_id)
     return render(request, template_name, {'obj': obj})
 

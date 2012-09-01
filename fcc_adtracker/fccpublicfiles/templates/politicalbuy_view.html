@@ -44,7 +44,7 @@
             <dl id="buy-metadata" class="clearfix">
                 <dt>Stations</dt>
                 {% for broadcaster in obj.broadcasters.all %}
-                <dd>{{ broadcaster.callsign }}, Channel {{ broadcaster.channel }}</dd>
+                <dd><a href="{% url broadcaster_politicalbuys_view callsign=broadcaster.callsign %}">{{ broadcaster.callsign }}, Channel {{ broadcaster.channel }}</a></dd>
                 {% endfor %}
                 <dt>Contract</dt>
                 <dd>{{obj.contract_number|default:"*****"}}</dd>
