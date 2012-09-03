@@ -17,5 +17,4 @@ urlpatterns = patterns('',
     url(r'^political-files/(?P<slug>\w|\-)+/(?P<buy_id>\d+)/$', 'fccpublicfiles.views.politicalbuy_view', name='politicalbuy_view'),
     url(r'^political-files/broadcaster/(?P<callsign>[\w-]+)/$', broadcaster_views.broadcaster_detail,
         {'template_name': 'broadcaster_politicalbuys.html'}, name='broadcaster_politicalbuys_view'),
-    url(r'^broadcaster/', include('broadcasters.urls'))
 )
