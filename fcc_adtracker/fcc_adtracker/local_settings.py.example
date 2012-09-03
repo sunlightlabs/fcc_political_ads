@@ -50,6 +50,12 @@ FACEBOOK_APP_ID = ''
 FACEBOOK_API_SECRET = ''
 FACEBOOK_EXTENDED_PERMISSIONS = ['email']
 
+# django-passwords  https://github.com/dstufft/django-passwords
+# These should be set to something better
+PASSWORD_MIN_LENGTH = 6
+PASSWORD_MAX_LENGTH = None
+PASSWORD_DICTIONARY = None
+
 GOOGLE_DOCS_ACCOUNT = ''
 GOOGLE_DOCS_PASSWORD = ''
 GOOGLE_DOCS_RESOURCE_ID = ''
