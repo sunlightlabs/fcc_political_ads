@@ -109,9 +109,12 @@ class PoliticalBuy(models.Model):
 
     broadcasters = models.ManyToManyField(Broadcaster, null=True)
 
+    def broadcasters_callsign_list(self):
+        return [x.callsign for x in self.broadcasters.all()]
+
     def __unicode__(self):
         if self.documentcloud_doc:
-            broadcasters_str = u', '.join([x.callsign for x in self.broadcasters.all()[:5]])
+            broadcasters_str = u', '.join(self.broadcasters_callsign_list()[:5])
             date_str = '-'.join([self.contract_start_date.__str__(), self.contract_end_date.__str__()])
             return u"{0} {1}: {2}".format(broadcasters_str, self.advertiser or '', date_str)
         return u"PoliticalBuy"
@@ -121,7 +124,7 @@ class PoliticalBuy(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('fccpublicfiles.views.politicalbuy_view', (), {'buy_id': self.id, 'slug': self.nonunique_slug()})
+        return ('politicalbuy_view', (), {'buy_id': str(self.id), 'slug': self.nonunique_slug()})
 
     def total_spent(self):
         """ Returns a total spent figure, from either the grand total on the document, or calculated from ad buys. """
