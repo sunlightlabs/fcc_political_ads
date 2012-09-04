@@ -3,7 +3,7 @@ South==0.7.5
 psycopg2
 django-debug-toolbar
 
--e git://github.com/sunlightlabs/sfapp.git@c552ed79818c23ebda15c3a4640146f4c941509c#egg=sfapp-dev
+-e git://github.com/sunlightlabs/sfapp.git@b8d70e8436ed50620a887845570d1602911b91ec#egg=sfapp-dev
 
 boto==2.5.1
 django-storages==1.1.4
