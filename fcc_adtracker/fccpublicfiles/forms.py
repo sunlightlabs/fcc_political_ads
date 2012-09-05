@@ -1,4 +1,3 @@
-from ajax_select.fields import AutoCompleteSelectMultipleField, AutoCompleteSelectField
 from django.forms import ModelForm, ModelMultipleChoiceField
 from doccloud.models import Document
 from fccpublicfiles.models import PoliticalBuy
