@@ -38,7 +38,7 @@ def state_broadcaster_list(request, state_id, template_name='broadcasters/broadc
 
 def broadcaster_detail(request, callsign, template_name='broadcasters/broadcaster_detail.html'):
     if not callsign.isupper():
-        return HttpResponsePermanentRedirect(reverse('broadcaster_detail', kwargs={'callsign': callsign.upper()}))
+        return HttpResponsePermanentRedirect(reverse('broadcaster_politicalbuys_view', kwargs={'callsign':callsign.upper()}))
     try:
         obj = BroadcasterAddress.objects.get(broadcaster__callsign=callsign.upper(), label__name__iexact='studio')
         state_geocenter = states_geocenters.get(obj.broadcaster.community_state, None) if states_geocenters else None
