@@ -97,8 +97,6 @@ def politicalbuy_edit(request, buy_id, template_name='politicalbuy_edit.html'):
     if form.is_valid():
         myobject = form.save()
         myobject.save()
-        #return redirect('contributor_dashboard')
-        return redirect('politicalbuy_view')
 
     return render(request, template_name, {'form': form, 'obj': myobject})
 
