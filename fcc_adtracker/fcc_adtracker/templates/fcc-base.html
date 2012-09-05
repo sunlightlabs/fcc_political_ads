@@ -5,11 +5,33 @@
 
 {% block head %}
 <script src="{% static "js/libs/modernizr-2.5.3.min.js" %}"></script>
-<script src="{% static "js/jquery-1.7.2.min.js" %}"></script>
 {% endblock head %}
 {% block js %}
 <script src="{% static 'js/fcc_site.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'js/bootstrap.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+    var feedback_widget_options = {};
+    feedback_widget_options.display = "overlay";
+    feedback_widget_options.company = "sunlightfoundation";
+    feedback_widget_options.placement = "right";
+    feedback_widget_options.color = "#222";
+    feedback_widget_options.style = "question";
+    feedback_widget_options.container = "getsatisfaction"; // page breaks if this is not set.
+
+    jQuery(document).ready(function($) {
+        var gs = document.createElement('script'), gsc = document.createElement('div'), interval;
+        gs.type = 'text/javascript'; gs.async = true; gsc.id = 'getsatisfaction';
+        gs.src = document.location.protocol + '//d3rdqalhjaisuu.cloudfront.net/javascripts/feedback-v2.js';
+        ($('head')[0] || $('body')[0]).appendChild(gs);
+        ($('body')[0]).appendChild(gsc);
+        interval = setInterval(function() {
+            if (window.GSFN !== undefined) {
+              new GSFN.feedback_widget(feedback_widget_options);
+              clearInterval(interval);
+            }
+        }, 10);
+    });
+</script>
 {% endblock js %}
 
 {% block css %}

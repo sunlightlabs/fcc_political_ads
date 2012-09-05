@@ -4,19 +4,24 @@ from django.core.urlresolvers import reverse
 from django.contrib.localflavor.us import us_states
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
+from django.conf import settings
 
 from broadcasters.models import Broadcaster
 from volunteers.forms import NonUserProfileForm
 from volunteers.models import Profile
-from fccpublicfiles.models import PoliticalBuy, PoliticalSpot
+from fccpublicfiles.models import PoliticalBuy, PoliticalSpot, Organization
 from fccpublicfiles.forms import PrelimDocumentForm
 
 from reversion.models import Revision, Version
 
+FEATURED_ADVERTISER_IDS = getattr(settings, 'FEATURED_ADVERTISER_IDS', ())
+
 
 def home_view(request):
+    featured_advertiser_list = Organization.objects.filter(organization_type='AD', id__in=FEATURED_ADVERTISER_IDS)
     resp_obj = {
         'form': NonUserProfileForm,
+        'featured_advertiser_list': featured_advertiser_list,
         'states_dict': us_states.US_STATES,
         'sfapp_base_template': 'sfapp/base-full.html'
     }

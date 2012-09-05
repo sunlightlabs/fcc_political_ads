@@ -43,6 +43,9 @@ DOCUMENTCLOUD_PASS = ''
 FEATURED_BROADCASTER_STATE = 'NC'
 STATES_GEOCENTERS_JSON_FILE = '../geodata/states_geocenters.json'
 
+# Tuple of organization-advertiser ids for use in views, templates.
+FEATURED_ADVERTISER_IDS = (1008, 1006, 1010)
+
 
 TWITTER_CONSUMER_KEY = ''
 TWITTER_CONSUMER_SECRET = ''

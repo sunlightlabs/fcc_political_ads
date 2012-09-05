@@ -41,7 +41,7 @@
         if (length in stateSelect && stateSelect.length != 0) {
             stateSelect.live('change', function(event) {
                 var val = $(this).val();
-                jQuery.getJSON('/broadcasters/by-state/' + val + '/all.json',
+                jQuery.getJSON('/stations/json/by-state/' + val + '/all.json',
                 function(data, textStatus, jqXHR) {
                     if (textStatus == 'success') {
                         var broadcastersEl = $('#noaccount_signup [name=broadcasters]');
