@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from registration.views import register
 
 from volunteers.models import Profile
-from volunteers.forms import RegistrationFormUniqueEmail, UserProfileForm, AccountProfileForm, NonUserProfileForm
+from volunteers.forms import BetterRegistrationFormUniqueEmail, UserProfileForm, AccountProfileForm, NonUserProfileForm
 
 import logging
 
@@ -199,7 +199,7 @@ def register_volunteer(request, *args, **kwargs):
         nonuser_profile = {}
     prerendered_select = USStateSelect(attrs={'required': 'required', 'id': 'state'}).render('state', nonuser_profile.get('state', ''))
     resp = register(request, backend='registration.backends.default.DefaultBackend',
-                    form_class=RegistrationFormUniqueEmail, extra_context={'nonuser_profile': nonuser_profile, 'prerendered_select': prerendered_select})
+                    form_class=BetterRegistrationFormUniqueEmail, extra_context={'nonuser_profile': nonuser_profile, 'prerendered_select': prerendered_select})
 
     if request.method == 'POST':
 

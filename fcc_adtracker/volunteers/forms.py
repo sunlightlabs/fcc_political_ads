@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.localflavor.us.forms import USPhoneNumberField, USStateField, USStateSelect, USZipCodeField
 # from django.contrib.localflavor.us import us_states
 
+from stronger_auth.forms import HelpfulPasswordField
 
 from registration.forms import RegistrationFormUniqueEmail
 
@@ -32,7 +33,12 @@ class ProfileRegistrationForm(BaseProfileForm):
     pass
 
 
-class RegistrationProfileUniqueEmail(RegistrationFormUniqueEmail, ProfileRegistrationForm):
+class BetterRegistrationFormUniqueEmail(RegistrationFormUniqueEmail):
+    password1 = HelpfulPasswordField()
+    password2 = HelpfulPasswordField()
+
+
+class RegistrationProfileUniqueEmail(BetterRegistrationFormUniqueEmail, ProfileRegistrationForm):
     pass
 
 
@@ -45,7 +51,7 @@ class UserProfileForm(BaseProfileForm):
 
 
 class AccountProfileForm(UserProfileForm):
-    new_password = forms.CharField(required=False, widget=forms.PasswordInput)
+    new_password = HelpfulPasswordField(required=False)
 
 
 class SetupSocialProfileForm(UserProfileForm):

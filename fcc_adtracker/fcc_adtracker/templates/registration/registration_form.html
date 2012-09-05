@@ -19,7 +19,8 @@
         <li>
             <label for="id_password1">Password</label>
             <input type="password" name="password1" class="required" placeholder="Password" id="id_password1">
-            {{ form.password.errors }}
+            <p class="help-block">{{ form.password1.help_text }}</p>
+            {{ form.password1.errors }}
         </li>
         <li>
             <label for="id_password2">Password (again)</label>

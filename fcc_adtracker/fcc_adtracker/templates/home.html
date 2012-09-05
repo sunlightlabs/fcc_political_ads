@@ -42,6 +42,27 @@
         {% include "volunteers/_nonuser_profile_form.html" %}
     </div>
     <div class="span4">
+        {% if featured_advertiser_list %}
+        <div>
+            <h3>Prominent Advertisers</h3>
+            <ul class="unstyled">
+                <li>
+                    {% for advertiser in featured_advertiser_list %}
+                    <h5>{{ advertiser.name }}</h5>
+                    {% if advertiser.advertiser_politicalbuys.all %}
+                    <ul>
+                        {% for pb in advertiser.advertiser_politicalbuys.all|slice:":6" %}
+                            <li><a href="{{ pb.get_absolute_url }}">{{pb.broadcasters_callsign_list|join:',' }} ({{pb.contract_start_date|date:"SHORT_DATE_FORMAT"}}-{{pb.contract_end_date|date:"SHORT_DATE_FORMAT"}})</a></li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>No buys currently recorded.</p>
+                    {% endif %}
+                    {% endfor %}
+                </li>
+            </ul>
+        </div>
+        {% endif %}
         <div id="feedback" class="module">
             <h4 class="withTip">Questions, Comments, Etc.</h4>
             <p class="tip">Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? <a href="mailto:politicaladsleuth@sunlightfoundation.com?subject=Question%20or%20comment%20about%20Political%20Ad%20Sleuth">Please email us!</a></p>

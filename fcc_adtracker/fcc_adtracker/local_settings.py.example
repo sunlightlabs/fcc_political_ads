@@ -43,12 +43,21 @@ DOCUMENTCLOUD_PASS = ''
 FEATURED_BROADCASTER_STATE = 'NC'
 STATES_GEOCENTERS_JSON_FILE = '../geodata/states_geocenters.json'
 
+# Tuple of organization-advertiser ids for use in views, templates.
+FEATURED_ADVERTISER_IDS = (1008, 1006, 1010)
+
 
 TWITTER_CONSUMER_KEY = ''
 TWITTER_CONSUMER_SECRET = ''
 FACEBOOK_APP_ID = ''
 FACEBOOK_API_SECRET = ''
 FACEBOOK_EXTENDED_PERMISSIONS = ['email']
+
+# django-passwords  https://github.com/dstufft/django-passwords
+# These should be set to something better
+PASSWORD_MIN_LENGTH = 6
+PASSWORD_MAX_LENGTH = None
+PASSWORD_DICTIONARY = None
 
 GOOGLE_DOCS_ACCOUNT = ''
 GOOGLE_DOCS_PASSWORD = ''
