@@ -145,13 +145,21 @@ def set_doccloud_data(sender, instance, signal, *args, **kwargs):
     doccloud_data['callsign'] = [ str(x) for x in instance.broadcasters_callsign_list() ]
     doccloud_data['contributedto'] = 'freethefiles'
     doccloud_data['collection'] = 'politicaladsleuth'
+
     if doc.dc_data != doccloud_data:
         doc.dc_data = doccloud_data
+
 
 @receiver(pre_delete, sender=PoliticalBuy)
 def set_privacy_for_deassociated_docs(sender, instance, *args, **kwargs):
     # Caution when PoliticalBuy or Document(Cloud) models are deleted: Make DocumentCloud doc private, but don't delete.
     doc = instance.documentcloud_doc
+    doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
+    doccloud_data['spasstatus'] = 'deleted'
+
+    if doc.dc_data != doccloud_data:
+        doc.dc_data = doccloud_data
+
     doc.access_level = 'private'
     doc.dc_properties.update_access(doc.access_level)
     doc.save()
