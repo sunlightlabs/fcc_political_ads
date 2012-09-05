@@ -1,29 +1,72 @@
-from django.forms import ModelForm, ModelMultipleChoiceField
+from django import forms
+from django.template.loader import render_to_string
+from django.core.urlresolvers import reverse_lazy
 from doccloud.models import Document
-from fccpublicfiles.models import PoliticalBuy
+from fccpublicfiles.models import PoliticalBuy, Organization, Person
 from broadcasters.models import Broadcaster
 
 
-class DocCloudFormBase(ModelForm):
+class SelectWithPopUp(forms.Select):
+    model = None
+
+    def __init__(self, model=None, add_url=None):
+        self.model = model
+        self.add_url = add_url
+        super(SelectWithPopUp, self).__init__()
+
+    def render(self, name, *args, **kwargs):
+        html = super(SelectWithPopUp, self).render(name, *args, **kwargs)
+
+        if not self.model:
+            self.model = name
+
+        popupplus = render_to_string("_form_popuplink.html", {'field': name, 'model': self.model, 'add_url': self.add_url})
+        return html + popupplus
+
+
+class DocCloudFormBase(forms.ModelForm):
     class Meta:
         model = Document
         fields = ('file',)
 
 
-class PoliticalBuyFormBase(ModelForm):
+class OrganizationForm(forms.ModelForm):
+    class Meta:
+        model = Organization
+
+
+class SimpleOrganizationForm(forms.ModelForm):
+    class Meta:
+        model = Organization
+        exclude = ('addresses', 'employees', 'is_visible', 'organization_type')
+
+
+class PersonForm(forms.ModelForm):
+    class Meta:
+        model = Person
+
+
+class PoliticalBuyFormBase(forms.ModelForm):
     class Meta:
         model = PoliticalBuy
         fields = ('broadcasters',)
 
 
 class PrelimDocumentForm(DocCloudFormBase, PoliticalBuyFormBase):
-    broadcasters = ModelMultipleChoiceField(queryset=Broadcaster.objects.all())
+    broadcasters = forms.ModelMultipleChoiceField(queryset=Broadcaster.objects.all())
 
 
-class PoliticalBuyFormFull(ModelForm):
+class PoliticalBuyFormFull(forms.ModelForm):
     class Meta:
         model = PoliticalBuy
         exclude = ('is_visible',)
+
+    advertiser = forms.ModelChoiceField(queryset=Organization.objects.filter(organization_type='AD'),
+                                        widget=SelectWithPopUp(add_url=reverse_lazy('add_advertiser'))
+                                        )
+    bought_by = forms.ModelChoiceField(queryset=Organization.objects.filter(organization_type='MB'),
+                                        widget=SelectWithPopUp(add_url=reverse_lazy('add_media_buyer'))
+                                        )
 
     def __init__(self, *args, **kwargs):
         super(PoliticalBuyFormFull, self).__init__(*args, **kwargs)

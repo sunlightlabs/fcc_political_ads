@@ -1,10 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from fccpublicfiles.forms import PrelimDocumentForm, PoliticalBuyFormFull
+from django.utils.html import escape
 from doccloud.models import Document
 
 from .models import *
+from fccpublicfiles.forms import PrelimDocumentForm, PoliticalBuyFormFull, SimpleOrganizationForm
 
 
 def politicalbuy_view(request, buy_id, slug='', template_name='politicalbuy_view.html'):
@@ -61,3 +63,37 @@ def politicalbuy_edit(request, buy_id, template_name='politicalbuy_edit.html'):
 
     return render(request, template_name, {'form': form, 'obj': myobject})
 
+
+@login_required
+def handlePopAdd(request, addForm, field, initial_data=None):
+    """ Using methods adapted from:
+         http://sontek.net/blog/detail/implementing-djangos-admin-interface-pop-ups
+         and
+         http://www.awebcoder.com/post/16/djangos-admin-related-objects-pop-up-in-the-front-end
+    """
+    if request.method == "POST":
+        form = addForm(request.POST, instance=initial_data)
+        if form.is_valid():
+            try:
+                newObject = form.save()
+            except forms.ValidationError, error:
+                newObject = None
+            if newObject:
+                return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % (escape(newObject._get_pk_val()), escape(newObject)))
+    else:
+        form = addForm(instance=initial_data)
+
+    pageContext = {'form': form, 'field': field}
+    return render(request, 'add_model_view.html', pageContext)
+
+
+@login_required
+def add_advertiser(request):
+    org_defaults = Organization(organization_type='AD')
+    return handlePopAdd(request, SimpleOrganizationForm, 'advertiser', initial_data=org_defaults)
+
+
+@login_required
+def add_media_buyer(request):
+    org_defaults = Organization(organization_type='MB')
+    return handlePopAdd(request, SimpleOrganizationForm, 'mediabuyer', initial_data=org_defaults)

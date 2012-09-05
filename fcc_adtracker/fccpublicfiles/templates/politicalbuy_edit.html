@@ -48,10 +48,7 @@
     </div>
 {% endblock content %}
 
-{% block sidebar %}
-{% endblock sidebar %}
-
 {% block js %}
     {{ block.super }}
-    <script src="{% static "js/fcc_site.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'admin/js/admin/RelatedObjectLookups.js' %}"></script>
 {% endblock js %}
