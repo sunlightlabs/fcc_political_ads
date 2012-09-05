@@ -1,16 +1,10 @@
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.db import transaction
 from django.db.models import Q
-from django.forms import ModelForm
-from django.views.generic import TemplateView
 from django.shortcuts import render, redirect, get_object_or_404
 from fccpublicfiles.forms import PrelimDocumentForm, PoliticalBuyFormFull
 from doccloud.models import Document
-from urllib2 import HTTPError
 
 
 from .models import *
