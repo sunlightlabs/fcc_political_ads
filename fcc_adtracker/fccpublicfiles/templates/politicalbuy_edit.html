@@ -1,19 +1,7 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %}
 {% block pagetitle %}Edit a Political Buy{% endblock pagetitle %}
 
-{% block head %}
-<script src="{% static "js/libs/modernizr-2.5.3.min.js" %}"></script>
-<script src="{% static "js/jquery-1.7.2.min.js" %}"></script>
-<style type="text/css" media="screen">
-    .documentcloud_embed {
-        width: 500px;
-        height: 720px;
-        background-color: #bfbfbf;
-        float: right;
-    }
-</style>
-{% endblock head %}
-
+{% block head %}{% endblock head %}
 
 {% block content %}
 <div style="display:block; height: 1200px;">
@@ -32,11 +20,21 @@
         <button class="btn btn-sunlight" value="Submit">Submit</button>
         </p>
     </form>
-    {% if mymodel.documentcloud_doc %}
-    <div class="documentcloud_embed">
-        {% include "doccloud/_documentcloud_embed.html" with document=mymodel.documentcloud_doc width=580 height=780 %}
-    </div>
-    {% endif %}
+    <div id="DV-viewer-413005-test-pdf" class="DV-container" style="float: right"></div>
+    <script src="//s3.amazonaws.com/s3.documentcloud.org/viewer/loader.js"></script>
+    <script>
+      DV.load("//www.documentcloud.org/documents/413005-test-pdf.js", {
+        width: 500,
+        height: 720,
+        sidebar: false,
+        container: "#DV-viewer-413005-test-pdf"
+      });
+    </script>
+    <noscript>
+      <a href="https://www.documentcloud.org/documents/413005/test-pdf.pdf">test.pdf (PDF)</a>
+      <br />
+      <a href="https://www.documentcloud.org/documents/413005/test-pdf.txt">test.pdf (Text)</a>
+    </noscript>
 </div>
 
 {% endblock content %}

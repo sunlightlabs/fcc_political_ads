@@ -24,17 +24,11 @@ class PrelimDocumentForm(DocCloudFormBase, PoliticalBuyFormBase):
 class PoliticalBuyFormFull(ModelForm):
     class Meta:
         model = PoliticalBuy
-        exclude = ('is_visible',)
 
     def __init__(self, *args, **kwargs):
         super(PoliticalBuyFormFull, self).__init__(*args, **kwargs)
         self.fields['total_spent_raw'].label = 'Grand Total'
-        for fieldname in 'advertiser advertiser_signatory bought_by broadcasters'.split():
-            append_ajax_class(self.fields[fieldname])
-
-
-def append_ajax_class(field):
-    if field.widget.attrs.has_key('class'):
-        field.widget.attrs['class'] += ' suggestions'
-    else:
-        field.widget.attrs.update({'class':'suggestions'})
+        self.fields['advertiser'] = AutoCompleteSelectField('organization', required=False)
+        self.fields['advertiser_signatory'] = AutoCompleteSelectField('person', required=False)
+        self.fields['bought_by'] = AutoCompleteSelectField('organization', required=False)
+        self.fields['broadcasters'] = AutoCompleteSelectMultipleField('broadcaster', required=False)
