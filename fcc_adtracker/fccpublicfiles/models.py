@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, post_save
 from django.db.models import Sum
 from django.dispatch import receiver
 from django.conf import settings
@@ -11,6 +11,7 @@ import reversion
 
 from locations.models import Address
 from broadcasters.models import Broadcaster
+import copy
 import datetime
 import timedelta
 from weekday_field import fields as wf_fields
@@ -136,20 +137,16 @@ class PoliticalBuy(models.Model):
         values = self.politicalspot_set.all().aggregate(total_num_spots=Sum('num_spots'))
         return values['total_num_spots']
 
-# Maybe update doccloud with fec_id if we have one?
-# @receiver(post_save, sender=PoliticalBuy)
-# def set_doccloud_data(sender, instance, signal, *args, **kwargs):
-#     doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
-#     doccloud_data['callsign'] = instance.station
 
-# @receiver(post_save, sender=PoliticalBuy)
-# def set_doccloud_data(sender, instance, signal, *args, **kwargs):
-#     doc = instance.documentcloud_doc
-#     doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
-#     doccloud_data['callsign'] = instance.broadcasters.latest('id').callsign
-#     if doc.dc_data != doccloud_data:
-#         doc.dc_data = doccloud_data
-
+@receiver(post_save, sender=PoliticalBuy)
+def set_doccloud_data(sender, instance, signal, *args, **kwargs):
+    doc = instance.documentcloud_doc
+    doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
+    doccloud_data['callsign'] = [ str(x) for x in instance.broadcasters_callsign_list() ]
+    doccloud_data['contributedto'] = 'freethefiles'
+    doccloud_data['collection'] = 'politicaladsleuth'
+    if doc.dc_data != doccloud_data:
+        doc.dc_data = doccloud_data
 
 @receiver(pre_delete, sender=PoliticalBuy)
 def set_privacy_for_deassociated_docs(sender, instance, *args, **kwargs):
