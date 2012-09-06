@@ -41,7 +41,7 @@ def state_broadcaster_list(request, state_id, template_name='broadcasters/broadc
         
         
         max_documents_to_show = 5
-        state_ad_buys = PoliticalBuy.objects.filter(broadcasters__community_state=state_id).order_by('documentcloud_doc__created_at')[:max_documents_to_show]
+        state_ad_buys = PoliticalBuy.objects.filter(broadcasters__community_state=state_id, is_visible=True).order_by('documentcloud_doc__created_at')[:max_documents_to_show]
         
         
         return render(request, template_name, {'broadcaster_list': broadcaster_list, 'state_name': state_name, 'state_geocenter': state_geocenter, 'state_ad_buys':state_ad_buys})
