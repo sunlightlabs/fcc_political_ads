@@ -1,0 +1,101 @@
+{# This is an updated version of broadcaster_list.html that uses a table, as suggested by the wire frames #}
+{# I haven't removed broadcaster_list.html, which includes station addresses, etc; unclear if we'll still want that in the future. -jf #}
+
+{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load url from future %}{% load humanize %}
+{% block bodyclass %}broadcasters{% endblock bodyclass %}
+{% block pagetitle %}{{ state_name }} Broadcasters{% endblock pagetitle %}
+{% block content %}
+    <h2>{{ state_name }} ({{ broadcaster_list|length }} stations)</h2>
+
+	{# Leave the map out for now #}
+    {% comment %}
+
+    <div>
+        <p>Find stations near you! Use this form to search for TV stations within a search radius. This will return a list of stations ordered by distance (as the crow flies). Actual driving distance will vary.</p>
+        {% include 'broadcasters/_map_searchform.html' %}
+
+    </div>
+    <div id="map-box">
+        <div id="map_canvas" style="width:100%; height:100%"></div>
+    </div>
+    {% endcomment %}
+
+    <table class="table table-striped">
+		<thead>
+            <tr>
+                <th>City</th>
+                <th>Station</th>
+                <th>Total Spent</th>
+                <th>Number of spots</th>
+            </tr>
+        </thead>
+        <tbody>
+		{% for broadcaster in broadcaster_list %}
+			<tr>
+        		<td>{{ broadcaster.community_city }}</td>
+        		<td><a href='{{ broadcaster.get_absolute_url }}'>{{ broadcaster.callsign }}</a></td>
+				<td>${{ broadcaster.total_spent|intcomma }}</td>
+				<td>{{ broadcaster.total_spots|intcomma }}</td>
+			</tr>
+		{% endfor %}
+    	</tbody>
+	</table>
+
+	{# I think this goes outside of the content block, but it's not visible there #}
+	{#  {% block sidebar %} #}
+	<div id="stations">
+		<h2>Recently uploaded documents from {{ state_name }}</h2>
+	    <ul class="withLine" id="locations">
+	    {% for state_ad_buy in state_ad_buys %}
+			<li><a href="{{ state_ad_buy.get_absolute_url}}">{{ state_ad_buy }}</a></li>
+		{% endfor %}
+	    </ul>
+	</div>
+	{# {% endblock sidebar %} #}
+	
+
+{% endblock content %}
+
+
+
+
+{# leave out the map js #}
+{% comment %}
+
+{% block head %}
+    {{ block.super }}
+    {% include "broadcasters/_googlemaps_script_include.html" %}
+{% endblock head %}
+
+{% block js %}
+    {{ block.super }}
+	
+
+    <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script>
+        var startPos = [{{ state_geocenter.lng|default:0 }}, {{ state_geocenter.lat|default:0 }}];
+        var initialLocations = [];
+        var locations_endpoint_url = "{% url 'broadcasters.json_views.state_broadcaster_addresses' state_id=broadcaster_list.0.community_state label_slug='studio' %}";
+        var userMarker_url = "{% static 'img/sll_map_marker_purple.png' %}";
+        var stationMarker_url = "{% static 'img/sll_map_marker_blue.png' %}";
+        $(document).ready(function() {
+            locationsData = jQuery.getJSON(locations_endpoint_url, function(json, textStatus) {
+                if (textStatus == "success")
+                {
+                    initialLocations = json;
+                    if ('SLF' in window)
+                    {
+                         if('locations' in SLF) SLF.locations = json;
+                         SLF.updateMapApp();
+                    }
+                }
+            });
+
+            if (!("autofocus" in document.createElement("input"))) {
+                  $("#address").focus();
+            }
+        });
+    </script>
+{% endblock js %}
+
+{% endcomment %}

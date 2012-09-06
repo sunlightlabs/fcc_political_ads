@@ -4,8 +4,12 @@ from django.core.urlresolvers import reverse
 from django.contrib.localflavor.us import us_states
 from django.conf import settings
 
+
+
 from broadcasters.models import Broadcaster, BroadcasterAddress
 from broadcasters.json_views import _make_broadcasteraddress_dict
+from broadcasters.broadcaster_utils import annotate_broadcaster_queryset
+from fccpublicfiles.models import PoliticalBuy
 
 try:
     import simplejson as json
@@ -23,15 +27,24 @@ if STATES_GEOCENTERS_JSON_FILE:
     except IOError, e:
         pass
 
-
-def state_broadcaster_list(request, state_id, template_name='broadcasters/broadcaster_list.html'):
+    
+def state_broadcaster_list(request, state_id, template_name='broadcasters/broadcaster_table.html'):
     state_id = state_id.upper()
     state_name = STATES_DICT.get(state_id, None)
     state_geocenter = states_geocenters.get(state_id, None) if states_geocenters else None
     if state_name:
         # Want to grab broadcasters with/without addresses, then the addresses themselves...
-        broadcaster_list = Broadcaster.objects.filter(community_state=state_id).prefetch_related('broadcasteraddress_set')
-        return render(request, template_name, {'broadcaster_list': broadcaster_list, 'state_name': state_name, 'state_geocenter': state_geocenter})
+        ## We're no longer displaying these addresses on this page, so don't bother...
+        #broadcaster_list = Broadcaster.objects.filter(community_state=state_id).prefetch_related('broadcasteraddress_set')
+        # instead grab the list and annotate it
+        broadcaster_list = annotate_broadcaster_queryset(Broadcaster.objects.filter(community_state=state_id))
+        
+        
+        max_documents_to_show = 5
+        state_ad_buys = PoliticalBuy.objects.filter(broadcasters__community_state=state_id).order_by('documentcloud_doc__created_at')[:max_documents_to_show]
+        
+        
+        return render(request, template_name, {'broadcaster_list': broadcaster_list, 'state_name': state_name, 'state_geocenter': state_geocenter, 'state_ad_buys':state_ad_buys})
     else:
         raise Http404('State with abbrevation "{state_id}" not found.'.format(state_id=state_id))
 

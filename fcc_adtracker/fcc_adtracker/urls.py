@@ -18,7 +18,7 @@ urlpatterns = patterns('',
     url(r'', include('fccpublicfiles.urls')),
 
     url(r'^stations/json/', include(json_urlpatterns)),
-    # url(r'stations', include('broadcasters.urls')),
+    url(r'^stations/', include('broadcasters.urls')),
     url(r'^states/(?P<state_id>\w{2})/$', 'broadcasters.views.state_broadcaster_list', name='state_broadcaster_list'),
     url(r'^$', 'fcc_adtracker.views.home_view', name='home'),
     (r'^admin/lookups/', include(ajax_select_urls)),
