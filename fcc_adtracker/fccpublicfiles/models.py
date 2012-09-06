@@ -116,6 +116,9 @@ class PoliticalBuy(models.Model):
     """
     is_complete = models.BooleanField(default=False)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
     broadcasters = models.ManyToManyField(Broadcaster, null=True)
 
     def broadcasters_callsign_list(self):
@@ -187,7 +190,11 @@ class PoliticalSpot(models.Model):
     rate = models.DecimalField(blank=True, null=True, max_digits=9, decimal_places=2, help_text="Dollar cost for each spot")
     preemptable = models.NullBooleanField(default=None, blank=True, null=True)
 
+    # This represents whether the latest version in moderation has been approved.
     is_visible = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def documentcloud_doc():
         doc = "The documentcloud_doc property."
