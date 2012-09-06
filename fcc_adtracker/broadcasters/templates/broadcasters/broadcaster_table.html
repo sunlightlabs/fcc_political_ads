@@ -25,8 +25,8 @@
             <tr>
                 <th>City</th>
                 <th>Station</th>
-                <th>Total Spent</th>
-                <th>Number of spots</th>
+                <th>Total Spent*</th>
+                <th>Number of spots**</th>
             </tr>
         </thead>
         <tbody>
@@ -40,6 +40,10 @@
 		{% endfor %}
     	</tbody>
 	</table>
+	<div class="data caveat">
+	* Estimate; some files may be omitted.
+	<br>** Only spots that have been data-entered are included.	
+	<div>
 
 	{# I think this goes outside of the content block, but it's not visible there #}
 	{#  {% block sidebar %} #}
