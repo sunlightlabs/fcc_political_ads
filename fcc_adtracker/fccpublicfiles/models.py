@@ -106,7 +106,15 @@ class PoliticalBuy(models.Model):
     lowest_unit_price = models.NullBooleanField(default=None, blank=True, null=True)
     total_spent_raw = models.IntegerField(blank=True, null=True)
 
+    # This represents whether the latest version in moderation has been approved.
     is_visible = models.BooleanField(default=False)
+
+    """ This is a user-defined setting that lets an authenticated user
+    mark a record as not needing any more work. The idea is that
+    a superuser will need to come along afterward to the moderated object
+    and approve the "completeness".
+    """
+    is_complete = models.BooleanField(default=False)
 
     broadcasters = models.ManyToManyField(Broadcaster, null=True)
 
