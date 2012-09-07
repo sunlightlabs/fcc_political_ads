@@ -1,3 +1,5 @@
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
 from django.contrib import admin
 from volunteers.models import Profile, NonUserProfile
 from volunteers.forms import NonUserProfileForm
@@ -34,4 +36,13 @@ class NonUserProfileAdmin(admin.ModelAdmin):
             qs = qs.filter(share_info=True)
         return qs
 
+
 admin.site.register(NonUserProfile, NonUserProfileAdmin)
+
+# Not sure where the right place to put admin overrides is, so just putting this here. 
+class UserAdmin(UserAdmin):
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups',)
+
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
+
