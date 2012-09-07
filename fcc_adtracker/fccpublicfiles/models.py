@@ -180,7 +180,7 @@ def set_privacy_for_deassociated_docs(sender, instance, *args, **kwargs):
 
 class PoliticalSpot(models.Model):
     """Information particular to a political ad spot (e.g., a candidate ad)"""
-    document = models.ForeignKey(PoliticalBuy, verbose_name="Political Buy")
+    politicalbuy = models.ForeignKey(PoliticalBuy, verbose_name="Political Buy")
     airing_start_date = models.DateField(blank=True, null=True)
     airing_end_date = models.DateField(blank=True, null=True)
     airing_days = wf_fields.WeekdayField(blank=True)
@@ -202,18 +202,18 @@ class PoliticalSpot(models.Model):
         doc = "The documentcloud_doc property."
 
         def fget(self):
-            if self.document:
-                return self.document.documentcloud_doc
+            if self.politicalbuy:
+                return self.politicalbuy.documentcloud_doc
             return None
         return locals()
     documentcloud_doc = property(**documentcloud_doc())
 
     def __unicode__(self):
         name_string = u'PoliticalSpot'
-        if self.document and self.document.advertiser:
-            name_string = u'{0}'.format(self.document.advertiser)
-            # if self.document.station:
-                # name_string = u'{0} on {1}'.format(name_string, self.document.station)
+        if self.politicalbuy and self.politicalbuy.advertiser:
+            name_string = u'{0}'.format(self.politicalbuy.advertiser)
+            # if self.politicalbuy.station:
+                # name_string = u'{0} on {1}'.format(name_string, self.politicalbuy.station)
         if self.show_name:
                 name_string = u'{0}: "{1}"'.format(name_string, self.show_name)
         if self.airing_start_date:
