@@ -4,6 +4,7 @@ from django.db.models import Sum
 from django.dispatch import receiver
 from django.conf import settings
 from django.template.defaultfilters import slugify
+from django_extensions.db.fields import UUIDField
 
 from doccloud.models import Document
 
@@ -92,6 +93,7 @@ class GenericPublicDocument(models.Model):
 
 class PoliticalBuy(models.Model):
     """A subset of PublicFile, the PoliticalBuy records purchases of air time (generally for political ads)"""
+    id = UUIDField(version=4, primary_key=True)
     documentcloud_doc = models.ForeignKey(Document)
     contract_number = models.CharField(blank=True, max_length=100)
     advertiser = models.ForeignKey('Organization', blank=True, null=True, related_name='advertiser_politicalbuys', limit_choices_to={'organization_type': u'AD'})
