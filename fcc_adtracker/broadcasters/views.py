@@ -27,7 +27,8 @@ if STATES_GEOCENTERS_JSON_FILE:
     except IOError, e:
         pass
 
-    
+MAX_DOCUMENTS_TO_SHOW_IN_SIDEBAR = 5
+
 def state_broadcaster_list(request, state_id, template_name='broadcasters/broadcaster_table.html'):
     state_id = state_id.upper()
     state_name = STATES_DICT.get(state_id, None)
@@ -39,9 +40,7 @@ def state_broadcaster_list(request, state_id, template_name='broadcasters/broadc
         # instead grab the list and annotate it
         broadcaster_list = annotate_broadcaster_queryset(Broadcaster.objects.filter(community_state=state_id))
         
-        
-        max_documents_to_show = 5
-        state_ad_buys = PoliticalBuy.objects.filter(broadcasters__community_state=state_id, is_visible=True).order_by('documentcloud_doc__created_at')[:max_documents_to_show]
+        state_ad_buys = PoliticalBuy.objects.filter(broadcasters__community_state=state_id, is_visible=True).order_by('created_at')[:MAX_DOCUMENTS_TO_SHOW_IN_SIDEBAR]
         
         
         return render(request, template_name, {'broadcaster_list': broadcaster_list, 'state_name': state_name, 'state_geocenter': state_geocenter, 'state_ad_buys':state_ad_buys})

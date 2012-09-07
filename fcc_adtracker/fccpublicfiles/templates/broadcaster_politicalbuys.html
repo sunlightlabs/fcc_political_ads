@@ -1,4 +1,4 @@
-{% extends "fcc-base.html" %}{% load static from staticfiles %}
+{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load recent_buy_sidebar from sidebars %}
 {% block bodyclass %}broadcaster-detail{% endblock bodyclass %}
 {% block pagetitle %}Political Ad Buys at {{ obj.broadcaster.callsign }} {% endblock pagetitle %}
 {% block content %}
@@ -21,6 +21,8 @@
         </p>
     {% endfor %}
     </div>
+
+	
     {% if obj_json and obj.address.lng %}
     <div id="map-box">
         <div id="map_canvas" style="width:100%; height:100%"></div>
@@ -54,6 +56,11 @@
         <p>No ad buys currently received for this station.</p>
         {% endif %}
     </div>
+
+	<div class="in-a-sidebar">
+	{# Could cache this if it shows up on other pages--I think it does, I just haven't added it elsewhere yet #}
+	{% recent_buy_sidebar %}
+	</div>
 {% endblock content %}
 
 {% block head %}

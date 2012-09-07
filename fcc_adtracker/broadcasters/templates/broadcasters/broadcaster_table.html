@@ -40,23 +40,18 @@
 		{% endfor %}
     	</tbody>
 	</table>
-	<div class="data caveat">
-	* Estimate; some files may be omitted.
-	<br>** Only spots that have been data-entered are included.	
-	<div>
-
+	{% include 'broadcasters/data_caveat.html' %}
 	{# I think this goes outside of the content block, but it's not visible there #}
 	{#  {% block sidebar %} #}
 	<div id="stations">
 		<h2>Recently uploaded documents from {{ state_name }}</h2>
 	    <ul class="withLine" id="locations">
 	    {% for state_ad_buy in state_ad_buys %}
-			<li><a href="{{ state_ad_buy.get_absolute_url}}">{{ state_ad_buy }}</a></li>
+			<li><a href="{{ state_ad_buy.get_absolute_url}}">{{ state_ad_buy.name }}</a></li>
 		{% endfor %}
 	    </ul>
 	</div>
 	{# {% endblock sidebar %} #}
-	
 
 {% endblock content %}
 
