@@ -8,7 +8,7 @@ from django.conf import settings
 
 from broadcasters.models import Broadcaster, BroadcasterAddress
 from broadcasters.json_views import _make_broadcasteraddress_dict
-from broadcasters.broadcaster_utils import annotate_broadcaster_queryset
+from fccpublicfiles.broadcaster_utils import annotate_broadcaster_queryset
 from fccpublicfiles.models import PoliticalBuy
 
 try:
