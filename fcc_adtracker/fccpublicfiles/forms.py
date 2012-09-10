@@ -68,6 +68,7 @@ class PoliticalBuyFormFull(forms.ModelForm):
             'contract_end_date',
             'lowest_unit_price',
             'total_spent_raw',
+            'num_spots_raw',
             'is_complete',
             'broadcasters',
         )
@@ -81,7 +82,6 @@ class PoliticalBuyFormFull(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(PoliticalBuyFormFull, self).__init__(*args, **kwargs)
-        self.fields['total_spent_raw'].label = 'Grand Total'
         for fieldname in 'advertiser advertiser_signatory bought_by broadcasters'.split():
             append_ajax_class(self.fields[fieldname])
 

@@ -107,7 +107,8 @@ class PoliticalBuy(models.Model):
     contract_start_date = models.DateField(blank=True, null=True, default=datetime.date.today)
     contract_end_date = models.DateField(blank=True, null=True, default=datetime.date.today)
     lowest_unit_price = models.NullBooleanField(default=None, blank=True, null=True)
-    total_spent_raw = models.IntegerField(blank=True, null=True)
+    total_spent_raw = models.DecimalField(max_digits=19, decimal_places=2, null=True, verbose_name='Grand Total')
+    num_spots_raw = models.PositiveIntegerField(null=True, verbose_name='Number of Ad Spots')
 
     # This represents whether the latest version in moderation has been approved.
     is_visible = models.BooleanField(default=False)

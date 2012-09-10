@@ -56,6 +56,8 @@
                 <dd>{{ obj.lowest_unit_price|yesno:"Yes,No,*****" }}</dd>
                 <dt>Bought by</dt>
                 <dd>{{obj.bought_by|default:"*****" }}</dd>
+                <dt>Number of Ad Spots</dt>
+                <dd>{{obj.num_spots_raw|default:"<em>Unknown</em>" }}</dd>
             </dl>
             <h3>Links</h3>
             <ul class="unstyled">
