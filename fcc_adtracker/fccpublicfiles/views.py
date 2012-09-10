@@ -42,13 +42,9 @@ def prelim_doc_form(request, template_name='document_submit.html'):
         pol_buy.broadcasters = form.cleaned_data['broadcasters']
         pol_buy.save()
 
-        return redirect('document_success')
+        return redirect('user_dashboard')
 
     return render(request, template_name, {'form': form})
-
-
-def doc_success(request, template_name='document_success.html'):
-    return render(request, template_name)
 
 
 @login_required

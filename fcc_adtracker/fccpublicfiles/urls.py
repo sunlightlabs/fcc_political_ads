@@ -11,7 +11,6 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^political-files/submit/', 'fccpublicfiles.views.prelim_doc_form', name='document_submit'),
-    url(r'^political-files/success/', 'fccpublicfiles.views.doc_success', name='document_success'),
     url(r'^political-files/edit/(?P<buy_id>\d+)/', 'fccpublicfiles.views.politicalbuy_edit', name='politicalbuy_edit'),
     url(r'^political-files/add/advertiser/', 'fccpublicfiles.views.add_advertiser', name='add_advertiser'),
     url(r'^political-files/add/media-buyer/', 'fccpublicfiles.views.add_media_buyer', name='add_media_buyer'),
