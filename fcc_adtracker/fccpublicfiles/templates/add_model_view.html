@@ -6,8 +6,9 @@
     <script src="{% static 'admin/js/admin/RelatedObjectLookups.js' %}"></script>
 {% endblock head %}
 
+{% block bodyclass %}minimal{% endblock bodyclass %}
 
-{% block content %}
+{% block container %}
     <h2>Add {{ field }}</h2>
     <form method="POST" action="{% url add_advertiser %}">
         {% csrf_token %}
@@ -16,7 +17,7 @@
         </table>
         <p><button class="btn btn-sunlight" value="Submit">Submit</button> | <a class="btn" href="javascript:window.close()">Cancel</a></p>
     </form>
-{% endblock content %}
+{% endblock container %}
 {% comment %}
 So maybe this shouldn't inhetid from fcc-base.html but some minimal other template.
 {% endcomment %}

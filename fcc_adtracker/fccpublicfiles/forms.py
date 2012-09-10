@@ -60,15 +60,15 @@ class PoliticalBuyFormFull(forms.ModelForm):
     class Meta:
         model = PoliticalBuy
         fields = (
-            'contract_number',
             'advertiser',
-            'advertiser_signatory',
-            'bought_by',
-            'contract_start_date',
-            'contract_end_date',
-            'lowest_unit_price',
             'total_spent_raw',
             'num_spots_raw',
+            'contract_start_date',
+            'contract_end_date',
+            'contract_number',
+            'advertiser_signatory',
+            'bought_by',
+            'lowest_unit_price',
             'is_complete',
             'broadcasters',
         )
