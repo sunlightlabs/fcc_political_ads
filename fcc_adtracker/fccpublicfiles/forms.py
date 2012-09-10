@@ -59,7 +59,18 @@ class PrelimDocumentForm(DocCloudFormBase, PoliticalBuyFormBase):
 class PoliticalBuyFormFull(forms.ModelForm):
     class Meta:
         model = PoliticalBuy
-        exclude = ('documentcloud_doc', 'is_visible', 'created_at', 'updated_at')
+        fields = (
+            'contract_number',
+            'advertiser',
+            'advertiser_signatory',
+            'bought_by',
+            'contract_start_date',
+            'contract_end_date',
+            'lowest_unit_price',
+            'total_spent_raw',
+            'is_complete',
+            'broadcasters',
+        )
 
     advertiser = forms.ModelChoiceField(queryset=Organization.objects.filter(organization_type='AD'),
                                         widget=SelectWithPopUp(add_url=reverse_lazy('add_advertiser'))
