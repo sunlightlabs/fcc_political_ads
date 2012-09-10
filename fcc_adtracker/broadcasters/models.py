@@ -15,11 +15,13 @@ class Broadcaster(models.Model):
     callsign = models.CharField(max_length=12, unique=True)
     channel = models.PositiveSmallIntegerField(null=True, blank=True)
     nielsen_dma = models.CharField(max_length=60, blank=True, null=True, help_text='Nielsen Designated Market Area')
+    dma_id = models.PositiveIntegerField(blank=True, null=True, unique=True, editable=False, help_text='DMA ID, from Nielsen')
     network_affiliate = models.CharField(max_length=100, blank=True, null=True)
     facility_id = models.PositiveIntegerField(blank=True, null=True, unique=True, editable=False, help_text='FCC assigned id')
     facility_type = models.CharField(max_length=3, blank=True, null=True, help_text='FCC assigned facility_type')
     community_city = models.CharField(max_length=20, blank=True, null=True)
     community_state = USStateField(choices=us_states.US_STATES, blank=True, null=True)
+    
 
     class Meta:
         ordering = ('community_state', 'community_city', 'callsign')
