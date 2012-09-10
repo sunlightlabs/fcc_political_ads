@@ -41,7 +41,7 @@
 
 {% block container %}
 <header>
-{% block nav %}	
+{% block nav %}
 <!-- nav start -->
     <div class="span9">
 	<nav class="primary-nav clearfix">
@@ -55,8 +55,8 @@
 	</nav>
 	</div>
 <!-- end nav -->
-{% endblock %}	
-	
+{% endblock %}
+
     <div class="span4 offset8">
     {% block pagenav %}{% endblock pagenav %}
         <div id="user-status">
@@ -75,7 +75,12 @@
 
 {# override this on weird pages #}
 {% block sidebar %}
+<div class="upload-callout">
+{% include "snippets/_upload_miniform.html" %}
+</div>
+<div class="recentbuys-sidebar">
 {# Could cache this #}
 {% recent_buy_sidebar %}
+</div>
 {% endblock %}
 
