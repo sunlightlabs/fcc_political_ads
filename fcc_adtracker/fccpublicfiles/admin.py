@@ -25,7 +25,7 @@ class PoliticalSpotAdmin(ModerationAdmin, VersionAdmin):
     fieldsets = (
 
         (None, {
-            'fields': ('politicalbuy',)
+            'fields': ('document',)
         }),
         (None, {
             'fields': POLITICAL_SPOT_FIELDS
