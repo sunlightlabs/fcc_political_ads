@@ -77,9 +77,14 @@
                     </ul>
                 </fieldset>
                 <ul>
-                <li>
-                    <button class="btn btn-sunlight" value="Submit">Submit</button>
-                </li>
+                    <li>
+                        <label>Let us know if you've entered all of the information from the document:</label>
+                        <label class="tip checkbox">{{form.is_complete}} {{form.is_complete.label}}</label>
+                        {{form.is_complete.errors}}
+                    </li>
+                    <li>
+                        <button class="btn btn-sunlight" value="Submit">Submit</button>
+                    </li>
                 </ul>
             </form>
         </div>
