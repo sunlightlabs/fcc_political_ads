@@ -11,15 +11,15 @@ def sum_broadcaster_spent(broadcaster):
 
 def sum_broadcaster_spots(broadcaster):
     # Will only count the spots that have been entered
-    spots = PoliticalSpot.objects.filter(politicalbuy__broadcasters__pk=broadcaster.pk).aggregate(total_spots=Sum('num_spots'))
+    spots = PoliticalSpot.objects.filter(document__broadcasters__pk=broadcaster.pk).aggregate(total_spots=Sum('num_spots'))
     if spots['total_spots']:
         return spots['total_spots']
     else:
         return 0
-    
+
 def annotate_broadcaster_queryset(broadcaster_queryset):
-    # Attach number of ads and total amount spent to a queryset of broadcasters. 
-    # Helper for state_broadcaster_list and wherever else broadcaster-wide numbers are needed. 
+    # Attach number of ads and total amount spent to a queryset of broadcasters.
+    # Helper for state_broadcaster_list and wherever else broadcaster-wide numbers are needed.
     for broadcaster in broadcaster_queryset:
         broadcaster.total_spent = sum_broadcaster_spent(broadcaster)
         broadcaster.total_spots = sum_broadcaster_spots(broadcaster)
