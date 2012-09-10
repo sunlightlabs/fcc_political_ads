@@ -14,7 +14,7 @@
 
     <div class="row">
         <div id="state_broadcasters" class="span5">
-        {% if not profile.state %}
+        {% if not profile or profile.state %}
             <p>Please <a href="{% url edit_profile %}">fill out your profile</a>, including your city, state and zipcode so we can show you stations in your state!</p>
         {% else %}
             <h3>{{ profile.get_state_display }} broadcasters</h3>
@@ -69,7 +69,7 @@
                     <td>{{ politicalbuy.broadcasters.all|join:", " }} {{ politicabuy.created_at }}</td>
                     <td>{{ politicalbuy.advertiser|default:'Unknown' }}</td>
                     <td>{{ politicalbuy.total_num_spots|default:'Unknown' }}</td>
-                    <td><a href="{% url politicalbuy_edit buy_id=politicalbuy.id %}" title="Edit data for '{{ politicalbuy.documentcloud_doc }}'">Edit</a></td>
+                    <td><a href="{% url politicalbuy_edit uuid_key=politicalbuy.uuid_key %}" title="Edit data for '{{ politicalbuy.documentcloud_doc }}'">Edit</a></td>
                 </tr>
             {% endfor %}
             </tbody>
