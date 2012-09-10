@@ -7,6 +7,7 @@ from doccloud.models import Document
 
 class DefaultModerator(GenericModerator):
     auto_approve_for_staff = False
+    auto_approve_for_groups = ['Professionals']
     notify_user = False
     notify_moderator = False
     visibility_column = 'is_visible'
