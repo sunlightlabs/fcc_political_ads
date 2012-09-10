@@ -11,6 +11,10 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding field 'PoliticalBuy.uuid_key'
+
+        # NOTE: Postgresql has UUID as a native type, but the functions that generate uuids are in contrib, so you have
+        # to load the extensions for it. For this to work, you need the postgresql-contrib package installed.
+        db.execute('create extension "uuid-ossp"')
         db.execute('alter table fccpublicfiles_politicalbuy add column uuid_key uuid not null unique default(uuid_generate_v4())')
 
 
