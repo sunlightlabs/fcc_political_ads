@@ -68,17 +68,7 @@
             <p class="tip">Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? <a href="mailto:politicaladsleuth@sunlightfoundation.com?subject=Question%20or%20comment%20about%20Political%20Ad%20Sleuth">Please email us!</a></p>
         </div>
         <div class="boxCallout resources">
-            <h3>Resources</h3>
-            <ul class='slf-list'>
-                <li>
-                    <h5 class="withTip">How to inspect public political files</h5>
-                    <p>This <a href="http://www.freepress.net/resource/98445/inspecting-broadcasters-public-and-political-files">handy how-to guide</a> from Free Press provides step-by-step information on how to free the files from your local broadcaster. (<a href="http://www.freepress.net/files/publicfiles-howto.pdf">pdf version</a>)</p>
-                </li>
-                <li>
-                    <h5 class="withTip">Public Files Inspection Checklist</h5>
-                    <p>Ready to go to the station? <a href='http://www.freepress.net/files/publicfiles-checklist.pdf'>Print this checklist</a> and the <a href='{% static 'files/FCC_public_files_excerpt.pdf' %}'>political files excerpt</a> from FCC’s manual and bring it with you.</p>
-                </li>
-            </ul>
+        {% include "snippets/_resources_list.html" %}
         </div>
     </div>
 </div>
