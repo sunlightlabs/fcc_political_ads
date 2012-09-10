@@ -1,6 +1,16 @@
+<div class="upload-area">
+<h3>Visit a Station and Have Some Documents to Upload? Do in Now!</h3>
+<form id="upload-link" method="link" action="{% url document_submit %}">
+<button class="btn btn-sunlight">Upload</input>
+</form>
+</div>
+<div class="recentbuys-sidebar">
+
 <h2>Recently uploaded documents</h2>
 <ul class="recent-ad-sidebar">
 	{% for ad_buy in ad_buys %}
 	<li><a href="{{ ad_buy.get_absolute_url }}">{{ ad_buy.name }}</a></li>
 	{% endfor %}
 </ul>
+
+</div>

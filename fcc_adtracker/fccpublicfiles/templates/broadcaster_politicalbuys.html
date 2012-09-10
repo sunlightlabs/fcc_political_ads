@@ -1,4 +1,4 @@
-{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load recent_buy_sidebar from sidebars %}
+{% extends "fcc-base.html" %}{% load static from staticfiles %}
 {% block bodyclass %}broadcaster-detail{% endblock bodyclass %}
 {% block pagetitle %}Political Ad Buys at {{ obj.broadcaster.callsign }} {% endblock pagetitle %}
 {% block content %}
@@ -7,9 +7,7 @@
     <dl class="moduleSm floatedList clearfix">
         <dt>Network:</dt> <dd>{{obj.broadcaster.network_affiliate}}</dd>
         <dt>Channel:</dt> <dd>{{obj.broadcaster.channel}}</dd>
-        {% if obj.broadcaster.nielsen_dma %}
-        <dt>Nielsen Designated Market Area:</dt> <dd>{{ obj.broadcaster.nielsen_dma }}</dd>
-        {% endif %}
+        <dt>Community served:</dt> <dd>{{obj.broadcaster.community_city}}, {{obj.broadcaster.community_state}}</dd>
     </dl>
     <div class='addresses'>
     {% for bca in obj.broadcaster.broadcasteraddress_set.all %}
@@ -57,11 +55,11 @@
         {% endif %}
     </div>
 
-	<div class="in-a-sidebar">
-	{# Could cache this if it shows up on other pages--I think it does, I just haven't added it elsewhere yet #}
-	{% recent_buy_sidebar %}
-	</div>
+
 {% endblock content %}
+
+
+
 
 {% block head %}
     {{ block.super }}
