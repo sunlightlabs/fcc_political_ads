@@ -1,6 +1,4 @@
 {% load static from staticfiles %}
-<script src="//cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
-<script>window.jQuery.tools || document.write('<script src="{% static 'js/libs/jquery.tools.min.js' %}"><\/script>')</script>
 <script type="text/javascript">
     $(document).ready(function() {
         var submitted = false;

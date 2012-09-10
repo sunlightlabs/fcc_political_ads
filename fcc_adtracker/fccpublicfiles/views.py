@@ -57,7 +57,7 @@ def politicalbuy_edit(request, uuid_key, template_name='politicalbuy_edit.html')
         myobject = form.save()
         myobject.save()
 
-    return render(request, template_name, {'form': form, 'obj': myobject})
+    return render(request, template_name, {'form': form, 'obj': myobject, 'sfapp_base_template': 'sfapp/base-full.html'})
 
 
 @login_required

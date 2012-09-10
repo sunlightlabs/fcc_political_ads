@@ -13,42 +13,96 @@
         {% endfor %}
     </ul>
     {% endif %}
+    {% comment %}
+    This page's view overrides the sidebar template in order to show the original document and a form on the same page.
+    {% endcomment %}
     <div class="row">
-        <div class="span5">
-            <form class="form form-vertical" enctype="multipart/form-data" method="post" action="." style="display: block; float: left">
+        <div class="span4">
+            <h2>Ad buy at {{obj.broadcasters_callsign_list|join:', ' }}</h2>
+            <form class="form form-vertical" enctype="multipart/form-data" method="post" action=".">
                 {% csrf_token %}
+                <fieldset>
+                    <legend>Essential Data</legend>
+                    <ul>
+                        <li class="input-append">
+                            <label>{{form.advertiser.label}}</label>
+                            {{form.advertiser}}
+                            {{form.advertiser.errors}}
+                        </li>
+                        <li class="input-prepend">
+                            <label>{{form.total_spent_raw.label}}</label>
+                            <span class="add-on">$</span>{{form.total_spent_raw}}
+                            {{form.total_spent_raw.errors}}
+                        </li>
+                        <li>
+                            <label>{{form.num_spots_raw.label}}</label>
+                            {{form.num_spots_raw}}
+                            {{form.total_spent_raw.errors}}
+                        </li>
+                        <li>
+                            <label>{{form.contract_start_date.label}}</label>
+                            <input type="date" value="{{form.contract_start_date.value|date:'Y-m-d'}}">
+                            {{form.contract_start_date.errors}}
+                        </li>
+                        <li>
+                            <label>{{form.contract_end_date.label}}</label>
+                            <input type="date" value="{{form.contract_end_date.value|date:'Y-m-d'}}">
+                            {{form.contract_end_date.errors}}
+                        </li>
+                    </ul>
+                </fieldset>
+                <fieldset>
+                    <legend>Additional Data</legend>
+                    <ul>
+                        <li>
+                            <label>{{form.contract_number.label}}</label>
+                            {{form.contract_number}}
+                            {{form.contract_number.errors}}
+                        </li>
+                        <li class="input-append">
+                            <label>{{form.bought_by.label}}</label>
+                            {{form.bought_by}}
+                            {{form.bought_by.errors}}
+                        </li>
+                        <li class="input-append">
+                            <label>{{form.advertiser_signatory.label}}</label>
+                            {{form.advertiser_signatory}}
+                            {{form.advertiser_signatory.errors}}
+                        </li>
+                        <li>
+                            <label>{{form.lowest_unit_price.label}}</label>
+                            {{form.lowest_unit_price}}
+                            {{form.lowest_unit_price.errors}}
+                        </li>
+                    </ul>
+                </fieldset>
                 <ul>
-                {% for field in form %}
-                    <li>
-                        <label>{{ field.label }}</label>
-                        {% if field.help_text %}
-                        <p class="tip">{{ field.help_text }}</p>
-                        {% endif %}
-                        {{ field }}
-                    </li>
-                {% endfor %}
                 <li>
                     <button class="btn btn-sunlight" value="Submit">Submit</button>
                 </li>
                 </ul>
             </form>
         </div>
-        <div class="span7">
+        <div id="original_document" class="span8">
         {% if obj %}
-        {% include "doccloud/_documentcloud_embed.html" with document=obj.documentcloud_doc width=540 height=620 %}
+        {% include "doccloud/_documentcloud_embed.html" with document=obj.documentcloud_doc width=620 height=760 %}
         {% endif %}
         </div>
     </div>
     <div class="row">
-        <div class="span12">
-            {% if obj.politicalspot_set.all %}
-            {% include '_politicalspots_table.html' with politicalspot_list=obj.politicalspot_set.all editable=1 %}
-            {% endif %}
-        </div>
+        {% if obj.politicalspot_set.all %}
+        {% include '_politicalspots_table.html' with politicalspot_list=obj.politicalspot_set.all editable=1 %}
+        {% endif %}
     </div>
+
 {% endblock content %}
 
 {% block js %}
     {{ block.super }}
     <script src="{% static 'admin/js/admin/RelatedObjectLookups.js' %}"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $(":date").dateinput();
+        });
+    </script>
 {% endblock js %}
