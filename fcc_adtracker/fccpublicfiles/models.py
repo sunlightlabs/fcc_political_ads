@@ -4,10 +4,13 @@ from django.db.models import Sum
 from django.dispatch import receiver
 from django.conf import settings
 from django.template.defaultfilters import slugify
+from django_extensions.db.fields import UUIDField
+
 
 from doccloud.models import Document
 
 import reversion
+from uuid import uuid4
 
 from locations.models import Address
 from broadcasters.models import Broadcaster
@@ -119,6 +122,8 @@ class PoliticalBuy(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
+    uuid_key = UUIDField(version=4, default=uuid4(), unique=True, editable=False)
+
     broadcasters = models.ManyToManyField(Broadcaster, null=True)
 
     def broadcasters_callsign_list(self):
@@ -144,7 +149,7 @@ class PoliticalBuy(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('politicalbuy_view', (), {'buy_id': str(self.id), 'slug': self.nonunique_slug()})
+        return ('politicalbuy_view', (), {'uuid_key': str(self.uuid_key)})
 
     def total_spent(self):
         """ Returns a total spent figure, from either the grand total on the document, or calculated from ad buys. """

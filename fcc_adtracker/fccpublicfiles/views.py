@@ -9,8 +9,8 @@ from .models import *
 from fccpublicfiles.forms import PrelimDocumentForm, PoliticalBuyFormFull, SimpleOrganizationForm
 
 
-def politicalbuy_view(request, buy_id, slug='', template_name='politicalbuy_view.html'):
-    obj = get_object_or_404(PoliticalBuy, id=buy_id)
+def politicalbuy_view(request, uuid_key, slug='', template_name='politicalbuy_view.html'):
+    obj = get_object_or_404(PoliticalBuy, uuid_key=uuid_key)
     return render(request, template_name, {'obj': obj})
 
 
@@ -48,8 +48,8 @@ def prelim_doc_form(request, template_name='document_submit.html'):
 
 
 @login_required
-def politicalbuy_edit(request, buy_id, template_name='politicalbuy_edit.html'):
-    myobject = get_object_or_404(PoliticalBuy, pk=buy_id)
+def politicalbuy_edit(request, uuid_key, template_name='politicalbuy_edit.html'):
+    myobject = get_object_or_404(PoliticalBuy, uuid_key=uuid_key)
 
     form = PoliticalBuyFormFull(request.POST or None, instance=myobject)
 
