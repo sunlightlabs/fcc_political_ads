@@ -50,7 +50,7 @@ def user_dashboard(request):
                                 .distinct('object_id')
         politicalbuy_ids = [vers.object_id for vers in politicalbuy_version_list]
         politicalbuy_list = PoliticalBuy.objects.filter(Q(id__in=politicalbuy_ids) |\
-                            Q(politicalspot__in=politicalspot_ids)).distinct()
+                            Q(politicalspot__in=politicalspot_ids)).distinct().order_by('-updated_at')
 
         form = PrelimDocumentForm()
 

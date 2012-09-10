@@ -50,15 +50,17 @@
         {% endcomment %}
     </div>
     <div id="user_contributions">
-        <h3>Your submissions/contributions</h3>
+        <h3>Your contributions</h3>
         {% if politicalbuy_list %}
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th></th>
-                    <th>Broadcaster</th>
+                    <th>Last Modified</th>
+                    <th>Station(s)</th>
                     <th>Advertiser</th>
-                    <th>Total # Spots</th>
+                    <th># Spots</th>
+                    <th>$ Spent</th>
                     <th></th>
                 </tr>
             </thead>
@@ -66,9 +68,11 @@
             {% for politicalbuy in politicalbuy_list %}
                 <tr class="{% if politicalbuy.is_visible %}live{% else %}not-live{% endif %}">
                     <td>{{ politicalbuy.is_visible|yesno:'Approved,Unapproved,Unknown'|title }}</td>
+                    <td>{% if politicalbuy.updated_at %}{{ politicalbuy.updated_at|date:"SHORT_DATETIME_FORMAT" }}{% else %}Unknown{% endif %}</td>
                     <td>{{ politicalbuy.broadcasters.all|join:", " }} {{ politicabuy.created_at }}</td>
                     <td>{{ politicalbuy.advertiser|default:'Unknown' }}</td>
                     <td>{{ politicalbuy.total_num_spots|default:'Unknown' }}</td>
+                    <td>{% if politicalbuy.total_spent %}${{ politicalbuy.total_spent }}{% else %}Unknown{% endif %}</td>
                     <td><a href="{% url politicalbuy_edit uuid_key=politicalbuy.uuid_key %}" title="Edit data for '{{ politicalbuy.documentcloud_doc }}'">Edit</a></td>
                 </tr>
             {% endfor %}
