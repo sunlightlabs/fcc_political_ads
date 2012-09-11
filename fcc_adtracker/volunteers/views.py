@@ -136,6 +136,24 @@ def edit_profile(request):
 
             if still_valid:
 
+                # update password
+
+                new_pw = form.cleaned_data.get('new_password', None)
+                new_pw_confirm = form.cleaned_data.get('new_password_confirm', None)
+
+                if new_pw:
+                    if new_pw_confirm:
+                        if new_pw == new_pw_confirm:
+                            user.set_password(form.cleaned_data['new_password'])
+                        else:
+                            form.errors['new_password'] = ['Password and confirmation did not match.']
+                            still_valid = False
+                    else:
+                        form.errors['new_password_confirm'] = ['Please confirm your new password.']
+                        still_valid = False
+
+            if still_valid:
+
                 # set user attributes
 
                 user.username = form.cleaned_data['username']

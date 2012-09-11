@@ -6,6 +6,7 @@ from django.forms.widgets import PasswordInput
 from passwords.fields import PasswordField
 
 PASSWORD_HELP_TEXT = getattr(settings, 'PASSWORD_HELP_TEXT', u'Please choose a strong password.')
+PASSWORD_CONFIRM_HELP_TEXT = getattr(settings, 'PASSWORD_CONFIRM_HELP_TEXT', u'Please confirm your new password.')
 
 
 class TougherSetPasswordForm(SetPasswordForm):
