@@ -3,7 +3,7 @@ from django.http import Http404, HttpResponsePermanentRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.localflavor.us import us_states
 from django.conf import settings
-
+from django.views.decorators.cache import never_cache
 
 
 from broadcasters.models import Broadcaster, BroadcasterAddress
@@ -47,12 +47,16 @@ def state_broadcaster_list(request, state_id, template_name='broadcasters/broadc
     else:
         raise Http404('State with abbrevation "{state_id}" not found.'.format(state_id=state_id))
 
-
+# Don't cache this, because the view changes if you're logged in.
+@never_cache
 def broadcaster_detail(request, callsign, template_name='broadcasters/broadcaster_detail.html'):
     if not callsign.isupper():
         return HttpResponsePermanentRedirect(reverse('broadcaster_politicalbuys_view', kwargs={'callsign':callsign.upper()}))
+    
+    studio_address = None
     try:
         obj = BroadcasterAddress.objects.get(broadcaster__callsign=callsign.upper(), label__name__iexact='studio')
+        studio_address = obj 
         state_geocenter = states_geocenters.get(obj.broadcaster.community_state, None) if states_geocenters else None
         obj_json = json.dumps(_make_broadcasteraddress_dict(obj))
     except BroadcasterAddress.DoesNotExist:
@@ -65,7 +69,20 @@ def broadcaster_detail(request, callsign, template_name='broadcasters/broadcaste
         }
         state_geocenter = states_geocenters.get(obj['broadcaster'].community_state, None) if states_geocenters else None
         obj_json = None
-    return render(request, template_name, {'obj': obj, 'obj_json': obj_json, 'state_geocenter': state_geocenter})
+        
+    ad_buys = None
+    try:
+        ad_buys = obj['broadcaster'].politicalbuy_set.all()    
+        # if they're not logged in, only show the spots that have been approved. 
+        if not request.user.is_authenticated():
+            print "not logged in"
+            ad_buys = ad_buys.filter(is_visible=True)
+            
+    except TypeError:
+        # No ad buys
+        pass
+    
+    return render(request, template_name, {'obj': obj, 'obj_json': obj_json, 'state_geocenter': state_geocenter, 'ad_buys':ad_buys, 'studio_address':studio_address})
 
 
 def featured_broadcasters(request, template_name='broadcasters/broadcasters_featured.html'):
