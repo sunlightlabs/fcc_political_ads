@@ -20,4 +20,6 @@ urlpatterns = patterns('',
     url(r'^political-files/{}/$'.format(uuid_re_str), 'fccpublicfiles.views.politicalbuy_view', name='politicalbuy_view'),
     url(r'^political-files/broadcaster/(?P<callsign>[\w-]+)/$', broadcaster_views.broadcaster_detail,
         {'template_name': 'broadcaster_politicalbuys.html'}, name='broadcaster_politicalbuys_view'),   
+    url(r'^about/', direct_to_template, {'template': 'about.html'}),
+    url(r'^help/', direct_to_template, {'template': 'about.html'}),
 )
