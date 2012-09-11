@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from django.views.generic.simple import direct_to_template
 
 from django.contrib import admin
 import moderation.helpers
@@ -17,5 +18,5 @@ urlpatterns = patterns('',
     url(r'^political-files/add/media-buyer/', 'fccpublicfiles.views.add_media_buyer', name='add_media_buyer'),
     url(r'^political-files/{}/$'.format(uuid_re_str), 'fccpublicfiles.views.politicalbuy_view', name='politicalbuy_view'),
     url(r'^political-files/broadcaster/(?P<callsign>[\w-]+)/$', broadcaster_views.broadcaster_detail,
-        {'template_name': 'broadcaster_politicalbuys.html'}, name='broadcaster_politicalbuys_view'),
+        {'template_name': 'broadcaster_politicalbuys.html'}, name='broadcaster_politicalbuys_view'),   
 )
