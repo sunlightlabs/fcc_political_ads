@@ -1,18 +1,6 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %}{% load recent_buy_sidebar from sidebars %}
 {% block bodyclass %}broadcasters-featured{% endblock bodyclass %}
 
-{% block pagenav %}
-<nav class="clearfix">
-    <ul class="account listNav unstyled">
-        <li>
-            <a href="#feedback">Questions</a>
-        </li>
-        <li class="first">
-            <a href="#get_involved">Get Involved</a>
-        </li>
-    </ul>
-</nav>
-{% endblock pagenav %}
 
 {% block content %}
 <div class="hero-unit module clearfix">
@@ -66,14 +54,7 @@
         <div>
         {% recent_buy_sidebar %}
         </div>
-        <div id="feedback" class="module">
-            <h4 class="withTip">Questions, Comments, Etc.</h4>
-            <p class="tip">Help us make the project better! Errors with the station addresses? Issues at the TV stations? Any questions or comments? <a href="mailto:politicaladsleuth@sunlightfoundation.com?subject=Question%20or%20comment%20about%20Political%20Ad%20Sleuth">Please email us!</a></p>
-        </div>
-        <div class="boxCallout resources">
-            <h4>Resources</h4>
-        {% include "snippets/_resources_list.html" %}
-        </div>
+        
     </div>
 </div>
 

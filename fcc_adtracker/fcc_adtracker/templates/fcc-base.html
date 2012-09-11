@@ -43,32 +43,18 @@
 
 {% block container %}
 <header>
-{% block nav %}
-<!-- nav start -->
-    <div class="span9">
-	<nav class="primary-nav clearfix">
-		<ul class="">
-			<li class="upload"><a href="/political-files/submit/">Upload Files</a></li>
-			<li class="account"><a href="/account/">Account</a></li>
-			<li class="loginout"><a href="{% if user.is_authenticated %}/account/logout/{% else %}/account/login/{% endif %}">Log {% if user.is_authenticated %}Out{% else %}In{% endif %}</a></li>
-			<li class="about"><a href="/about/">About</a></li>
-			<li class="help"><a href="/help/">Help</a></li>
-		</ul>
-	</nav>
-	</div>
-<!-- end nav -->
-{% endblock %}
-
-    <div class="span4 offset8">
-    {% block pagenav %}{% endblock pagenav %}
-        <div id="user-status">
-            {% if user.is_authenticated %}
-                <p>Welcome, <strong>{{ user.username }}</strong>.</p>
-            {% else %}
-                <p><a href="{% url auth_login %}">Log in</a>, <a href="{% url register_volunteer %}">register</a>, or sign in with <a class="signinBtn" id="tweetBtn" href="{% url socialauth_begin 'twitter' %}">Twitter</a> or <a class="signinBtn" id="fbBtn" href="{% url socialauth_begin 'facebook' %}">Facebook</a>.</p>
-            {% endif %}
-        </div>
-    </div>
+    {% block nav %}
+        <nav>
+    		<ul class="account listNav unstyled">
+    		    <li class="help"><a href="/help/">Help</a></li>
+    		    <li class="about"><a href="/about/">About</a></li>
+    		    <li class="loginout"><a href="{% if user.is_authenticated %}/account/logout/{% else %}/account/login/{% endif %}">Log {% if user.is_authenticated %}Out{% else %}In{% endif %}</a></li>
+    		    <li class="signup first"><a href="{% url register_volunteer %}">Sign Up!</a></li>
+    		    <!--<li class="account"><a href="/account/">Account</a></li>-->
+    			<!--<li class="upload"><a href="/political-files/submit/">Upload Files</a></li>-->
+    		</ul>
+    	</nav>
+    {% endblock %}
     <h1 class="textReplace" id="logo">Political Ad Sleuth</h1>
 
 </header>

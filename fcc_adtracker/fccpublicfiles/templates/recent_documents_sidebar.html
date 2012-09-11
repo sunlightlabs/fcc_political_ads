@@ -1,5 +1,5 @@
-<h2>Recently uploaded documents</h2>
-<ul class="recent-ad-sidebar">
+<h4>Recently uploaded documents</h4>
+<ul class="slf-list recent-ad-sidebar unstyled">
 	{% for ad_buy in ad_buys %}
 	<li><a href="{{ ad_buy.get_absolute_url }}">{{ ad_buy.name }}</a></li>
 	{% endfor %}
