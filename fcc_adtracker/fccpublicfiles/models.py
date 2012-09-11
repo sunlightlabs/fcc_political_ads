@@ -118,7 +118,7 @@ class PoliticalBuy(models.Model):
     a superuser will need to come along afterward to the moderated object
     and approve the "completeness".
     """
-    is_complete = models.BooleanField(default=False)
+    is_complete = models.BooleanField(default=False, verbose_name="Data Entry Is Complete", )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
