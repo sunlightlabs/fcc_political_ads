@@ -8,45 +8,45 @@
         {% csrf_token %}
         <fieldset>
             <legend>Your account profile</legend>
-            <ul>
+            <ul class="control-group">
                 <li>
                     {{ form.username.errors }}
-                    <label for="id_username">Username</label>
+                    <label class="control-label" for="id_username">Username</label>
                     {{ form.username }}
                     {% for error in form.username.errors %}
                     <span class="errorlist help-inline">{{error}}</span>
                     {% endfor %}
                 </li>
                 <li>
-                    <label for="id_first_name">First name</label>
+                    <label class="control-label" for="id_first_name">First name</label>
                     {{ form.first_name }}
                     {% for error in form.first_name.errors %}
                     <span class="errorlist help-inline">{{error}}</span>
                     {% endfor %}
                 </li>
                 <li>
-                    <label for="id_phone">Last name</label>
+                    <label class="control-label" for="id_phone">Last name</label>
                     {{ form.last_name }}
                     {% for error in form.last_name.errors %}
                     <span class="errorlist help-inline">{{error}}</span>
                     {% endfor %}
                 </li>
                 <li>
-                    <label for="id_email">Email</label>
+                    <label class="control-label" for="id_email">Email</label>
                     {{ form.email }}
                     {% for error in form.email.errors %}
                     <span class="errorlist help-inline">{{error}}</span>
                     {% endfor %}
                 </li>
                 <li>
-                    <label for="id_phone">Phone Number</label>
+                    <label class="control-label" for="id_phone">Phone Number</label>
                     {{ form.phone }}
                     {% for error in form.phone.errors %}
                     <span class="errorlist help-inline">{{error}}</span>
                     {% endfor %}
                 </li>
                 <li>
-                    <label for="notify" class="tip asInput checkbox">{{ form.notify }} Receive email updates from Political Ad Sleuth</label>
+                    <label for="notify" class="tip asInput checkbox inline control-label">{{ form.notify }} Receive email updates from Political Ad Sleuth</label>
                     {% for error in form.notify.errors %}
                     <span class="errorlist help-inline">{{error}}</span>
                     {% endfor %}
@@ -61,50 +61,54 @@
                     <p><strong>Warning!</strong> You do not have a password set for this account. We recommend setting a new password in case your associated accounts become disconnected.</p>
                 </div>
             {% endif %}
-            <ul>
+            <ul class="control-group">
                 <li>
-                    <label for="id_new_password">New password</label>
+                    <label class="control-label" for="id_new_password">New password</label>
                     {{ form.new_password }}
-                    <p class="help-block">{{ form.new_password.help_text }}</p>
                     {% for error in form.new_password.errors %}
                     <span class="errorlist help-inline">{{error}}</span>
+                    {% empty %}
+                    <p class="help-block">{{ form.new_password.help_text }}</p>
                     {% endfor %}
                 </li>
             </ul>
         </fieldset>
         <fieldset>
             <legend>About You</legend>
-            <ul>
+            <ul class="control-group">
                 <li>
-                    <label>City</label>
+                    <label class="control-label" for="id_city">City</label>
                     <input type="text" name="{{ form.city.html_name }}" value="{{ form.city.value }}" maxlength="20" placeholder="City" id="city">
                     {% for error in form.city.errors %}
                     <span class="errorlist help-inline">{{error}}</span>
                     {% endfor %}
                 </li>
                 <li>
-                    <label for="id_state">State (where you can collect files)</label>
+                    <label class="control-label" for="id_state">State</label>
                     {{ form.state }}
+                    <p class="help-block">{{ form.state.help_text }}</p>
                     {% for error in form.state.errors %}
                     <span class="errorlist help-inline">{{error}}</span>
                     {% endfor %}
                 </li>
                 <li>
-                    <label for="id_zipcode">Your zipcode</label>
+                    <label class="control-label" for="id_zipcode">Your zipcode</label>
                     {{ form.zipcode }}
                     {% for error in form.zipcode.errors %}
                     <span class="errorlist help-inline">{{error}}</span>
                     {% endfor %}
                 </li>
                 <li>
-                    <label for="id_is_a">What best describes your role?</label>
+                    <label class="control-label" for="id_is_a">What best describes your role?</label>
                     {{ form.is_a }}
                     {% for error in form.is_a.errors %}
                     <span class="errorlist help-inline">{{error}}</span>
                     {% endfor %}
                 </li>
+            </ul>
+            <ul class="form-actions">
                 <li>
-                    <button class="btn btn-sunlight" type="submit">Save Changes</button>
+                    <button class="btn btn-sunlight controls" type="submit">Save Changes</button>
                 </li>
             </ul>
         </fieldset>
