@@ -11,8 +11,11 @@ admin.autodiscover()
 
 
 urlpatterns = patterns('',
+    # TODO: these two urls could probably be cut down to one, or at least simplified somehow
+    # they end up at the same place
     url(r'^account/dashboard/$', 'fcc_adtracker.views.user_dashboard', name='user_dashboard'),
-    url(r'^account/$', 'fcc_adtracker.views.account_to_dashboard_landing', name='account_to_dashboard'),
+    url(r'^account/$', 'fcc_adtracker.views.user_dashboard'),
+
     url(r'', include('volunteers.urls')),
     url(r'', include('sfapp.urls')),
     url(r'', include('fccpublicfiles.urls')),
