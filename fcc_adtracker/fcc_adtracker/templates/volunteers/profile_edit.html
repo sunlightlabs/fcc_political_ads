@@ -60,6 +60,18 @@
                 <div class="alert">
                     <p><strong>Warning!</strong> You do not have a password set for this account. We recommend setting a new password in case your associated accounts become disconnected.</p>
                 </div>
+            {% else %}
+            <ul class="control-group">
+                <li>
+                    <label class="control-label" for="id_old_password">Current password</label>
+                    {{ form.old_password }}
+                    {% for error in form.old_password.errors %}
+                    <span class="errorlist help-inline">{{error}}</span>
+                    {% empty %}
+                    <p class="help-block">{{ form.new_password.help_text }}</p>
+                    {% endfor %}
+                </li>
+            </ul>
             {% endif %}
             <ul class="control-group">
                 <li>
