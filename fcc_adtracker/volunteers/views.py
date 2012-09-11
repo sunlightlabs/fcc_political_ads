@@ -172,6 +172,7 @@ def edit_profile(request):
                 profile.state = form.cleaned_data['state']
                 profile.zipcode = form.cleaned_data['zipcode']
                 profile.is_a = form.cleaned_data['is_a']
+                profile.notify = form.cleaned_data['notify']
 
                 profile.save()
 
@@ -193,6 +194,7 @@ def edit_profile(request):
             initial_data['zipcode'] = profile.zipcode
             initial_data['is_a'] = profile.is_a
             initial_data['share_info'] = profile.share_info
+            initial_data['notify'] = profile.notify
         except Profile.DoesNotExist:
             profile = None
         form = AccountProfileForm(initial=initial_data)
