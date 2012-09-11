@@ -75,7 +75,6 @@ def broadcaster_detail(request, callsign, template_name='broadcasters/broadcaste
         ad_buys = obj['broadcaster'].politicalbuy_set.all()    
         # if they're not logged in, only show the spots that have been approved. 
         if not request.user.is_authenticated():
-            print "not logged in"
             ad_buys = ad_buys.filter(is_visible=True)
             
     except TypeError:
