@@ -41,13 +41,18 @@
                         </li>
                         <li>
                             <label>{{form.contract_start_date.label}}</label>
-                            <input type="date" value="{{form.contract_start_date.value|date:'Y-m-d'}}">
+                            <input type="date" name="{{form.contract_start_date.html_name}}" value="{{form.contract_start_date.value|date:'Y-m-d'}}">
                             {{form.contract_start_date.errors}}
                         </li>
                         <li>
                             <label>{{form.contract_end_date.label}}</label>
-                            <input type="date" value="{{form.contract_end_date.value|date:'Y-m-d'}}">
+                            <input type="date" name="{{form.contract_end_date.html_name}}" value="{{form.contract_end_date.value|date:'Y-m-d'}}">
                             {{form.contract_end_date.errors}}
+                        </li>
+                        <li>
+                            <label>{{form.broadcasters.label}}</label>
+                            {{form.broadcasters}}
+                            {{form.broadcasters.errors}}
                         </li>
                     </ul>
                 </fieldset>
@@ -107,7 +112,13 @@
     <script src="{% static 'admin/js/admin/RelatedObjectLookups.js' %}"></script>
     <script type="text/javascript">
         jQuery(document).ready(function($) {
-            $(":date").dateinput();
+            // $(":date").dateinput();
+
+            $('#id_advertiser').live('change', function(event) {
+                log(event);
+                var url = $('#add_id_advertiser_signatory').attr('href') + '?advertiser_id=' + $(this).val();
+                $('#add_id_advertiser_signatory').attr('href', url);
+            });
         });
     </script>
 {% endblock js %}

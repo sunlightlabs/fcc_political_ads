@@ -6,7 +6,7 @@ from django.utils.html import escape
 from doccloud.models import Document
 
 from .models import *
-from fccpublicfiles.forms import PrelimDocumentForm, PoliticalBuyFormFull, SimpleOrganizationForm
+from fccpublicfiles.forms import PrelimDocumentForm, PoliticalBuyFormFull, SimpleOrganizationForm, AdvertiserSignatoryForm
 
 
 def politicalbuy_view(request, uuid_key, slug='', template_name='politicalbuy_view.html'):
@@ -52,7 +52,6 @@ def politicalbuy_edit(request, uuid_key, template_name='politicalbuy_edit.html')
     myobject = get_object_or_404(PoliticalBuy, uuid_key=uuid_key)
 
     form = PoliticalBuyFormFull(request.POST or None, instance=myobject)
-
     if form.is_valid():
         myobject = form.save()
         myobject.save()
@@ -68,16 +67,16 @@ def handlePopAdd(request, addForm, field, initial_data=None):
          http://www.awebcoder.com/post/16/djangos-admin-related-objects-pop-up-in-the-front-end
     """
     if request.method == "POST":
-        form = addForm(request.POST, instance=initial_data)
+        form = addForm(request.POST)
         if form.is_valid():
             try:
                 newObject = form.save()
-            except forms.ValidationError, error:
+            except forms.ValidationError:
                 newObject = None
             if newObject:
                 return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % (escape(newObject._get_pk_val()), escape(newObject)))
     else:
-        form = addForm(instance=initial_data)
+        form = addForm(initial_data)
 
     pageContext = {'form': form, 'field': field}
     return render(request, 'add_model_view.html', pageContext)
@@ -93,3 +92,36 @@ def add_advertiser(request):
 def add_media_buyer(request):
     org_defaults = Organization(organization_type='MB')
     return handlePopAdd(request, SimpleOrganizationForm, 'mediabuyer', initial_data=org_defaults)
+
+
+@login_required
+def add_advertiser_signatory(request):
+    if 'advertiser_id' in request.GET:
+        defaults = {
+            'advertiser_id': request.GET['advertiser_id'] or None
+        }
+    else:
+        defaults = {}
+    if request.method == "POST":
+        form = AdvertiserSignatoryForm(request.POST)
+        if form.is_valid():
+            person = Person()
+            person.first_name = form.data['first_name']
+            person.middle_name = form.data.get('middle_name', None)
+            person.last_name = form.data['last_name']
+            person.suffix = form.data.get('suffix', None)
+            person.save()
+            if 'advertiser_id' in form.data:
+                adv_id = form.data.get('advertiser_id', None)
+                if adv_id:
+                    try:
+                        advertiser = Organization.objects.get(id=adv_id)
+                        role = Role(person=person, organization=advertiser)
+                        role.title = form.data.get('job_title', '')
+                        role.save()
+                    except Organization.DoesNotExist:
+                        # What else to do in this case?
+                        pass
+            return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % (escape(person._get_pk_val()), escape(person)))
+    else:
+        return handlePopAdd(request, AdvertiserSignatoryForm, 'advertiser_signatory', initial_data=defaults)
