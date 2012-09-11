@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.localflavor.us.models import PhoneNumberField, USStateField
 from django.contrib.localflavor.us import us_states
@@ -77,3 +78,10 @@ class Profile(BaseProfile):
 
     def __unicode__(self):
         return u'Profile: ' + self.user.username
+
+
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+post_save.connect(create_user_profile, sender=User)

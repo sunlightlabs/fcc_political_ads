@@ -161,31 +161,23 @@ def edit_profile(request):
                 user.last_name = form.cleaned_data['last_name']
                 user.email = form.cleaned_data['email']
 
-                if 'new_password' in form.cleaned_data:
-                    user.set_password(form.cleaned_data['new_password'])
-
                 user.save()
 
                 # set profile attributes
 
-                try:
+                profile = Profile.objects.get_or_create(user=user)[0]
 
-                    profile = user.get_profile()
+                profile.phone = form.cleaned_data['phone']
+                profile.city = form.cleaned_data['city']
+                profile.state = form.cleaned_data['state']
+                profile.zipcode = form.cleaned_data['zipcode']
+                profile.is_a = form.cleaned_data['is_a']
 
-                    profile.phone = form.cleaned_data['phone']
-                    profile.city = form.cleaned_data['city']
-                    profile.state = form.cleaned_data['state']
-                    profile.zipcode = form.cleaned_data['zipcode']
-                    profile.is_a = form.cleaned_data['is_a']
-
-                    profile.save()
-
-                except Profile.DoesNotExist:
-                    messages.warning(request, 'Your account does not have a profile. Please contact us to let us know.')
+                profile.save()
 
                 messages.success(request, 'Your account has been updated.')
 
-                return HttpResponseRedirect('/account/')
+                return redirect('account_landing')
     else:
         initial_data = {
             'username': user.username,
