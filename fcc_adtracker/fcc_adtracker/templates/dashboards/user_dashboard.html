@@ -14,21 +14,19 @@
 
     <div class="row">
         <div id="state_broadcasters" class="span5">
-        {% if not profile or profile.state %}
+        {% if not profile or not profile.state %}
             <p>Please <a href="{% url edit_profile %}">fill out your profile</a>, including your city, state and zipcode so we can show you stations in your state!</p>
         {% else %}
             <h3>{{ profile.get_state_display }} broadcasters</h3>
-            {% if broadcaster_list %}
             <ul class="unstyled">
             {% for broadcaster in broadcaster_list %}
                 <li>
                     <p>{{ broadcaster.callsign }} | <a href="{% url broadcaster_politicalbuys_view broadcaster.callsign %}">{{ broadcaster.politicalbuy_set.count}} files</a></p>
                 </li>
+            {% empty %}
+                <p>No broadcasters found for this state.</p>
             {% endfor %}
             </ul>
-            {% else %}
-            <p>No broadcasters found for this state.</p>
-            {% endif %}
         {% endif %}
         </div>
 
