@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib.localflavor.us.forms import USPhoneNumberField, USStateField, USStateSelect, USZipCodeField
 # from django.contrib.localflavor.us import us_states
 
-from stronger_auth.forms import HelpfulPasswordField
+from passwords.fields import PasswordField
+from stronger_auth.forms import PASSWORD_HELP_TEXT
 
 from registration.forms import RegistrationFormUniqueEmail
 
@@ -34,8 +35,8 @@ class ProfileRegistrationForm(BaseProfileForm):
 
 
 class BetterRegistrationFormUniqueEmail(RegistrationFormUniqueEmail):
-    password1 = HelpfulPasswordField()
-    password2 = HelpfulPasswordField()
+    password1 = PasswordField(help_text=PASSWORD_HELP_TEXT)
+    password2 = PasswordField(help_text=PASSWORD_HELP_TEXT)
 
 
 class RegistrationProfileUniqueEmail(BetterRegistrationFormUniqueEmail, ProfileRegistrationForm):
@@ -51,7 +52,7 @@ class UserProfileForm(BaseProfileForm):
 
 
 class AccountProfileForm(UserProfileForm):
-    new_password = HelpfulPasswordField(required=False)
+    new_password = PasswordField(required=False, help_text=PASSWORD_HELP_TEXT)
 
 
 class SetupSocialProfileForm(UserProfileForm):

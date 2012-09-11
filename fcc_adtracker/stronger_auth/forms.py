@@ -8,20 +8,10 @@ from passwords.fields import PasswordField
 PASSWORD_HELP_TEXT = getattr(settings, 'PASSWORD_HELP_TEXT', u'Please choose a strong password.')
 
 
-class HelpfulPasswordField(PasswordField):
-    def __init__(self, required=True, widget=PasswordInput, label=None, initial=None,
-                 help_text=None, error_messages=None, show_hidden_initial=False,
-                 validators=[], localize=False):
-        super(HelpfulPasswordField, self).__init__(required=True, widget=widget, label=None, initial=None,
-                 help_text=None, error_messages=None, show_hidden_initial=False,
-                 validators=[], localize=False)
-        self.help_text = PASSWORD_HELP_TEXT
-
-
 class TougherSetPasswordForm(SetPasswordForm):
-    new_password1 = HelpfulPasswordField(label=_("New password"))
-    new_password2 = HelpfulPasswordField(label=_("New password confirmation"))
+    new_password1 = PasswordField(label=_("New password"), help_text=PASSWORD_HELP_TEXT)
+    new_password2 = PasswordField(label=_("New password confirmation"), help_text=PASSWORD_HELP_TEXT)
 
 
 class TougherChangePasswordForm(PasswordChangeForm, TougherSetPasswordForm):
-    new_password1 = HelpfulPasswordField(label=_("New password"))
+    new_password1 = PasswordField(label=_("New password"), help_text=PASSWORD_HELP_TEXT)
