@@ -2,7 +2,7 @@ from django import forms
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse_lazy
 from doccloud.models import Document
-from fccpublicfiles.models import PoliticalBuy, Organization, Person
+from fccpublicfiles.models import PoliticalBuy, Organization, Person, Role
 from broadcasters.models import Broadcaster
 
 
@@ -44,6 +44,20 @@ class SimpleOrganizationForm(forms.ModelForm):
 class PersonForm(forms.ModelForm):
     class Meta:
         model = Person
+        exclude = ('is_visible',)
+
+
+class AdvertiserSignatoryForm(forms.Form):
+    """
+    Custom form for advertiser_signatory popup form.
+    Can't mixin two modelforms, so these fields aren't bound to models.
+    """
+    first_name = forms.CharField(max_length=40)
+    middle_name = forms.CharField(max_length=40, required=False)
+    last_name = forms.CharField(max_length=40)
+    suffix = forms.CharField(max_length=10, required=False)
+    job_title = forms.CharField(help_text="Job title or descriptor for position they hold.")
+    advertiser_id = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
 
 class PoliticalBuyFormBase(forms.ModelForm):
@@ -77,8 +91,11 @@ class PoliticalBuyFormFull(forms.ModelForm):
                                         widget=SelectWithPopUp(add_url=reverse_lazy('add_advertiser'))
                                         )
     bought_by = forms.ModelChoiceField(queryset=Organization.objects.filter(organization_type='MB'),
-                                        widget=SelectWithPopUp(add_url=reverse_lazy('add_media_buyer'))
-                                        )
+                                        widget=SelectWithPopUp(add_url=reverse_lazy('add_media_buyer')),
+                                        required=False)
+    advertiser_signatory = forms.ModelChoiceField(queryset=Person.objects.all(),
+                                    widget=SelectWithPopUp(add_url=reverse_lazy('add_advertiser_signatory')),
+                                    required=False)
 
     def __init__(self, *args, **kwargs):
         super(PoliticalBuyFormFull, self).__init__(*args, **kwargs)
