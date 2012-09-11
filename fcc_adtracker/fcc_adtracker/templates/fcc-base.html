@@ -67,8 +67,10 @@
 {% include "snippets/_upload_miniform.html" %}
 </div>
 <div class="recentbuys-sidebar">
-{# Could cache this #}
+{# Could cache this; it's in it's own block b/c it needs to be overridden on pages. #}
+{% block recent_buys %}
 {% recent_buy_sidebar %}
+{% endblock %}
 </div>
 {% endblock %}
 

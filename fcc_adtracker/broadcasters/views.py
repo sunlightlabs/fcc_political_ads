@@ -40,10 +40,10 @@ def state_broadcaster_list(request, state_id, template_name='broadcasters/broadc
         # instead grab the list and annotate it
         broadcaster_list = annotate_broadcaster_queryset(Broadcaster.objects.filter(community_state=state_id))
         
-        state_ad_buys = PoliticalBuy.objects.filter(broadcasters__community_state=state_id, is_visible=True).order_by('created_at')[:MAX_DOCUMENTS_TO_SHOW_IN_SIDEBAR]
+        ad_buys = PoliticalBuy.objects.filter(broadcasters__community_state=state_id, is_visible=True).order_by('created_at')[:MAX_DOCUMENTS_TO_SHOW_IN_SIDEBAR]
         
         
-        return render(request, template_name, {'broadcaster_list': broadcaster_list, 'state_name': state_name, 'state_geocenter': state_geocenter, 'state_ad_buys':state_ad_buys})
+        return render(request, template_name, {'broadcaster_list': broadcaster_list, 'state_name': state_name, 'state_geocenter': state_geocenter, 'ad_buys':ad_buys})
     else:
         raise Http404('State with abbrevation "{state_id}" not found.'.format(state_id=state_id))
 
