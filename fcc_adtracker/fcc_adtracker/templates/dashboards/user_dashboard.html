@@ -86,18 +86,18 @@
 {% block sidebar %}
     <section id="profile" class="module">
         <h3>About you</h3>
-        <dl>
-            <dt>Username</dt>
-            <dd>{{ user.username }}</dd>
+        <dl class="floatedList">
+            <dt>Username:</dt>
+            <dd class="clear">{{ user.username }}</dd>
             
-            <dt>First Name</dt>
-            <dd>{{user.first_name }}</dd>
+            <dt>First Name:</dt>
+            <dd class="clear">{{user.first_name }}</dd>
             
-            <dt>Last Name</dt>
-            <dd>{{user.last_name }}</dd>
+            <dt>Last Name:</dt>
+            <dd class="clear">{{user.last_name }}</dd>
             
-            <dt>Email</dt>
-            <dd>{{user.email }}</dd>
+            <dt>Email:</dt>
+            <dd class="clear">{{user.email }}</dd>
 
             {% if profile %}
                 <dt>City</dt>
