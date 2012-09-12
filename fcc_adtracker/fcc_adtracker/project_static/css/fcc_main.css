@@ -13,19 +13,9 @@ img {
 nav { margin-top: -20px;}
 
 #map_canvas { height: 100% }
-
-#map_form {
-    margin-bottom: 0;
-}
-
-form#map_form > input, form#map_form > label {
-    margin-right: 10px;
-}
-
-.broadcaster-detail #map-box {
-    width:50%;
-    height: 300px;
-}
+#map_form { margin-bottom: 0; }
+form#map_form > input, form#map_form > label { margin-right: 10px;}
+.broadcaster-detail #map-box { width:50%; height: 300px; }
 
 p.distance {
     color: #65befe;
@@ -67,11 +57,6 @@ form p {
 
 fieldset {
     margin-bottom: 1em;
-}
-
-fieldset legend {
-    font-size: 120%;
-    margin: 0 0 8px;
 }
 
 input#address { width: 150px;}
@@ -254,3 +239,6 @@ a.caldisabled {
 .table th { padding-bottom: 10px; }
 .table { margin: 30px 0; }
 
+.row .span8 { padding-right: 30px; width: 590px; }
+
+#associated a { width: 180px; padding: 15px; }

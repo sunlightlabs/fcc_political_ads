@@ -5,7 +5,6 @@
 {% block content %}
     <h2>Edit your profile</h2>
 
-
 	{% if form.errors %}
     <div class="messages alert fade in">
         <button type="button" class="close" data-dismiss="alert">x</button>
@@ -30,7 +29,7 @@
 	
     <form action="." method="post" class="form-horizontal">
         {% csrf_token %}
-        <fieldset>
+        <fieldset class="module">
             <legend>Your account profile</legend>
             <ul class="control-group">
                 <li>
@@ -158,34 +157,24 @@
             </ul>
         </fieldset>
     </form>
-    <div>
-        <h3>Associated Accounts</h3>
-        <p>
-            {% if social_auth.twitter %}
-                <a class="btn btn-warning" href="{% url socialauth_disconnect 'twitter' %}">
-                    <i class="icon-remove-circle icon-white"></i>
-                    Unlink Twitter
-                </a>
-            {% else %}
-                <a class="btn" href="{% url socialauth_associate_begin 'twitter' %}">
-                    <i class="icon-repeat"></i>
-                    Link with Twitter
-                </a>
-            {% endif %}
-        </p>
-
-        <p>
-            {% if social_auth.facebook %}
-                <a class="btn btn-warning" href="{% url socialauth_disconnect 'facebook' %}">
-                    <i class="icon-remove-circle icon-white"></i>
-                    Unlink Facebook
-                </a>
-            {% else %}
-                <a class="btn" href="{% url socialauth_associate_begin 'facebook' %}">
-                    <i class="icon-repeat"></i>
-                    Link with Facebook
-                </a>
-            {% endif %}
-        </p>
-    </div>
 {% endblock content %}
+
+{% block sidebar %}
+        <h3>Associated Accounts</h3>
+        <ul class="unstyled" id="associated">
+            <li>
+                {% if social_auth.twitter %}
+                    <a class="btn btn-warning" href="{% url socialauth_disconnect 'twitter' %}">Unlink Your Twitter Account</a>
+                {% else %}
+                    <a class="btn" href="{% url socialauth_associate_begin 'twitter' %}">Link Your Twitter Account</a>
+                {% endif %}
+            </li>
+            <li>
+                {% if social_auth.facebook %}
+                    <a class="btn btn-warning" href="{% url socialauth_disconnect 'facebook' %}">Unlink Your Facebook Account</a>
+                {% else %}
+                    <a class="btn" href="{% url socialauth_associate_begin 'facebook' %}">Link Your Facebook Account</a>
+                {% endif %}
+            </li>
+        </ul>
+{% endblock %}
