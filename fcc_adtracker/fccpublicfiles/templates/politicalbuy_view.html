@@ -41,6 +41,8 @@
 {% block content %}
     <div>
             <h2>Political Buy: <strong>{{ obj.advertiser|default:"" }}</strong></h2>
+			{% include "gigya_div.html" with gigya_url=obj.get_absolute_url %}
+
             <dl id="buy-metadata" class="clearfix">
                 <dt>Stations</dt>
                 {% for broadcaster in obj.broadcasters.all %}
@@ -109,5 +111,6 @@
     <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.widgets.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.pager.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/sort_table.js' %}"></script>
+	<script type="text/javascript" src="http://assets.sunlightfoundation.com.s3.amazonaws.com/site/4.0/scripts/gigya.min.js"></script>
 
 {% endblock js %}
