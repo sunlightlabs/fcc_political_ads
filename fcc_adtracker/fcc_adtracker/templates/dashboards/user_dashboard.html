@@ -84,17 +84,30 @@
 {% endblock content %}
 
 {% block sidebar %}
-    <section id="profile" >
-        <h3>About you:</h3>
-        <p><strong>Username:</strong> {{ user.username }}</p>
-        <p><strong>First name:</strong> {{user.first_name }}</p>
-        <p><strong>Last name:</strong> {{user.last_name }}</p>
-        <p><strong>Email:</strong> {{user.email }}</p>
-        {% if profile %}
-        <p><strong>City:</strong> {{ profile.city|default:"Not specified" }}</p>
-        <p><strong>State:</strong> {{ profile.state }}</p>
-        {% endif %}
-        <p><a class="btn btn-sunlight" href="{% url edit_profile %}">Edit profile</a></p>
+    <section id="profile" class="module">
+        <h3>About you</h3>
+        <dl>
+            <dt>Username</dt>
+            <dd>{{ user.username }}</dd>
+            
+            <dt>First Name</dt>
+            <dd>{{user.first_name }}</dd>
+            
+            <dt>Last Name</dt>
+            <dd>{{user.last_name }}</dd>
+            
+            <dt>Email</dt>
+            <dd>{{user.email }}</dd>
+
+            {% if profile %}
+                <dt>City</dt>
+                <dd>{{ profile.city|default:"Not specified" }}</dd>
+                
+                <dt>State</dt>
+                <dd>{{ profile.state }}</dd>
+            {% endif %}
+        </dl>
+        <a class="btn btn-sunlight" href="{% url edit_profile %}">Edit profile</a>
     </section>
     <section>
         <h3>Resources</h3>

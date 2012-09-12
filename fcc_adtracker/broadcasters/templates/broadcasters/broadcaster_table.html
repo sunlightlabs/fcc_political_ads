@@ -5,7 +5,7 @@
 {% block bodyclass %}broadcasters{% endblock bodyclass %}
 {% block pagetitle %}{{ state_name }} Broadcasters{% endblock pagetitle %}
 {% block content %}
-    <h2>{{ state_name }} ({{ broadcaster_list|length }} stations)</h2>
+    <h2>{{ state_name }} <small class="tip inlineTip">({{ broadcaster_list|length }} stations)</small></h2>
 
 	{# Leave the map out for now #}
     {% comment %}
