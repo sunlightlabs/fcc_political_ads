@@ -3,6 +3,8 @@
 {% block pagetitle %}Political Ad Buys at {{ obj.broadcaster.callsign }} {% endblock pagetitle %}
 {% block content %}
     <h2>{{ obj.broadcaster.callsign }}</h2>
+	{% include "gigya_div.html" with gigya_url=obj.broadcaster.get_absolute_url %}
+	<div>
     <p><a href="{{ obj.broadcaster.fcc_profile_url }}" title="{{ obj.broadcaster.callsign }}'s FCC TV Station profile">FCC Station profile</a></p>
 
     <dl class="moduleSm floatedList clearfix">
@@ -12,6 +14,8 @@
 		{# Only show an address if we have a studio address #}
 		{% if studio_address %}<dt>Studio address:</dt> <dd>{{ studio_address.address }}</dd>{% endif %}
 	</dl>
+	
+
 
 {% if obj_json and obj.address.lng %}
     <div id="map-box">
@@ -87,4 +91,5 @@
         });
     </script>
     {% endif %}
+	<script type="text/javascript" src="http://assets.sunlightfoundation.com.s3.amazonaws.com/site/4.0/scripts/gigya.min.js"></script>
 {% endblock js %}
