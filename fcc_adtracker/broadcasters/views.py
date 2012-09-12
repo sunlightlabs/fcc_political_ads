@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.localflavor.us import us_states
 from django.conf import settings
 from django.views.decorators.cache import never_cache
-
+from django.db.models import Count
 
 from broadcasters.models import Broadcaster, BroadcasterAddress
 from broadcasters.json_views import _make_broadcasteraddress_dict
@@ -29,6 +29,8 @@ if STATES_GEOCENTERS_JSON_FILE:
 
 MAX_DOCUMENTS_TO_SHOW_IN_SIDEBAR = 5
 
+
+
 def state_broadcaster_list(request, state_id, template_name='broadcasters/broadcaster_table.html'):
     state_id = state_id.upper()
     state_name = STATES_DICT.get(state_id, None)
@@ -46,6 +48,13 @@ def state_broadcaster_list(request, state_id, template_name='broadcasters/broadc
         return render(request, template_name, {'broadcaster_list': broadcaster_list, 'state_name': state_name, 'state_geocenter': state_geocenter, 'ad_buys':ad_buys})
     else:
         raise Http404('State with abbrevation "{state_id}" not found.'.format(state_id=state_id))
+
+
+def state_list(request, template_name='broadcasters/state_list.html'):
+    states = Broadcaster.objects.filter(community_state__isnull=False).exclude(community_state__in=('GU', 'PR', 'VI')).values('community_state').annotate(count=Count('pk')).order_by('community_state')
+    for state in states:
+        state['state_name'] = STATES_DICT[state['community_state']]
+    return render(request, template_name, {'states': states})
 
 # Don't cache this, because the view changes if you're logged in.
 @never_cache

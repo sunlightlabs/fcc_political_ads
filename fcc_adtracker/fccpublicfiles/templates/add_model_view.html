@@ -6,16 +6,28 @@
     <script src="{% static 'admin/js/admin/RelatedObjectLookups.js' %}"></script>
 {% endblock head %}
 
-{% block bodyclass %}minimal{% endblock bodyclass %}
+{% block bodyclass %}minimal content{% endblock bodyclass %}
 
 {% block container %}
     <h2>Add {{ field }}</h2>
-    <form method="POST" action="{% url add_advertiser %}">
+    <form method="POST" class="form-horizontal" action=".">
         {% csrf_token %}
-        <table>
-        {{ form }}
-        </table>
-        <p><button class="btn btn-sunlight" value="Submit">Submit</button> | <a class="btn" href="javascript:window.close()">Cancel</a></p>
+        {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+        {% endfor %}
+        <ul>
+        {% for field in form.visible_fields %}
+            <li>
+                <label>{{field.label}}</label>
+                {{field}}
+                {% if field.errors %}
+                {{field.errors}}
+                {% endif %}
+                <p class="tip">{{field.help_text}}</p>
+            </li>
+        {% endfor %}
+            <li><button class="btn btn-sunlight" value="Submit">Submit</button> | <a class="btn" href="javascript:window.close()">Cancel</a></li>
+        </ul>
     </form>
 {% endblock container %}
 {% comment %}

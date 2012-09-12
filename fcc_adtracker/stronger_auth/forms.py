@@ -5,6 +5,7 @@ from django.forms.widgets import PasswordInput
 
 from passwords.fields import PasswordField
 
+OLD_PASSWORD_HELP_TEXT = getattr(settings, 'OLD_PASSWORD_HELP_TEXT', u'Enter your current password')
 PASSWORD_HELP_TEXT = getattr(settings, 'PASSWORD_HELP_TEXT', u'Please choose a strong password.')
 PASSWORD_CONFIRM_HELP_TEXT = getattr(settings, 'PASSWORD_CONFIRM_HELP_TEXT', u'Please confirm your new password.')
 

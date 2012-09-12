@@ -41,12 +41,13 @@ class Broadcaster(models.Model):
             disp_elements = {
                 'callsign': self.callsign,
                 'community_state': self.community_state,
+                'community_city': self.community_city,
                 'network_affiliate': self.network_affiliate,
                 'channel': self.channel
             }
             output_str = u'{callsign}'.format(**disp_elements)
             if disp_elements['network_affiliate'] and disp_elements['channel']:
-                output_str = u'{0} ({network_affiliate} channel {channel})'.format(output_str, **disp_elements)
+                output_str = u'{0} ({network_affiliate} channel {channel}, {community_city}, {community_state})'.format(output_str, **disp_elements)
             return output_str
         return u"Broadcaster"
 

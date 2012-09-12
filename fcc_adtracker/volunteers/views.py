@@ -138,19 +138,25 @@ def edit_profile(request):
 
                 # update password
 
-                new_pw = form.cleaned_data.get('new_password', None)
-                new_pw_confirm = form.cleaned_data.get('new_password_confirm', None)
+                new_pw = form.cleaned_data.get('new_password')
+                new_pw_confirm = form.cleaned_data.get('new_password_confirm')
 
-                if new_pw:
-                    if new_pw_confirm:
-                        if new_pw == new_pw_confirm:
-                            user.set_password(form.cleaned_data['new_password'])
-                        else:
-                            form.errors['new_password'] = ['Password and confirmation did not match.']
-                            still_valid = False
-                    else:
-                        form.errors['new_password_confirm'] = ['Please confirm your new password.']
+                if new_pw and user.has_usable_password:
+                    old_pw = form.cleaned_data.get('old_password')
+
+                    if not user.check_password(old_pw):
+                        form.errors['old_password'] = ['You did not enter your old password correctly']
                         still_valid = False
+                    else:
+                        if new_pw_confirm:
+                            if new_pw == new_pw_confirm:
+                                user.set_password(form.cleaned_data['new_password'])
+                            else:
+                                form.errors['new_password'] = ['Password and confirmation did not match.']
+                                still_valid = False
+                        else:
+                            form.errors['new_password_confirm'] = ['Please confirm your new password.']
+                            still_valid = False
 
             if still_valid:
 
