@@ -78,7 +78,7 @@ class Organization(models.Model):
 class Role(models.Model):
     person = models.ForeignKey(Person)
     organization = models.ForeignKey(Organization)
-    title = models.CharField(max_length=100, help_text="Job title or descriptor for position they hold.")
+    title = models.CharField(blank=True, null=True, max_length=100, help_text="Job title or descriptor for position they hold.")
 
     is_visible = models.BooleanField(default=False)
 
@@ -142,7 +142,7 @@ class PoliticalBuy(models.Model):
         broadcaster = "%s (%s, %s)" % (first_broadcaster.callsign, first_broadcaster.community_city, first_broadcaster.community_state)
         advertiser = self.advertiser or 'Unknown'
         date_str = u"{0}".format(self.contract_end_date.strftime("%m/%d/%y"))
-        
+
         return "%s, %s on %s" % (advertiser, date_str, broadcaster)
 
     def nonunique_slug(self):
