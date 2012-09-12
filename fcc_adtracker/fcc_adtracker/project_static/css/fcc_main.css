@@ -8,7 +8,8 @@ img {
     max-width: none;
 }
 
-#logo { background: url(../img/logo.png) top left no-repeat; width: 135px; height: 80px;}
+#logo { width: 135px; height: 80px;}
+#logo a { background: url(../img/logo.png) top left no-repeat; width: 135px; height: 80px;}
 nav { margin-top: -20px;}
 
 #map_canvas { height: 100% }
