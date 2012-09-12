@@ -246,3 +246,11 @@ a.caldisabled {
 .minimal .sf-footerWrapper {
     display: none;
 }
+
+
+.table.table-striped tbody tr:nth-child(odd) td, .table.table-striped tbody tr:nth-child(odd) th { background-color: #f9f8f8;  }
+.table tbody tr:hover td, .table tbody tr:hover th, .table.table-striped tbody tr:nth-child(odd):hover td, .table.table-striped tbody tr:nth-child(odd):hover th { background-color: #e9e7e7; }
+.table td { padding: 10px; border-top: 1px solid #f0ebeb;}
+.table th { padding-bottom: 10px; }
+.table { margin: 30px 0; }
+

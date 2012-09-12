@@ -4,7 +4,7 @@
 {% block content %}
 <h2 class="withTip">Sign Up</h2> 
 <span class="tip">Create an account to upload and enter political ad buys that you discover.</span>
-<form class="form-horizontal" action="." method="post" accept-charset="utf-8">
+<form class="form-inline compact" action="." method="post" accept-charset="utf-8">
     {% csrf_token %}
     <ul>
         <li>
@@ -19,13 +19,13 @@
         </li>
         <li>
             <label for="id_password1">Password</label>
+            <span class="help-block tip withTip">{{ form.password1.help_text }}</span>
             <input type="password" name="password1" class="required" placeholder="Password" id="id_password1">
-            <p class="help-block">{{ form.password1.help_text }}</p>
             {{ form.password1.errors }}
         </li>
         <li>
-            <label for="id_password2">Password (again)</label>
-            <input type="password" name="password2" class="required" placeholder="Password (again)" id="id_password2">
+            <label for="id_password2">Confirm Password</label>
+            <input type="password" name="password2" class="required" placeholder="Confirm Password" id="id_password2">
             {{ form.password2.errors }}
         </li>
         {% if form.first_name %}
