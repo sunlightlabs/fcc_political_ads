@@ -22,7 +22,7 @@
             <ul class="unstyled">
             {% for broadcaster in broadcaster_list %}
                 <li>
-                    <p>{{ broadcaster.callsign }} | <a href="{% url broadcaster_politicalbuys_view broadcaster.callsign %}">{{ broadcaster.politicalbuy_set.count}} files</a></p>
+                    <p>{{ broadcaster }} | <a href="{% url broadcaster_politicalbuys_view broadcaster.callsign %}">{{ broadcaster.politicalbuy_set.count}} files</a></p>
                 </li>
             {% empty %}
                 <p>No broadcasters found for this state.</p>
