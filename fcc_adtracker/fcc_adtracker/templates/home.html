@@ -5,6 +5,7 @@
 <div class="hero-unit module clearfix">
     <div class="span7">
         <h2 id='page-intro'>Who's trying to influence your vote?<br /> Help us find out!</h2>
+		{% include "gigya_div.html" %}
         <div class="featureText">
             <p>New campaign finance rules mean that the airwaves this election year will be dominated by outside groups, many of which don’t have to disclose the sources of their funding.</p>
             <p>But there is one place where they will leave a paper trail: At the TV stations where they buy their ads. For the first time, the Federal Communications Commission (FCC) has ordered television stations to put their public and political files online. But this year, only stations affiliated with the major networks (NBC, ABC, FOX, CBS) in the top 50 markets will have to put their political files online -- and only beginning August 2.</p>
@@ -62,4 +63,5 @@
 {% block js %}
     {{ block.super }}
     {% include "volunteers/_nonuser_profile_form.js" %}
+	<script type="text/javascript" src="http://assets.sunlightfoundation.com.s3.amazonaws.com/site/4.0/scripts/gigya.min.js"></script>
 {% endblock js %}
