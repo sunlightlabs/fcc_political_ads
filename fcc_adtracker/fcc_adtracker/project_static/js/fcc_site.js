@@ -40,39 +40,4 @@ jQuery(document).ready(function($) {
                 });
             });
     }
-
-    /*
-        Typeahead transformations for select forms
-        depends on underscore.js
-    */
-    /*
-    var transform_list = jQuery.unique($('select.suggestions'));
-    transform_list.each(function(index) {
-        var select_el = $(this);
-        var option_dict = {}, typeahead_labels = [], initial_label = select_el.children(':selected').eq(0).val() !== '' ? select_el.children(':selected').eq(0).text() : '';
-        var proxy_id = 'proxy-'+ select_el.attr('id');
-        var input_proxy = $('<input id="'+ proxy_id + '" type="text" data-provide="typeahead">').val(initial_label).addClass('typeahead select_proxy');
-        if (!jQuery.contains(document, input_proxy[0])) {
-            $(this).children('option').each(function(index) {
-                if ($(this).val() !== '') {
-                    typeahead_labels.push($(this).text());
-                    option_dict[$(this).text()] = $(this).val();
-                }
-            });
-            input_proxy.data('option_dict', option_dict);
-            $(input_proxy).typeahead({
-                source: typeahead_labels,
-                items: 14
-            })
-            .change(function(event) {
-                var new_label = $(this).val();
-                select_el.val(option_dict[new_label]);
-            });
-            $(this).hide();
-            $(this).before(input_proxy);
-        }
-
-    });
-*/
-
 });

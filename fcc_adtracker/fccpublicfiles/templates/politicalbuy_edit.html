@@ -4,6 +4,7 @@
 {% block head %}
     {{ block.super }}
     <link rel="stylesheet" href="{% static 'css/datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/chosen.css' %}">
 {% endblock head %}
 
 {% block content %}
@@ -110,18 +111,54 @@
 
 {% block js %}
     {{ block.super }}
-    <script src="{% static 'admin/js/admin/RelatedObjectLookups.js' %}"></script>
+    <script src="{% static 'js/addnewobj_popup.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/libs/bootstrap-datepicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/libs/URI.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/libs/chosen.jquery.min.js' %}"></script>
     <script type="text/javascript">
         jQuery(document).ready(function($) {
             $('input[type=date]').datepicker({
                 format: 'yyyy-mm-dd'
             });
 
-            $('#id_advertiser').live('change', function(event) {
-                log(event);
-                var url = $('#add_id_advertiser_signatory').attr('href') + '?advertiser_id=' + $(this).val();
-                $('#add_id_advertiser_signatory').attr('href', url);
+            // Depends on URI.js
+            function updatedPopupUrl(add_url_element, p_args) {
+                var target_uri = $(add_url_element).uri();
+                var arg_obj = target_uri.query(true);
+                $.extend(arg_obj, p_args);
+                target_uri.search(arg_obj);
+            }
+
+            function jq_to_htmlstring(jq_obj) {
+                return $('<div>').append(jq_obj).html()
+            }
+
+            // Add url args to advertiser_signatory_form
+            var add_adversig_el = $('#add_id_advertiser_signatory');
+            updatedPopupUrl(add_adversig_el, {'advertiser_id': $('#id_advertiser').val()});
+
+            jQuery.unique($('select.suggestions')).each(function(index) {
+                var original_select = this;
+                var addRelated_el = $(original_select).next('a.add-on')
+                if (addRelated_el.length != 0) {
+                    var uri = addRelated_el.uri();
+                    $(original_select).data('add_uri', uri);
+                    addRelated_el.detach();
+                    $(original_select).chosen({
+                        no_results_text: jq_to_htmlstring(addRelated_el)
+                    });
+                    // $(original_select).trigger("liszt:updated");
+                };
+            });
+
+            $(document).on('change', '#id_advertiser', function(event) {
+                log('advertiser change');
+                var uri = $(this).data('add_uri');
+                var chosen = $('#id_advertiser_signatory').data('chosen');
+                var add_el = $(chosen.results_none_found);
+                updatedPopupUrl(add_el, {'advertiser_id': $('#id_advertiser').val()});
+                chosen.results_none_found = jq_to_htmlstring(add_el);
+                $(this).data('chosen', chosen);
             });
         });
     </script>
