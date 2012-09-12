@@ -8,7 +8,7 @@ img {
     max-width: none;
 }
 
-#logo { width: 135px; height: 80px;}
+#logo { width: 135px; height: 80px; padding-top: 30px; }
 #logo a { background: url(../img/logo.png) top left no-repeat; width: 135px; height: 80px;}
 nav { margin-top: -20px;}
 
@@ -48,6 +48,9 @@ p.distance {
 /*.broadcasters-featured ul#locations {
     height:350px;
 }*/
+
+.broadcasters-featured header { margin-bottom: 0px; border-bottom: 0px; }
+header { margin-bottom: 70px;  border-bottom: 1px dashed #e1dddd; }
 
 ul#locations {
     height: 500px;
