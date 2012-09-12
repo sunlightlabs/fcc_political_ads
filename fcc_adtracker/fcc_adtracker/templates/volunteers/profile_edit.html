@@ -4,6 +4,16 @@
 
 {% block content %}
     <h2>Edit your profile</h2>
+
+	{% if form.errors %}
+	Your changes couldn't be saved--please fix errors in these fields:
+	<span id="form-error">
+		{% for field in form %}
+		{% if field.errors %}{{ field.label }}{% if forloop.last %}{% else %},{% endif %}{% endif %}
+		{% endfor %}
+	</span>
+	{% endif %}
+	
     <form action="." method="post" class="form-horizontal">
         {% csrf_token %}
         <fieldset>
