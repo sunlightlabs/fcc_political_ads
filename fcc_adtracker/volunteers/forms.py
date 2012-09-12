@@ -26,7 +26,7 @@ class BaseProfileForm(forms.Form):
     phone = USPhoneNumberField(required=False)
     city = forms.CharField()
     state = USStateField(widget=USStateSelect, help_text="Please select the state you will volunteer in.")
-    zipcode = USZipCodeField(required=True)
+    zipcode = USZipCodeField(required=True, label="ZIP code")
     is_a = forms.ChoiceField(required=False, choices=IS_A_CHOICES, label='I am a:')
 
 
@@ -52,9 +52,9 @@ class UserProfileForm(BaseProfileForm):
 
 
 class AccountProfileForm(UserProfileForm):
-    new_password = PasswordField(required=False, help_text=PASSWORD_HELP_TEXT)
-    new_password_confirm = PasswordField(required=False, help_text=PASSWORD_CONFIRM_HELP_TEXT)
-    old_password = PasswordField(required=False, help_text=OLD_PASSWORD_HELP_TEXT)
+    new_password = PasswordField(required=False, help_text=PASSWORD_HELP_TEXT, label="new password")
+    new_password_confirm = PasswordField(required=False, help_text=PASSWORD_CONFIRM_HELP_TEXT, label="new password confirmation")
+    old_password = PasswordField(required=False, help_text=OLD_PASSWORD_HELP_TEXT, label="current password")
 
 
 class SetupSocialProfileForm(UserProfileForm):
