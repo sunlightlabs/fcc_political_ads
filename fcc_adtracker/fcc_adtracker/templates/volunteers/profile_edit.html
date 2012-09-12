@@ -78,44 +78,41 @@
         </fieldset>
         <fieldset class="module">
             <legend>Change your password</legend>
-            <p class="tip">Enter a new password in the field below to change your password</p>
+            <p class="tip">{{ form.new_password.help_text }}</p>
             {% if not request.user.has_usable_password %}
                 <div class="alert">
                     <p><strong>Warning!</strong> You do not have a password set for this account. We recommend setting a new password in case your associated accounts become disconnected.</p>
                 </div>
             {% else %}
-            <ul class="control-group">
-                <li>
-                    <label class="control-label" for="id_old_password">Current password</label>
-                    {{ form.old_password }}
-                    {% for error in form.old_password.errors %}
-                    <span class="errorlist help-inline">{{error}}</span>
-                    {% empty %}
-                    <p class="help-block">{{ form.new_password.help_text }}</p>
-                    {% endfor %}
-                </li>
-            </ul>
-            {% endif %}
-            <ul class="control-group">
-                <li>
-                    <label class="control-label" for="id_new_password">New password</label>
-                    {{ form.new_password }}
-                    {% for error in form.new_password.errors %}
-                    <span class="errorlist help-inline">{{error}}</span>
-                    {% empty %}
-                    <p class="help-block">{{ form.new_password.help_text }}</p>
-                    {% endfor %}
-                </li>
-                <li>
-                    <label class="control-label" for="id_new_password_confirm">New password (confirm)</label>
-                    {{ form.new_password_confirm }}
-                    {% for error in form.new_password_confirm.errors %}
-                    <span class="errorlist help-inline">{{error}}</span>
-                    {% empty %}
-                    <p class="help-block">{{ form.new_password_confirm.help_text }}</p>
-                    {% endfor %}
-                </li>
-            </ul>
+                <ul>
+                        <li class="elementWithLine">
+                            <label class="control-label" for="id_old_password">Current password</label>
+                            {{ form.old_password }}
+                            {% for error in form.old_password.errors %}
+                            <span class="errorlist help-inline">{{error}}</span>
+                            {% empty %}
+                            {% endfor %}
+                        </li>
+                    {% endif %}
+                    <li>
+                        <label class="control-label" for="id_new_password">New password</label>
+                        {{ form.new_password }}
+                        {% for error in form.new_password.errors %}
+                        <span class="errorlist help-inline">{{error}}</span>
+                        {% empty %}
+            
+                        {% endfor %}
+                    </li>
+                    <li>
+                        <label class="control-label" for="id_new_password_confirm">Confirm New password</label>
+                        {{ form.new_password_confirm }}
+                        {% for error in form.new_password_confirm.errors %}
+                        <span class="errorlist help-inline">{{error}}</span>
+                        {% empty %}
+                    </li>
+                </ul>
+            {% endfor %}
+
         </fieldset>
         <fieldset>
             <legend>About You</legend>
@@ -149,10 +146,8 @@
                     <span class="errorlist help-inline">{{error}}</span>
                     {% endfor %}
                 </li>
-            </ul>
-            <ul class="form-actions">
                 <li>
-                    <button class="btn btn-sunlight controls" type="submit">Save Changes</button>
+                    <button class="btn btn-sunlight" type="submit">Save Changes</button>
                 </li>
             </ul>
         </fieldset>
