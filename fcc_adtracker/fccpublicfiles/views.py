@@ -84,13 +84,13 @@ def handlePopAdd(request, addForm, field, initial_data=None):
 
 @login_required
 def add_advertiser(request):
-    org_defaults = Organization(organization_type='AD')
+    org_defaults = {'organization_type': 'AD'}
     return handlePopAdd(request, SimpleOrganizationForm, 'advertiser', initial_data=org_defaults)
 
 
 @login_required
 def add_media_buyer(request):
-    org_defaults = Organization(organization_type='MB')
+    org_defaults = {'organization_type': 'MB'}
     return handlePopAdd(request, SimpleOrganizationForm, 'mediabuyer', initial_data=org_defaults)
 
 

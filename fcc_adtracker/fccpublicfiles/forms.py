@@ -56,7 +56,7 @@ class AdvertiserSignatoryForm(forms.Form):
     middle_name = forms.CharField(max_length=40, required=False)
     last_name = forms.CharField(max_length=40)
     suffix = forms.CharField(max_length=10, required=False)
-    job_title = forms.CharField(help_text="Job title or descriptor for position they hold.")
+    job_title = forms.CharField(required=False, help_text="Job title or descriptor for position they hold.")
     advertiser_id = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
 
