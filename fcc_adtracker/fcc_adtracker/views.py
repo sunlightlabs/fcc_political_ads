@@ -59,7 +59,8 @@ def user_dashboard(request):
         'profile': profile,
         'broadcaster_list': broadcaster_list,
         'politicalbuy_list': politicalbuy_list,
-        'form': form
+        'form': form,
+        'sfapp_base_template': 'sfapp/base-full.html'
     }
     return render(request, 'dashboards/user_dashboard.html', resp_obj)
 

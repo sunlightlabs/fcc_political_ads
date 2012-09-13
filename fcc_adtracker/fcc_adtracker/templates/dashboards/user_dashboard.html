@@ -14,106 +14,112 @@
     {% endif %}
 
     <div class="row">
-        <div id="state_broadcasters" class="span5">
-        {% if not profile or not profile.state %}
-            <p>Please <a href="{% url edit_profile %}">fill out your profile</a>, including your city, state and zipcode so we can show you stations in your state!</p>
-        {% else %}
-            <h3>{{ profile.get_state_display }} broadcasters</h3>
-            <ul class="unstyled">
-            {% for broadcaster in broadcaster_list %}
-                <li>
-                    <p>{{ broadcaster }} | <a href="{% url broadcaster_politicalbuys_view broadcaster.callsign %}">{{ broadcaster.politicalbuy_set.count}} files</a></p>
-                </li>
-            {% empty %}
-                <p>No broadcasters found for this state.</p>
-            {% endfor %}
-            </ul>
-        {% endif %}
+        <div class="span9">
+            <div id="state_broadcasters" class="module">
+                {% if not profile or not profile.state %}
+                    <p>Please <a href="{% url edit_profile %}">fill out your profile</a>, including your city, state and zipcode so we can show you stations in your state!</p>
+                {% else %}
+                    <h3>What's Happening Around You</h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Broadcaster</th>
+                                    <th>Number of Political Ad Buys</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for broadcaster in broadcaster_list %}
+                                <tr>
+                                    <td>{{ broadcaster }}</td>
+                                    <td><a href="{% url broadcaster_politicalbuys_view broadcaster.callsign %}">{{ broadcaster.politicalbuy_set.count}} files</a></td>
+                                    {% empty %}
+                                        <td>No broadcasters found for this state.</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>   
+                    {% comment %}  Map on this page?
+                        <section id="map">
+                            {% include "broadcasters/_map_searchform.html" %}
+                        </section>
+                    {% endcomment %}
+                
+            </div>
+            <div id="user_contributions" class="module">
+                <h3>Your contributions</h3>
+                {% if politicalbuy_list %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Last Modified</th>
+                            <th>Station(s)</th>
+                            <th>Advertiser</th>
+                            <th># Spots</th>
+                            <th>$ Spent</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for politicalbuy in politicalbuy_list %}
+                        <tr class="{% if politicalbuy.is_visible %}live{% else %}not-live{% endif %}">
+                            <td>{{ politicalbuy.is_visible|yesno:'Approved,Unapproved,Unknown'|title }}</td>
+                            <td>{% if politicalbuy.updated_at %}{{ politicalbuy.updated_at|date:"SHORT_DATETIME_FORMAT" }}{% else %}Unknown{% endif %}</td>
+                            <td>{{ politicalbuy.broadcasters.all|join:", " }} {{ politicabuy.created_at }}</td>
+                            <td>{{ politicalbuy.advertiser|default:'Unknown' }}</td>
+                            <td>{{ politicalbuy.total_num_spots|default:'Unknown' }}</td>
+                            <td>{% if politicalbuy.total_spent %}${{ politicalbuy.total_spent }}{% else %}Unknown{% endif %}</td>
+                            <td><a href="{% url politicalbuy_edit uuid_key=politicalbuy.uuid_key %}" title="Edit data for '{{ politicalbuy.documentcloud_doc }}'">Edit</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>We do not currently have any submissions associated with your account. Submit a political file document to get started!</p>
+                {% endif %}
+            </div>
         </div>
+        <div class="span3">
+            <section class="module boxCallout">
+                <h4 class="withTip">Submit Discovered Files</h4>
+                <p class="tip">Go to a station and want to upload the files? Upload them now!</p>
+                <a href="/political-files/submit/">Upload</a>
+            </section>    
+            <section id="profile" class="module">
+                <h3>About you</h3>
+                <dl class="pushInward">
+                    <dt>Username:</dt>
+                    <dd class="elementWithLine">{{ user.username }}</dd>
 
-        <div id="doc_submit" class="span3">
-            <h3>Submit a Political File</h3>
-            <p class="tip">We are looking for pdfs of political ad purchases from television stations. If you have one, please send it to us using the form below.</p>
-            <form enctype="multipart/form-data" method="post" action="{% url document_submit %}">
-                {% csrf_token %}
-                {{ form }}
-                <p>
-                <input class="btn btn-sunlight" type="submit" value="Submit" name="Submit"/>
-                </p>
-            </form>
+                    <dt>First Name:</dt>
+                    <dd class="elementWithLine">{{user.first_name }}</dd>
+
+                    <dt>Last Name:</dt>
+                    <dd class="elementWithLine">{{user.last_name }}</dd>
+
+                    <dt>Email:</dt>
+                    <dd class="elementWithLine">{{user.email }}</dd>
+
+                    {% if profile %}
+                        <dt>City:</dt>
+                        <dd class="elementWithLine">{{ profile.city|default:"Not specified" }}</dd>
+
+                        <dt>State:</dt>
+                        <dd class="elementWithLine">{{ profile.state }}</dd>
+                    {% endif %}
+                </dl>
+                <a class="btn btn-sunlight" href="{% url edit_profile %}">Edit profile</a>
+            </section>
+            <section>
+                <h3>Resources</h3>
+                {% include "snippets/_resources_list.html" %}
+            </section>
         </div>
-        {% comment %}  Map on this page?
-        <section id="map">
-            {% include "broadcasters/_map_searchform.html" %}
-        </section>
-        {% endcomment %}
-    </div>
-    <div id="user_contributions">
-        <h3>Your contributions</h3>
-        {% if politicalbuy_list %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Last Modified</th>
-                    <th>Station(s)</th>
-                    <th>Advertiser</th>
-                    <th># Spots</th>
-                    <th>$ Spent</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for politicalbuy in politicalbuy_list %}
-                <tr class="{% if politicalbuy.is_visible %}live{% else %}not-live{% endif %}">
-                    <td>{{ politicalbuy.is_visible|yesno:'Approved,Unapproved,Unknown'|title }}</td>
-                    <td>{% if politicalbuy.updated_at %}{{ politicalbuy.updated_at|date:"SHORT_DATETIME_FORMAT" }}{% else %}Unknown{% endif %}</td>
-                    <td>{{ politicalbuy.broadcasters.all|join:", " }} {{ politicabuy.created_at }}</td>
-                    <td>{{ politicalbuy.advertiser|default:'Unknown' }}</td>
-                    <td>{{ politicalbuy.total_num_spots|default:'Unknown' }}</td>
-                    <td>{% if politicalbuy.total_spent %}${{ politicalbuy.total_spent }}{% else %}Unknown{% endif %}</td>
-                    <td><a href="{% url politicalbuy_edit uuid_key=politicalbuy.uuid_key %}" title="Edit data for '{{ politicalbuy.documentcloud_doc }}'">Edit</a></td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p>We do not currently have any submissions associated with your account. Submit a political file document to get started!</p>
-        {% endif %}
     </div>
 {% endblock content %}
 
-{% block sidebar %}
-    <section id="profile" class="module">
-        <h3>About you</h3>
-        <dl class="floatedList">
-            <dt>Username:</dt>
-            <dd class="clear">{{ user.username }}</dd>
-            
-            <dt>First Name:</dt>
-            <dd class="clear">{{user.first_name }}</dd>
-            
-            <dt>Last Name:</dt>
-            <dd class="clear">{{user.last_name }}</dd>
-            
-            <dt>Email:</dt>
-            <dd class="clear">{{user.email }}</dd>
 
-            {% if profile %}
-                <dt>City</dt>
-                <dd>{{ profile.city|default:"Not specified" }}</dd>
-                
-                <dt>State</dt>
-                <dd>{{ profile.state }}</dd>
-            {% endif %}
-        </dl>
-        <a class="btn btn-sunlight" href="{% url edit_profile %}">Edit profile</a>
-    </section>
-    <section>
-        <h3>Resources</h3>
-        {% include "snippets/_resources_list.html" %}
-    </section>
-{% endblock sidebar %}
 
 {% block js %}
     {{ block.super }}
