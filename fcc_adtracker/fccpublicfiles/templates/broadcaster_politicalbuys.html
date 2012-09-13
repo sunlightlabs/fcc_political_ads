@@ -3,7 +3,7 @@
 {% block pagetitle %}Political Ad Buys at {{ obj.broadcaster.callsign }} {% endblock pagetitle %}
 {% block content %}
     <h2>{{ obj.broadcaster.callsign }}</h2>
-	{% include "gigya_div.html" with gigya_url=obj.broadcaster.get_absolute_url %}
+	{% include "gigya_div.html" with gigya_url=obj.broadcaster.get_absolute_url tweet_text='Political Buy Tweet' %}
 	
     <p><a href="{{ obj.broadcaster.fcc_profile_url }}" title="{{ obj.broadcaster.callsign }}'s FCC TV Station profile">FCC Station profile</a></p>
 
