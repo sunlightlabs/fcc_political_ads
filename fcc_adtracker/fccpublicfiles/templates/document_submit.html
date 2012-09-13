@@ -3,6 +3,8 @@
 
 {% block content %}
 <div style="display:block; height: 1200px;">
+    <h3 class="withTip">Submit a Political File</h3>
+    <p class="tip">Have a pdfs of political ad purchases from television stations? Please send it to us using the form below.</p>
     {% if messages %}
     <ul class="messages">
         {% for message in messages %}
@@ -11,12 +13,14 @@
     </ul>
     {% endif %}
 
-    <form enctype="multipart/form-data" method="post" action=".">
+    <form enctype="multipart/form-data" class="form-inline compact" method="post" action=".">
         {% csrf_token %}
-        {{ form }}
-        <p>
-        <input type="submit" value="Submit" name="Submit"/>
-        </p>
+        <ul id="stationNames">
+            <li>{{ form }}</li>
+            <li class="bottomBtn">
+                <input type="submit" value="Submit" class="btn btn-sunlight" name="Submit">
+            </li>
+        </ul>
     </form>
 </div>
 {% endblock content %}
