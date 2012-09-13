@@ -5,8 +5,9 @@
 
 img { max-width: none; }
 
-#logo { width: 135px; height: 80px; padding-top: 30px; }
+#logo { width: 135px; height: 80px; padding-top: 10px; float: left; }
 #logo a { background: url(../img/logo.png) top left no-repeat; width: 135px; height: 80px;}
+.gig-bar-container { float: right; padding-top: 70px; }
 nav { margin-top: -20px;}
 
 #map_canvas { height: 100% }
@@ -47,18 +48,6 @@ ul#locations {
     margin: 0px;
     padding: 0 10px;
 }
-
-form p {
-    margin: 6px 0;
-}
-
-fieldset {
-    margin-bottom: 1em;
-}
-
-input#address { width: 150px;}
-#radius { width: 90px;}
-#city { width: 80px;}
 
 .featureImg { margin-top: 180px; float: right; margin-right: 20px; }
 
@@ -212,24 +201,12 @@ a.caldisabled {
     Styles for a minimal template, such as a popover edit form
 */
 
-.minimal {
-    background: url("../img/sfapp_bg.jpg") repeat-x scroll center -6px;
-}
+.minimal { background: url("../img/sfapp_bg.jpg") repeat-x scroll center -6px;}
+.minimal .sf-header { display: none;}
+.minimal .container { width: auto; padding: 25px 40px; }
+.minimal .sf-footerWrapper { display: none; }
 
-.minimal .sf-header {
-    display: none;
-}
-
-.minimal .container {
-    width: auto;
-    padding: 25px 40px;
-}
-
-.minimal .sf-footerWrapper {
-    display: none;
-}
-
-
+/* table styles */
 .table.table-striped tbody tr:nth-child(odd) td, .table.table-striped tbody tr:nth-child(odd) th { background-color: #f9f8f8;  }
 .table tbody tr:hover td, .table tbody tr:hover th, .table.table-striped tbody tr:nth-child(odd):hover td, .table.table-striped tbody tr:nth-child(odd):hover th { background-color: #e9e7e7; }
 .table td { padding: 10px; border-top: 1px solid #f0ebeb;}
@@ -241,3 +218,10 @@ a.caldisabled {
 #associated a { width: 180px; padding: 15px; }
 
 .floatedList dt { width: 80px; margin-right: 15px; }
+
+/* form styles */
+#noaccount_signup input { width: 220px; }
+#noaccount_signup  input[type=checkbox] { width: 15px; }
+#noaccount_signup select { width: 230px; }
+#stationNames select { width: 480px; height: 100px; }
+fieldset { margin-bottom: 1em; }

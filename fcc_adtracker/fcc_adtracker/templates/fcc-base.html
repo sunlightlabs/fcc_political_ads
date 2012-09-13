@@ -47,9 +47,9 @@
 {% endblock css %}
 
 {% block container %}
-<header>
+<header class="clearfix">
     {% block nav %}
-        <nav>
+        <nav class="clearfix">
     		<ul class="account listNav unstyled">
     		    <li class="help"><a href="/help/">Help</a></li>
     		    <li class="about"><a href="/about/">About</a></li>
@@ -69,7 +69,7 @@
     {% else %}
         <h1 id="logo"><a class="textReplace" href="/">Political Ad Sleuth</a></h1>
     {% endif %}
-
+    {% include "gigya_div.html" %}
 </header>
 {{ block.super }}
 {% endblock container %}

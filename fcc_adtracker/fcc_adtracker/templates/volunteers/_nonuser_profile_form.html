@@ -9,16 +9,16 @@
     {% csrf_token %}
     <ul>
         <li>
-            <label>Email</label>
-            <input type="email" name="{{ form.email.html_name }}" value="" placeholder="Email" required="required">
-        </li>
-        <li>
             <label>First Name</label>
             <input type="text" name="{{ form.first_name.html_name }}" value="" placeholder="First Name" id="firstname" required="required">
         </li>
         <li>
             <label>Last Name</label>
             <input type="text" name="{{ form.last_name.html_name }}" value="" id="lastname" placeholder="Last Name" required="required">
+        </li>
+        <li>
+            <label>Email</label>
+            <input type="email" name="{{ form.email.html_name }}" value="" placeholder="Email" required="required">
         </li>
         <li>
             <label>Phone</label>
@@ -41,22 +41,22 @@
             <label>Zip Code</label>
             <input type="text" name="{{ form.zipcode.html_name }}" id="zip" pattern="\d{5}" title="5 digit zip code" placeholder="Zip Code" required="required">
         </li>
-        <li class="clearfix">
+        <li>
+            <label for="id_is_a">What best describes your role?</label>
+            {{ form.is_a }}
+        </li>
+        <li class="clearfix elementWithLine" id="stationNames">
             <label>Stations I Plan to Visit (optional)</label>
             <select name="broadcasters" multiple size="10">
                 <option value="">Select your state to get a list of broadcasters</option>
             </select>
         </li>
-        <li>
-            <label for="id_is_a">What best describes your role?</label>
-            {{ form.is_a }}
-        </li>
         <li class="clearfix">
             <label>Share with Free Press</label>
             <label class="tip asInput checkbox"><input type="checkbox" name="{{ form.share_info.html_name }}" id="optin" checked="checked" />Yes, I would like to receive email alerts from Free Press</label>
         </li>
-        <li class="last">
-            <input type="submit" class="btn btn-sunlight" value="Sign up &rarr;">
+        <li class="bottomBtn">
+            <input type="submit" class="btn btn-sunlight" value="Sign up">
         </li>
     </ul>
 </form>
