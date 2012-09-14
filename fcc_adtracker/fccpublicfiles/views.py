@@ -6,7 +6,8 @@ from django.utils.html import escape
 from doccloud.models import Document
 
 from .models import *
-from fccpublicfiles.forms import PrelimDocumentForm, PoliticalBuyFormFull, SimpleOrganizationForm, AdvertiserSignatoryForm
+from fccpublicfiles.forms import PrelimDocumentForm, PoliticalBuyFormFull,\
+        SimpleOrganizationForm, AdvertiserSignatoryForm, PoliticalSpotForm
 
 from name_cleaver import IndividualNameCleaver
 
@@ -57,7 +58,6 @@ def politicalbuy_edit(request, uuid_key, template_name='politicalbuy_edit.html')
     if form.is_valid():
         myobject = form.save()
         myobject.save()
-
     return render(request, template_name, {'form': form, 'obj': myobject, 'sfapp_base_template': 'sfapp/base-full.html'})
 
 
@@ -139,5 +139,4 @@ def add_advertiser_signatory(request):
                         # What else to do in this case?
                         pass
             return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % (escape(person._get_pk_val()), escape(person)))
-    else:
-        return handlePopAdd(request, AdvertiserSignatoryForm, 'advertiser_signatory', initial_data=defaults)
+    return handlePopAdd(request, AdvertiserSignatoryForm, 'advertiser_signatory', initial_data=defaults)

@@ -47,20 +47,14 @@
                             Also, the date format needs to be in the m/d/Y format as
                                 both django and bootstrap.datepicker like that one
                         {% endcomment %}
-                        <li class="input-append date">
+                        <li class="input-append">
                             <label>{{form.contract_start_date.label}}</label>
-                            <input type="date" name="{{form.contract_start_date.html_name}}" value="{% spaceless %}
-                            {% if form.contract_start_date.value %}
-                                {{form.contract_start_date.value|date:'m/d/Y'}}
-                            {% else %}
-                                {{obj.contract_start_date|date:'m/d/Y'}}
-                            {% endif %}
-                            {% endspaceless %} "><span class="add-on"><i class="icon-th"></i></span>
+                            {{form.contract_start_date}}
                             {{form.contract_start_date.errors}}
                         </li>
-                        <li class="input-append date">
+                        <li class="input-append">
                             <label>{{form.contract_end_date.label}}</label>
-                            <input type="date" name="{{form.contract_end_date.html_name}}" value="{{form.contract_end_date.value|date:'m/d/Y'}}"><span class="add-on"><i class="icon-th"></i></span>
+                            {{form.contract_end_date}}
                             {{form.contract_end_date.errors}}
                         </li>
                         <li>
@@ -124,7 +118,6 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/addnewobj_popup.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/libs/bootstrap-datepicker.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/libs/URI.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/libs/chosen.jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/edit_helpers.js' %}"></script>

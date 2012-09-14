@@ -1,8 +1,9 @@
 from django import forms
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse_lazy
+from django.forms.extras.widgets import SelectDateWidget
 from doccloud.models import Document
-from fccpublicfiles.models import PoliticalBuy, Organization, Person, Role
+from fccpublicfiles.models import PoliticalBuy, PoliticalSpot, Organization, Person, Role
 from broadcasters.models import Broadcaster
 
 
@@ -61,6 +62,11 @@ class AdvertiserSignatoryForm(forms.Form):
     advertiser_id = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
 
+class PoliticalSpotForm(forms.ModelForm):
+    class Meta:
+        model = PoliticalSpot
+
+
 class PoliticalBuyFormBase(forms.ModelForm):
     class Meta:
         model = PoliticalBuy
@@ -88,6 +94,8 @@ class PoliticalBuyFormFull(forms.ModelForm):
             'broadcasters',
         )
 
+    contract_start_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-mini'}))
+    contract_end_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-mini'}))
     advertiser = forms.ModelChoiceField(queryset=Organization.objects.filter(organization_type='AD'),
                                         widget=SelectWithPopUp(add_url=reverse_lazy('add_advertiser'))
                                         )

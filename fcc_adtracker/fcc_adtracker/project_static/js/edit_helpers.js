@@ -2,18 +2,10 @@
     For front-end edit pages, currently:
         * political buy edit pages.
     Depends on:
-        * bootstrap-datepicker.js
         * URI.js
         * chosen.jquery.min.js
 */
 jQuery(document).ready(function($) {
-    $('form .date').datepicker({
-        format: 'mm/dd/yyyy'
-    }).on('changeDate', function(ev){
-        var date_input = $(this).children('input[type=date]').first();
-        $(date_input).val($(this).data('date'));
-      });
-
     // Depends on URI.js
     function updatedPopupUrl(add_url_element, p_args) {
         var target_uri = $(add_url_element).uri();
