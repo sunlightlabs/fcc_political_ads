@@ -245,3 +245,6 @@ table.sortable > thead th:hover { color: #827b78; }
 #headerFloat.nofloat h2{ width: 100%; padding-top: 0px;}
 #headerFloat h2 { float: left; width: 380px; padding-top: 15px;}
 #headerFloat p { float: right; width: 175px;  padding: 10px 15px; }
+
+
+#downloadBtn { float: right; }
