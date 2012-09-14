@@ -1,9 +1,10 @@
 from django.db import models
 from django.contrib.localflavor.us import us_states
 from django.contrib.localflavor.us.models import USStateField
+from mildmoderator.models import MildModeratedModel
 
 
-class Address(models.Model):
+class Address(MildModeratedModel):
     address1 = models.CharField(blank=True, null=True, max_length=100)
     address2 = models.CharField(blank=True, null=True, max_length=100)
     city = models.CharField(max_length=50)
@@ -11,8 +12,6 @@ class Address(models.Model):
     zipcode = models.CharField(blank=True, null=True, max_length=10)
     lat = models.FloatField(blank=True, null=True)
     lng = models.FloatField(blank=True, null=True)
-
-    is_visible = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = u"Addresses"
@@ -37,11 +36,9 @@ class Address(models.Model):
         return self.combined_address
 
 
-class AddressLabel(models.Model):
+class AddressLabel(MildModeratedModel):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField()
-
-    is_visible = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name

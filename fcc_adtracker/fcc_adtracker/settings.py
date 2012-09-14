@@ -142,7 +142,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'storages',
     'reversion',
-    'moderation',
+    'mildmoderator',
 
     'doccloud',
     'registration',

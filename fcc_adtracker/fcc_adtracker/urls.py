@@ -1,12 +1,9 @@
 from django.conf.urls import patterns, include, url
 from broadcasters.urls import json_urlpatterns
 from ajax_select import urls as ajax_select_urls
-from fccpublicfiles.views import prelim_doc_form
 
 from django.contrib import admin
-import moderation.helpers
 
-moderation.helpers.auto_discover()
 admin.autodiscover()
 
 

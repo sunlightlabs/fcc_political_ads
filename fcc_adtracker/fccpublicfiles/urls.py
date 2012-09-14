@@ -2,11 +2,9 @@ from django.conf.urls import patterns, include, url
 from django.views.generic.simple import direct_to_template
 
 from django.contrib import admin
-import moderation.helpers
 
 from broadcasters import views as broadcaster_views
 
-moderation.helpers.auto_discover()
 admin.autodiscover()
 
 uuid_re_str = r'(?P<uuid_key>[a-f0-9-]{32,36})'

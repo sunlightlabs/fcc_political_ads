@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
 from django.db.models import Sum
@@ -5,19 +6,18 @@ from django.dispatch import receiver
 from django.conf import settings
 from django.template.defaultfilters import slugify
 from django_extensions.db.fields import UUIDField
-
-
 from doccloud.models import Document
-
-import reversion
+from broadcasters.models import Broadcaster
+from locations.models import Address
+from mildmoderator.managers import MildModeratedModelManager
+from mildmoderator.models import MildModeratedModel
+from weekday_field import fields as wf_fields
 from uuid import uuid4
 
-from locations.models import Address
-from broadcasters.models import Broadcaster
 import copy
 import datetime
 import timedelta
-from weekday_field import fields as wf_fields
+import reversion
 
 
 ORGANIZATION_TYPES = (
@@ -28,13 +28,11 @@ ORGANIZATION_TYPES = (
 DOCUMENTCLOUD_META = getattr(settings, 'DOCUMENTCLOUD_META', {})
 
 
-class Person(models.Model):
+class Person(MildModeratedModel):
     first_name = models.CharField(max_length=40)
     middle_name = models.CharField(max_length=40, blank=True, null=True)
     last_name = models.CharField(max_length=40)
     suffix = models.CharField(max_length=10, blank=True, null=True)
-
-    is_visible = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = "People"
@@ -57,14 +55,12 @@ class Person(models.Model):
         return self.full_name
 
 
-class Organization(models.Model):
+class Organization(MildModeratedModel):
     name = models.CharField(max_length=100)
     organization_type = models.CharField(blank=True, max_length=2, choices=ORGANIZATION_TYPES)
     addresses = models.ManyToManyField(Address, blank=True, null=True)
     employees = models.ManyToManyField(Person, through='Role')
     fec_id = models.CharField(max_length=9, blank=True)
-
-    is_visible = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('name',)
@@ -75,25 +71,26 @@ class Organization(models.Model):
         return u"Organization"
 
 
-class Role(models.Model):
+class Role(MildModeratedModel):
     person = models.ForeignKey(Person)
     organization = models.ForeignKey(Organization)
     title = models.CharField(blank=True, null=True, max_length=100, help_text="Job title or descriptor for position they hold.")
-
-    is_visible = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u"<" + self.person.__unicode__() + ": " + self.title + " >"
 
 
-class GenericPublicDocument(models.Model):
+class GenericPublicDocument(MildModeratedModel):
     documentcloud_doc = models.ForeignKey(Document)
     broadcasters = models.ManyToManyField(Broadcaster, null=True)
 
+    # TODO: this should either be dropped or updated to is_public like the rest,
+    # but we didn't have this under moderation so it seems like this field's
+    # existence might have been a mistake anyway
     is_visible = models.BooleanField(default=False)
 
 
-class PoliticalBuy(models.Model):
+class PoliticalBuy(MildModeratedModel):
     """A subset of PublicFile, the PoliticalBuy records purchases of air time (generally for political ads)"""
     documentcloud_doc = models.ForeignKey(Document)
     contract_number = models.CharField(blank=True, max_length=100)
@@ -110,9 +107,6 @@ class PoliticalBuy(models.Model):
     total_spent_raw = models.DecimalField(max_digits=19, decimal_places=2, null=True, verbose_name='Grand Total')
     num_spots_raw = models.PositiveIntegerField(null=True, verbose_name='Number of Ad Spots')
 
-    # This represents whether the latest version in moderation has been approved.
-    is_visible = models.BooleanField(default=False)
-
     """ This is a user-defined setting that lets an authenticated user
     mark a record as not needing any more work. The idea is that
     a superuser will need to come along afterward to the moderated object
@@ -120,10 +114,7 @@ class PoliticalBuy(models.Model):
     """
     is_complete = models.BooleanField(default=False, verbose_name="Data Entry Is Complete", )
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
-
-    uuid_key = UUIDField(version=4, default=uuid4(), unique=True, editable=False)
+    uuid_key = UUIDField(version=4, default=lambda: uuid4(), unique=True, editable=False)
 
     broadcasters = models.ManyToManyField(Broadcaster, null=True)
 
@@ -190,7 +181,7 @@ def set_privacy_for_deassociated_docs(sender, instance, *args, **kwargs):
     doc.save()
 
 
-class PoliticalSpot(models.Model):
+class PoliticalSpot(MildModeratedModel):
     """Information particular to a political ad spot (e.g., a candidate ad)"""
     document = models.ForeignKey(PoliticalBuy, verbose_name="Political Buy")
     airing_start_date = models.DateField(blank=True, null=True)
@@ -203,12 +194,6 @@ class PoliticalSpot(models.Model):
     num_spots = models.IntegerField(blank=True, null=True, verbose_name="Number of Spots")
     rate = models.DecimalField(blank=True, null=True, max_digits=9, decimal_places=2, help_text="Dollar cost for each spot")
     preemptable = models.NullBooleanField(default=None, blank=True, null=True)
-
-    # This represents whether the latest version in moderation has been approved.
-    is_visible = models.BooleanField(default=False)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def documentcloud_doc():
         doc = "The documentcloud_doc property."

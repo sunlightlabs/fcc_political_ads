@@ -42,14 +42,14 @@ class OrganizationForm(forms.ModelForm):
 class SimpleOrganizationForm(forms.ModelForm):
     class Meta:
         model = Organization
-        exclude = ('addresses', 'employees', 'is_visible')
+        exclude = ('addresses', 'employees', 'is_public')
     organization_type = forms.CharField(widget=forms.HiddenInput)
 
 
 class PersonForm(forms.ModelForm):
     class Meta:
         model = Person
-        exclude = ('is_visible',)
+        exclude = ('is_public',)
 
 
 class AdvertiserSignatoryForm(forms.Form):
@@ -73,7 +73,7 @@ class PoliticalSpotForm(forms.ModelForm):
 class RelatedPoliticalSpotForm(forms.ModelForm):
     class Meta:
         model = PoliticalSpot
-        exclude = ('is_visible',)
+        exclude = ('is_public',)
     document = forms.ModelChoiceField(queryset=PoliticalBuy.objects.all(), widget=forms.HiddenInput)
     airing_start_date = forms.DateField(widget=SelectDateWidget(years=SELECT_YEARS, attrs={'class':'input-small'}))
     airing_end_date = forms.DateField(widget=SelectDateWidget(years=SELECT_YEARS, attrs={'class':'input-small'}))

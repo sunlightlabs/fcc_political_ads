@@ -42,7 +42,7 @@ def state_broadcaster_list(request, state_id, template_name='broadcasters/broadc
         # instead grab the list and annotate it
         broadcaster_list = annotate_broadcaster_queryset(Broadcaster.objects.filter(community_state=state_id))
         
-        ad_buys = PoliticalBuy.objects.filter(broadcasters__community_state=state_id, is_visible=True).order_by('created_at')[:MAX_DOCUMENTS_TO_SHOW_IN_SIDEBAR]
+        ad_buys = PoliticalBuy.objects.filter(broadcasters__community_state=state_id, is_public=True).order_by('created_at')[:MAX_DOCUMENTS_TO_SHOW_IN_SIDEBAR]
         
         
         return render(request, template_name, {'broadcaster_list': broadcaster_list, 'state_name': state_name, 'state_geocenter': state_geocenter, 'ad_buys':ad_buys})
@@ -61,7 +61,7 @@ def state_list(request, template_name='broadcasters/state_list.html'):
 def broadcaster_detail(request, callsign, template_name='broadcasters/broadcaster_detail.html'):
     if not callsign.isupper():
         return HttpResponsePermanentRedirect(reverse('broadcaster_politicalbuys_view', kwargs={'callsign':callsign.upper()}))
-    
+
     studio_address = None
     try:
         obj = BroadcasterAddress.objects.get(broadcaster__callsign=callsign.upper(), label__name__iexact='studio')
@@ -78,18 +78,18 @@ def broadcaster_detail(request, callsign, template_name='broadcasters/broadcaste
         }
         state_geocenter = states_geocenters.get(obj['broadcaster'].community_state, None) if states_geocenters else None
         obj_json = None
-        
+
     ad_buys = None
     try:
         ad_buys = obj['broadcaster'].politicalbuy_set.all()    
         # if they're not logged in, only show the spots that have been approved. 
         if not request.user.is_authenticated():
-            ad_buys = ad_buys.filter(is_visible=True)
-            
+            ad_buys = ad_buys.filter(is_public=True)
+
     except TypeError:
         # No ad buys
         pass
-    
+
     return render(request, template_name, {'obj': obj, 'obj_json': obj_json, 'state_geocenter': state_geocenter, 'ad_buys':ad_buys, 'studio_address':studio_address})
 
 
