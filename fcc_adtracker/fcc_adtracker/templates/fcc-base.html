@@ -51,6 +51,8 @@
     {% block nav %}
         <nav class="clearfix">
     		<ul class="account listNav unstyled">
+				<li class="help"><a href="/political-files/submit/">Upload Files</a></li>
+    			<li class="help"><a href="/states/">Browse States</a></li>
     		    <li class="help"><a href="/help/">Help</a></li>
     		    <li class="about"><a href="/about/">About</a></li>
     		    <li class="loginout"><a href="{% if user.is_authenticated %}/account/logout/{% else %}/account/login/{% endif %}">Log {% if user.is_authenticated %}Out{% else %}In{% endif %}</a></li>
@@ -60,7 +62,6 @@
     		    <li class="signup first"><a href="{% url register_volunteer %}">Sign Up!</a></li>
                 {% endif %}
     		    <!--<li class="account"><a href="/account/">Account</a></li>-->
-    			<!--<li class="upload"><a href="/political-files/submit/">Upload Files</a></li>-->
     		</ul>
     	</nav>
     {% endblock %}

@@ -3,11 +3,19 @@
 {% block pagetitle %}Browse stations by state{% endblock pagetitle %}
 {% block content %}
 <h2>Browse TV stations by state</h2>
-<p class="tip">Not all stations are included. Click on a state name to see all stations.</p> 
-<ul class="state-list">
-{% for state in states %}
-<li class="state-item"><a href="/states/{{state.community_state}}/">{{state.state_name}}</a> ( {{state.count}} stations )</li>
+<p class="tip">Not all stations are included. Click on a state name to see stations there.</p> 
+<table class="table table-striped">
+	<thead>
+        <tr>
+            <th>State</th>
+            <th>Number of stations</th>
+        </tr>
+    </thead>
+    <tbody>
+	{% for state in states %}
+	<tr><td><a href="/states/{{state.community_state}}/">{{state.state_name}}</a></td><td> {{state.count}} stations </td></tr>
 {% endfor %}
-</ul>
+	<tbody>
+</table>
 
 {% endblock content %}
