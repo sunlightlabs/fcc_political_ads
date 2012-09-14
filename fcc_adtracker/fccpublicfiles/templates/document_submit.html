@@ -16,10 +16,10 @@
     <form enctype="multipart/form-data" class="form-inline compact" method="post" action=".">
         {% csrf_token %}
         <ul id="stationNames">
-            <li>{{ form }}</li>
-            <li class="bottomBtn">
-                <input type="submit" value="Submit" class="btn btn-sunlight" name="Submit">
-            </li>
+			<li class="id_file"><label>{{ form.file.label }}</label>{{ form.file }}{{form.file.errors}}</li>
+			<li class="id_broadcasters"><label>{{ form.broadcasters.label }}</label>{{ form.broadcasters }}{{form.broadcasters.errors}}</li>
+			<p class="form-instructions tip">Hold down "Control", or "Command" on a Mac, to select more than one broadcaster.</p>
+            <li class="bottomBtn"><input type="submit" value="Submit" class="btn btn-sunlight" name="Submit"></li>
         </ul>
     </form>
 </div>
