@@ -195,9 +195,7 @@ a.caldisabled {
 }
 
 
-/*
-    Styles for a minimal template, such as a popover edit form
-*/
+/* Styles for a minimal template, such as a popover edit form */
 
 .minimal { background: url("../img/sfapp_bg.jpg") repeat-x scroll center -6px;}
 .minimal .sf-header { display: none;}
@@ -227,8 +225,20 @@ a.caldisabled {
 #stationNames select { width: 480px; height: 100px; }
 fieldset { margin-bottom: 1em; }
 .compact .tip { width: 330px; }
+#pager { text-align: left;}
+.pagerDetails { background-color: #FCFCFC; padding: 5px; border-top: 1px solid #F4F4F4; border-bottom: 1px solid #F4F4F4; }
+#pager .pageNumDisplay { text-align: left; }
+#pager select { width: 60px; margin-right: 240px;  }
+#pager label { color: #76716E; margin-right: 5px; }
 
-#headerFloat { border-bottom: 1px solid #F0EDED; margin-bottom: 40px;  }
+#pager a { width: 16px; border: none; margin: 5px 0 0;  padding: 0; }
+#btnFirst a { background: url(../img/btnFirst.png) center top no-repeat;  }
+#btnPrev a { background: url(../img/btnPrev.png) center top no-repeat; }
+#btnNext a { background: url(../img/btnNext.png) center top no-repeat; }
+#btnLast a { background: url(../img/btnLast.png) center top no-repeat; }
+
+
+#headerFloat { border-bottom: 1px solid #F0EDED; margin-bottom: 40px; }
 #headerFloat.nofloat h2{ width: 100%; padding-top: 0px;}
 #headerFloat h2 { float: left; width: 380px; padding-top: 15px;}
 #headerFloat p { float: right; width: 175px;  padding: 10px 15px; }

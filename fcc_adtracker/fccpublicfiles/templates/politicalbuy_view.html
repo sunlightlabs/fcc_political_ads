@@ -77,15 +77,12 @@
         </div>
     </div>
     <div class="module">
-        <h3>Ad spots purchased in this ad buy</h3>
+        <h3>Ad Spots Purchased by {{ obj.advertiser|default:"" }}</h3>
         <div id="pager" class="pager">
-            <ul>
-                <li><a href="#" class="first">First</a></li>
-                <li><a href="#" class="prev">Prev</a></li>
-                <li><span class="pagedisplay"></span></li>
-                <li><a href="#" class="next">Next</a></li>
-                <li><a href="#" class="last">Last</a></li>
+            <span class="pagedisplay tip withTip"></span>
+            <ul class="unstyled form-inline form-vertical pagerDetails clearfix">
                 <li>
+                    <label>Results per page</label>
                     <select class="pagesize">
                         <option value="10">10</option>
                         <option selected="selected" value="20">20</option>
@@ -93,6 +90,11 @@
                         <option value="100">100</option>
                     </select>
                 </li>
+                <li id="btnFirst"><a href="#" class="first textReplace">First</a></li>
+                <li id="btnPrev"><a href="#" class="prev textReplace">Prev</a></li>
+                <li id="btnNext"><a href="#" class="next textReplace">Next</a></li>
+                <li id="btnLast"><a href="#" class="last textReplace">Last</a></li>
+                
             </ul>
         </div>
         {% if obj.politicalspot_set.all %}
