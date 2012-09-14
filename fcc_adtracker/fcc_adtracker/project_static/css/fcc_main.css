@@ -237,6 +237,9 @@ fieldset { margin-bottom: 1em; }
 #btnNext a { background: url(../img/btnNext.png) center top no-repeat; }
 #btnLast a { background: url(../img/btnLast.png) center top no-repeat; }
 
+table.sortable > thead th { color: #C9A706; }
+table.sortable > thead th:hover { color: #827b78; }
+
 
 #headerFloat { border-bottom: 1px solid #F0EDED; margin-bottom: 40px; }
 #headerFloat.nofloat h2{ width: 100%; padding-top: 0px;}
