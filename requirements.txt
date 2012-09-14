@@ -21,3 +21,4 @@ django-reversion==1.6.0
 django-ajax-selects==1.2.5
 geopy
 unicodecsv==0.9.0
+name-cleaver==0.3.1

@@ -1,5 +1,5 @@
 /*
-    Add new object popup code adapted from
+    Add new object popup code copied & adapted from
         django's js/admin/RelatedObjectLookups.js
     Provides support for events related to adding new objects
 */
@@ -33,7 +33,7 @@ function windowname_to_id(text) {
 function showAddAnotherPopup(triggeringLink) {
     var name = triggeringLink.id.replace(/^add_/, '');
     name = id_to_windowname(name);
-    href = triggeringLink.href
+    href = triggeringLink.href;
     if (href.indexOf('?') == -1) {
         href += '?_popup=1';
     } else {
@@ -41,6 +41,7 @@ function showAddAnotherPopup(triggeringLink) {
     }
     var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
     win.focus();
+    $(triggeringLink).trigger('django:showaddanotherpopup'); // Trigger custom event
     return false;
 }
 
@@ -64,13 +65,20 @@ function dismissAddAnotherPopup(win, newId, newRepr) {
                 elem.value = newId;
             }
         }
-    } else {
+   } else {
         var toId = name + "_to";
         elem = document.getElementById(toId);
         var o = new Option(newRepr, newId);
         SelectBox.add_to_cache(toId, o);
         SelectBox.redisplay(toId);
     }
-    $(elem).change(); // Trigger change event
+    $(elem).trigger('django:dismissaddanotherpopup'); // Trigger custom event
     win.close();
 }
+
+jQuery(document).ready(function($) {
+    $(document).on('click', 'a.add-on', function(event) {
+        showAddAnotherPopup(this);
+    });
+});
+

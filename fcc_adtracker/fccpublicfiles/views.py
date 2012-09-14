@@ -8,6 +8,8 @@ from doccloud.models import Document
 from .models import *
 from fccpublicfiles.forms import PrelimDocumentForm, PoliticalBuyFormFull, SimpleOrganizationForm, AdvertiserSignatoryForm
 
+from name_cleaver import IndividualNameCleaver
+
 
 def politicalbuy_view(request, uuid_key, slug='', template_name='politicalbuy_view.html'):
     obj = get_object_or_404(PoliticalBuy, uuid_key=uuid_key)
@@ -85,12 +87,16 @@ def handlePopAdd(request, addForm, field, initial_data=None):
 @login_required
 def add_advertiser(request):
     org_defaults = {'organization_type': 'AD'}
+    if 'search' in request.GET:
+        org_defaults['name'] = request.GET['search']
     return handlePopAdd(request, SimpleOrganizationForm, 'advertiser', initial_data=org_defaults)
 
 
 @login_required
 def add_media_buyer(request):
     org_defaults = {'organization_type': 'MB'}
+    if 'search' in request.GET:
+        org_defaults['name'] = request.GET['search']
     return handlePopAdd(request, SimpleOrganizationForm, 'mediabuyer', initial_data=org_defaults)
 
 
@@ -102,6 +108,16 @@ def add_advertiser_signatory(request):
         }
     else:
         defaults = {}
+    if 'search' in request.GET:
+        input_name = IndividualNameCleaver(request.GET['search']).parse(safe=True)
+        if isinstance(input_name, basestring):
+            defaults['first_name'] = input_name
+        else:
+            defaults['first_name'] = input_name.first
+            defaults['middle_name'] = input_name.middle
+            defaults['last_name'] = input_name.last
+            defaults['suffix'] = input_name.suffix
+
     if request.method == "POST":
         form = AdvertiserSignatoryForm(request.POST)
         if form.is_valid():

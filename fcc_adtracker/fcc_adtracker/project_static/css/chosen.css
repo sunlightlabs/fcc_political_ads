@@ -1,5 +1,6 @@
 /* @group Base */
 .chzn-container {
+  font-family: "Georgia","Times New Roman","Times",serif;
   font-size: 13px;
   position: relative;
   display: inline-block;
@@ -8,7 +9,7 @@
 }
 .chzn-container .chzn-drop {
   background: #fff;
-  border: 1px solid #aaa;
+  border: 2px solid #E7E4DC;
   border-top: 0;
   position: absolute;
   top: 29px;
@@ -29,13 +30,13 @@
   background-image: -moz-linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
   background-image: -o-linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
   background-image: linear-gradient(#ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
-  -webkit-border-radius: 5px;
-  -moz-border-radius   : 5px;
-  border-radius        : 5px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius   : 3px;
+  border-radius        : 3px;
   -moz-background-clip   : padding;
   -webkit-background-clip: padding-box;
   background-clip        : padding-box;
-  border: 1px solid #aaaaaa;
+  border: 2px solid #E7E4DC;
   -webkit-box-shadow: 0 0 3px #ffffff inset, 0 1px 1px rgba(0,0,0,0.1);
   -moz-box-shadow   : 0 0 3px #ffffff inset, 0 1px 1px rgba(0,0,0,0.1);
   box-shadow        : 0 0 3px #ffffff inset, 0 1px 1px rgba(0,0,0,0.1);
@@ -135,7 +136,7 @@
   background-image: -moz-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
   background-image: -o-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
   background-image: linear-gradient(#eeeeee 1%, #ffffff 15%);
-  border: 1px solid #aaa;
+  border: 2px solid #E7E4DC;
   margin: 0;
   padding: 0;
   cursor: text;
@@ -190,8 +191,8 @@
   color: #333;
   border: 1px solid #aaaaaa;
   line-height: 13px;
-  padding: 3px 20px 3px 5px;
-  margin: 3px 0 3px 5px;
+  padding: 4px 20px 3px 5px;
+  margin: 3px 2px 0;
   position: relative;
   cursor: default;
 }
@@ -316,10 +317,10 @@
   -webkit-box-shadow: 0 0 5px rgba(0,0,0,.3);
   -moz-box-shadow   : 0 0 5px rgba(0,0,0,.3);
   box-shadow        : 0 0 5px rgba(0,0,0,.3);
-  border: 1px solid #5897fb;
+  border: 2px solid #E7E4DC;
 }
 .chzn-container-active .chzn-single-with-drop {
-  border: 1px solid #aaa;
+  border: 2px solid #E7E4DC;
   -webkit-box-shadow: 0 1px 0 #fff inset;
   -moz-box-shadow   : 0 1px 0 #fff inset;
   box-shadow        : 0 1px 0 #fff inset;
@@ -348,7 +349,7 @@
   -webkit-box-shadow: 0 0 5px rgba(0,0,0,.3);
   -moz-box-shadow   : 0 0 5px rgba(0,0,0,.3);
   box-shadow        : 0 0 5px rgba(0,0,0,.3);
-  border: 1px solid #5897fb;
+  border: 2px solid #E7E4DC;
 }
 .chzn-container-active .chzn-choices .search-field input {
   color: #111 !important;

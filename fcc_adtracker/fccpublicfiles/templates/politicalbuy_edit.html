@@ -41,14 +41,26 @@
                             {{form.num_spots_raw}}
                             {{form.num_spots_raw.errors}}
                         </li>
-                        <li>
+                        {% comment %}
+                            The following date inputs use the .date class to
+                                apply a datepicker to a input and an span.add-on
+                            Also, the date format needs to be in the m/d/Y format as
+                                both django and bootstrap.datepicker like that one
+                        {% endcomment %}
+                        <li class="input-append date">
                             <label>{{form.contract_start_date.label}}</label>
-                            <input class="date" type="date" name="{{form.contract_start_date.html_name}}" value="{{form.contract_start_date.value|date:'Y-m-d'}}">
+                            <input type="date" name="{{form.contract_start_date.html_name}}" value="{% spaceless %}
+                            {% if form.contract_start_date.value %}
+                                {{form.contract_start_date.value|date:'m/d/Y'}}
+                            {% else %}
+                                {{obj.contract_start_date|date:'m/d/Y'}}
+                            {% endif %}
+                            {% endspaceless %} "><span class="add-on"><i class="icon-th"></i></span>
                             {{form.contract_start_date.errors}}
                         </li>
-                        <li>
+                        <li class="input-append date">
                             <label>{{form.contract_end_date.label}}</label>
-                            <input class="date" type="date" name="{{form.contract_end_date.html_name}}" value="{{form.contract_end_date.value|date:'Y-m-d'}}">
+                            <input type="date" name="{{form.contract_end_date.html_name}}" value="{{form.contract_end_date.value|date:'m/d/Y'}}"><span class="add-on"><i class="icon-th"></i></span>
                             {{form.contract_end_date.errors}}
                         </li>
                         <li>
@@ -111,55 +123,9 @@
 
 {% block js %}
     {{ block.super }}
-    <script src="{% static 'js/addnewobj_popup.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/addnewobj_popup.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/libs/bootstrap-datepicker.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/libs/URI.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/libs/chosen.jquery.min.js' %}"></script>
-    <script type="text/javascript">
-        jQuery(document).ready(function($) {
-            $('input[type=date]').datepicker({
-                format: 'yyyy-mm-dd'
-            });
-
-            // Depends on URI.js
-            function updatedPopupUrl(add_url_element, p_args) {
-                var target_uri = $(add_url_element).uri();
-                var arg_obj = target_uri.query(true);
-                $.extend(arg_obj, p_args);
-                target_uri.search(arg_obj);
-            }
-
-            function jq_to_htmlstring(jq_obj) {
-                return $('<div>').append(jq_obj).html()
-            }
-
-            // Add url args to advertiser_signatory_form
-            var add_adversig_el = $('#add_id_advertiser_signatory');
-            updatedPopupUrl(add_adversig_el, {'advertiser_id': $('#id_advertiser').val()});
-
-            jQuery.unique($('select.suggestions')).each(function(index) {
-                var original_select = this;
-                var addRelated_el = $(original_select).next('a.add-on')
-                if (addRelated_el.length != 0) {
-                    var uri = addRelated_el.uri();
-                    $(original_select).data('add_uri', uri);
-                    addRelated_el.detach();
-                    $(original_select).chosen({
-                        no_results_text: jq_to_htmlstring(addRelated_el)
-                    });
-                    // $(original_select).trigger("liszt:updated");
-                };
-            });
-
-            $(document).on('change', '#id_advertiser', function(event) {
-                log('advertiser change');
-                var uri = $(this).data('add_uri');
-                var chosen = $('#id_advertiser_signatory').data('chosen');
-                var add_el = $(chosen.results_none_found);
-                updatedPopupUrl(add_el, {'advertiser_id': $('#id_advertiser').val()});
-                chosen.results_none_found = jq_to_htmlstring(add_el);
-                $(this).data('chosen', chosen);
-            });
-        });
-    </script>
+    <script type="text/javascript" src="{% static 'js/edit_helpers.js' %}"></script>
 {% endblock js %}
