@@ -6,12 +6,14 @@
 
 
 {% block content %}
-    <h2>{{ obj.broadcaster.callsign }}</h2>
+    <div id="headerFloat" class="clearfix">
+        <h2 class="withTip">{{ obj.broadcaster.callsign }}</h2>
+        <p class="boxCallout ">Have more information on this station? <a href="#">Suggest it now</a></p>
+    </div>
 	<div class="module">
-        <p><a href="{{ obj.broadcaster.fcc_profile_url }}" title="{{ obj.broadcaster.callsign }}'s FCC TV Station profile">FCC Station profile</a></p>
-
-        <dl class="moduleSm floatedList clearfix">
-            <dt>Network:</dt> <dd>{{obj.broadcaster.network_affiliate}}</dd>
+        <dl class="moduleSm floatedList clearfix stationProfile">
+            <dt class="hidden">FCC Station Profile:</dt> <dd><a href="{{ obj.broadcaster.fcc_profile_url }}" title="{{ obj.broadcaster.callsign }}'s FCC TV Station profile">View FCC Station profile</a></dd>
+            <dt class="clear">Network:</dt> <dd>{{obj.broadcaster.network_affiliate}}</dd>
             <dt>Channel:</dt> <dd>{{obj.broadcaster.channel}}</dd>
             <dt>Community served:</dt> <dd>{{obj.broadcaster.community_city}}, {{obj.broadcaster.community_state}}</dd>
     		{# Only show an address if we have a studio address #}
@@ -25,12 +27,11 @@
         {% endif %}
     </div>
 	<div>
-	    <h3>Political buys</h3>
+	    <h3>Political Buys</h3>
         {% if ad_buys %}
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th></th>
                     <th>Advertiser</th>
                     <th>Total Spent</th>
                     <th>Start Date</th>
@@ -40,8 +41,7 @@
             <tbody>
                 {% for politicalbuy in ad_buys %}
                 <tr>
-                    <td><a href="{{ politicalbuy.get_absolute_url }}" title="">View details</a></td>
-                    <td>{{ politicalbuy.advertiser }}</td>
+                    <td><a href="{{ politicalbuy.get_absolute_url }}" title="">{{ politicalbuy.advertiser }}</a></td>
                     <td>{% if politicalbuy.total_spent %}${{ politicalbuy.total_spent|intcomma }}{% else %}N/A{% endif %}</td>
                     <td>{{ politicalbuy.contract_start_date }}</td>
                     <td>{{ politicalbuy.contract_end_date }}</td>

@@ -1,5 +1,3 @@
-.clear { clear: right; }
-
 .invalid { border-color: #E9322D; }
 .errorlist  { color: #B94A48; }
 
@@ -219,6 +217,8 @@ a.caldisabled {
 #associated a { width: 180px; padding: 15px; }
 
 .floatedList dt { width: 80px; margin-right: 15px; }
+.stationProfile dd { width: 180px; margin-right:20px;}
+.stationProfile dd, .stationProfile dt { margin-bottom: 15px; }
 
 /* form styles */
 #noaccount_signup input { width: 220px; }
@@ -227,3 +227,8 @@ a.caldisabled {
 #stationNames select { width: 480px; height: 100px; }
 fieldset { margin-bottom: 1em; }
 .compact .tip { width: 330px; }
+
+#headerFloat { border-bottom: 1px solid #F0EDED; margin-bottom: 40px;  }
+#headerFloat.nofloat h2{ width: 100%; padding-top: 0px;}
+#headerFloat h2 { float: left; width: 380px; padding-top: 15px;}
+#headerFloat p { float: right; width: 175px;  padding: 10px 15px; }

@@ -38,30 +38,34 @@
 </style>
 {% endblock head %}
 
+{% include "gigya_div.html" with gigya_url=obj.get_absolute_url %}
 {% block content %}
-    <div>
-            <h2>Political Buy: <strong>{{ obj.advertiser|default:"" }}</strong></h2>
-			{% include "gigya_div.html" with gigya_url=obj.get_absolute_url %}
-
-            <dl id="buy-metadata" class="clearfix">
-                <dt>Stations</dt>
+    <div id="headerFloat" class="clearfix nofloat">
+        <h2><small class="clearfix">Political Buy:</small> {{ obj.advertiser|default:"" }}</h2>
+    </div>
+    <div class="row module">
+        <div id="buyData" class="span5">
+            <dl class="moduleSm floatedList clearfix stationProfile">
+                <dt>Stations:</dt>
                 {% for broadcaster in obj.broadcasters.all %}
                 <dd><a href="{% url broadcaster_politicalbuys_view callsign=broadcaster.callsign %}">{{ broadcaster.callsign }}, Channel {{ broadcaster.channel }}</a></dd>
                 {% endfor %}
-                <dt>Contract</dt>
+                <dt class="clear">Contract:</dt>
                 <dd>{{obj.contract_number|default:"Unknown"}}</dd>
-                <dt>Contract Dates</dt>
+                <dt class="clear">Contract Dates:</dt>
                 <dd>{{obj.contract_start_date}} - {{ obj.contract_end_date }}</dd>
-                <dt>Total Spent</dt>
+                <dt class="clear">Total Spent:</dt>
                 <dd>{% if obj.total_spent %}${{ obj.total_spent }}{% else %}Unknown{% endif %}</dd>
-                <dt>Lowest unit price?</dt>
+                <dt class="clear">Lowest unit price?:</dt>
                 <dd>{{ obj.lowest_unit_price|yesno:"Yes,No,Unknown" }}</dd>
-                <dt>Bought by</dt>
+                <dt class="clear">Bought by:</dt>
                 <dd>{{obj.bought_by|default:"Unknown" }}</dd>
-                <dt>Number of Ad Spots</dt>
+                <dt class="clear">Number of Ad Spots:</dt>
                 <dd>{{obj.num_spots_raw|default:"Unknown" }}</dd>
             </dl>
-            <h3>Links</h3>
+        </div>
+        <div id="internalLinks" class="span2 sideCallout">
+            <h4>More Information</h4>
             <ul class="unstyled">
                 {% if obj.advertiser.fec_id != '' %}
                 <li><p id='fec_id'><a href="http://reporting.sunlightfoundation.com/outside-spending/committee/{{obj.advertiser.name|slugify}}/{{ obj.advertiser.fec_id }}/">Follow the Unlimited Money Profile</a></p>
@@ -70,29 +74,30 @@
                 {% endif %}
                 <li><p><a href="#original_document">Original Document</a></p>
             </ul>
-            <h3>Ad spots purchased in this ad buy</h3>
-            <div id="pager" class="pager">
-                <form>
-                    <ul>
-                        <li><a href="#" class="first">First</a></li>
-                        <li><a href="#" class="prev">Prev</a></li>
-                        <li><span class="pagedisplay"></span></li>
-                        <li><a href="#" class="next">Next</a></li>
-                        <li><a href="#" class="last">Last</a></li>
-                        <li>
-                            <select class="pagesize">
-                                <option value="10">10</option>
-                                <option selected="selected" value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select>
-                        </li>
-                    </ul>
-                </form>
-            </div>
-            {% if obj.politicalspot_set.all %}
-            {% include '_politicalspots_table.html' with politicalspot_list=obj.politicalspot_set.all %}
-            {% endif %}
+        </div>
+    </div>
+    <div class="module">
+        <h3>Ad spots purchased in this ad buy</h3>
+        <div id="pager" class="pager">
+            <ul>
+                <li><a href="#" class="first">First</a></li>
+                <li><a href="#" class="prev">Prev</a></li>
+                <li><span class="pagedisplay"></span></li>
+                <li><a href="#" class="next">Next</a></li>
+                <li><a href="#" class="last">Last</a></li>
+                <li>
+                    <select class="pagesize">
+                        <option value="10">10</option>
+                        <option selected="selected" value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+        {% if obj.politicalspot_set.all %}
+        {% include '_politicalspots_table.html' with politicalspot_list=obj.politicalspot_set.all %}
+        {% endif %}
     </div>
     <div class="row">
         <div class="span12">
