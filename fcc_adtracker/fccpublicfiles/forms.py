@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.forms.extras.widgets import SelectDateWidget
 from doccloud.models import Document
 from fccpublicfiles.models import PoliticalBuy, PoliticalSpot, Organization, Person, Role
+from fccpublicfiles.widgets import SelectTimeWidget
 from broadcasters.models import Broadcaster
 
 
@@ -65,6 +66,16 @@ class AdvertiserSignatoryForm(forms.Form):
 class PoliticalSpotForm(forms.ModelForm):
     class Meta:
         model = PoliticalSpot
+
+
+class RelatedPoliticalSpotForm(forms.ModelForm):
+    class Meta:
+        model = PoliticalSpot
+    document = forms.ModelChoiceField(queryset=PoliticalBuy.objects.all(), widget=forms.HiddenInput)
+    airing_start_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-small'}))
+    airing_end_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-small'}))
+    timeslot_begin = forms.TimeField(widget=SelectTimeWidget(twelve_hr=True, use_seconds=False, attrs={'class':'time input-mini'}))
+    timeslot_end = forms.TimeField(widget=SelectTimeWidget(twelve_hr=True, use_seconds=False, attrs={'class':'time input-mini'}))
 
 
 class PoliticalBuyFormBase(forms.ModelForm):

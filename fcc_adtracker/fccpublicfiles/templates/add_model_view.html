@@ -3,7 +3,7 @@
 
 {% block head %}
     {{ block.super }}
-    <script type="text/javascript" src="{% static 'js/addnewobj_popup.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
 {% endblock head %}
 
 {% block bodyclass %}minimal content{% endblock bodyclass %}
@@ -23,7 +23,7 @@
                 {% if field.errors %}
                 {{field.errors}}
                 {% endif %}
-                <p class="tip">{{field.help_text}}</p>
+                <p class="tip">{{field.help_text|safe}}</p>
             </li>
         {% endfor %}
             <li><button class="btn btn-sunlight" value="Submit">Submit</button> | <a class="btn" href="javascript:window.close()">Cancel</a></li>
@@ -31,5 +31,18 @@
     </form>
 {% endblock container %}
 {% comment %}
-So maybe this shouldn't inhetid from fcc-base.html but some minimal other template.
+So maybe this shouldn't inhetid from fcc-base.html but some minimal other template?
 {% endcomment %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/addnewobj_popup.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/libs/jquery.timepicker.js' %}"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $('input.time').timepicker({
+                timeFormat: 'H:i'
+            });
+        });
+    </script>
+{% endblock js %}

@@ -7,7 +7,7 @@ from doccloud.models import Document
 
 from .models import *
 from fccpublicfiles.forms import PrelimDocumentForm, PoliticalBuyFormFull,\
-        SimpleOrganizationForm, AdvertiserSignatoryForm, PoliticalSpotForm
+        SimpleOrganizationForm, AdvertiserSignatoryForm, RelatedPoliticalSpotForm
 
 from name_cleaver import IndividualNameCleaver
 
@@ -58,30 +58,51 @@ def politicalbuy_edit(request, uuid_key, template_name='politicalbuy_edit.html')
     if form.is_valid():
         myobject = form.save()
         myobject.save()
+
     return render(request, template_name, {'form': form, 'obj': myobject, 'sfapp_base_template': 'sfapp/base-full.html'})
 
 
 @login_required
-def handlePopAdd(request, addForm, field, initial_data=None):
+def handlePopAdd(request, addForm, field, initial_data=None, current_object=None):
     """ Using methods adapted from:
          http://sontek.net/blog/detail/implementing-djangos-admin-interface-pop-ups
          and
          http://www.awebcoder.com/post/16/djangos-admin-related-objects-pop-up-in-the-front-end
     """
     if request.method == "POST":
-        form = addForm(request.POST)
+        form = addForm(request.POST, instance=current_object)
         if form.is_valid():
             try:
-                newObject = form.save()
+                obj = form.save()
             except forms.ValidationError:
-                newObject = None
-            if newObject:
-                return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % (escape(newObject._get_pk_val()), escape(newObject)))
+                obj = None
+            if obj:
+                return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % (escape(obj._get_pk_val()), escape(obj)))
     else:
-        form = addForm(initial_data)
-
+        if current_object:
+            form = addForm(instance=current_object)
+        else:
+            form = addForm(initial_data)
     pageContext = {'form': form, 'field': field}
     return render(request, 'add_model_view.html', pageContext)
+
+
+@login_required
+def edit_related_politicalspot(request, uuid_key, spot_id=None):
+    if spot_id:
+        try:
+            current_obj = PoliticalSpot.objects.get(id=int(spot_id))
+        except PoliticalSpot.DoesNotExist:
+            current_obj =  None
+    else:
+        current_obj =  None
+    initial_data = {
+        'document': PoliticalBuy.objects.get(uuid_key=uuid_key)
+    }
+    if current_obj:
+        initial_data['id'] = current_obj.id
+
+    return handlePopAdd(request, RelatedPoliticalSpotForm, 'politicalspot', initial_data=initial_data, current_object=current_obj)
 
 
 @login_required

@@ -79,6 +79,8 @@ function dismissAddAnotherPopup(win, newId, newRepr) {
 jQuery(document).ready(function($) {
     $(document).on('click', 'a.add-on', function(event) {
         showAddAnotherPopup(this);
+        event.preventDefault();
+        return false;
     });
 });
 

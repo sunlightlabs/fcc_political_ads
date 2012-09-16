@@ -25,7 +25,7 @@
             <th class="show_name" scope="row">{{ spot.show_name|default:"Unspecified" }}</th>
             <td class="timeslot_begin">{{ spot.timeslot_begin|time:"h:i A" }}</td>
             <td class="timeslot_end">{{ spot.timeslot_end|time:"h:i A" }}</td>
-            {% if editable %}<td><a href="" class="btn">Edit</a></td>{% endif %}
+            {% if editable %}<td><a class="add-on" href="{% url edit_related_politicalspot spot_id=spot.id uuid_key=uuid_key %}">Edit</a></td>{% endif %}
        </tr>
     {% endfor %}
     </tbody>

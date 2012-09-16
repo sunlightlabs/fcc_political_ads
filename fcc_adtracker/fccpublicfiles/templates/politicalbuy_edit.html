@@ -108,8 +108,9 @@
         </div>
     </div>
     <div class="row">
+        <p><a class="btn btn-sunlight add-on" href="{% url edit_related_politicalspot uuid_key=obj.uuid_key %}">Add a political spot</a></p>
         {% if obj.politicalspot_set.all %}
-        {% include '_politicalspots_table.html' with politicalspot_list=obj.politicalspot_set.all editable=1 %}
+        {% include '_politicalspots_table.html' with politicalspot_list=obj.politicalspot_set.all editable=1 uuid_key=obj.uuid_key %}
         {% endif %}
     </div>
 
