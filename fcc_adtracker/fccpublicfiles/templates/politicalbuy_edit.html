@@ -107,8 +107,8 @@
         {% endif %}
         </div>
     </div>
-    <div class="row">
-        <p><a class="btn btn-sunlight add-on" href="{% url edit_related_politicalspot uuid_key=obj.uuid_key %}">Add a political spot</a></p>
+    <div class="row">{# ids on anchors are needed for javascript #}
+        <p><a id="politicalspot-add" class="btn btn-sunlight add-on" href="{% url add_related_politicalspot uuid_key=obj.uuid_key %}">Add a political spot</a></p>
         {% if obj.politicalspot_set.all %}
         {% include '_politicalspots_table.html' with politicalspot_list=obj.politicalspot_set.all editable=1 uuid_key=obj.uuid_key %}
         {% endif %}
@@ -118,6 +118,9 @@
 
 {% block js %}
     {{ block.super }}
+    <script type="text/javascript">
+        var update_spots_url = '{% url related_spots_ajax uuid_key=obj.uuid_key %}';
+    </script>
     <script type="text/javascript" src="{% static 'js/addnewobj_popup.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/libs/URI.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/libs/chosen.jquery.min.js' %}"></script>

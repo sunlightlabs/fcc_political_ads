@@ -59,4 +59,22 @@ jQuery(document).ready(function($) {
         chosen.results_none_found = jq_to_htmlstring(add_el);
         $(this).data('chosen', chosen);
     });
+
+    /*
+        Update spots helper
+    */
+    if (update_spots_url !== undefined) {
+        var spots_table = $('table.politicalspots');
+        $('table.politicalspots, #politicalspot-add').on('django:dismissaddanotherpopup', function(event) {
+            var target_el = $(spots_table);
+            log('dismissaddanotherpopup event');
+            $.get(update_spots_url, function(data, textStatus, jqXHR) {
+                var new_content = $(data);
+                target_el.fadeOut(500, function() {
+                    target_el.replaceWith(new_content);
+                    new_content.fadeIn(500);
+                });
+            });
+        });
+    }
 });

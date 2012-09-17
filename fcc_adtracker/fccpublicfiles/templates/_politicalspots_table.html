@@ -1,4 +1,4 @@
-<table class="table table-striped sortable">{% load fccpublicfiles_extras %}
+<table class="politicalspots table table-striped sortable">{% load fccpublicfiles_extras %}
     <thead>
         <tr>
             <th>Airing Start</th>
@@ -14,18 +14,18 @@
         </tr>
     </thead>
     <tbody>
-    {% for spot in politicalspot_list %}
+    {% for spot in politicalspot_list %}{# ids on anchors are needed for javascript #}
         <tr>
             <td class="airing_start_date">{{ spot.airing_start_date}}</td>
             <td class="airing_end_date">{{ spot.airing_end_date}}</td>
             <td class="airing_days">{{ spot.airing_days|weekday:"D1"|join:", " }}</td>
             <td class="num_spots">{{ spot.num_spots }}</td>
-            <td class="rate">${{ spot.rate }}</td>
+            <td class="rate">{% if spot.rate %}${% endif %}{{ spot.rate }}</td>
             <td class="broadcast_length">{{ spot.broadcast_length }}</td>
             <th class="show_name" scope="row">{{ spot.show_name|default:"Unspecified" }}</th>
             <td class="timeslot_begin">{{ spot.timeslot_begin|time:"h:i A" }}</td>
             <td class="timeslot_end">{{ spot.timeslot_end|time:"h:i A" }}</td>
-            {% if editable %}<td><a class="add-on" href="{% url edit_related_politicalspot spot_id=spot.id uuid_key=uuid_key %}">Edit</a></td>{% endif %}
+            {% if editable %}<td><a class="add-on" id="polticalspot-edit-{{spot.id}}" href="{% url edit_related_politicalspot spot_id=spot.id uuid_key=uuid_key %}">Edit</a></td>{% endif %}
        </tr>
     {% endfor %}
     </tbody>

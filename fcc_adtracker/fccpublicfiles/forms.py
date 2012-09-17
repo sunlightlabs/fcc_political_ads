@@ -7,6 +7,8 @@ from fccpublicfiles.models import PoliticalBuy, PoliticalSpot, Organization, Per
 from fccpublicfiles.widgets import SelectTimeWidget
 from broadcasters.models import Broadcaster
 
+SELECT_YEARS = range(2008, 2017)
+
 
 class SelectWithPopUp(forms.Select):
     model = None
@@ -71,9 +73,10 @@ class PoliticalSpotForm(forms.ModelForm):
 class RelatedPoliticalSpotForm(forms.ModelForm):
     class Meta:
         model = PoliticalSpot
+        exclude = ('is_visible',)
     document = forms.ModelChoiceField(queryset=PoliticalBuy.objects.all(), widget=forms.HiddenInput)
-    airing_start_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-small'}))
-    airing_end_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-small'}))
+    airing_start_date = forms.DateField(widget=SelectDateWidget(years=SELECT_YEARS, attrs={'class':'input-small'}))
+    airing_end_date = forms.DateField(widget=SelectDateWidget(years=SELECT_YEARS, attrs={'class':'input-small'}))
     timeslot_begin = forms.TimeField(widget=SelectTimeWidget(twelve_hr=True, use_seconds=False, attrs={'class':'time input-mini'}))
     timeslot_end = forms.TimeField(widget=SelectTimeWidget(twelve_hr=True, use_seconds=False, attrs={'class':'time input-mini'}))
 

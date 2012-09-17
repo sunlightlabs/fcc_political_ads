@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.html import escape
 from doccloud.models import Document
@@ -161,3 +161,21 @@ def add_advertiser_signatory(request):
                         pass
             return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % (escape(person._get_pk_val()), escape(person)))
     return handlePopAdd(request, AdvertiserSignatoryForm, 'advertiser_signatory', initial_data=defaults)
+
+
+def related_spots_ajax(request, uuid_key):
+    if request.is_ajax():
+        try:
+            buy = PoliticalBuy.objects.get(uuid_key=uuid_key)
+        except PoliticalBuy.DoesNotExist:
+            return HttpResponseNotFound()
+        politicalspot_list = buy.politicalspot_set.all()
+        pageContext = {
+            'politicalspot_list': politicalspot_list,
+            'editable': True,
+            'uuid_key': uuid_key
+        }
+        return render(request, '_politicalspots_table.html', pageContext)
+    else:
+        return HttpResponseBadRequest('<p>Request must be an XMLHttpRequest</p>')
+

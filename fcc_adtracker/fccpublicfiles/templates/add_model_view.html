@@ -1,5 +1,5 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %}
-{% block pagetitle %}Add {{ field }}{% endblock pagetitle %}
+{% block pagetitle %}Add/Edit {{ field }}{% endblock pagetitle %}
 
 {% block head %}
     {{ block.super }}
@@ -9,7 +9,7 @@
 {% block bodyclass %}minimal content{% endblock bodyclass %}
 
 {% block container %}
-    <h2>Add {{ field }}</h2>
+    <h2>Add/Edit {{ field }}</h2>
     <form method="POST" class="form-horizontal" action=".">
         {% csrf_token %}
         {% for hidden in form.hidden_fields %}
@@ -37,12 +37,4 @@ So maybe this shouldn't inhetid from fcc-base.html but some minimal other templa
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/addnewobj_popup.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/libs/jquery.timepicker.js' %}"></script>
-    <script type="text/javascript">
-        jQuery(document).ready(function($) {
-            $('input.time').timepicker({
-                timeFormat: 'H:i'
-            });
-        });
-    </script>
 {% endblock js %}
