@@ -1,4 +1,6 @@
 from django.conf.urls import patterns, include, url
+from django.views.generic.simple import direct_to_template
+
 from broadcasters.urls import json_urlpatterns
 from ajax_select import urls as ajax_select_urls
 
@@ -12,7 +14,8 @@ urlpatterns = patterns('',
     # they end up at the same place
     url(r'^account/dashboard/$', 'fcc_adtracker.views.user_dashboard', name='user_dashboard'),
     url(r'^account/$', 'fcc_adtracker.views.user_dashboard'),
-
+    url(r'^about/', direct_to_template, {'template': 'about.html'}),
+    url(r'^help/', direct_to_template, {'template': 'help.html'}),
     url(r'', include('volunteers.urls')),
     url(r'', include('sfapp.urls')),
     url(r'', include('fccpublicfiles.urls')),

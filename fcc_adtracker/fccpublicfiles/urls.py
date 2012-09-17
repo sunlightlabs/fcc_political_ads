@@ -1,5 +1,4 @@
 from django.conf.urls import patterns, include, url
-from django.views.generic.simple import direct_to_template
 
 from django.contrib import admin
 
@@ -21,6 +20,4 @@ urlpatterns = patterns('',
     url(r'^political-files/broadcaster/(?P<callsign>[\w-]+)/$', broadcaster_views.broadcaster_detail,
         {'template_name': 'broadcaster_politicalbuys.html'}, name='broadcaster_politicalbuys_view'),
     url(r'^political-files/ajax/{}/spots/$'.format(uuid_re_str), 'fccpublicfiles.views.related_spots_ajax', name='related_spots_ajax'),
-    url(r'^about/', direct_to_template, {'template': 'about.html'}),
-    url(r'^help/', direct_to_template, {'template': 'about.html'}),
 )
