@@ -90,6 +90,10 @@ class PoliticalBuyFormBase(forms.ModelForm):
 class PrelimDocumentForm(DocCloudFormBase, PoliticalBuyFormBase):
     broadcasters = forms.ModelMultipleChoiceField(queryset=Broadcaster.objects.all())
 
+    def __init__(self, *args, **kwargs):
+        super(PrelimDocumentForm, self).__init__(*args, **kwargs)
+        append_ajax_class(self.fields['broadcasters'])
+
 
 class PoliticalBuyFormFull(forms.ModelForm):
     class Meta:
