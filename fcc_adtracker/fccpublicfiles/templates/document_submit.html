@@ -16,9 +16,13 @@
     <form enctype="multipart/form-data" class="form-inline compact" method="post" action=".">
         {% csrf_token %}
         <ul id="stationNames">
-			<li class="id_file"><label>{{ form.file.label }}</label>{{ form.file }}{{form.file.errors}}</li>
-			<li class="id_broadcasters"><label>{{ form.broadcasters.label }}</label>{{ form.broadcasters }}{{form.broadcasters.errors}}</li>
-			<p class="form-instructions tip">Hold down "Control", or "Command" on a Mac, to select more than one broadcaster.</p>
+            <li class="id_file"><label>{{ form.file.label }}</label>{{ form.file }}{{form.file.errors}}</li>
+            <li class="id_broadcasters">
+                <label>{{ form.broadcasters.label }}</label>
+                {{ form.broadcasters }}
+                {{form.broadcasters.errors}}
+                <p class="form-instructions tip">Hold down "Control", or "Command" on a Mac, to select more than one broadcaster.</p>
+            </li>
             <li class="bottomBtn"><input type="submit" value="Submit" class="btn btn-sunlight" name="Submit"></li>
         </ul>
     </form>
@@ -30,9 +34,24 @@
 
 {% block head %}
     {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/chosen.css' %}">
+    <style type="text/css">
+        .chzn-container .chzn-results li {
+            clear: both;
+        }
+    </style>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBJAvCwnDreQHJ_cAlbXAm9Fb_LmjvlaTI&sensor=true&libraries=geometry"></script>
 {% endblock head %}
 
 {% block js %}
     <script src="{% static "js/fcc_site.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="{% static 'js/libs/chosen.jquery.min.js' %}"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $('select#id_broadcasters').chosen({
+                placeholder_text: 'Click to choose one or more broadcasters'
+            });
+            $('.id_broadcasters > p.form-instructions').hide(); // When using chosen js, those instructions don't apply.
+        });
+    </script>
 {% endblock js %}
