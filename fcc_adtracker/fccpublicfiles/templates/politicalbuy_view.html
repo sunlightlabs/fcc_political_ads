@@ -40,8 +40,9 @@
 
 {% include "gigya_div.html" with gigya_url=obj.get_absolute_url %}
 {% block content %}
-    <div id="headerFloat" class="clearfix nofloat">
-        <h2><small class="clearfix">Political Buy:</small> {{ obj.advertiser|default:"" }}</h2>
+    <div id="headerFloat" class="clearfix">
+        <h2 class="withTip"><small class="clearfix">Political Buy:</small> {{ obj.advertiser|default:"" }}</h2>
+        <p class="editBtn"><a href="#">Edit Details</a></p>
     </div>
     <div class="row module">
         <div id="buyData" class="span5">

@@ -18,14 +18,14 @@
     {% comment %}
     This page's view overrides the sidebar template in order to show the original document and a form on the same page.
     {% endcomment %}
-    <div class="row">
+    <div class="row module">
         <div class="span4">
             <h2>Ad buy at {{obj.broadcasters_callsign_list|join:', ' }}</h2>
-            <form class="form form-vertical" enctype="multipart/form-data" method="post" action=".">
+            <form class="form" enctype="multipart/form-data" method="post" action=".">
                 {% csrf_token %}
                 <fieldset>
-                    <legend>Essential Data</legend>
-                    <ul>
+                    <legend class="clearfix">Essential Data</legend>
+                    <ul class="unstyled clearfix">
                         <li class="input-append">
                             <label>{{form.advertiser.label}}</label>
                             {{form.advertiser}}
@@ -33,7 +33,7 @@
                         </li>
                         <li class="input-prepend">
                             <label>{{form.total_spent_raw.label}}</label>
-                            <span class="add-on">$</span>{{form.total_spent_raw}}
+                            {{form.total_spent_raw}}
                             {{form.total_spent_raw.errors}}
                         </li>
                         <li>
@@ -108,7 +108,10 @@
         </div>
     </div>
     <div class="row">{# ids on anchors are needed for javascript #}
-        <p><a id="politicalspot-add" class="btn btn-sunlight add-on" href="{% url add_related_politicalspot uuid_key=obj.uuid_key %}">Add a political spot</a></p>
+        <div id="headerFloat" class="clearfix">
+            <h3 class="withTip">Ad Spots</h3>
+            <a id="politicalspot-add" class="btn add-on" href="{% url add_related_politicalspot uuid_key=obj.uuid_key %}">Add a political spot</a>
+        </div>
         {% if obj.politicalspot_set.all %}
         {% include '_politicalspots_table.html' with politicalspot_list=obj.politicalspot_set.all editable=1 uuid_key=obj.uuid_key %}
         {% endif %}
