@@ -206,8 +206,10 @@ AJAX_SELECT_INLINES = 'inline'
 DOCUMENTS_PATH = ''
 DOCUMENTCLOUD_USERNAME = ''
 DOCUMENTCLOUD_PASS = ''
+DOCUMENTCLOUD_DEFAULT_ACCESS_LEVEL = 'public'
 DOCUMENTCLOUD_META = {
-    'contributedto': 'freethefiles'
+    'contributedto': 'freethefiles',
+    'Collection': 'PolticalAdSleuth'
 }
 
 # Django registration settings

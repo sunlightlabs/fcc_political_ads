@@ -3,6 +3,7 @@ from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.html import escape
+from django.conf import settings
 from doccloud.models import Document
 
 from .models import *
@@ -10,6 +11,9 @@ from fccpublicfiles.forms import PrelimDocumentForm, PoliticalBuyFormFull,\
         SimpleOrganizationForm, AdvertiserSignatoryForm, RelatedPoliticalSpotForm
 
 from name_cleaver import IndividualNameCleaver
+
+
+DOCUMENTCLOUD_DEFAULT_ACCESS_LEVEL = getattr(settings, 'DOCUMENTCLOUD_DEFAULT_ACCESS_LEVEL', 'private')
 
 
 def politicalbuy_view(request, uuid_key, slug='', template_name='politicalbuy_view.html'):
@@ -32,6 +36,7 @@ def prelim_doc_form(request, template_name='document_submit.html'):
             file=uploaded_file,
             title=uploaded_file.name,
             user=request.user,
+            access_level=DOCUMENTCLOUD_DEFAULT_ACCESS_LEVEL
         )
         # upload
         cloud_doc.connect_dc_doc()
@@ -45,7 +50,7 @@ def prelim_doc_form(request, template_name='document_submit.html'):
         pol_buy.broadcasters = form.cleaned_data['broadcasters']
         pol_buy.save()
 
-        return redirect('user_dashboard')
+        return redirect('politicalbuy_edit', uuid_key=pol_buy.uuid_key)
 
     return render(request, template_name, {'form': form})
 

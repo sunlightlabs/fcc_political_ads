@@ -3,7 +3,6 @@
 
 {% block head %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static 'css/datepicker.css' %}">
     <link rel="stylesheet" href="{% static 'css/chosen.css' %}">
 {% endblock head %}
 
@@ -102,8 +101,11 @@
             </form>
         </div>
         <div id="original_document" class="span8">
-        {% if obj %}
+        {% if obj and obj.documentcloud_doc.access_level != 'private' %}
+        <p>The document should appear below. Not visible? DocumentCloud may be processing the file, but you should at least see a page <a href='{{ obj.documentcloud_doc.get_absolute_url }}'>on DocumentCloud</a>. Let us know if your upload is not appearing.</p>
         {% include "doccloud/_documentcloud_embed.html" with document=obj.documentcloud_doc width=620 height=760 %}
+        {% else %}
+        <p>Document is private or unavailble on DocumentCloud. Let us know if this is an error.</p>
         {% endif %}
         </div>
     </div>
