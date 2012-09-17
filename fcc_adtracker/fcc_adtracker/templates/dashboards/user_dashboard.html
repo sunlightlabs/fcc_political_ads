@@ -64,7 +64,7 @@
                     <tbody>
                     {% for politicalbuy in politicalbuy_list %}
                         <tr class="{% if politicalbuy.is_public %}live{% else %}not-live{% endif %}">
-                            <td>{{ politicalbuy.is_public|yesno:'Approved,Unapproved,Unknown'|title }}</td>
+                            <td class="{{ politicalbuy.is_public|yesno:'Approved,Unapproved,Unknown'|title }} tip">{{ politicalbuy.is_public|yesno:'Approved,Unapproved,Unknown'|title }}</td>
                             <td>{% if politicalbuy.updated_at %}{{ politicalbuy.updated_at|date:"SHORT_DATETIME_FORMAT" }}{% else %}Unknown{% endif %}</td>
                             <td>{{ politicalbuy.broadcasters.all|join:", " }} {{ politicabuy.created_at }}</td>
                             <td>{{ politicalbuy.advertiser|default:'Unknown' }}</td>
