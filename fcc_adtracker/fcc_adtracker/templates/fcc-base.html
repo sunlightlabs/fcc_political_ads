@@ -54,14 +54,13 @@
     		    <li class="help"><a href="/help/">Help</a></li>
     		    <li class="about"><a href="/about/">About</a></li>
     		    <li class="loginout"><a href="{% if user.is_authenticated %}/account/logout/{% else %}/account/login/{% endif %}">Log {% if user.is_authenticated %}Out{% else %}In{% endif %}</a></li>
-    		    <li class="home"><a href="{% url user_dashboard %}">Account</a></li>
-    		    <li class="help"><a href="/states/">Browse States</a></li>
-    		    <li class="help  first"><a href="/political-files/submit/">Upload Files</a></li>
                 {% if user.is_authenticated %}
+                <li class="upload"><a href="/political-files/submit/">Upload Files</a></li>
+                <li class="account"><a href="{% url user_dashboard %}">Account</a></li>
                 {% else %}
-    		    <li class="signup first"><a href="{% url register_volunteer %}">Sign Up!</a></li>
+                <li class="signup"><a href="{% url register_volunteer %}">Sign Up!</a></li>
                 {% endif %}
-    		    <!--<li class="account"><a href="/account/">Account</a></li>-->
+                <li class="states first"><a href="/states/">Browse States</a></li>
     		</ul>
     	</nav>
     {% endblock %}
