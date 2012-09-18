@@ -159,8 +159,6 @@ def set_doccloud_data(sender, instance, signal, *args, **kwargs):
     doc = instance.documentcloud_doc
     doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
     doccloud_data['callsign'] = [ str(x) for x in instance.broadcasters_callsign_list() ]
-    doccloud_data['contributedto'] = 'freethefiles'
-    doccloud_data['collection'] = 'politicaladsleuth'
 
     if doc.dc_data != doccloud_data:
         doc.dc_data = doccloud_data
