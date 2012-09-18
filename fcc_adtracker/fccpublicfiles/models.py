@@ -143,6 +143,10 @@ class PoliticalBuy(MildModeratedModel):
     def get_absolute_url(self):
         return ('politicalbuy_view', (), {'uuid_key': str(self.uuid_key)})
 
+    @models.permalink
+    def get_edit_url(self):
+        return ('politicalbuy_edit', (), {'uuid_key': str(self.uuid_key)})
+
     def total_spent(self):
         """ Returns a total spent figure, from either the grand total on the document, or calculated from ad buys. """
         # TODO: we may want to have this also return a calculation if available, if the raw total is not filled in
