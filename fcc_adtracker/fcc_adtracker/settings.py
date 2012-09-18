@@ -209,7 +209,7 @@ DOCUMENTCLOUD_PASS = ''
 DOCUMENTCLOUD_DEFAULT_ACCESS_LEVEL = 'public'
 DOCUMENTCLOUD_META = {
     'contributedto': 'freethefiles',
-    'Collection': 'PolticalAdSleuth'
+    'Collection': 'PoliticalAdSleuth'
 }
 
 # Django registration settings
