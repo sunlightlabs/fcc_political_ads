@@ -225,7 +225,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 LOGIN_URL = '/account/login/'
-LOGIN_REDIRECT_URL = '/account/dashboard/'
+LOGIN_REDIRECT_URL = '/account/'
 LOGIN_ERROR_URL = '/account/error/'
 
 SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
