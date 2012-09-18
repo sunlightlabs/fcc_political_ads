@@ -69,6 +69,12 @@
     {% else %}
         <h1 id="logo"><a class="textReplace" href="/">Political Ad Sleuth</a></h1>
     {% endif %}
+        <form class="form-search" action="{% url haystack_search %}">
+        <div>
+            <input type="text" id="id_q" value="" name="q">
+            <button class="btn" type="submit">Search</button>
+        </div>
+        </form>
     {% include "gigya_div.html" %}
 </header>
 {{ block.super }}

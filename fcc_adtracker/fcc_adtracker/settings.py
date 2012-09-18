@@ -144,6 +144,9 @@ INSTALLED_APPS = (
     'reversion',
     'mildmoderator',
 
+    'haystack',
+    'search',  # Implements the search functionality enabled by haystack
+
     'doccloud',
     'registration',
     'social_auth',
@@ -251,6 +254,14 @@ SOCIAL_AUTH_PIPELINE = (
 
 FACEBOOK_EXTENDED_PERMISSIONS = ['email']
 
+#  Search settings
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': '',
+        'INDEX_NAME': '',
+    },
+}
 
 try:
     from local_settings import *

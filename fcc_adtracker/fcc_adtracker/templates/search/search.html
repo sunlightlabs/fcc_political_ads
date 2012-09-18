@@ -1,0 +1,65 @@
+{% extends "fcc-base.html" %}
+
+{% block pagetitle %}Search{% if query %}: "{{query}}"{% endif %}{% endblock pagetitle %}
+
+
+{% block content %}
+    <h2>Search{% if query %}: "{{query}}"{% endif %}</h2>
+    {% if not query %}
+    <form method="get" action="." class='form'>
+        <ul>
+            {% for field in form %}
+            <li>
+                <label>{{field.label}}</label>
+                {{field}}
+                {{field.errors}}
+            </li>
+            {% endfor %}
+            <li>
+                <input class='btn btn-sunlight' type="submit" value="Search">
+            </li>
+        </ul>
+    </form>
+    {% endif %}
+    {% if query %}
+        <ul class="unstyled">
+        {% for result in page.object_list %}
+            <li>
+                <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>
+            </li>
+        {% empty %}
+            <li>No results found.</li>
+        {% endfor %}
+        </ul>
+
+        {% if page.has_previous or page.has_next %}
+            <div>
+                {% if page.has_previous %}<a href="{% url haystack_search %}?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+                |
+                {% if page.has_next %}<a href="{% url haystack_search %}?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        {# Show some example queries to run, maybe query syntax, something else? #}
+    {% endif %}
+{% endblock %}
+
+{% block sidebar %}
+
+
+    {% if facets %}
+    <h3>Narrow your search</h3>
+    {% for key, value in facets.fields.items %}
+    <div>
+        <h5>{{key|title}}</h5>
+        <ul class='unstyled'>
+{% for item in value %}
+            <li><a href="{% url haystack_search %}?q={{query}}&amp;selected_facets={{key}}_exact:{{ item.0|urlencode }}">{{ item.0 }}</a> ({{ item.1 }} matches)</li>{% endfor %}
+        </ul>
+    </div>
+    <ul class="unstyled">
+
+    </ul>
+    {% endfor %}
+    {% endif %}
+{% endblock sidebar %}
