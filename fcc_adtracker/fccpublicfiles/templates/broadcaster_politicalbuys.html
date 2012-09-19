@@ -2,8 +2,6 @@
 {% block bodyclass %}broadcaster-detail{% endblock bodyclass %}
 {% block pagetitle %}Political Ad Buys at {{ obj.broadcaster.callsign }} {% endblock pagetitle %}
 
-{% include "gigya_div.html" with gigya_url=obj.broadcaster.get_absolute_url tweet_text='Political Buy Tweet' %}
-
 
 {% block content %}
     <div id="headerFloat" class="clearfix noFloat">
@@ -90,5 +88,4 @@
         });
     </script>
     {% endif %}
-	<script type="text/javascript" src="http://assets.sunlightfoundation.com.s3.amazonaws.com/site/4.0/scripts/gigya.min.js"></script>
 {% endblock js %}

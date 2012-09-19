@@ -3,6 +3,17 @@
 
 {% block ga %}UA-22821126-17{% endblock ga %}
 
+{% block og %}
+    <meta property="og:title" content="{% block og_title %}Become a Political Ad Sleuth with Sunlight Foundation & Free Press to find out who’s buying up airwaves this election!{% endblock og_title %}">
+    <meta property="og:description" content="Political Ad Sleuth is a new tool from Sunlight Foundation in partnership with Free Press that allows you to see who is buying up the airwaves and influencing your vote.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{request.build_absolute_uri}}">
+    <meta property="og:image" content="{% static 'img/img_fccBallot.png' %}">
+    <meta property="og:locale" content="en_US">
+    <meta property="fb:admins" content="7812952">
+{% endblock %}
+
+
 {% block head %}
 <script src="{% static "js/libs/modernizr-2.5.3.min.js" %}"></script>
 {% endblock head %}
@@ -40,6 +51,7 @@
         }, 10);
     });
 </script>
+    <script type="text/javascript" src="http://assets.sunlightfoundation.com.s3.amazonaws.com/site/4.0/scripts/gigya.min.js"></script>
 {% endblock js %}
 
 {% block css %}
@@ -76,7 +88,15 @@
             <p><a href='{% url haystack_search %}'>Advanced Search</a></p>
         </div>
         </form>
-    {% include "gigya_div.html" %}
+        {% block gigya_html %}
+        <div class="social-icons share-buttons"
+            data-gigya="auto"
+            data-services="twitter-tweet, facebook"
+            data-options="linkBack={{request.build_absolute_uri|urlencode}}&amp;size=16&amp;showCounts=right"
+            {# tweet_text needs to be urlencoded, which means that http://djangosnippets.org/snippets/363/ may be a fine idea. #}
+            data-twitter-tweet-options="defaultText={% block tweet_text %}Become a Political Ad Sleuth w/ @sunfoundation @freepress to find out who’s buying up airwaves this election! {{request.build_absolute_uri}} #freethefiles{% endblock tweet_text %}">
+        </div>
+        {% endblock gigya_html %}
 </header>
 {{ block.super }}
 {% endblock container %}
