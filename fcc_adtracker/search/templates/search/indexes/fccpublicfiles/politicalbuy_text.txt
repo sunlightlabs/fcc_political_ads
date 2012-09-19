@@ -1,0 +1,4 @@
+{{object.advertiser.name|default:"Unknown"}}
+{{object.advertiser_signatory.full_name|default:"Unknown"}}
+{{object.bought_by.name|default:"Unknown"}}
+{{object.broadcasters_callsign_list|join:','}}
