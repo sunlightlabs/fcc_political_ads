@@ -1,10 +1,18 @@
-{% extends "fcc-base.html" %}
+{% extends "fcc-base.html" %} {% load search_extras %}
 
 {% block pagetitle %}Search{% if query %}: "{{query}}"{% endif %}{% endblock pagetitle %}
 
 
 {% block content %}
     <h2>Search{% if query %}: "{{query}}"{% endif %}</h2>
+    {% if selected_facets %}
+    <h3>Filters</h3>
+    <ul>
+        {% for key, value in selected_facets.items %}
+        <li><strong>{{key|replace:'_, '|title}}</strong>: {{value}} (<a href="{% url haystack_search %}?q={{query}}{% for k, v in selected_facets.items %}{% if k != key %}&amp;selected_facets={{k}}:{{ v|urlencode }}{% endif %}{% endfor %}">Remove</a>)</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     {% if not query %}
     <form method="get" action="." class='form'>
         <ul>
@@ -34,9 +42,9 @@
 
         {% if page.has_previous or page.has_next %}
             <div>
-                {% if page.has_previous %}<a href="{% url haystack_search %}?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+                {% if page.has_previous %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
                 |
-                {% if page.has_next %}<a href="{% url haystack_search %}?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+                {% if page.has_next %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
             </div>
         {% endif %}
     {% else %}
@@ -45,16 +53,31 @@
 {% endblock %}
 
 {% block sidebar %}
-
+    {% if query %}
+    <form method="get" action="." class='form'>
+        <ul>
+            {% for field in form %}
+            <li>
+                <label>{{field.label}}</label>
+                {{field}}
+                {{field.errors}}
+            </li>
+            {% endfor %}
+            <li>
+                <input class='btn btn-sunlight' type="submit" value="Search">
+            </li>
+        </ul>
+    </form>
+    {% endif %}
 
     {% if facets %}
     <h3>Narrow your search</h3>
     {% for key, value in facets.fields.items %}
     <div>
-        <h5>{{key|title}}</h5>
+        <h5>{{key|replace:'_, '|title}}</h5>
         <ul class='unstyled'>
 {% for item in value %}
-            <li><a href="{% url haystack_search %}?q={{query}}&amp;selected_facets={{key}}_exact:{{ item.0|urlencode }}">{{ item.0 }}</a> ({{ item.1 }} matches)</li>{% endfor %}
+            <li><a href="{% url haystack_search %}?q={{query}}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}{% if item.0 not in selected_facets.values %}&amp;selected_facets={{key}}_exact:{{ item.0|urlencode }}{% endif %}">{{ item.0 }}</a> ({{ item.1 }} matches)</li>{% endfor %}
         </ul>
     </div>
     <ul class="unstyled">

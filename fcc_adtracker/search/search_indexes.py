@@ -22,7 +22,7 @@ class PoliticalBuyIndex(indexes.SearchIndex, indexes.Indexable):
 
     def index_queryset(self):
         """Used when the entire index for model is updated."""
-        return self.get_model().objects.public()
+        return self.get_model().objects.all()
 
     def prepare_station(self, obj):
         return obj.broadcasters_callsign_list()

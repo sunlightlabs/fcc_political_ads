@@ -1,18 +1,27 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
 from haystack.query import SearchQuerySet
-from haystack.views import SearchView, FacetedSearchView, search_view_factory
-from haystack.forms import SearchForm
+from haystack.views import search_view_factory
 
+from search.views import ImprovedFacetedSearchView
 from search.forms import DateRangeSearchForm
 
-sqs = SearchQuerySet().facet('advertiser').facet('bought_by').facet('station')
+sqs_all = SearchQuerySet().facet('advertiser').facet('media_buyer').facet('station').facet('advertiser_signatory')
+# sqs_public = sqs_all.filter(is_public=True)
+
 
 urlpatterns = patterns('haystack.views',
     url(r'^$', search_view_factory(
-            view_class=FacetedSearchView,
+            view_class=ImprovedFacetedSearchView,
             template='search/search.html',
-            searchqueryset=sqs,
+            searchqueryset=sqs_all,
             form_class=DateRangeSearchForm,
             results_per_page=20
         ), name='haystack_search'),
+    # url(r'^auth$', search_view_factory(
+    #         view_class=FacetedSearchView,
+    #         template='search/search.html',
+    #         searchqueryset=sqs_all,
+    #         form_class=DateRangeSearchForm,
+    #         results_per_page=20
+    #     ), name='haystack_search'),
 )
