@@ -70,13 +70,19 @@
         <h1 id="logo"><a class="textReplace" href="/">Political Ad Sleuth</a></h1>
     {% endif %}
         <form class="form-search" action="{% url haystack_search %}">
-        <div>
-            <input type="text" id="id_q" value="" name="q">
-            <button class="btn" type="submit">Search</button>
-            <p><a href='{% url haystack_search %}'>Advanced Search</a></p>
-        </div>
+            <ul>
+                <li>
+                    <label class="invisible">Search</label>
+                    <input type="text" id="id_q" value="" name="q">
+                </li>
+                <li>
+                    <button class="btn" type="submit">Search</button>
+                </li>
+                <li class="clear">
+                    <a href='{% url haystack_search %}'>Advanced Search</a>
+                </li>
+            </ul>
         </form>
-    {% include "gigya_div.html" %}
 </header>
 {{ block.super }}
 {% endblock container %}
