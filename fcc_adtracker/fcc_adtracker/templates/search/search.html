@@ -48,6 +48,25 @@
             <li><strong>{{key|replace:'_, '|title}}</strong>: {{value}} (<a href="{% url haystack_search %}?q={{query}}{% for k, v in selected_facets.items %}{% if k != key %}&amp;selected_facets={{k}}:{{ v|urlencode }}{% endif %}{% endfor %}">Remove</a>)</li>
             {% endfor %}
         </ul>
+    </form>
+    {% endif %}
+    {% if query %}
+        <ul class="unstyled">
+        {% for result in page.object_list %}
+            <li>
+                <a href="{{ result.object.get_absolute_url }}">{{ result.object.advertiser_display }} {{ result.object.station_display }} {{ result.object.date_display }} {{ result.object.citystate_display}}</a>
+            </li>
+        {% empty %}
+            <li>No results found.</li>
+        {% endfor %}
+        </ul>
+
+        {% if page.has_previous or page.has_next %}
+            <div>
+                {% if page.has_previous %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+                |
+                {% if page.has_next %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+            </div>
         {% endif %}
         {% if not query %}
         <form method="get" action="." class='form'>
