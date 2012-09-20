@@ -1,6 +1,9 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %} {% load fccpublicfiles_extras %}
 {% block pagetitle %}Political Buy {% if obj.advertiser %}for {{ obj.advertiser }}{% endif %} :: {{ obj.broadcasters.all|join:", " }}{% endblock pagetitle %}
 
+{% block og_title %}I just learned {{obj.advertiser.name}} bought ads on {{ obj.broadcasters_callsign_list|join:", " }} on Political Ad Sleuth from Sunlight Foundation & Free Press{% endblock og_title %}
+
+
 {% block head %}
 {{ block.super }}
 {% comment %}
@@ -38,7 +41,6 @@
 </style>
 {% endblock head %}
 
-{% include "gigya_div.html" with gigya_url=obj.get_absolute_url %}
 {% block content %}
     <div id="headerFloat" class="clearfix">
         <h2 class="withTip"><small class="clearfix">Political Buy:</small> {{ obj.advertiser|default:"" }}</h2>
