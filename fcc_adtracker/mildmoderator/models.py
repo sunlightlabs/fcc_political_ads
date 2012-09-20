@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
-from .managers import MildModeratedModelManager
+from django.db.models.signals import pre_save
+from mildmoderator.managers import MildModeratedModelManager
 
 
 class MildModeratedModel(models.Model):
@@ -24,5 +25,35 @@ class MildModeratedModel(models.Model):
 
     class Meta:
         abstract = True
+
+    def save(self, user, *args, **kwargs):
+        # people shouldn't be setting PK's manually, otherwise this check will not work
+        # FWIW, Django uses it as its internal check, too.
+
+        # option 1: no pk, just set created_by
+
+        # option 2: pk, set updated_by
+
+        # option 3: user has permission to approve
+        # and is_public is True when it was False before, set approved_by
+
+        klass = self.__class__
+
+        if not self.pk:
+            self.created_by = user
+            self.is_public = klass.objects.can_be_autoapproved_by_user(user)
+
+        else:
+            self.updated_by = user
+
+            if klass.objects.can_be_approved_by_user(user):
+                if (not self._is_public_old) and self.is_public: # Field has changed to True
+                    self.approved_by = user
+            else:
+                self.is_public = False
+
+        return super(MildModeratedModel, self).save(*args, **kwargs)
+
+
 
 
