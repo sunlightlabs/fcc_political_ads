@@ -33,7 +33,7 @@
         <ul class="unstyled">
         {% for result in page.object_list %}
             <li>
-                <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>
+                <a href="{{ result.object.get_absolute_url }}">{{ result.object.advertiser_display }} {{ result.object.station_display }} {{ result.object.date_display }} {{ result.object.citystate_display}}</a>
             </li>
         {% empty %}
             <li>No results found.</li>
