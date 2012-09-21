@@ -55,7 +55,7 @@
                 <tbody>   
                     {% for result in page.object_list %}
                     <tr>
-                        <td>{{ result.object.advertiser_display }}</td>
+                        <td><a href="{{ result.object.get_absolute_url }}">{{ result.object.advertiser_display }}</a></td>
                         <td>{{ result.object.station_display }}</td> 
                         <td>{{ result.object.date_display }}</td> 
                         <td>{{ result.object.citystate_display}}</td>
