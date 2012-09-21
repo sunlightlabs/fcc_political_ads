@@ -6,9 +6,28 @@
 {% block content %}
 <div class="row">
     <div class="span12">
-        <h2 id="resultsTitle">Search Results for{% if query %}: <span>&#8220;{{query}}&#8221;{% endif %}</span></h2>
+	{% if query %}
+		<h2 id="resultsTitle">Search Results for: <span>&#8220;{{query}}&#8221;</span></h2>
+	{% else %}
+		<h2 id="resultsTitle">Advanced Search</h2>
+         <form method="get" action="." class='form'>
+             <ul>
+                 {% for field in form %}
+                 <li>
+                     <label>{{field.label}}</label>
+                     {{field}}
+                     {{field.errors}}
+                 </li>
+                 {% endfor %}
+                 <li>
+                     <input class='btn btn-sunlight' type="submit" value="Search">
+                 </li>
+             </ul>
+         </form>
+	{% endif %}
     </div>    
-</div>    
+</div>
+{% if query %}
 <div class="row">
     <div class="span3">
         <h4>Narrow your search</h4>
@@ -76,23 +95,9 @@
                 {% if page.has_next %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
             </div>
         {% endif %}
-        {% if not query %}
-            <form method="get" action="." class='form'>
-                <ul>
-                    {% for field in form %}
-                    <li>
-                        <label>{{field.label}}</label>
-                        {{field}}
-                        {{field.errors}}
-                    </li>
-                    {% endfor %}
-                    <li>
-                        <input class='btn btn-sunlight' type="submit" value="Search">
-                    </li>
-                </ul>
-            </form>
-        {% endif %}
+        
        
     </div>
-</div>    
+</div> 
+{% endif %}   
 {% endblock %}
