@@ -6,37 +6,42 @@
 {% block content %}
 <div class="row">
     <div class="span12">
-        <h2>Search Results for{% if query %}: "{{query}}"{% endif %}</h2>
+        <h2 id="resultsTitle">Search Results for{% if query %}: <span>&#8220;{{query}}&#8221;{% endif %}</span></h2>
     </div>    
 </div>    
 <div class="row">
     <div class="span3">
-        <h3>Narrow your search</h3>
+        <h4>Narrow your search</h4>
        
         {% if facets %}
             {% for key, value in facets.fields.items %}
-                <div>
-                    <h5>{{key|replace:'_, '|title}}</h5>
-                    <ul class='unstyled'>
-            {% for item in value %}
-                    <li><a href="{% url haystack_search %}?q={{query}}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}{% if item.0 not in selected_facets.values %}&amp;selected_facets={{key}}_exact:{{ item.0|urlencode }}{% endif %}">{{ item.0 }}</a> ({{ item.1 }})</li>{% endfor %}
-                </ul>
-            </div>
-            <ul class="unstyled">
-
+                <ul class="unstyled withLine">
+                    <li>
+                        <h5>{{key|replace:'_, '|title}}</h5>
+                        <ul class='unstyled'>
+                {% for item in value %}
+                            <li><a href="{% url haystack_search %}?q={{query}}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}{% if item.0 not in selected_facets.values %}&amp;selected_facets={{key}}_exact:{{ item.0|urlencode }}{% endif %}">{{ item.0 }}</a> <span class="resultCount">({{ item.1 }})</span></li>{% endfor %}
+                        </ul>
+                    </li>
+                </li>    
             </ul>
         {% endfor %}
     {% endif %}
     </div>
-    <div class="span9">
+    <div id="searchResults" class="span8 offset1">
         {% if selected_facets %}
-            <h3>Filters</h3>
-            <ul>
-                {% for key, value in selected_facets.items %}
-                <li><strong>{{key|replace:'_, '|title}}</strong>: {{value}} (<a href="{% url haystack_search %}?q={{query}}{% for k, v in selected_facets.items %}{% if k != key %}&amp;selected_facets={{k}}:{{ v|urlencode }}{% endif %}{% endfor %}">Remove</a>)</li>
-                {% endfor %}
-            </ul>
+            <div id="filterBox">
+                <span><strong>Your Selections:</strong></span>
+                <ul class="unstyled">
+                    {% for key, value in selected_facets.items %}
+                    <li>
+                        <a class="closeBtn textReplace" href="{% url haystack_search %}?q={{query}}{% for k, v in selected_facets.items %}{% if k != key %}&amp;selected_facets={{k}}:{{ v|urlencode }}{% endif %}{% endfor %}">Remove</a>
+                        <strong>{{key|replace:'_, '|title}}</strong>: {{value}} </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
+            
         {% if query %}
             <table class="table table-striped ">
                 <thead>
