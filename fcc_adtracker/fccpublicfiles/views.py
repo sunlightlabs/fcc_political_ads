@@ -45,10 +45,10 @@ def prelim_doc_form(request, template_name='document_submit.html'):
         pol_buy = PoliticalBuy(
             documentcloud_doc=cloud_doc
         )
-        pol_buy.save()
+        pol_buy.save(request.user)
 
         pol_buy.broadcasters = form.cleaned_data['broadcasters']
-        pol_buy.save()
+        pol_buy.save(request.user)
 
         return redirect('politicalbuy_edit', uuid_key=pol_buy.uuid_key)
 

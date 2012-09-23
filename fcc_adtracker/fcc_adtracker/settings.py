@@ -158,6 +158,8 @@ INSTALLED_APPS = (
 
     'south',
     'ajax_select',
+    
+    'scraper',
 )
 
 # A sample logging configuration. The only tangible logging

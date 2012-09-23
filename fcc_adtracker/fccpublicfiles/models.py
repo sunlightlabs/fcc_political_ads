@@ -7,6 +7,7 @@ from django.conf import settings
 from django.template.defaultfilters import slugify
 from django_extensions.db.fields import UUIDField
 from doccloud.models import Document
+from scraper.models import PDF_File
 from broadcasters.models import Broadcaster
 from locations.models import Address
 from mildmoderator.managers import MildModeratedModelManager
@@ -106,7 +107,19 @@ class PoliticalBuy(MildModeratedModel):
     lowest_unit_price = models.NullBooleanField(default=None, blank=True, null=True)
     total_spent_raw = models.DecimalField(max_digits=19, decimal_places=2, null=True, verbose_name='Grand Total')
     num_spots_raw = models.PositiveIntegerField(null=True, verbose_name='Number of Ad Spots')
-
+    
+    # Are the summary fields completed? 
+    is_summarized = models.NullBooleanField(default=False, verbose_name="Data Entry Is Complete", help_text="Are all the summary fields filled in?")
+    
+    # Did this come from the FCC
+    is_FCC_doc = models.NullBooleanField(default=False, help_text="Did this document come from the FCC? ")
+    
+    related_FCC_file = models.ForeignKey('PDF_File', blank=True, null=True)
+    
+    
+    is_invalid = models.BooleanField(default=False, help_text="Is this document unprocessable? ")
+    data_entry_notes = models.TextField(blank=True, null=True, help_text="Explain any complications in entering summary data")
+    
     """ This is a user-defined setting that lets an authenticated user
     mark a record as not needing any more work. The idea is that
     a superuser will need to come along afterward to the moderated object
@@ -128,6 +141,27 @@ class PoliticalBuy(MildModeratedModel):
             return u"{0} {1}: {2}".format(broadcasters_str, self.advertiser or '', date_str)
         return u"PoliticalBuy"
 
+    # 
+    def isadbuy(self):
+        return True
+        
+    def advertiser_display(self):
+        return self.advertiser or 'Unknown'
+    
+    def date_display(self):
+        date_str = u"{0}".format(self.contract_end_date.strftime("%m/%d/%y"))
+        return date_str
+        
+    def citystate_display(self):
+        first_broadcaster = self.broadcasters.all()[0]
+        broadcaster = "%s, %s" % (first_broadcaster.community_city, first_broadcaster.community_state)
+        return broadcaster
+    
+    def station_display(self):
+        first_broadcaster = self.broadcasters.all()[0]
+        return first_broadcaster.callsign
+        
+        
     def name(self):
         first_broadcaster = self.broadcasters.all()[0]
         broadcaster = "%s (%s, %s)" % (first_broadcaster.callsign, first_broadcaster.community_city, first_broadcaster.community_state)
