@@ -141,17 +141,16 @@ class PoliticalBuy(MildModeratedModel):
             return u"{0} {1}: {2}".format(broadcasters_str, self.advertiser or '', date_str)
         return u"PoliticalBuy"
 
-    # 
     def isadbuy(self):
         return True
-        
+
     def advertiser_display(self):
         return self.advertiser or 'Unknown'
-    
+
     def date_display(self):
         date_str = u"{0}".format(self.contract_end_date.strftime("%m/%d/%y"))
         return date_str
-        
+
     def citystate_display(self):
         first_broadcaster = self.broadcasters.all()[0]
         broadcaster = "%s, %s" % (first_broadcaster.community_city, first_broadcaster.community_state)

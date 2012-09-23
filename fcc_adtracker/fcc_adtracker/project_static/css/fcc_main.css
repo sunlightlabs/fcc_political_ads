@@ -5,7 +5,7 @@ img { max-width: none; }
 
 #logo { width: 135px; height: 80px; padding-top: 10px; float: left; }
 #logo a { background: url(../img/logo.png) top left no-repeat; width: 135px; height: 80px;}
-.social-icons { float: right; padding-top: 70px; }
+.social-icons { float: right; clear: both; position: relative; margin-top: -30px; margin-bottom: 20px; }
 nav { margin-top: -20px;}
 
 #map_canvas { height: 100% }
@@ -35,7 +35,6 @@ p.distance {
     height:350px;
 }*/
 
-.broadcasters-featured header { margin-bottom: 0px; border-bottom: 0px; }
 header { margin-bottom: 70px;  border-bottom: 1px dashed #e1dddd; }
 
 ul#locations {
@@ -47,7 +46,8 @@ ul#locations {
     padding: 0 10px;
 }
 
-.featureImg { margin-top: 180px; float: right; margin-right: 20px; }
+.featureImg {  float: right; margin-right: 20px; }
+.featureImg img { margin-top: 180px;}
 
 #freepress { background: url(../img/logo_freepress.png) top left no-repeat; width: 118px; height: 40px; margin-top: 10px;}
 #newAmerica { background: url(../img/logo_newAmerica.png) top left no-repeat; width: 156px; height: 28px; margin-top: 20px; margin-right: 0;}
@@ -210,7 +210,11 @@ a.caldisabled {
 .table { margin: 30px 0; }
 
 .row .span8 { padding-right: 30px; width: 590px; }
+.row #searchResults.span8 { padding-right: 0px; width: 620px;}
 .row .span9 { padding-right: 30px; width: 670px; }
+
+#resultsTitle span { text-transform: capitalize; color: #97928F; }
+.resultCount {  font-family: Georgia, "Times New Roman", Times, serif; font-style: oblique; color: #97928F; }
 
 #associated a { width: 180px; padding: 15px; }
 
@@ -231,7 +235,11 @@ fieldset ul { padding-top: 18px; }
 #pager .pageNumDisplay { text-align: left; }
 #pager select { width: 60px; margin-right: 240px;  }
 #pager label { color: #76716E; margin-right: 5px; }
-.input-mini { width: 72px; }
+.row .input-mini { width: 72px; }
+
+.form-search { float: right; margin-top: 60px; margin-bottom: 5px;  }
+.form-search li { float: left; display: block; clear: none; margin-left: 10px; margin-bottom: 5px; }
+.form-search li.clear { clear: both; float: right; }
 
 #pager a { width: 16px; border: none; margin: 5px 0 0;  padding: 0; }
 #btnFirst a { background: url(../img/btnFirst.png) center top no-repeat;  }
@@ -242,14 +250,18 @@ fieldset ul { padding-top: 18px; }
 table.sortable > thead th { color: #C9A706; }
 table.sortable > thead th:hover { color: #827b78; }
 
+#filterBox { background-color: #F9F8F8; border: 1px solid #F0EDED; padding: 6px 10px 5px; }
+#filterBox span { font-size: 105%; margin-bottom: 5px; display: block; }
+#filterBox li { margin-bottom: 0px; color: #98928f; }
+.closeBtn { background: url(../img/icon_close.png) top left no-repeat; height: 14px; float: left; width: 14px; margin-right: 5px;  margin-top: 1px; }
+.closeBtn:hover { background: url(../img/icon_close.png) bottom left no-repeat; } 
 
 #headerFloat { border-bottom: 1px solid #F0EDED; margin-bottom: 40px; }
 #headerFloat.nofloat h2{ width: 100%; padding-top: 0px;}
 #headerFloat h2, #headerFloat h3 { float: left; width: 380px; padding-top: 15px;}
 #headerFloat p { float: right; width: 175px;  padding: 10px 15px; }
 #headerFloat p.editBtn { text-align: right; }
-
-
+ 
 #downloadBtn { float: right; }
 table .tip { display: table-cell; }
 
@@ -257,3 +269,5 @@ table .Approved { background: url(../img/bg_approved.png) center 8px no-repeat; 
 table .Unapproved { background: url(../img/bg_unapproved.png) center 8px no-repeat; padding-top: 30px; font-size: 90%; }
 
 #politicalspot-add { float: right; }
+
+.withLine li li { border: none; padding: 0px; }

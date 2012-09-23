@@ -157,6 +157,7 @@ INSTALLED_APPS = (
     'volunteers',
 
     'south',
+    'django_nose',
     'ajax_select',
     
     'scraper',
@@ -264,6 +265,9 @@ HAYSTACK_CONNECTIONS = {
         'INDEX_NAME': '',
     },
 }
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
 
 try:
     from local_settings import *
