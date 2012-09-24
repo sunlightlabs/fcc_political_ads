@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import pre_save
 from mildmoderator.managers import MildModeratedModelManager
+from django.contrib import messages
 
 
 class MildModeratedModel(models.Model):
@@ -41,7 +42,8 @@ class MildModeratedModel(models.Model):
 
         if not self.pk:
             self.created_by = user
-            self.is_public = klass.objects.can_be_autoapproved_by_user(user)
+            can_autoapprove = klass.objects.can_be_autoapproved_by_user(user)
+            self.is_public = can_autoapprove
 
         else:
             self.updated_by = user
