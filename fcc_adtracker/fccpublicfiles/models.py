@@ -162,9 +162,11 @@ class PoliticalBuy(MildModeratedModel):
         first_broadcaster = self.broadcasters.all()[0]
         broadcaster = "%s (%s, %s)" % (first_broadcaster.callsign, first_broadcaster.community_city, first_broadcaster.community_state)
         advertiser = self.advertiser or 'Unknown'
-        date_str = u"{0}".format(self.contract_end_date.strftime("%m/%d/%y"))
+        date_str = ""
+        if (self.contract_end_date):
+            date_str = self.contract_end_date.strftime(", %m/%d/%y")
 
-        return "%s, %s on %s" % (advertiser, date_str, broadcaster)
+        return "%s%s on %s" % (advertiser, date_str, broadcaster)
 
     def nonunique_slug(self):
         return slugify(self.__unicode__())
