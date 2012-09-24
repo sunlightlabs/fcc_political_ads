@@ -39,7 +39,7 @@ def user_dashboard(request):
         broadcaster_list = Broadcaster.objects.filter(community_state=profile.state)
     except Profile.DoesNotExist:
         profile = broadcaster_list = None
-
+    """
     user_revisions = Revision.objects.filter(user=request.user)
     user_versions = Version.objects.filter(revision_id__in=user_revisions)
     pbuy_type = ContentType.objects.get_for_model(PoliticalBuy)
@@ -50,8 +50,8 @@ def user_dashboard(request):
     politicalbuy_version_list = user_versions.filter(content_type=pbuy_type) \
                             .distinct('object_id')
     politicalbuy_ids = [vers.object_id for vers in politicalbuy_version_list]
-    politicalbuy_list = PoliticalBuy.objects.filter(Q(id__in=politicalbuy_ids) |\
-                        Q(politicalspot__in=politicalspot_ids)).distinct().order_by('-updated_at')
+    """
+    politicalbuy_list = PoliticalBuy.objects.filter(created_by=request.user).order_by('-created_at')
 
     form = PrelimDocumentForm()
 
