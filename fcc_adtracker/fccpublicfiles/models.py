@@ -159,8 +159,11 @@ class PoliticalBuy(MildModeratedModel):
         
         
     def name(self):
-        first_broadcaster = self.broadcasters.all()[0]
-        broadcaster = "%s (%s, %s)" % (first_broadcaster.callsign, first_broadcaster.community_city, first_broadcaster.community_state)
+        all_broadcasters = self.broadcasters.all()
+        broadcaster = "Unknown"
+        if len(all_broadcasters > 0):
+            first_broadcaster = self.broadcasters.all()[0]  
+            broadcaster = "%s (%s, %s)" % (first_broadcaster.callsign, first_broadcaster.community_city, first_broadcaster.community_state)
         advertiser = self.advertiser or 'Unknown'
         date_str = ""
         if (self.contract_end_date):
