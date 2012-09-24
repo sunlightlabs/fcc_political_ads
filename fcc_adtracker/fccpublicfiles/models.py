@@ -108,16 +108,13 @@ class PoliticalBuy(MildModeratedModel):
     total_spent_raw = models.DecimalField(max_digits=19, decimal_places=2, null=True, verbose_name='Grand Total')
     num_spots_raw = models.PositiveIntegerField(null=True, verbose_name='Number of Ad Spots')
     
+    # JF Adds
     # Are the summary fields completed? 
     is_summarized = models.NullBooleanField(default=False, verbose_name="Data Entry Is Complete", help_text="Are all the summary fields filled in?")
-    
-    # Did this come from the FCC
+    # Did this come from the FCC?
     is_FCC_doc = models.NullBooleanField(default=False, help_text="Did this document come from the FCC? ")
-    
-    related_FCC_file = models.ForeignKey('PDF_File', blank=True, null=True)
-    
-    
-    is_invalid = models.BooleanField(default=False, help_text="Is this document unprocessable? ")
+    related_FCC_file = models.ForeignKey(PDF_File, blank=True, null=True)
+    is_invalid = models.NullBooleanField(default=False, help_text="Is this document unprocessable, a duplicate, or devoid of any relevant information? ", null=True)
     data_entry_notes = models.TextField(blank=True, null=True, help_text="Explain any complications in entering summary data")
     
     """ This is a user-defined setting that lets an authenticated user
@@ -194,9 +191,20 @@ class PoliticalBuy(MildModeratedModel):
 @receiver(post_save, sender=PoliticalBuy)
 def set_doccloud_data(sender, instance, signal, *args, **kwargs):
     doc = instance.documentcloud_doc
-    doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
+    #doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
+    doccloud_data = {}
     doccloud_data['callsign'] = [ str(x) for x in instance.broadcasters_callsign_list() ]
-
+    
+    if (instance.is_FCC_doc):
+        doccloud_data['uploader'] = "auto"
+        doccloud_data['Collection'] = 'PoliticalAdSleuthFCC'
+        
+    else:
+        doccloud_data['uploader'] = "submission"        
+        # only put the manual documents here... 
+        doccloud_data['contributedto'] = "freethefiles"
+        doccloud_data['Collection'] = 'PoliticalAdSleuth'           
+    
     if doc.dc_data != doccloud_data:
         doc.dc_data = doccloud_data
 

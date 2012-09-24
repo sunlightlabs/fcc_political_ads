@@ -1,13 +1,84 @@
 
 
 from django.db import models
+# from django.contrib.gis.db import models
 
 from broadcasters.models import Broadcaster
 
 from utils import get_folder_path, get_file_path
 
+# Geo representation of a broadcast area. Requires PostGIS. 
+"""
+class StationContour(models.Model):
+    facility_id = models.CharField(max_length=15, primary_key=True)
+    callSign = models.CharField(max_length=15)
+    station_polygon = models.PolygonField(null=True, srid=4326) # maybe we want 4269 ? 
+    objects = models.GeoManager()
 
-# Represents the basic info in a folder. Folders have types, parents, and children, but that's 'recoverable' from the 
+    polylines = models.TextField(null=True, editable=False)
+    levels = models.CharField(max_length=511, null=True) # Should never be longer than 360, b/c FCC puts out degree-based readings. 
+"""
+
+
+
+# Helper reference class to store data about stations scraped from the FCC.
+# In general all of the TV stations with data on 'em are in here; broadcasters is only broadcasters we 'care' about. 
+
+# All of this info is available from the CDBS and elsewhere, but having it flattened is super-convenient--saves the pain of picking 
+# which application_id is the current one. Actually not clear where studio addresses come from in the CDBS. 
+#TODO: unify load process. 
+class StationData(models.Model):
+    # DATA FROM API
+    facility_id = models.CharField(max_length=15, primary_key=True)
+    callSign = models.CharField(max_length=15)
+    facilityType = models.CharField(max_length=3)
+    service= models.CharField(max_length=31, null=True)
+    authAppId= models.CharField(max_length=15, null=True)
+    frequency = models.CharField(max_length=15, null=True)
+    band= models.CharField(max_length=15)
+    virtualChannel = models.CharField(max_length=3)
+    rfChannel= models.CharField(max_length=3)
+    networkAfil= models.CharField(max_length=100, null=True)
+    communityCity= models.CharField(max_length=20)
+    communityState= models.CharField(max_length=3)
+    nielsenDma= models.CharField(max_length=60)
+    # Watch out for status = "LICENSED AND SILENT"
+    status = models.CharField(max_length=25)
+    statusDate= models.DateField(null=True)
+    licenseExpirationDate= models.DateField(null=True)
+    partyName= models.CharField(max_length=255, null=True)
+    partyAddress1= models.CharField(max_length=127, null=True)
+    partyAddress2= models.CharField(max_length=127, null=True)
+    partyCity= models.CharField(max_length=127, null=True)
+    partyState= models.CharField(max_length=7, null=True)
+    partyZip1= models.CharField(max_length=15, null=True)
+    partyZip2= models.CharField(max_length=15, null=True)
+    partyPhone= models.CharField(max_length=15, null=True)
+    # From scraping the site. Where is this in the CDBS? 
+    studio_address = models.CharField(max_length=255, null=True)
+    studio_state = models.CharField(max_length=7, null=True)
+    studio_zip = models.CharField(max_length=15, null=True)
+    studio_phone = models.CharField(max_length=15, null=True)
+    # From the kml files. Should also have as geography. 
+    station_lat =  models.FloatField(null=True)# Antenna location
+    station_lng =  models.FloatField(null=True) # Antenna location
+    
+    #station_point = models.PointField(null=True, srid=4326) # maybe we want 4269 ? 
+    #objects = models.GeoManager()
+
+    # Added by consulting crosswalk table
+    nielsenDma_id = models.IntegerField(null=True)
+    is_mandated_station = models.BooleanField(default=False, help_text="Is this station mandated to report political files?")
+    
+    # TODO
+    # house_districts - m2m
+    # senate_districts - m2m
+
+    def __unicode__(self):
+        return "%s - %s, %s" % (self.callSign, self.communityCity, self.communityState)
+
+
+# Represents the basic info in a folder. Folders have types, parents, and children, but that's 'recoverable' from the URL
 class Folder(models.Model):
     callsign = models.CharField(max_length=12,)
     facility_id = models.PositiveIntegerField(blank=True, null=True, unique=True, editable=False, help_text='FCC assigned id')
@@ -40,7 +111,7 @@ class PDF_File(models.Model):
     federal_office =  models.CharField(max_length=31, blank=True, null=True, help_text="President, House, Senate; leave blank for non-candidate or non-federal candidate")
     federal_district =  models.CharField(max_length=31, blank=True, null=True, help_text="US House district, if applicable")
     raw_name_guess = models.CharField(max_length=255, blank=True, null=True, help_text="raw candidate name, picked by computer. Possibly not right.")
-    in_document_cloud = models.NullBooleanField(default=False, help_text="Has this been saved to document cloud?")
+    in_document_cloud = models.NullBooleanField(default=False, help_text="Has this been saved to document cloud and created as an ad buy?")
     
 
     
@@ -49,3 +120,7 @@ class PDF_File(models.Model):
     
     def __unicode__(self):
         return self.raw_url
+
+        
+        
+        

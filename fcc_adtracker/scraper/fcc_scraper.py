@@ -1,15 +1,18 @@
 import re
-import mechanize
+import urllib2
 import traceback
 
 from time import sleep
 from datetime import datetime, date
 from dateutil.parser import parse as dateparse
 
+from django.conf import settings
+
 from BeautifulSoup import BeautifulSoup
 
 from models import PDF_File, Folder
 from local_log import fcc_logger
+from utils import read_url
 
 size_re = re.compile(r'<div class="size">(.*?)</div>')
 type_re = re.compile(r'<div class="type">(.*?)</div>')
@@ -24,9 +27,8 @@ pdf_re = re.compile(r'<div id="(.*?)" class="(.*?)"><a target="_blank" title="(.
 folder_url_re = re.compile(r'https://stations.fcc.gov/station-profile/(.*?)/political-files/browse->(.*)')
 file_url_re = re.compile(r'https://stations.fcc.gov/collect/files/(\d+)/Political File/(.+)')
 
-USER_AGENT_STRING = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)'
 
-delay_time = 1 # pause 1 second between hits.
+SCRAPE_DELAY_TIME = getattr(settings, 'SCRAPE_DELAY_TIME')
 
 today = datetime.today()
 todays_date = today.strftime("%m/%d/%Y")
@@ -111,16 +113,7 @@ def parse_pdf_div(div_html):
         print "No match in file re %s" % (div_html)
     return (fileid, fileclass, title, href)
 
-def read_url(url):
-    req = mechanize.Request(url)    
-    req.add_header('User-agent', USER_AGENT_STRING )
-    page = mechanize.urlopen(req).read()
 
-        
-    return page
-
-def getorsavefile(fileobj):
-    print "***** Saving file %s" % fileobj
 
 class folder_placeholder(object):
     url = None
@@ -261,7 +254,7 @@ class folder_placeholder(object):
                         childfolder.folder.size = child['size']
                         childfolder.process()
                         childfolder.folder.save()
-                        sleep(delay_time)
+                        sleep(SCRAPE_DELAY_TIME)
                     else:
                         print "\n***No update to folder since last scrape: %s, %s" % (child['size'], childfolder.url)
                         
