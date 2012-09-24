@@ -15,13 +15,7 @@ class MildModeratedModelManager(models.Manager):
         instance._is_public_old = instance.is_public
 
     def for_user(self, user):
-        return super(MildModeratedModelManager, self).get_query_set().filter(
-            Q(
-                Q(is_public=True) |\
-                Q(updated_by=user) |\
-                Q(updated_by__isnull=True, created_by=user)
-            )
-        )
+        return super(MildModeratedModelManager, self).get_query_set().all()
 
     def public(self):
         return super(MildModeratedModelManager, self).get_query_set().filter(
