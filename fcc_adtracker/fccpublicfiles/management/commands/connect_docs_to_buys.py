@@ -1,5 +1,6 @@
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import NoArgsCommand, CommandError
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 # from django.conf import settings
 
 # from optparse import make_option
@@ -18,6 +19,12 @@ class Command(NoArgsCommand):
     def handle_noargs(self, **options):
         orphan_docs = Document.objects.filter(politicalbuy__isnull=True)
         self.stdout.write('Found {0} orphan docs (not attached to PoliticalBuy records)\n'.format(orphan_docs.count()))
+
+        try:
+            user = User.objects.get(username='auto')
+        except User.DoesNotExist:
+            raise CommandError("Couldn't find user 'auto', which is required to populate moderation fields. Exiting.")
+
         for orphan_obj in orphan_docs:
             doc_meta = orphan_obj.dc_data
             callsign = doc_meta.get('callsign')
@@ -40,7 +47,7 @@ class Command(NoArgsCommand):
                         pb_obj.full_clean()
                     except ValidationError, e:
                         self.stderr.write(e)
-                    pb_obj.save()
+                    pb_obj.save(user)
                 except Exception, e:
                     self.stderr.write(repr(e))
                     raise e

@@ -61,8 +61,8 @@ def politicalbuy_edit(request, uuid_key, template_name='politicalbuy_edit.html')
 
     form = PoliticalBuyFormFull(request.POST or None, instance=myobject)
     if form.is_valid():
-        myobject = form.save()
-        myobject.save()
+        myobject = form.save(commit=False)
+        myobject.save(request.user)
 
     return render(request, template_name, {'form': form, 'obj': myobject, 'sfapp_base_template': 'sfapp/base-full.html'})
 
@@ -78,10 +78,11 @@ def handlePopAdd(request, addForm, field, initial_data=None, current_object=None
         form = addForm(request.POST, instance=current_object)
         if form.is_valid():
             try:
-                obj = form.save()
+                obj = form.save(commit=False)
             except forms.ValidationError:
                 obj = None
             if obj:
+                obj.save(request.user)
                 return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % (escape(obj._get_pk_val()), escape(obj)))
     else:
         if current_object:
@@ -152,7 +153,7 @@ def add_advertiser_signatory(request):
             person.middle_name = form.data.get('middle_name', None)
             person.last_name = form.data['last_name']
             person.suffix = form.data.get('suffix', None)
-            person.save()
+            person.save(request.user)
             if 'advertiser_id' in form.data:
                 adv_id = form.data.get('advertiser_id', None)
                 if adv_id:
@@ -160,7 +161,7 @@ def add_advertiser_signatory(request):
                         advertiser = Organization.objects.get(id=adv_id)
                         role = Role(person=person, organization=advertiser)
                         role.title = form.data.get('job_title', '')
-                        role.save()
+                        role.save(request.user)
                     except Organization.DoesNotExist:
                         # What else to do in this case?
                         pass
