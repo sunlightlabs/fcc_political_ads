@@ -9,13 +9,19 @@
 {% endblock head %}
 
 {% block content %}
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
+
+    {% if form.errors %}
+    <div class="messages alert fade in">
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        <ul>
+            <li class="failure">Not Saved! Please fix errors in these fields: {% for field in form %}
+				{% if field.errors %}{{ field.label }}; {% endif %}
+				{% endfor %}
+			</li>
+        </ul>
+    </div>
     {% endif %}
+
     {% comment %}
     This page's view overrides the sidebar template in order to show the original document and a form on the same page.
     {% endcomment %}
@@ -40,9 +46,10 @@
                             {{form.advertiser.errors}}
                         </li>
                         <li class="input-prepend">
-                            <label>{{form.total_spent_raw.label}}</label>
+                            <label>Grand Total: Gross amount spent</label>
                             {{form.total_spent_raw}}
-                            {{form.total_spent_raw.errors}}
+							{% if form.total_spent_raw.errors %}<ul class="errorlist"><li><b>Enter the the grand total without commas or dollar signs!</b></li></ul>{% else %}<p class="tip" style="margin-bottom:0px;padding:0px;">Don't use commas or dollar signs!</p>{% endif %}
+                            
                         </li>
                         <li>
                             <label>{{form.num_spots_raw.label}}</label>

@@ -43,6 +43,17 @@
 
 {% block content %}
     <div id="headerFloat" class="clearfix">
+	
+		{% if message %}
+	    <div class="messages alert fade in">
+	        <button type="button" class="close" data-dismiss="alert">x</button>
+	        <ul>
+	            <li>{{ message }}
+				</li>
+	        </ul>
+	    </div>
+		{% endif %}
+	
         <h2 class="withTip"><small class="clearfix">Political Buy:</small> {{ obj.advertiser|default:"" }}</h2>
         <p class="editBtn"><a href="{{ obj.get_edit_url }}">Edit Details</a></p>
     </div>

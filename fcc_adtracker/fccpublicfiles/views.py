@@ -16,9 +16,9 @@ from name_cleaver import IndividualNameCleaver
 DOCUMENTCLOUD_DEFAULT_ACCESS_LEVEL = getattr(settings, 'DOCUMENTCLOUD_DEFAULT_ACCESS_LEVEL', 'private')
 
 
-def politicalbuy_view(request, uuid_key, slug='', template_name='politicalbuy_view.html'):
+def politicalbuy_view(request, uuid_key, template_name='politicalbuy_view.html', message=None):
     obj = get_object_or_404(PoliticalBuy, uuid_key=uuid_key)
-    return render(request, template_name, {'obj': obj})
+    return render(request, template_name, {'obj': obj, 'message':message})
 
 
 @login_required
@@ -61,8 +61,13 @@ def politicalbuy_edit(request, uuid_key, template_name='politicalbuy_edit.html')
 
     form = PoliticalBuyFormFull(request.POST or None, instance=myobject)
     if form.is_valid():
+        print "form is valid"
         myobject = form.save(commit=False)
         myobject.save(request.user)
+        # redirect on success. Would be nice to display the message here, but..
+        return redirect('politicalbuy_view', uuid_key)
+    else:
+        print "form is not valid"
 
     return render(request, template_name, {'form': form, 'obj': myobject, 'sfapp_base_template': 'sfapp/base-full.html'})
 
