@@ -117,9 +117,21 @@ class PDF_File(models.Model):
     
     def path(self):
         return get_file_path(self.raw_url)
-    
+    def folder_name(self):
+        rawpath = get_file_path(self.raw_url)
+        return ":".join(rawpath[1:-1])
+    def file_name(self):
+        
+        rawpath = get_file_path(self.raw_url)
+        print rawpath
+        return (rawpath[-1:][0])
+        
+    def search_text(self):
+        rawpath = get_file_path(self.raw_url)
+        return " ".join(rawpath[1:])   
+     
     def __unicode__(self):
-        return self.raw_url
+        return self.search_text
 
         
         
