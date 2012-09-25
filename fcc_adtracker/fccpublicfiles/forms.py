@@ -104,14 +104,18 @@ class PoliticalBuyFormFull(forms.ModelForm):
             'num_spots_raw',
             'contract_start_date',
             'contract_end_date',
+            'is_invalid',
             'contract_number',
             'advertiser_signatory',
             'bought_by',
             'lowest_unit_price',
             'is_complete',
             'broadcasters',
+            'data_entry_notes',
         )
-
+        
+    is_invalid = forms.BooleanField()
+    data_entry_notes = forms.CharField(widget=forms.Textarea(attrs={'cols': 5}), required=False)
     contract_start_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-mini'}))
     contract_end_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-mini'}))
     advertiser = forms.ModelChoiceField(queryset=Organization.objects.filter(organization_type='AD'),

@@ -49,6 +49,11 @@
     <div class="row module">
         <div id="buyData" class="span5">
             <dl class="moduleSm floatedList clearfix stationProfile">
+				<dt>File Source:</dt><dd>{% if obj.is_FCC_doc %}<a href="https://stations.fcc.gov/">FCC site</a>{% else %}Submission{% endif %}</dd>
+				{% if obj.is_FCC_doc %}
+				<dt>Ad Type:</dt><dd>{{ obj.related_FCC_file.ad_type}}</dd>
+				<dt>File Location:</dt><dd><a href="{{obj.related_FCC_file.raw_url }}">{% for folder in obj.related_FCC_file.path %}/{{folder }}{% endfor %}</a></dd>
+				{% endif %}
                 <dt>Stations:</dt>
                 {% for broadcaster in obj.broadcasters.all %}
                 <dd><a href="{% url broadcaster_politicalbuys_view callsign=broadcaster.callsign %}">{{ broadcaster.callsign }}, Channel {{ broadcaster.channel }}</a></dd>

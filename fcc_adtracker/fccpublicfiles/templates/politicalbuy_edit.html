@@ -26,7 +26,14 @@
                 {% csrf_token %}
                 <fieldset>
                     <legend class="clearfix">Essential Data</legend>
-                    <ul class="unstyled clearfix">
+					                  
+						<ul class="unstyled clearfix">
+						
+						{% if obj.is_FCC_doc %}  
+						<li class="input-append">
+							<label>FCC folder is: {% for folder in obj.related_FCC_file.path %}/{{folder }}{% endfor %}</label>
+						</li>
+						{% endif %}
                         <li class="input-append">
                             <label>{{form.advertiser.label}}</label>
                             {{form.advertiser}}
@@ -65,6 +72,20 @@
                         </li>
                     </ul>
                 </fieldset>
+              <ul>
+                    <li>
+                        <label>Let us know if you've entered all of the summary information (the fields above) from the document:</label>
+                        <label class="tip checkbox">{{form.is_complete}} Summary information complete</label>
+                        {{form.is_complete.errors}}
+                    </li>
+					<li>
+						<label>Is there a problem with this file?</label>
+						<label class="tip checkbox">{{form.is_invalid}} Many uploaded files are not ad buys; if there's a problem with this file, please check this box. You can describe the issue in the data entry notes field below.</label>
+					</li>
+                    <li>
+                        <button class="btn btn-sunlight" value="Submit">Submit</button>
+                    </li>
+                </ul>
                 <fieldset>
                     <legend>Additional Data</legend>
                     <ul>
@@ -88,18 +109,17 @@
                             {{form.lowest_unit_price}}
                             {{form.lowest_unit_price.errors}}
                         </li>
+						<li>
+							<label>Data entry notes</label>
+							{{ form.data_entry_notes }}
+							<label class="tip checkbox">Is there anything odd or unusual about this form? Add any notes you have here. </label>
+						</li>
+						<li>
+	                        <button class="btn btn-sunlight" value="Submit">Submit</button>
+	                    </li>
                     </ul>
                 </fieldset>
-                <ul>
-                    <li>
-                        <label>Let us know if you've entered all of the information from the document:</label>
-                        <label class="tip checkbox">{{form.is_complete}} {{form.is_complete.label}}</label>
-                        {{form.is_complete.errors}}
-                    </li>
-                    <li>
-                        <button class="btn btn-sunlight" value="Submit">Submit</button>
-                    </li>
-                </ul>
+  
             </form>
         </div>
         <div id="original_document" class="span8">
