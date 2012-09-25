@@ -1,5 +1,5 @@
 from fccpublicfiles.models import PoliticalBuy, PoliticalSpot
-from django.db.models import Sum
+from django.db.models import Sum, Count
 
 def sum_broadcaster_spent(broadcaster):
     # PoliticalBuy's can be spent on multiple stations (though most aren't); this will attribute all spending on all stations towards each station, giving a wrong answer.
@@ -9,11 +9,12 @@ def sum_broadcaster_spent(broadcaster):
     else:
         return 0
 
-def sum_broadcaster_spots(broadcaster):
+def sum_broadcaster_buys(broadcaster):
     # Will only count the spots that have been entered
-    spots = PoliticalSpot.objects.filter(document__broadcasters__pk=broadcaster.pk).aggregate(total_spots=Sum('num_spots'))
-    if spots['total_spots']:
-        return spots['total_spots']
+    buys = PoliticalBuy.objects.filter(broadcasters__pk=broadcaster.pk).aggregate(total_buys=Count('pk'))
+    if buys['total_buys']:
+        #print "%s political buys: %s" % (broadcaster, buys['total_buys'])
+        return buys['total_buys']
     else:
         return 0
 
@@ -22,5 +23,5 @@ def annotate_broadcaster_queryset(broadcaster_queryset):
     # Helper for state_broadcaster_list and wherever else broadcaster-wide numbers are needed.
     for broadcaster in broadcaster_queryset:
         broadcaster.total_spent = sum_broadcaster_spent(broadcaster)
-        broadcaster.total_spots = sum_broadcaster_spots(broadcaster)
+        broadcaster.total_buys = sum_broadcaster_buys(broadcaster)
     return broadcaster_queryset

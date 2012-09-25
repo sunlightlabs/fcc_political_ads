@@ -26,7 +26,7 @@
                 <th>City</th>
                 <th>Station</th>
                 <th>Total Spent*</th>
-                <th>Number of spots**</th>
+                <th>Number ad buys*</th>
             </tr>
         </thead>
         <tbody>
@@ -35,11 +35,12 @@
         		<td>{{ broadcaster.community_city }}</td>
         		<td><a href='{{ broadcaster.get_absolute_url }}'>{{ broadcaster.callsign }}</a></td>
 				<td>${{ broadcaster.total_spent|intcomma }}</td>
-				<td>{{ broadcaster.total_spots|intcomma }}</td>
+				<td>{{ broadcaster.total_buys|intcomma }}</td>
 			</tr>
 		{% endfor %}
     	</tbody>
 	</table>
+	<p class="tip">* Only includes data that has been uploaded and entered to this site</p>
 
 {% endblock content %}
 
