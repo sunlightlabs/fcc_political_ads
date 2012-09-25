@@ -114,7 +114,7 @@ class PoliticalBuyFormFull(forms.ModelForm):
             'data_entry_notes',
         )
         
-    is_invalid = forms.BooleanField()
+    is_invalid = forms.BooleanField(required=False)
     data_entry_notes = forms.CharField(widget=forms.Textarea(attrs={'cols': 5}), required=False)
     contract_start_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-mini'}))
     contract_end_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-mini'}))
