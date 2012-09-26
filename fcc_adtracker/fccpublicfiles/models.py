@@ -93,7 +93,8 @@ class GenericPublicDocument(MildModeratedModel):
 
 class PoliticalBuy(MildModeratedModel):
     """A subset of PublicFile, the PoliticalBuy records purchases of air time (generally for political ads)"""
-    documentcloud_doc = models.ForeignKey(Document)
+    # Don't require documents -- allows us to reference other documents w/out copying them to our account. 
+    documentcloud_doc = models.ForeignKey(Document, null=True)
     contract_number = models.CharField(blank=True, max_length=100)
     advertiser = models.ForeignKey('Organization', blank=True, null=True, related_name='advertiser_politicalbuys', limit_choices_to={'organization_type': u'AD'})
     advertiser_signatory = models.ForeignKey('Person', blank=True, null=True)
@@ -203,38 +204,40 @@ class PoliticalBuy(MildModeratedModel):
 
 @receiver(post_save, sender=PoliticalBuy)
 def set_doccloud_data(sender, instance, signal, *args, **kwargs):
-    doc = instance.documentcloud_doc
-    #doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
-    doccloud_data = {}
-    doccloud_data['callsign'] = [ str(x) for x in instance.broadcasters_callsign_list() ]
+    if instance.documentcloud_doc:
+        doc = instance.documentcloud_doc
+        #doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
+        doccloud_data = {}
+        doccloud_data['callsign'] = [ str(x) for x in instance.broadcasters_callsign_list() ]
     
-    if (instance.is_FCC_doc):
-        doccloud_data['uploader'] = "auto"
-        doccloud_data['Collection'] = 'PoliticalAdSleuthFCC'
+        if (instance.is_FCC_doc):
+            doccloud_data['uploader'] = "auto"
+            doccloud_data['Collection'] = 'PoliticalAdSleuthFCC'
         
-    else:
-        doccloud_data['uploader'] = "submission"        
-        # only put the manual documents here... 
-        doccloud_data['contributedto'] = "freethefiles"
-        doccloud_data['Collection'] = 'PoliticalAdSleuth'           
+        else:
+            doccloud_data['uploader'] = "submission"        
+            # only put the manual documents here... 
+            doccloud_data['contributedto'] = "freethefiles"
+            doccloud_data['Collection'] = 'PoliticalAdSleuth'           
     
-    if doc.dc_data != doccloud_data:
-        doc.dc_data = doccloud_data
+        if doc.dc_data != doccloud_data:
+            doc.dc_data = doccloud_data
 
 
 @receiver(pre_delete, sender=PoliticalBuy)
 def set_privacy_for_deassociated_docs(sender, instance, *args, **kwargs):
-    # Caution when PoliticalBuy or Document(Cloud) models are deleted: Make DocumentCloud doc private, but don't delete.
-    doc = instance.documentcloud_doc
-    doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
-    doccloud_data['spasstatus'] = 'deleted'
+    if instance.documentcloud_doc:
+        # Caution when PoliticalBuy or Document(Cloud) models are deleted: Make DocumentCloud doc private, but don't delete.
+        doc = instance.documentcloud_doc
+        doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
+        doccloud_data['spasstatus'] = 'deleted'
 
-    if doc.dc_data != doccloud_data:
-        doc.dc_data = doccloud_data
+        if doc.dc_data != doccloud_data:
+            doc.dc_data = doccloud_data
 
-    doc.access_level = 'private'
-    doc.dc_properties.update_access(doc.access_level)
-    doc.save()
+        doc.access_level = 'private'
+        doc.dc_properties.update_access(doc.access_level)
+        doc.save()
 
 
 class PoliticalSpot(MildModeratedModel):

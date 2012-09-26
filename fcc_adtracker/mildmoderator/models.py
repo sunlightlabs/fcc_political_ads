@@ -1,3 +1,7 @@
+""" Everything must be public by default! 
+In spite of the class name below we are not choosing what content goes up
+"""
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import pre_save
@@ -17,7 +21,7 @@ class MildModeratedModel(models.Model):
     approved_at = models.DateTimeField(auto_now=True, null=True, editable=False)
 
     # actual moderation flag
-    is_public = models.BooleanField(default=False)
+    is_public = models.BooleanField(default=True)
 
     notes = models.TextField(max_length=255, null=True, blank=True)
 
@@ -42,17 +46,17 @@ class MildModeratedModel(models.Model):
 
         if not self.pk:
             self.created_by = user
-            can_autoapprove = klass.objects.can_be_autoapproved_by_user(user)
-            self.is_public = can_autoapprove
-
+            #can_autoapprove = klass.objects.can_be_autoapproved_by_user(user)
+            #self.is_public = can_autoapprove
+            self.is_public = True
         else:
             self.updated_by = user
 
-            if klass.objects.can_be_approved_by_user(user):
-                if (not self._is_public_old) and self.is_public: # Field has changed to True
-                    self.approved_by = user
-            else:
-                self.is_public = False
+            #if klass.objects.can_be_approved_by_user(user):
+            #    if (not self._is_public_old) and self.is_public: # Field has changed to True
+            #        self.approved_by = user
+            #else:
+            #    self.is_public = False
 
         return super(MildModeratedModel, self).save(*args, **kwargs)
 

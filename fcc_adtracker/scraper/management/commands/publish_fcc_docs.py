@@ -3,7 +3,7 @@ from django.conf import settings
 
 
 from scraper.models import PDF_File
-from scraper.put_pdfs import make_ad_buy_from_pdf_file
+from scraper.create_ad_buys import make_ad_buy_from_pdf_file
 
 
 num_to_load = 5

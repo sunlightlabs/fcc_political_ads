@@ -78,6 +78,29 @@ class StationData(models.Model):
         return "%s - %s, %s" % (self.callSign, self.communityCity, self.communityState)
 
 
+
+
+# Where did the doc come from? IE, what group? And how do they want to be credited ? 
+# Requires manual entry, etc. 
+class doc_source(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True, help_text="Group's name")
+    project_name = models.CharField(max_length=255, blank=True, null=True, help_text="Project name")
+    project_link = models.CharField(max_length=255, blank=True, null=True, help_text="link t project")
+    use_html = models.BooleanField(max_length=255, blank=True, default=False, help_text="Should we use the html to link to 'em (if there are images, etc.)")
+    raw_html = models.TextField(max_length=255, blank=True, null=True, help_text="raw html of credit line to group collecting this doc.")
+
+
+# Reference to docs already in DC. We don't know their slugs; gotta match to what we know on the basis of titles. 
+class dc_reference(models.Model):
+    # from DC
+    dc_slug = models.CharField(max_length=255, blank=True, null=True, help_text="Document cloud slug")
+    dc_title = models.CharField(max_length=255, blank=True, null=True, help_text="Document cloud title")
+    source = models.ForeignKey('doc_source', null=True)
+
+    def __unicode__(self):
+        return self.dc_title
+
+
 # Represents the basic info in a folder. Folders have types, parents, and children, but that's 'recoverable' from the URL
 class Folder(models.Model):
     callsign = models.CharField(max_length=12,)
@@ -112,7 +135,8 @@ class PDF_File(models.Model):
     federal_district =  models.CharField(max_length=31, blank=True, null=True, help_text="US House district, if applicable")
     raw_name_guess = models.CharField(max_length=255, blank=True, null=True, help_text="raw candidate name, picked by computer. Possibly not right.")
     in_document_cloud = models.NullBooleanField(default=False, help_text="Has this been saved to document cloud and created as an ad buy?")
-    
+    dc_slug = models.CharField(max_length=255, blank=True, null=True, help_text="Document cloud slug")
+    dc_title = models.CharField(max_length=255, blank=True, null=True, help_text="Document cloud title")
 
     
     def path(self):
@@ -133,6 +157,6 @@ class PDF_File(models.Model):
     def __unicode__(self):
         return self.search_text()
 
-        
-        
-        
+"""
+TK: other external doc source models. 
+"""

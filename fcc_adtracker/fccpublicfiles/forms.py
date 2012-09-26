@@ -94,7 +94,7 @@ class PrelimDocumentForm(DocCloudFormBase, PoliticalBuyFormBase):
         super(PrelimDocumentForm, self).__init__(*args, **kwargs)
         append_ajax_class(self.fields['broadcasters'])
 
-
+# Unfortunately we gotta make none of these forms required so that it's easy to enter invalid forms. 
 class PoliticalBuyFormFull(forms.ModelForm):
     class Meta:
         model = PoliticalBuy
@@ -116,10 +116,10 @@ class PoliticalBuyFormFull(forms.ModelForm):
         
     is_invalid = forms.BooleanField(required=False)
     data_entry_notes = forms.CharField(widget=forms.Textarea(attrs={'cols': 5}), required=False)
-    contract_start_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-mini'}))
-    contract_end_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-mini'}))
+    contract_start_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-mini'}), required=False)
+    contract_end_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-mini'}), required=False)
     advertiser = forms.ModelChoiceField(queryset=Organization.objects.filter(organization_type='AD'),
-                                        widget=SelectWithPopUp(add_url=reverse_lazy('add_advertiser'))
+                                        widget=SelectWithPopUp(add_url=reverse_lazy('add_advertiser')), required=False
                                         )
     bought_by = forms.ModelChoiceField(queryset=Organization.objects.filter(organization_type='MB'),
                                         widget=SelectWithPopUp(add_url=reverse_lazy('add_media_buyer')),

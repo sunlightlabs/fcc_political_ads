@@ -117,7 +117,15 @@
         <div class="span12">
             <h3 id="original_document">Original Document</h3>
             <div class="documentcloud_embed">
-            {% include "doccloud/_documentcloud_embed.html" with document=obj.documentcloud_doc width=940 height=768 %}
+			{% if obj.is_FCC_doc %}
+				{% if obj.related_FCC_file.dc_slug %}
+            		{% include "_FCC_documentcloud_embed.html" with document_slug=obj.related_FCC_file.dc_slug width=940 height=768 %}
+				{% else %}
+					This document isn't available on document cloud--instead see <a href="{{obj.related_FCC_file.raw_url }}">the original file at the FCC</a>.
+				{% endif %}
+			{% else %}
+            	{% include "doccloud/_documentcloud_embed.html" with document=obj.documentcloud_doc width=940 height=768 %}
+			{% endif %}
             </div>
         </div>
     </div>
