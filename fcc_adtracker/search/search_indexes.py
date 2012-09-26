@@ -9,9 +9,11 @@ from fccpublicfiles.models import PoliticalBuy
 class PoliticalBuyIndex(indexes.SearchIndex, indexes.Indexable):
     """Index of PUBLIC PolticalBuys"""
     text = indexes.CharField(document=True, use_template=True)
+    relatedfccfile = indexes.CharField(model_attr='related_FCC_file', null=True, default='', faceted=False)
     advertiser = indexes.CharField(model_attr='advertiser', null=True, default='Unknown', faceted=True)
-    advertiser_signatory = indexes.CharField(model_attr='advertiser_signatory', null=True, default='Unknown', faceted=True)
-    media_buyer = indexes.CharField(model_attr='bought_by', null=True, default='Unknown', faceted=True)
+#    advertiser_signatory = indexes.CharField(model_attr='advertiser_signatory', null=True, default='Unknown', faceted=True)
+#    media_buyer = indexes.CharField(model_attr='bought_by', null=True, default='Unknown', faceted=False)
+    state = indexes.MultiValueField(faceted=True)
     station = indexes.MultiValueField(faceted=True)
 
     def get_model(self):
@@ -26,3 +28,6 @@ class PoliticalBuyIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_station(self, obj):
         return obj.broadcasters_callsign_list()
+    
+    def prepare_state(self, obj):
+        return obj.broadcasters_state_list()

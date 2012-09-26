@@ -66,19 +66,12 @@
 				<dt>File Location:</dt><dd><a href="{{obj.related_FCC_file.raw_url }}">{% for folder in obj.related_FCC_file.path %}/{{folder }}{% endfor %}</a></dd>
 				{% endif %}
                 <dt>Stations:</dt>
-                {% for broadcaster in obj.broadcasters.all %}
-                <dd><a href="{% url broadcaster_politicalbuys_view callsign=broadcaster.callsign %}">{{ broadcaster.callsign }}, Channel {{ broadcaster.channel }}</a></dd>
-                {% endfor %}
-                <dt class="clear">Contract:</dt>
-                <dd>{{obj.contract_number|default:"Unknown"}}</dd>
+                <dd>{% for broadcaster in obj.broadcasters.all %}
+                <a href="{% url broadcaster_politicalbuys_view callsign=broadcaster.callsign %}">{{ broadcaster.callsign }}, Channel {{ broadcaster.channel }}</a>{% endfor %}</dd>
                 <dt class="clear">Contract Dates:</dt>
                 <dd>{{obj.contract_start_date}} - {{ obj.contract_end_date }}</dd>
                 <dt class="clear">Total Spent:</dt>
                 <dd>{% if obj.total_spent %}${{ obj.total_spent }}{% else %}Unknown{% endif %}</dd>
-                <dt class="clear">Lowest unit price?:</dt>
-                <dd>{{ obj.lowest_unit_price|yesno:"Yes,No,Unknown" }}</dd>
-                <dt class="clear">Bought by:</dt>
-                <dd>{{obj.bought_by|default:"Unknown" }}</dd>
                 <dt class="clear">Number of Ad Spots:</dt>
                 <dd>{{obj.num_spots_raw|default:"Unknown" }}</dd>
             </dl>

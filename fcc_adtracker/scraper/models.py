@@ -131,7 +131,7 @@ class PDF_File(models.Model):
         return " ".join(rawpath[1:])   
      
     def __unicode__(self):
-        return self.search_text
+        return self.search_text()
 
         
         

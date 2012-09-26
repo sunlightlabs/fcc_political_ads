@@ -131,6 +131,9 @@ class PoliticalBuy(MildModeratedModel):
     def broadcasters_callsign_list(self):
         return [x.callsign for x in self.broadcasters.all()]
 
+    def broadcasters_state_list(self):
+        return [x.community_state for x in self.broadcasters.all()]
+
     def __unicode__(self):
         if self.documentcloud_doc:
             broadcasters_str = u', '.join(self.broadcasters_callsign_list()[:5])
@@ -149,14 +152,19 @@ class PoliticalBuy(MildModeratedModel):
         return date_str
 
     def citystate_display(self):
-        first_broadcaster = self.broadcasters.all()[0]
-        broadcaster = "%s, %s" % (first_broadcaster.community_city, first_broadcaster.community_state)
-        return broadcaster
+        try:
+            first_broadcaster = self.broadcasters.all()[0]
+            broadcaster = "%s, %s" % (first_broadcaster.community_city, first_broadcaster.community_state)
+            return broadcaster
+        except:
+            return None
     
     def station_display(self):
-        first_broadcaster = self.broadcasters.all()[0]
-        return first_broadcaster.callsign
-        
+        try:
+            first_broadcaster = self.broadcasters.all()[0]
+            return first_broadcaster.callsign
+        except IndexError:
+            return None
         
     def name(self):
         all_broadcasters = self.broadcasters.all()

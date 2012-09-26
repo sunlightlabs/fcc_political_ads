@@ -64,7 +64,7 @@
         {% if query %}
             <table class="table table-striped ">
                 <thead>
-                    <tr>
+                    <tr><th>File</th>
                         <th>Name</th>
                         <th>Station</th>
                         <th>Date</th>
@@ -74,6 +74,7 @@
                 <tbody>   
                     {% for result in page.object_list %}
                     <tr>
+	<td>{% if result.object.related_FCC_file %}<a href="{{ result.object.get_absolute_url }}">{{ result.object.related_FCC_file }}</a>{% endif %}</td>
                         <td><a href="{{ result.object.get_absolute_url }}">{{ result.object.advertiser_display }}</a></td>
                         <td>{{ result.object.station_display }}</td> 
                         <td>{{ result.object.date_display }}</td> 

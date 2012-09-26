@@ -5,7 +5,7 @@ from haystack.views import search_view_factory
 from search.views import ImprovedFacetedSearchView
 from search.forms import DateRangeSearchForm
 
-sqs_all = SearchQuerySet().facet('advertiser').facet('media_buyer').facet('station').facet('advertiser_signatory')
+sqs_all = SearchQuerySet().facet('state').facet('advertiser').facet('station')
 # sqs_public = sqs_all.filter(is_public=True)
 
 

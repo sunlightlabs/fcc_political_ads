@@ -1,3 +1,4 @@
+{% if object.is_FCC_doc %}{{ object.related_FCC_file }}{% endif %}
 {{object.advertiser.name|default:"Unknown"}}
 {{object.advertiser_signatory.full_name|default:"Unknown"}}
 {{object.bought_by.name|default:"Unknown"}}
