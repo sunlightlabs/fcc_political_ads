@@ -201,6 +201,13 @@ class PoliticalBuy(MildModeratedModel):
         values = self.politicalspot_set.all().aggregate(total_num_spots=Sum('num_spots'))
         return values['total_num_spots']
 
+    def doc_status(self):
+        if self.is_complete:
+            return 'Summarized'
+        elif self.is_FCC_doc and not self.related_FCC_file.in_document_cloud:
+            return 'Not loaded'
+        else:
+            return 'Needs entry'
 
 @receiver(post_save, sender=PoliticalBuy)
 def set_doccloud_data(sender, instance, signal, *args, **kwargs):

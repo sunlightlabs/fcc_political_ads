@@ -15,6 +15,7 @@ class PoliticalBuyIndex(indexes.SearchIndex, indexes.Indexable):
 #    media_buyer = indexes.CharField(model_attr='bought_by', null=True, default='Unknown', faceted=False)
     state = indexes.MultiValueField(faceted=True)
     station = indexes.MultiValueField(faceted=True)
+    status = indexes.CharField(faceted=True, default='')
 
     def get_model(self):
         return PoliticalBuy
@@ -31,3 +32,8 @@ class PoliticalBuyIndex(indexes.SearchIndex, indexes.Indexable):
     
     def prepare_state(self, obj):
         return obj.broadcasters_state_list()
+        
+    def prepare_status(self, obj):
+        #print "Preparing status: %s - status is '%s'" % (obj, obj.doc_status())
+        return obj.doc_status()
+    

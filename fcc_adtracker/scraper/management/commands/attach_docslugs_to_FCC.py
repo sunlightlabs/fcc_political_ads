@@ -28,8 +28,11 @@ class Command(BaseCommand):
                 total_matches += 1
                 orphan.dc_slug = dc_file.dc_slug
                 orphan.dc_title = dc_file.dc_title
+                orphan.in_document_cloud = True
                 orphan.save()
             except IndexError:
+                orphan.in_document_cloud = False
+                orphan.save()
                 print "** No match for %s" % (our_title)
                 
         print "Found %s of %s docs" % (total_matches, total)

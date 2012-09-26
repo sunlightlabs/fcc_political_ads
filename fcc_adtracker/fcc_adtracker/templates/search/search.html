@@ -65,10 +65,11 @@
             <table class="table table-striped ">
                 <thead>
                     <tr><th>File</th>
-                        <th>Name</th>
+                        <th>Advertiser</th>
                         <th>Station</th>
                         <th>Date</th>
                         <th>City, State</th>
+						<th>Status</th>
                     </td>    
                 </thead> 
                 <tbody>   
@@ -79,6 +80,7 @@
                         <td>{{ result.object.station_display }}</td> 
                         <td>{{ result.object.date_display }}</td> 
                         <td>{{ result.object.citystate_display}}</td>
+						<td>{{ result.object.doc_status }}</td>
                     </tr>
                     {% empty %}
                     <tr>
