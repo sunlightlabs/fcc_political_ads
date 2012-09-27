@@ -12,6 +12,5 @@ urlpatterns = patterns('scraper.views',
     url(r'^by-state/(?P<state_id>\w{2})/$', 'filing_state_list', name='filing_state_list'),
     url(r'^by-tv-station/(?P<callsign>[\w\-]+)/$', 'filing_station_list', name='filing_station_list'),
     url(r'^most-recent/', 'fcc_most_recent', name='fcc_most_recent'),
-    url(r'^r/(?P<buy_id>\d+)/', 'ad_buy_redirect')
-#    url(r'^by-state/(?P<state_id>\w{2})/$', 'state_fcc_list', name='state_fcc_list'),
+    url(r'^r/(?P<buy_id>\d+)/', 'scraper.views.ad_buy_redirect', name='ad_buy_redirect'),
     )

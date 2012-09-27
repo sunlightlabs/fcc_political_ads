@@ -28,7 +28,7 @@
 		<td>{{filing.upload_time|date:"n/j/Y"}}</td>
 		<td>{{ filing.candidate_type }}</td>
 		<td>{{ filing.raw_name_guess}}</td>
-		<td><a href="{{filing.get_absolute_url}}">{{filing.file_name }}</a></td>
+		<td><a href="{{filing.raw_url}}">{{filing.file_name }}</a></td>
 	</tr>
 {% endfor %}
 	<tbody>
