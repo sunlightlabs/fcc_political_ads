@@ -33,7 +33,7 @@ def all_ads_to_file():
     all_rows = PDF_File.objects.all()
     file_rows = []
     for row in all_rows:
-        file_rows.append([row.pk, row.callsign, row.upload_time.strftime("%Y-%m-%d"), row.nielsen_dma, row.dma_id, row.candidate_type(), row.raw_name_guess, row.file_name, row.raw_url])
+        file_rows.append([row.pk, row.callsign, row.upload_time.strftime("%Y-%m-%d"), row.nielsen_dma, row.dma_id, row.candidate_type(), row.raw_name_guess, row.file_name(), row.raw_url])
     
     write_csv_to_file(file_description, file_name, fields, file_rows)
     
