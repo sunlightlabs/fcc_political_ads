@@ -4,6 +4,7 @@ import csv
 from django.shortcuts import render_to_response, redirect
 
 from models import StationData, PDF_File
+from fccpublicfiles.models import PoliticalBuy
 from broadcasters.models import Broadcaster
 from django.db.models import Count
 from django.contrib.localflavor.us import us_states
@@ -169,7 +170,7 @@ def fcc_most_recent(request):
         'sfapp_base_template': 'sfapp/base-full.html',
     })
 
-#def ad_buy_redirect(request, buy_id):
-#    adbuy = PoliticalBuy.objects.get(related_FCC_file__pk=buy_id)
-#    return redirect(adbuy.get_absolute_url())
+def ad_buy_redirect(request, buy_id):
+    adbuy = PoliticalBuy.objects.get(related_FCC_file__pk=buy_id)
+    return redirect(adbuy.get_absolute_url())
     
