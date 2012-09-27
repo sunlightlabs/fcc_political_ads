@@ -131,6 +131,12 @@ class PoliticalBuy(MildModeratedModel):
 
     def broadcasters_callsign_list(self):
         return [x.callsign for x in self.broadcasters.all()]
+    
+    def doc_source(self):
+        if self.is_FCC_doc:
+            return 'FCC'
+        else:
+            return 'Submission' 
 
     def broadcasters_state_list(self):
         return [x.community_state for x in self.broadcasters.all()]

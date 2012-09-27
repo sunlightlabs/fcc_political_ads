@@ -25,7 +25,7 @@ def state_fcc_list(request):
         state['geography_name'] = STATES_DICT[state['communityState']]
         state['geography_name_short'] = state['communityState']
     return render_to_response('geography_list.html', {
-        'geography_name':'State',
+        'geography_name':'state',
         'geography_name_short':'state',
         'geography_list':states
     })
@@ -38,7 +38,7 @@ def dma_fcc_list(request):
         dma['geography_name'] = dma['nielsenDma']
         dma['geography_name_short'] = dma['nielsenDma_id']
     return render_to_response('geography_list.html', {
-        'geography_name':'TV Market',
+        'geography_name':'TV market',
         'geography_name_short':'dma',
         'geography_list':dmas
     })
@@ -53,7 +53,7 @@ def station_fcc_list(request):
         broadcaster['location1'] = "%s, %s" % (broadcaster['communityCity'], broadcaster['communityState'])
         broadcaster['location2'] = broadcaster['nielsenDma']
     return render_to_response('geography_list.html', {
-        'geography_name':'TV Station',
+        'geography_name':'TV station',
         'geography_name_short':'tv-station',
         'geography_list':broadcasters,
         'show_location':'True'
@@ -70,7 +70,7 @@ def station_state_list(request, state_id):
             broadcaster['location1'] = "%s" % (broadcaster['communityCity'])
             broadcaster['location2'] = broadcaster['nielsenDma']
         return render_to_response('geography_list.html', {
-            'geography_name':'TV Station',
+            'geography_name':'TV station',
             'geography_name_short':'tv-station',
             'geography_list':broadcasters,
             'show_location':'True',
@@ -94,7 +94,7 @@ def station_dma_list(request, dma_id):
         broadcaster['location1'] = "%s, %s" % (broadcaster['communityCity'], broadcaster['communityState'])
         broadcaster['location2'] = broadcaster['nielsenDma']
     return render_to_response('geography_list.html', {
-        'geography_name':'TV Station',
+        'geography_name':'TV station',
         'geography_name_short':'tv-station',
         'geography_list':broadcasters,
         'show_location':'True',
