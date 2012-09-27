@@ -28,7 +28,7 @@ class PoliticalBuyIndex(indexes.SearchIndex, indexes.Indexable):
         """Used when the entire index for model is updated."""
         return self.get_model().objects.all()
         
-    def prepare_adtype(self, obj):
+    def prepare_type(self, obj):
         if obj.is_FCC_doc:
             return obj.related_FCC_file.candidate_type()
         else:
