@@ -3,17 +3,17 @@ import csv
 
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
-from scraper.models import StationData, PDF_File
-from django.core.management.base import BaseCommand, CommandError
 
+from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
+from django.conf import settings
+
+from scraper.models import StationData, PDF_File
+from scraper.models import Scrape_Time
 
 AWS_ACCESS_KEY_ID = getattr(settings, 'AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY =  getattr(settings, 'AWS_SECRET_ACCESS_KEY')
 CSV_EXPORT_DIR =  getattr(settings, 'CSV_EXPORT_DIR')
-
-
-from django.conf import settings
 
 def write_csv_to_file(file_description, local_file, fields, rows):
     local_response = open(local_file, 'w')
@@ -25,7 +25,9 @@ def write_csv_to_file(file_description, local_file, fields, rows):
     
 
 def all_ads_to_file():
-    file_description="All ads available"
+    most_recent_scrape=Scrape_Time.objects.all().order_by('-run_time')[0].run_time
+    file_description="All ads available as of %s" % most_recent_scrape.strftime("%Y-%m-%d %H:%m")
+    print file_description
     file_name =  "%s/all_ads.csv" % (CSV_EXPORT_DIR)
     fields = ['id', 'station', 'file_upload_time', 'tv_market', 'tv_market_id', 'ad_type', 'fcc_folder', 'file_name', 'source_file_url']
     all_rows = PDF_File.objects.all()
