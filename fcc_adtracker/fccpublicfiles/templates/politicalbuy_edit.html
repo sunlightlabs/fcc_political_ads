@@ -35,12 +35,6 @@
 					                  
 						<ul class="unstyled clearfix">
 						
-						{% if obj.is_FCC_doc %}  
-						<li>
-						<p>FCC folder: {{ obj.related_FCC_file.folder_name}}
-						<br>Filename: {{ obj.related_FCC_file.file_name }}
-						</li>
-						{% endif %}
 						<li>
 							<label>Is there a problem with this file?</label>
 							<label class="tip checkbox">{{form.is_invalid}} Many uploaded files are not ad buys; if there's a problem with this file, please check this box. You can describe the issue in the data entry notes field below.</label>
@@ -49,17 +43,19 @@
                             <label>{{form.advertiser.label}}</label>
                             {{form.advertiser}}
                             {{form.advertiser.errors}}
+							<p class="tip"><a href="/help/#advertiser">How do I find the advertiser?</a></p>
                         </li>
                         <li class="input-prepend">
                             <label>Grand Total: Gross amount spent</label>
                             {{form.total_spent_raw}}
 							{% if form.total_spent_raw.errors %}<ul class="errorlist"><li><b>Enter the the grand total without commas or dollar signs!</b></li></ul>{% else %}<p class="tip" style="margin-bottom:0px;padding:0px;">Don't use commas or dollar signs!</p>{% endif %}
-                            
+                            <p class="tip"><a href="/help/#total">How do I find the total amount?</a></p>
                         </li>
                         <li>
                             <label>{{form.num_spots_raw.label}}</label>
                             {{form.num_spots_raw}}
                             {{form.num_spots_raw.errors}}
+							<p class="tip"><a href="/help/#spots">How do I find the number of ad spots?</a></p>
                         </li>
                         {% comment %}
                             The following date inputs use the .date class to
@@ -68,19 +64,21 @@
                                 both django and bootstrap.datepicker like that one
                         {% endcomment %}
                         <li class="input-append">
-                            <label>{{form.contract_start_date.label}}</label>
+                            <label>Ad air start date</label>
                             {{form.contract_start_date}}
                             {{form.contract_start_date.errors}}
                         </li>
                         <li class="input-append">
-                            <label>{{form.contract_end_date.label}}</label>
+                            <label>Ad air end date</label>
                             {{form.contract_end_date}}
                             {{form.contract_end_date.errors}}
                         </li>
+						<p class="tip"><a href="/help/#dates">Where&rsquo;s the ad air start and end date?</a></p>
                         <li>
                             <label>{{form.broadcasters.label}}</label>
                             {{form.broadcasters}}
                             {{form.broadcasters.errors}}
+							<p class="tip"><a href="/help/#broadcaster">Who is the broadcaster?</a></p>
                         </li>
                     </ul>
                 </fieldset>
@@ -97,20 +95,24 @@
                 <fieldset>
                     <legend>Additional Data</legend>
                     <ul>
-                        <li>
+	                    <li>
                             <label>{{form.contract_number.label}}</label>
                             {{form.contract_number}}
                             {{form.contract_number.errors}}
+						<p class="tip"><a href="/help/#contract">How do I find the contract number?</a></p>
                         </li>
+
                         <li class="input-append">
-                            <label>{{form.bought_by.label}}</label>
+                            <label>Media Buyer</label>
                             {{form.bought_by}}
                             {{form.bought_by.errors}}
+							<p class="tip"><a href="/help/#buyer">Who is the media buyer</a></p>
                         </li>
                         <li class="input-append">
                             <label>{{form.advertiser_signatory.label}}</label>
                             {{form.advertiser_signatory}}
                             {{form.advertiser_signatory.errors}}
+							<p class="tip"><a href="/help/#signatory">What is the advertiser signatory?</a></p>
                         </li>
                         <li>
                             <label>{{form.lowest_unit_price.label}}</label>
