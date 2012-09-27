@@ -9,21 +9,23 @@ from django.contrib.auth.models import User
 
 def make_ad_buy_from_pdf_file(pdf_file):
     
-
-    auser = User.objects.all()[0]
-
-    pol_buy = PoliticalBuy()
-    pol_buy.is_FCC_doc= True
-    pol_buy.related_FCC_file = pdf_file
-    pol_buy.save(auser)
-    
-    if pdf_file.folder.broadcaster:
-        pol_buy.broadcasters.add(pdf_file.folder.broadcaster)
-        pol_buy.is_public=True
-        pol_buy.save(auser)
+    try:
+        PoliticalBuy.objects.get(related_FCC_file__pk=pdf_file.pk)
+        print "Found buy"
+        return False
         
-    # 
-    # Record that this file has been uploaded. 
-    pdf_file.in_document_cloud = True
-    pdf_file.save()
-    return True
+    except PoliticalBuy.DoesNotExist:
+
+        auser = User.objects.all()[0]
+
+        pol_buy = PoliticalBuy()
+        pol_buy.is_FCC_doc= True
+        pol_buy.related_FCC_file = pdf_file
+        pol_buy.save(auser)
+    
+        if pdf_file.folder.broadcaster:
+            pol_buy.broadcasters.add(pdf_file.folder.broadcaster)
+            pol_buy.is_public=True
+            pol_buy.save(auser)
+        
+        return True

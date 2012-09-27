@@ -12,7 +12,7 @@ class Command(BaseCommand):
     
     def handle(self, *args, **options):
         
-        files = PDF_File.objects.exclude(in_document_cloud=True).order_by('-upload_time')
+        files = PDF_File.objects.all()
         count = 0
         for afile in files:
             count += 1
