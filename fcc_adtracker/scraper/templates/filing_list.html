@@ -1,0 +1,37 @@
+{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load updatetime from update %}
+{% block bodyclass %}states{% endblock bodyclass %}
+{% block pagetitle %}Recent FCC political ad filings {{ preposition }} {{ geography_name }}{% endblock pagetitle %}
+{% block content %}
+<h2>FCC political ad filings {{ preposition }} {{ geography_name }}</h2>
+
+<a href="/fcc/most-recent/">Most recent</a>&nbsp;|&nbsp;<a href="/fcc/states/">Browse by state</a>&nbsp;|&nbsp;<a href="/fcc/dmas/">Browse by TV Market</a>&nbsp;|&nbsp;<a href="/fcc/stations/">Browse by station</a>
+<br>
+ <p>Found {{count}} filings{% if broadcaster %} at {{broadcaster }}{% endif %}. {% updatetime %}.</p>
+<table class="table table-striped">
+	<thead>
+        <tr>
+            <th>TV Station</th>
+			<th>State</th>
+			<th>TV Market</th>
+			<th>Date</th>
+			<th>Type</th>
+			<th>FCC Folder</th>
+			<th>File Name</th>
+        </tr>
+    </thead>
+    <tbody>
+	{% for filing in filings %}
+	<tr>
+		<td>{{filing.callsign}}</td>
+		<td>{{filing.community_state}}</td>
+		<td>{{filing.nielsen_dma}}</td>
+		<td>{{filing.upload_time|date:"n/j/Y"}}</td>
+		<td>{{ filing.candidate_type }}</td>
+		<td>{{ filing.raw_name_guess}}</td>
+		<td><a href="{{filing.get_absolute_url}}">{{filing.file_name }}</a></td>
+	</tr>
+{% endfor %}
+	<tbody>
+</table>
+
+{% endblock content %}

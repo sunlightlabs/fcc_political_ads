@@ -31,4 +31,9 @@ class Command(BaseCommand):
             afile.federal_district = district[:31]
             afile.raw_name_guess = name[:255]
             
+            # flatten stuff
+            afile.nielsen_dma = afile.folder.broadcaster.nielsen_dma
+            afile.dma_id = afile.folder.broadcaster.dma_id
+            afile.community_state = afile.folder.broadcaster.community_state
+            
             afile.save()

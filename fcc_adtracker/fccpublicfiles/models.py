@@ -173,7 +173,11 @@ class PoliticalBuy(MildModeratedModel):
         if len(all_broadcasters) > 0:
             first_broadcaster = self.broadcasters.all()[0]  
             broadcaster = "%s (%s, %s)" % (first_broadcaster.callsign, first_broadcaster.community_city, first_broadcaster.community_state)
-        advertiser = self.advertiser or 'Unknown'
+        advertiser = 'Unknown'
+        if self.advertiser:
+            advertiser = self.advertiser
+        elif self.is_FCC_doc:
+            advertiser = self.related_FCC_file.folder_name()
         date_str = ""
         if (self.contract_end_date):
             date_str = self.contract_end_date.strftime(", %m/%d/%y")

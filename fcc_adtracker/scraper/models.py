@@ -20,6 +20,9 @@ class StationContour(models.Model):
 """
 
 
+# whenever we run the scraper add it here. Periodically clear this out...
+class Scrape_Time(models.Model):
+    run_time = models.DateTimeField(auto_now=True)
 
 # Helper reference class to store data about stations scraped from the FCC.
 # In general all of the TV stations with data on 'em are in here; broadcasters is only broadcasters we 'care' about. 
@@ -137,6 +140,10 @@ class PDF_File(models.Model):
     in_document_cloud = models.NullBooleanField(default=False, help_text="Has this been saved to document cloud and created as an ad buy?")
     dc_slug = models.CharField(max_length=255, blank=True, null=True, help_text="Document cloud slug")
     dc_title = models.CharField(max_length=255, blank=True, null=True, help_text="Document cloud title")
+    # flattened fields, for efficient pages:
+    nielsen_dma = models.CharField(max_length=60, blank=True, null=True, help_text='Nielsen Designated Market Area')
+    dma_id = models.PositiveIntegerField(blank=True, null=True, editable=False, help_text='DMA ID, from Nielsen')
+    community_state = models.CharField(max_length=7, blank=True, null=True)
 
     
     def path(self):
@@ -152,10 +159,19 @@ class PDF_File(models.Model):
         
     def search_text(self):
         rawpath = get_file_path(self.raw_url)
-        return " ".join(rawpath[1:])   
+        return " ".join(rawpath[1:])
+        
+    def candidate_type(self):
+        if self.federal_office:
+            return self.federal_office
+        else:
+            return self.ad_type
      
     def __unicode__(self):
         return self.search_text()
+        
+    def get_absolute_url(self):
+        return "/fcc/r/%s/" % self.pk
 
 """
 TK: other external doc source models. 

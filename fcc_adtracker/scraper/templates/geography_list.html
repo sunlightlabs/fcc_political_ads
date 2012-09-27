@@ -1,0 +1,24 @@
+{% extends "fcc-base.html" %}{% load static from staticfiles %}
+{% block bodyclass %}states{% endblock bodyclass %}
+{% block pagetitle %}Find recent FCC political ad filings by {{ geography_name }}{% if subgeography %} in {{subgeography}}{% endif %}{% endblock pagetitle %}
+{% block content %}
+<h2>Find recent FCC political ad filings by {{ geography_name }}{% if subgeography %} in {{subgeography}}{% endif %}</h2>
+
+<a href="/fcc/most-recent/">Most recent</a>&nbsp;|&nbsp;<a href="/fcc/states/">Browse by state</a>&nbsp;|&nbsp;<a href="/fcc/dmas/">Browse by TV Market</a>&nbsp;|&nbsp;<a href="/fcc/stations/">Browse by station</a>
+<br>
+<p class="tip">Only stations required to put their political files online are included. Click on a {{ geography_name|lower }} name to see filings there.</p> 
+<table class="table table-striped">
+	<thead>
+        <tr>
+            <th>{{ geography_name }}</th>
+            {% if show_location %}<th>Location</th><th>TV Market</th>{% else %}<th>Number of stations mandated to report</th>{% endif %}
+        </tr>
+    </thead>
+    <tbody>
+	{% for geography in geography_list %}
+	<tr><td><a href="/fcc/by-{{geography_name_short}}/{{geography.geography_name_short}}/">{{geography.geography_name}}</a></td>{% if show_location %}<td>{{ geography.location1|upper}}</td><td>{{ geography.location2}}</td>{% else %}<td> {{geography.count}} &nbsp;see <a href="/fcc/stations/{{geography_name_short}}/{{geography.geography_name_short}}/">all stations in this {{ geography_name|lower }}</a></td>{% endif %}</tr>
+{% endfor %}
+	<tbody>
+</table>
+
+{% endblock content %}

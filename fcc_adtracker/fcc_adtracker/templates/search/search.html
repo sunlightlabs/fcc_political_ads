@@ -55,7 +55,7 @@
                     {% for key, value in selected_facets.items %}
                     <li>
                         <a class="closeBtn textReplace" href="{% url haystack_search %}?q={{query}}{% for k, v in selected_facets.items %}{% if k != key %}&amp;selected_facets={{k}}:{{ v|urlencode }}{% endif %}{% endfor %}">Remove</a>
-{# No idea why, but the key for 'State' get's truncated to 's'. Should fix this for real, but...  %}
+{# No idea why, but the key for 'State' get's truncated to 's'. Should fix this for real, but...  #}
                         <strong>{% ifequal key 's' %}State{% else %}{{key|replace:'_, '|title}}{% endifequal %}</strong>: {{value}} </li>
                     {% endfor %}
                 </ul>

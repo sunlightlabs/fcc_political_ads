@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     url(r'', include('volunteers.urls')),
     url(r'', include('sfapp.urls')),
     url(r'', include('fccpublicfiles.urls')),
-
+    url(r'^fcc/', include('scraper.urls')),
     (r'^search/', include('search.urls')),
 
     url(r'^stations/json/', include(json_urlpatterns)),

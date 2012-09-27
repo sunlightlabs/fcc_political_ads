@@ -72,7 +72,9 @@
                 {% else %}
                 <li class="signup"><a href="{% url register_volunteer %}">Sign Up!</a></li>
                 {% endif %}
-                <li class="states first"><a href="/states/">Browse States</a></li>
+                <li class="states"><a href="/fcc/states/">Filings by State</a></li>
+                <li class="states"><a href="/fcc/dmas/">Filings by TV Market</a></li>
+    		    <li class="states first"><a href="/fcc/most-recent/">Newest FCC Filings</a></li>
     		</ul>
     	</nav>
     {% endblock %}
@@ -91,7 +93,7 @@
                     <button class="btn" type="submit">Search</button>
                 </li>
                 <li class="clear">
-                    <a href='{% url haystack_search %}'>Advanced Search</a>
+                    Search for ad buys
                 </li>
             </ul>
         </form>
