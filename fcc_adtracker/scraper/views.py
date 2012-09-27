@@ -1,4 +1,5 @@
 import datetime
+import csv
 
 from django.shortcuts import render_to_response, redirect
 
@@ -7,6 +8,10 @@ from broadcasters.models import Broadcaster
 from fccpublicfiles.models import PoliticalBuy
 from django.db.models import Count
 from django.contrib.localflavor.us import us_states
+
+from django.conf import settings
+
+CSV_EXPORT_DIR = getattr(settings, 'CSV_EXPORT_DIR')
 
 
 
@@ -169,5 +174,22 @@ def ad_buy_redirect(request, buy_id):
     adbuy = PoliticalBuy.objects.get(related_FCC_file__pk=buy_id)
     return redirect(adbuy.get_absolute_url())
     
-        
+def write_csv_to_file(file_description, local_file, fields, rows):
+    local_response = open(local_file, 'w')
+    writer = csv.writer(local_response)
+    writer.writerow([file_description])
+    writer.writerow(fields)
+    for row in rows:
+        writer.writerow(row)
     
+
+def all_ads_to_file():
+    file_description="All ads available"
+    file_name =  "%s/all_ads.csv" % (CSV_EXPORT_DIR)
+    fields = ['id', 'station', 'file_upload_time', 'tv_market', 'tv_market_id', 'ad_type', 'fcc_folder', 'file_name', 'source_file_url']
+    all_rows = PDF_File.objects.all()
+    file_rows = []
+    for row in all_rows:
+        file_rows.append([row.pk, row.callsign, row.upload_time.strftime("%Y-%m-%d"), row.nielsen_dma, row.dma_id, row.candidate_type(), row.raw_name_guess, row.file_name, row.raw_url])
+    
+    write_csv_to_file(file_description, file_name, fields, file_rows)
