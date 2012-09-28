@@ -2,25 +2,21 @@
 {% block bodyclass %}states{% endblock bodyclass %}
 {% block pagetitle %}Find recent FCC political ad filings by {{ geography_name }}{% if subgeography %} in {{subgeography}}{% endif %}{% endblock pagetitle %}
 {% block content %}
-<h2>Find recent FCC political ad filings by {{ geography_name }}{% if subgeography %} in {{subgeography}}{% endif %}</h2>
+<h2>Last week: FCC political ad filings from the last 7 days, by {{ geography_name }}</h2>
 
 <a href="/fcc/most-recent/">Most recent</a>&nbsp;|&nbsp;<a href="/fcc/states/">Browse by state</a>&nbsp;|&nbsp;<a href="/fcc/dmas/">Browse by TV market</a>&nbsp;|&nbsp;<a href="/fcc/stations/">Browse by station</a>
 <br>
-<p class="tip">Only stations required by the FCC to put their political files online are included. Click on a {{ geography_name }} name to see filings there.<br>
+<p class="tip">This page shows only filings made in the last 7 days. Only stations required by the FCC to put their political files online are included. Click on a {{ geography_name }} name to see filings there.<br>
 </p> 
 Download a <a href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">.csv file of all ads posted online.</a>	
 <table class="table table-striped tablesorter sortable" id="ad-data">
 	<thead>
         <tr>
             <th>{{ geography_name|upper }}</th>
-			<th>Stations filing</th>
-            <th>All ad filings</th>
-			<th>Non-candidates</th>
-			<th>President</th>
-			<th>Senate</th>
-			<th>US House</th>
-			<th>State</th>
-			<th>Local</th>						
+			<th>Recent non-candidates<br> (last 7 days)</th>
+			<th>Recent President<br> (last 7 days)</th>
+			<th>Recent Senate<br> (last 7 days)</th>
+			<th>Recent US House<br> (last 7 days)</th>						
         </tr>
     </thead>
     <tbody>
@@ -28,13 +24,10 @@ Download a <a href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/a
 	<tr>
 		<td><a href="{{ geo.get_absolute_url}}">{{geo.name|safe}}</a><br>see <a href="{{ geo.get_station_url }}">all stations</a></td>
 		<td> {{geo.num_broadcasters}}</td>
-		<td> {{geo.tot_buys}}</td>
-		<td> {{geo.outside_buys}}</td>				
-		<td> {{geo.pres_buys}}</td>
-		<td> {{geo.sen_buys}}</td>
-		<td> {{geo.house_buys}}</td>
-		<td> {{geo.state_buys}}</td>
-		<td> {{geo.local_buys}}</td>										
+		<td> {{geo.recent_outside_buys}}</td>				
+		<td> {{geo.recent_pres_buys}}</td>
+		<td> {{geo.recent_sen_buys}}</td>
+		<td> {{geo.recent_house_buys}}</td>										
 	</tr>
 {% endfor %}
 	<tbody>

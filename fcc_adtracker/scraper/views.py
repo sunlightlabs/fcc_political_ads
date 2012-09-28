@@ -28,11 +28,33 @@ def state_fcc_list(request):
         'sfapp_base_template': 'sfapp/base-full.html',
         
     })
+
+def recent_state_fcc_list(request):
+
+    states = state_summary.objects.filter(tot_buys__gte=0).order_by('-tot_buys')
+
+    return render_to_response('recent_geography_list.html', {
+        'geography_name':'state',
+        'geography_name_short':'state',
+        'geography_list':states,
+        'sfapp_base_template': 'sfapp/base-full.html',
+
+    })
     
 def dma_fcc_list(request):
 
     dmas = dma_summary.objects.filter(tot_buys__gte=0).order_by('-tot_buys')
     return render_to_response('geography_list.html', {
+        'geography_name':'TV market',
+        'geography_name_short':'dma',
+        'geography_list':dmas,
+        'sfapp_base_template': 'sfapp/base-full.html',
+    })
+
+def recent_dma_fcc_list(request):
+
+    dmas = dma_summary.objects.filter(tot_buys__gte=0).order_by('-tot_buys')
+    return render_to_response('recent_geography_list.html', {
         'geography_name':'TV market',
         'geography_name_short':'dma',
         'geography_list':dmas,
