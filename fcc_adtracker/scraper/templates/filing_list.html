@@ -4,7 +4,7 @@
 {% block content %}
 <h2>FCC political ad filings {{ preposition }} {{ geography_name }}</h2>
 
-<a href="/fcc/most-recent/">Most recent</a>&nbsp;|&nbsp;<a href="/fcc/states/">Browse by state</a>&nbsp;|&nbsp;<a href="/fcc/dmas/">Browse by TV market</a>&nbsp;|&nbsp;<a href="/fcc/stations/">Browse by station</a>
+<a href="/fcc/most-recent/">Most recent</a>&nbsp;|&nbsp;<a href="/fcc/states/">State summary</a>&nbsp;|&nbsp;<a href="/fcc/dmas/">TV market summary</a>&nbsp;|&nbsp;<a href="/fcc/stations/">Browse by station</a>
 <br>
  <p>Found {{count}} filings{% if broadcaster %} at {{broadcaster }}{% endif %}. {% updatetime %}.
 <br>Download a <a href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">.csv file of all ads posted online.</a>	
@@ -25,9 +25,9 @@
     <tbody>
 	{% for filing in filings %}
 	<tr>
-		<td>{{filing.callsign}}</td>
-		<td>{{filing.community_state}}</td>
-		<td>{{filing.nielsen_dma}}</td>
+		<td><a href="/fcc/by-tv-station/{{filing.callsign}}/">{{filing.callsign}}</a></td>
+		<td><a href="/fcc/by-state/{{filing.community_state}}/">{{filing.community_state}}</a></td>
+		<td><a href="/fcc/by-dma/{{filing.dma_id}}/">{{filing.nielsen_dma}}</a></td>
 		<td>{{filing.upload_time|date:"n/j/Y"}}</td>
 		<td>{{ filing.candidate_type }}</td>
 		<td>{{ filing.raw_name_guess}}</td>
