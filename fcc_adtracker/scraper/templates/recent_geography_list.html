@@ -4,7 +4,7 @@
 {% block content %}
 <h2>Last week: FCC political ad filings from the last 7 days, by {{ geography_name }}</h2>
 
-<a href="/fcc/most-recent/">Most recent</a>&nbsp;|&nbsp;<a href="/fcc/states/">State summary</a>&nbsp;|&nbsp;<a href="/fcc/dmas/">TV market summary</a>&nbsp;|&nbsp;<a href="/fcc/stations/">Browse by station</a>
+<a href="/fcc/most-recent/">Most recent</a>&nbsp;|&nbsp;<a href="/fcc/states/">State summary</a>&nbsp;|&nbsp;<a href="/fcc/dmas/">TV market summary</a>&nbsp;|&nbsp;<a href="/fcc/stations/">Browse by station</a>&nbsp;|&nbsp;<a href="/fcc/recent/dmas/">TV Market--last 7 days</a>&nbsp;|&nbsp;<a href="/fcc/recent/states/">States--last 7 days</a>
 <br>
 <p class="tip">This page shows only filings made in the last 7 days. Only stations required by the FCC to put their political files online are included. Click on a {{ geography_name }} name to see filings there.  {% updatetime %}.<br>
 </p> 
@@ -13,6 +13,7 @@ Download a <a href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/a
 	<thead>
         <tr>
             <th>{{ geography_name|upper }}</th>
+			<th>Number of stations reporting</th>
 			<th>Recent non-candidates<br> (last 7 days)</th>
 			<th>Recent President<br> (last 7 days)</th>
 			<th>Recent Senate<br> (last 7 days)</th>

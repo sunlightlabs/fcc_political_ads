@@ -55,7 +55,7 @@
 		{% endif %}
 	
         <h2 class="withTip"><small class="clearfix">Political Buy:</small> {{ obj.advertiser|default:"" }}</h2>
-        <!--<p class="editBtn" style="font-size:24px;"><a href="{{ obj.get_edit_url }}" title="Enter details about this ad buy">Enter Ad Data!</a></p> -->
+        <p class="editBtn"><a id="enter_button" class="btn clear" title="Enter details about this ad buy" href="{{ obj.get_edit_url }}">Enter Ad Data!</a></p> 
     </div>
     <div class="row module">
         <div id="buyData" class="span5">
@@ -78,7 +78,6 @@
         </div>
         <div id="internalLinks" class="span2 sideCallout">
            
-			<h4><a href="{{ obj.get_edit_url }}" title="Enter details about this ad buy">Enter Ad Data!</a></h4>
 			<b>More Information</b>
            <ul class="unstyled">
                 {% if obj.advertiser.fec_id != '' %}
@@ -86,13 +85,13 @@
                 {% else %}
                 <li><p><a href="http://reporting.sunlightfoundation.com/outside-spending/search/?q={{obj.advertiser.name|urlencode}}">Search for {{obj.advertiser.name }}</a> on Follow the Unlimited Money</p>
                 {% endif %}
-                <!--<li><p><a href="#original_document">Original Document</a></p></li>-->
+                {% if obj.related_FCC_file %}<li><p><a href="{{obj.related_FCC_file.raw_url }}">Original Document</a></p></li>{% endif %}
             </ul>
         </div>
     </div>
     <div class="module">
         <h3>Ad Spots Purchased by {{ obj.advertiser|default:"" }}</h3>
-        <a id="downloadBtn" class="btn clear" href="#">Download CSV</a>
+        <!-- <a id="downloadBtn" class="btn clear" href="#">Download CSV</a> -->
         <div id="pager" class="pager clear">
             <span class="pagedisplay tip withTip"></span>
             <ul class="unstyled form-inline form-vertical pagerDetails clearfix">
