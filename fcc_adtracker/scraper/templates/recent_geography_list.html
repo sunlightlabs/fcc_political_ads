@@ -1,12 +1,12 @@
-{% extends "fcc-base.html" %}{% load static from staticfiles %}
+{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load updatetime from update %}
 {% block bodyclass %}states{% endblock bodyclass %}
 {% block pagetitle %}Find recent FCC political ad filings by {{ geography_name }}{% if subgeography %} in {{subgeography}}{% endif %}{% endblock pagetitle %}
 {% block content %}
 <h2>Last week: FCC political ad filings from the last 7 days, by {{ geography_name }}</h2>
 
-<a href="/fcc/most-recent/">Most recent</a>&nbsp;|&nbsp;<a href="/fcc/states/">Browse by state</a>&nbsp;|&nbsp;<a href="/fcc/dmas/">Browse by TV market</a>&nbsp;|&nbsp;<a href="/fcc/stations/">Browse by station</a>
+<a href="/fcc/most-recent/">Most recent</a>&nbsp;|&nbsp;<a href="/fcc/states/">State summary</a>&nbsp;|&nbsp;<a href="/fcc/dmas/">TV market summary</a>&nbsp;|&nbsp;<a href="/fcc/stations/">Browse by station</a>
 <br>
-<p class="tip">This page shows only filings made in the last 7 days. Only stations required by the FCC to put their political files online are included. Click on a {{ geography_name }} name to see filings there.<br>
+<p class="tip">This page shows only filings made in the last 7 days. Only stations required by the FCC to put their political files online are included. Click on a {{ geography_name }} name to see filings there.  {% updatetime %}.<br>
 </p> 
 Download a <a href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">.csv file of all ads posted online.</a>	
 <table class="table table-striped tablesorter sortable" id="ad-data">

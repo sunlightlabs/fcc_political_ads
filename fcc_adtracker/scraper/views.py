@@ -10,13 +10,15 @@ from django.db.models import Count
 from django.contrib.localflavor.us import us_states
 
 from django.conf import settings
-
+from django.views.decorators.cache import cache_page
 CSV_EXPORT_DIR = getattr(settings, 'CSV_EXPORT_DIR')
 
 
 
 STATES_DICT = dict(us_states.US_STATES)
+CACHE_TIME = 15 * 60 
 
+@cache_page(CACHE_TIME)
 def state_fcc_list(request):
     
     states = state_summary.objects.filter(tot_buys__gte=0).order_by('-tot_buys')
@@ -29,6 +31,7 @@ def state_fcc_list(request):
         
     })
 
+@cache_page(CACHE_TIME)
 def recent_state_fcc_list(request):
 
     states = state_summary.objects.filter(tot_buys__gte=0).order_by('-tot_buys')
@@ -41,6 +44,7 @@ def recent_state_fcc_list(request):
 
     })
     
+@cache_page(CACHE_TIME)
 def dma_fcc_list(request):
 
     dmas = dma_summary.objects.filter(tot_buys__gte=0).order_by('-tot_buys')
@@ -51,6 +55,7 @@ def dma_fcc_list(request):
         'sfapp_base_template': 'sfapp/base-full.html',
     })
 
+@cache_page(CACHE_TIME)
 def recent_dma_fcc_list(request):
 
     dmas = dma_summary.objects.filter(tot_buys__gte=0).order_by('-tot_buys')
@@ -61,6 +66,7 @@ def recent_dma_fcc_list(request):
         'sfapp_base_template': 'sfapp/base-full.html',
     })
 
+@cache_page(CACHE_TIME)
 def station_fcc_list(request):
 
     broadcasters = StationData.objects.filter(is_mandated_station=True).order_by('callSign').values('callSign', 'networkAfil', 'communityCity', 'communityState', 'nielsenDma')
@@ -76,7 +82,8 @@ def station_fcc_list(request):
         'geography_list':broadcasters,
         'show_location':'True',
     })
-    
+
+@cache_page(CACHE_TIME)  
 def station_state_list(request, state_id):
     state_name = STATES_DICT.get(state_id, None)
     if state_name:
@@ -97,7 +104,8 @@ def station_state_list(request, state_id):
         
     else:
         raise Http404('State with abbrevation "{state_id}" not found.'.format(state_id=state_id))
-        
+
+@cache_page(CACHE_TIME)      
 def station_dma_list(request, dma_id):
     dma_name = None
 
@@ -119,6 +127,7 @@ def station_dma_list(request, dma_id):
         'subgeography':dma_name,
     })
 
+@cache_page(CACHE_TIME)
 def filing_dma_list(request, dma_id):
     dma_name = None
 
@@ -133,7 +142,8 @@ def filing_dma_list(request, dma_id):
         'count':count,
         'sfapp_base_template': 'sfapp/base-full.html',
     }) 
-    
+  
+@cache_page(CACHE_TIME)  
 def filing_station_list(request, callsign):
 
     filings = PDF_File.objects.filter(callsign__iexact=callsign).order_by('-upload_time')
@@ -153,7 +163,8 @@ def filing_station_list(request, callsign):
         'sfapp_base_template': 'sfapp/base-full.html',
         
     })       
-       
+
+@cache_page(CACHE_TIME)   
 def filing_state_list(request, state_id):
     state_name = STATES_DICT.get(state_id, None)
     if state_name:
@@ -171,7 +182,8 @@ def filing_state_list(request, state_id):
         
     else:
         raise Http404('State with abbrevation "{state_id}" not found.'.format(state_id=state_id))
-        
+ 
+@cache_page(CACHE_TIME)       
 def fcc_most_recent(request):
     
     today = datetime.datetime.today()
