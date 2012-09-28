@@ -3,7 +3,7 @@ import csv
 
 from django.shortcuts import render_to_response, redirect
 
-from models import StationData, PDF_File
+from models import StationData, PDF_File, dma_summary, state_summary
 from fccpublicfiles.models import PoliticalBuy
 from broadcasters.models import Broadcaster
 from django.db.models import Count
@@ -18,29 +18,25 @@ CSV_EXPORT_DIR = getattr(settings, 'CSV_EXPORT_DIR')
 STATES_DICT = dict(us_states.US_STATES)
 
 def state_fcc_list(request):
+    
+    states = state_summary.objects.filter(tot_buys__gte=0).order_by('-tot_buys')
 
-    mandated_broadcasters = StationData.objects.filter(is_mandated_station=True)
-    states = mandated_broadcasters.values('communityState').annotate(count=Count('pk')).order_by('communityState')
-    for state in states:
-        state['geography_name'] = STATES_DICT[state['communityState']]
-        state['geography_name_short'] = state['communityState']
     return render_to_response('geography_list.html', {
         'geography_name':'state',
         'geography_name_short':'state',
-        'geography_list':states
+        'geography_list':states,
+        'sfapp_base_template': 'sfapp/base-full.html',
+        
     })
     
 def dma_fcc_list(request):
 
-    mandated_broadcasters = StationData.objects.filter(is_mandated_station=True)
-    dmas = mandated_broadcasters.values('nielsenDma', 'nielsenDma_id').order_by('nielsenDma').annotate(count=Count('pk')).order_by('nielsenDma')
-    for dma in dmas:
-        dma['geography_name'] = dma['nielsenDma']
-        dma['geography_name_short'] = dma['nielsenDma_id']
+    dmas = dma_summary.objects.filter(tot_buys__gte=0).order_by('-tot_buys')
     return render_to_response('geography_list.html', {
         'geography_name':'TV market',
         'geography_name_short':'dma',
-        'geography_list':dmas
+        'geography_list':dmas,
+        'sfapp_base_template': 'sfapp/base-full.html',
     })
 
 def station_fcc_list(request):
@@ -56,7 +52,7 @@ def station_fcc_list(request):
         'geography_name':'TV station',
         'geography_name_short':'tv-station',
         'geography_list':broadcasters,
-        'show_location':'True'
+        'show_location':'True',
     })
     
 def station_state_list(request, state_id):
@@ -69,7 +65,7 @@ def station_state_list(request, state_id):
             broadcaster['geography_name_short'] = broadcaster['callSign']
             broadcaster['location1'] = "%s" % (broadcaster['communityCity'])
             broadcaster['location2'] = broadcaster['nielsenDma']
-        return render_to_response('geography_list.html', {
+        return render_to_response('broadcaster_list.html', {
             'geography_name':'TV station',
             'geography_name_short':'tv-station',
             'geography_list':broadcasters,
@@ -93,7 +89,7 @@ def station_dma_list(request, dma_id):
         broadcaster['geography_name_short'] = broadcaster['callSign']
         broadcaster['location1'] = "%s, %s" % (broadcaster['communityCity'], broadcaster['communityState'])
         broadcaster['location2'] = broadcaster['nielsenDma']
-    return render_to_response('geography_list.html', {
+    return render_to_response('broadcaster_list.html', {
         'geography_name':'TV station',
         'geography_name_short':'tv-station',
         'geography_list':broadcasters,

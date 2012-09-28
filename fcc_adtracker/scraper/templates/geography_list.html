@@ -9,18 +9,49 @@
 <p class="tip">Only stations required by the FCC to put their political files online are included. Click on a {{ geography_name }} name to see filings there.<br>
 </p> 
 Download a <a href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">.csv file of all ads posted online.</a>	
-<table class="table table-striped">
+<table class="table table-striped tablesorter sortable" id="ad-data">
 	<thead>
         <tr>
-            <th>{{ geography_name|upper }}</th>
-            {% if show_location %}<th>LOCATION</th><th>TV MARKET</th>{% else %}<th>NUMBER OF STATIONS MANDATED TO REPORT</th>{% endif %}
+            <th class="sort">{{ geography_name|upper }}</th>
+			<th class="sort header">Stations filing</th>
+            <th class="sort header">All ad filings</th>
+			<th class="sort header">Non-candidates</th>
+			<th>President</th>
+			<th>Senate</th>
+			<th>US House</th>
+			<th>State</th>
+			<th>Local</th>						
         </tr>
     </thead>
     <tbody>
-	{% for geography in geography_list %}
-	<tr><td><a href="/fcc/by-{{geography_name_short}}/{{geography.geography_name_short}}/">{{geography.geography_name}}</a></td>{% if show_location %}<td>{{ geography.location1|upper}}</td><td>{{ geography.location2}}</td>{% else %}<td> {{geography.count}} &nbsp;see <a href="/fcc/stations/{{geography_name_short}}/{{geography.geography_name_short}}/">all stations in this {{ geography_name|lower }}</a></td>{% endif %}</tr>
+	{% for geo in geography_list %}
+	<tr>
+		<td><a href="{{ geo.get_absolute_url}}">{{geo.name|safe}}</a><br>see <a href="{{ geo.get_station_url }}">all stations</a></td>
+		<td> {{geo.num_broadcasters}}</td>
+		<td> {{geo.tot_buys}}</td>
+		<td> {{geo.outside_buys}}</td>				
+		<td> {{geo.pres_buys}}</td>
+		<td> {{geo.sen_buys}}</td>
+		<td> {{geo.house_buys}}</td>
+		<td> {{geo.state_buys}}</td>
+		<td> {{geo.local_buys}}</td>										
+	</tr>
 {% endfor %}
 	<tbody>
 </table>
 
 {% endblock content %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.widgets.min.js' %}"></script>
+	<script type="text/javascript">
+	
+	$(document).ready(function() 
+	    { 
+	        $("#ad-data").tablesorter( {sortList: [[0,0], [1,0]]} ); 
+	    } 
+	); 
+	</script>
+{% endblock %}

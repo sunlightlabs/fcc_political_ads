@@ -55,7 +55,7 @@
 		{% endif %}
 	
         <h2 class="withTip"><small class="clearfix">Political Buy:</small> {{ obj.advertiser|default:"" }}</h2>
-        <p class="editBtn" style="font-size:24px;"><a href="{{ obj.get_edit_url }}" title="Enter details about this ad buy">Enter Ad Data!</a></p>
+        <!--<p class="editBtn" style="font-size:24px;"><a href="{{ obj.get_edit_url }}" title="Enter details about this ad buy">Enter Ad Data!</a></p> -->
     </div>
     <div class="row module">
         <div id="buyData" class="span5">
@@ -77,14 +77,16 @@
             </dl>
         </div>
         <div id="internalLinks" class="span2 sideCallout">
-            <h4>More Information</h4>
-            <ul class="unstyled">
+           
+			<h4><a href="{{ obj.get_edit_url }}" title="Enter details about this ad buy">Enter Ad Data!</a></h4>
+			<b>More Information</b>
+           <ul class="unstyled">
                 {% if obj.advertiser.fec_id != '' %}
                 <li><p id='fec_id'><a href="http://reporting.sunlightfoundation.com/outside-spending/committee/{{obj.advertiser.name|slugify}}/{{ obj.advertiser.fec_id }}/">Follow the Unlimited Money Profile</a></p>
                 {% else %}
                 <li><p><a href="http://reporting.sunlightfoundation.com/outside-spending/search/?q={{obj.advertiser.name|urlencode}}">Search for {{obj.advertiser.name }}</a> on Follow the Unlimited Money</p>
                 {% endif %}
-                <li><p><a href="#original_document">Original Document</a></p>
+                <!--<li><p><a href="#original_document">Original Document</a></p></li>-->
             </ul>
         </div>
     </div>

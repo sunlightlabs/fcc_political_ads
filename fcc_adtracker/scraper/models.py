@@ -6,6 +6,9 @@ from django.db import models
 from broadcasters.models import Broadcaster
 
 from utils import get_folder_path, get_file_path
+from django.contrib.localflavor.us import us_states
+
+STATES_DICT = dict(us_states.US_STATES)
 
 # Geo representation of a broadcast area. Requires PostGIS. 
 """
@@ -173,6 +176,59 @@ class PDF_File(models.Model):
     def get_absolute_url(self):
         return "/fcc/r/%s/" % self.pk
 
+class state_summary(models.Model):
+    state_id = models.CharField(max_length=2, blank=True, null=True)
+    num_broadcasters = models.PositiveIntegerField(blank=True, null=True, help_text="only mandated broadcasters")
+    tot_buys = models.PositiveIntegerField(blank=True, null=True)
+    pres_buys =  models.PositiveIntegerField(blank=True, null=True)
+    sen_buys =  models.PositiveIntegerField(blank=True, null=True)
+    house_buys =  models.PositiveIntegerField(blank=True, null=True)
+    state_buys = models.PositiveIntegerField(blank=True, null=True)
+    local_buys = models.PositiveIntegerField(blank=True, null=True)
+    outside_buys = models.PositiveIntegerField(blank=True, null=True)
+    recent_pres_buys =  models.PositiveIntegerField(blank=True, null=True)  
+    recent_sen_buys =  models.PositiveIntegerField(blank=True, null=True)
+    recent_house_buys =  models.PositiveIntegerField(blank=True, null=True)
+    recent_outside_buys = models.PositiveIntegerField(blank=True, null=True)
+    
+    def get_absolute_url(self):
+        return "/fcc/by-state/%s/" % (self.state_id)
+        
+    def get_station_url(self):
+        return "/fcc/stations/state/%s/" % (self.state_id)  
+
+    def name(self):
+        return STATES_DICT[self.state_id]
+    
+
+class dma_summary(models.Model):
+    dma_id = models.PositiveIntegerField(blank=True, null=True, editable=False, help_text='DMA ID, from Nielsen')
+    dma_name = models.CharField(max_length=255, blank=True, null=True, help_text="Better name - set from file")
+    fcc_dma_name = models.CharField(max_length=255, blank=True, null=True)
+    rank1011 = models.PositiveIntegerField(blank=True, null=True)
+    rank1112 = models.PositiveIntegerField(blank=True, null=True)
+    
+    num_broadcasters = models.PositiveIntegerField(blank=True, null=True, help_text="only mandated broadcasters")
+    tot_buys = models.PositiveIntegerField(blank=True, null=True)
+    pres_buys =  models.PositiveIntegerField(blank=True, null=True)
+    sen_buys =  models.PositiveIntegerField(blank=True, null=True)
+    house_buys =  models.PositiveIntegerField(blank=True, null=True)
+    state_buys = models.PositiveIntegerField(blank=True, null=True)
+    local_buys = models.PositiveIntegerField(blank=True, null=True)
+    outside_buys = models.PositiveIntegerField(blank=True, null=True)
+    recent_pres_buys =  models.PositiveIntegerField(blank=True, null=True)  
+    recent_sen_buys =  models.PositiveIntegerField(blank=True, null=True)
+    recent_house_buys =  models.PositiveIntegerField(blank=True, null=True)
+    recent_outside_buys = models.PositiveIntegerField(blank=True, null=True)
+    
+    def get_absolute_url(self):
+        return "/fcc/by-dma/%s/" % (self.dma_id)
+        
+    def get_station_url(self):
+        return "/fcc/stations/dma/%s/" % (self.dma_id)
+    
+    def name(self):
+        return self.dma_name
 """
 TK: other external doc source models. 
 """
