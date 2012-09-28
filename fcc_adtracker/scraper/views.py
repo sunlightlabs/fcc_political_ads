@@ -76,7 +76,7 @@ def station_fcc_list(request):
         broadcaster['geography_name_short'] = broadcaster['callSign']
         broadcaster['location1'] = "%s, %s" % (broadcaster['communityCity'], broadcaster['communityState'])
         broadcaster['location2'] = broadcaster['nielsenDma']
-    return render_to_response('geography_list.html', {
+    return render_to_response('broadcaster_list.html', {
         'geography_name':'TV station',
         'geography_name_short':'tv-station',
         'geography_list':broadcasters,
