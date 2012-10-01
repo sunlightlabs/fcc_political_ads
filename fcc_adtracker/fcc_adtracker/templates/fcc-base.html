@@ -18,7 +18,6 @@
 <script src="{% static "js/libs/modernizr-2.5.3.min.js" %}"></script>
 {% endblock head %}
 {% block js %}
-{# <script src="{% static 'js/libs/underscore-min.js' %}" type="text/javascript" charset="utf-8"></script> #}
 <script src="//cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
 <script>window.jQuery.tools || document.write('<script src="{% static 'js/libs/jquery.tools.min.js' %}"><\/script>')</script>
 <script src="{% static 'js/bootstrap.min.js' %}" type="text/javascript" charset="utf-8"></script>
@@ -67,14 +66,13 @@
     		    <li class="about"><a href="/about/">About</a></li>
     		    <li class="loginout"><a href="{% if user.is_authenticated %}/account/logout/{% else %}/account/login/{% endif %}">Log {% if user.is_authenticated %}Out{% else %}In{% endif %}</a></li>
                 {% if user.is_authenticated %}
-                <li class="upload"><a href="/political-files/submit/">Upload Files</a></li>
+                <li class="upload"><a href="{% url document_submit %}">Upload Files</a></li>
                 <li class="account"><a href="{% url user_dashboard %}">Account</a></li>
                 {% else %}
                 <li class="signup"><a href="{% url register_volunteer %}">Sign Up!</a></li>
                 {% endif %}
-                <li class="states"><a href="/fcc/states/">Ads by State</a></li>
-                <li class="states"><a href="/fcc/dmas/">Ads by TV Market</a></li>
-    		    <li class="states first"><a href="/fcc/most-recent/">Newest Ads</a></li>
+                <li class="states"><a href="{% url state_list %}">Ads by State</a></li>
+    		    <li class="first"><a href="{% url fcc_most_recent %}">Newest Ads</a></li>
     		</ul>
     	</nav>
     {% endblock %}
@@ -87,13 +85,10 @@
             <ul>
                 <li>
                     <label class="invisible">Search</label>
-                    <input type="text" id="id_q" value="" name="q">
+                    <input placeholder="Search ad buys, advertisers, etc." type="text" id="id_q" value="" name="q">
                 </li>
                 <li>
                     <button class="btn" type="submit">Search</button>
-                </li>
-                <li class="clear">
-                    Search for ad buys
                 </li>
             </ul>
         </form>
