@@ -157,7 +157,7 @@ class PoliticalBuy(MildModeratedModel):
     def date_display(self):
         date_str = ''
         if self.is_FCC_doc:
-            date_str = u"{0}".format(self.related_FCC_file.upload_time.strftime("%Y%m%d"))
+            date_str = u"{0}".format(self.related_FCC_file.upload_time.strftime("%m/%d/%y"))
         else:
             date_str = u"{0}".format(self.contract_end_date.strftime("%m/%d/%y"))
         return date_str
