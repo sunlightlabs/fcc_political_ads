@@ -63,6 +63,13 @@ GOOGLE_DOCS_ACCOUNT = ''
 GOOGLE_DOCS_PASSWORD = ''
 GOOGLE_DOCS_RESOURCE_ID = ''
 
+FCC_SCRAPER_LOG = ''
+SCRAPER_USER_AGENT_STRING = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)'
+SCRAPE_DELAY_TIME = 0.5
+SCRAPER_LOCAL_DOC_DIR = ''
+
+CSV_EXPORT_DIR = ''
+
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
