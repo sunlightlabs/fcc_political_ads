@@ -3,12 +3,12 @@
 {% block pagetitle %}Recent FCC political ad filings {{ preposition }} {{ geography_name }}{% endblock pagetitle %}
 {% block content %}
 <h2>FCC political ad filings {{ preposition }} {{ geography_name }}</h2>
-
+{% include "_subnav.html" %}
 
 
  <p>Found {{count}} filings{% if broadcaster %} at {{broadcaster }}{% endif %}. {% updatetime %}.
      
-     <a href="/fcc/most-recent/">Most recent</a>&nbsp;|&nbsp;<a href="/fcc/states/">State summary</a>&nbsp;|&nbsp;<a href="/fcc/dmas/">TV market summary</a>&nbsp;|&nbsp;<a href="/fcc/stations/">Browse by station</a>&nbsp;|&nbsp;<a href="/fcc/recent/dmas/">TV Market--last 7 days</a>&nbsp;|&nbsp;<a href="/fcc/recent/states/">States--last 7 days</a>
+    
 
 <a id="downloadBtn" class="btn" href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">Download CSV</a>	
 
