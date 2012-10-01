@@ -25,13 +25,13 @@
              </ul>
          </form>
 	{% endif %}
-    </div>    
+    </div>
 </div>
 {% if query %}
 <div class="row">
     <div class="span3">
         <h4>Narrow your search</h4>
-       
+
         {% if facets %}
             {% for key, value in facets.fields.items %}
                 <ul class="unstyled withLine">
@@ -42,7 +42,7 @@
                             <li><a href="{% url haystack_search %}?q={{query}}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}{% if item.0 not in selected_facets.values %}&amp;selected_facets={{key}}_exact:{{ item.0|urlencode }}{% endif %}">{{ item.0 }}</a> <span class="resultCount">({{ item.1 }})</span></li>{% endfor %}
                         </ul>
                     </li>
-                </li>    
+                </li>
             </ul>
         {% endfor %}
     {% endif %}
@@ -54,14 +54,14 @@
                 <ul class="unstyled">
                     {% for key, value in selected_facets.items %}
                     <li>
-                        <a class="closeBtn textReplace" href="{% url haystack_search %}?q={{query}}{% for k, v in selected_facets.items %}{% if k != key %}&amp;selected_facets={{k}}:{{ v|urlencode }}{% endif %}{% endfor %}">Remove</a>
+                        <a class="closeBtn textReplace" href="{% url haystack_search %}?q={{query}}{% for k, v in selected_facets.items %}&amp;selected_facets={{k}}:{{ v|urlencode }}{% endfor %}">Remove</a>
 {# No idea why, but the key for 'State' get's truncated to 's'. Should fix this for real, but...  #}
                         <strong>{% ifequal key 's' %}State{% else %}{{key|replace:'_, '|title}}{% endifequal %}</strong>: {{value}} </li>
                     {% endfor %}
                 </ul>
             </div>
         {% endif %}
-            
+
         {% if query %}
             <table class="table table-striped ">
                 <thead>
@@ -71,15 +71,15 @@
                         <th>Date</th>
                         <th>City, State</th>
 						<th>Status</th>
-                    </td>    
-                </thead> 
-                <tbody>   
+                    </tr>
+                </thead>
+                <tbody>
                     {% for result in page.object_list %}
                     <tr>
 	<td>{% if result.object.related_FCC_file %}<a href="{{ result.object.get_absolute_url }}">{{ result.object.related_FCC_file }}</a>{% endif %}</td>
                         <td><a href="{{ result.object.get_absolute_url }}">{{ result.object.advertiser_display }}</a></td>
-                        <td>{{ result.object.station_display }}</td> 
-                        <td>{{ result.object.date_display }}</td> 
+                        <td>{{ result.object.station_display }}</td>
+                        <td>{{ result.object.date_display }}</td>
                         <td>{{ result.object.citystate_display}}</td>
 						<td>{{ result.object.doc_status }}</td>
                     </tr>
@@ -91,7 +91,7 @@
                 </tbody>
             </table>
         {% endif %}
-        
+
         {% if page.has_previous or page.has_next %}
             <div>
                 {% if page.has_previous %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
@@ -99,9 +99,9 @@
                 {% if page.has_next %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
             </div>
         {% endif %}
-        
-       
+
+
     </div>
-</div> 
-{% endif %}   
+</div>
+{% endif %}
 {% endblock %}
