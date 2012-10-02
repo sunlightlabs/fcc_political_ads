@@ -10,6 +10,7 @@ from doccloud.models import Document
 from scraper.models import PDF_File
 from broadcasters.models import Broadcaster
 from locations.models import Address
+from fecdata.models import Candidate, Committee
 from mildmoderator.managers import MildModeratedModelManager
 from mildmoderator.models import MildModeratedModel
 from weekday_field import fields as wf_fields
@@ -27,6 +28,65 @@ ORGANIZATION_TYPES = (
 )
 
 DOCUMENTCLOUD_META = getattr(settings, 'DOCUMENTCLOUD_META', {})
+
+
+class TV_Advertiser(models.Model):
+    # The same person can run for two seats; if that's the case, prefer senate over house--typically they're in a safe seat in the house and are fighting over the senate seat. Not perfect, but it's basically impossible to sort out, especially since the people filing the forms are often wrong
+    candidate =  models.ForeignKey(Candidate, null=True)
+    candidate_name = models.CharField(max_length=255, blank=True, null=True)
+    # Many advertisers are related to multiple C-records; one for the superpac, one for electioneering, one for non-committee, etc. Which one is the primary one? Generally prefer the hierarchy used by ad hawk. 
+    primary_committee = models.ForeignKey(Committee, related_name='primary committee', null=True)
+    secondary_committees = models.ManyToManyField(Committee, null=True, related_name='secondary committees', help_text=" ")
+    committee_name = models.CharField(max_length=255, blank=True, null=True)
+    advertiser_name = models.CharField(max_length=255, blank=True, null=True, help_text="Usually most prominent committee name, if there is one. Starting place is ad hawk's mapping. Human editing required for Crossroads. ")
+    
+    # Hmm, not sure one is really needed
+    ad_hawk_url = models.CharField(max_length=255, blank=True, null=True)
+    ie_url = models.CharField(max_length=255, blank=True, null=True)
+    ftum_url = models.CharField(max_length=255, blank=True, null=True)
+    
+    # Ad hawk doesn't cover candidate ads
+    is_in_adhawk = models.NullBooleanField(null=True, help_text = "Was this in ad hawk?")
+    
+    # how many states have we played in
+    num_states = models.PositiveIntegerField(blank=True, null=True)
+    # how many states this week?
+    num_recent_state = models.PositiveIntegerField(blank=True, null=True)
+    ## ditto for dmas
+    num_dmas = models.PositiveIntegerField(blank=True, null=True)
+    num_recent_dmas = models.PositiveIntegerField(blank=True, null=True)
+    
+    num_broadcasters = models.PositiveIntegerField(blank=True, null=True)
+    num_recent_broadcasters = models.PositiveIntegerField(blank=True, null=True)
+    
+    num_buys = models.PositiveIntegerField(blank=True, null=True)
+    num_recent_buys = models.PositiveIntegerField(blank=True, null=True)
+
+    total_amount_guess_high = models.PositiveIntegerField(blank=True, null=True)
+    total_amount_guess = models.PositiveIntegerField(blank=True, null=True)
+    total_amount_guess_low = models.PositiveIntegerField(blank=True, null=True)
+    
+    recent_amount_guess_high= models.PositiveIntegerField(blank=True, null=True)
+    recent_amount_guess = models.PositiveIntegerField(blank=True, null=True)
+    recent_amount_guess_low = models.PositiveIntegerField(blank=True, null=True)
+    
+    def __unicode__(self):
+        if (self.candidate):
+            return "%s (%s)" % (self.advertiser_name, self.candidate_name)
+        else:
+            return self.candidate_name
+        
+        
+
+# helper table for lookups
+class TV_Advertiser_Alias(models.Model):
+    parent =  models.ForeignKey(TV_Advertiser, null=True)
+    advertiser_name_raw = models.CharField(max_length=255, blank=True, null=True)
+    advertiser_name_clean = models.CharField(max_length=255, blank=True, null=True)
+    
+    def __unicode__(self):
+        return self.advertiser_name_raw
+# TK: Station_Race, Acti
 
 
 class Person(MildModeratedModel):
@@ -57,11 +117,13 @@ class Person(MildModeratedModel):
 
 
 class Organization(MildModeratedModel):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=255, blank=True, null=True)
     organization_type = models.CharField(blank=True, max_length=2, choices=ORGANIZATION_TYPES)
     addresses = models.ManyToManyField(Address, blank=True, null=True)
     employees = models.ManyToManyField(Person, through='Role')
-    fec_id = models.CharField(max_length=9, blank=True)
+    fec_id = models.CharField(max_length=9, blank=True, help_text="fec id of primary committee")
+    related_advertiser = models.ForeignKey(TV_Advertiser, null=True)
+
 
     class Meta:
         ordering = ('name',)
@@ -94,7 +156,7 @@ class GenericPublicDocument(MildModeratedModel):
 class PoliticalBuy(MildModeratedModel):
     """A subset of PublicFile, the PoliticalBuy records purchases of air time (generally for political ads)"""
     # Don't require documents -- allows us to reference other documents w/out copying them to our account. 
-    documentcloud_doc = models.ForeignKey(Document, null=True)
+    documentcloud_doc = models.ForeignKey(Document, null=True, default=None)
     contract_number = models.CharField(blank=True, max_length=100)
     advertiser = models.ForeignKey('Organization', blank=True, null=True, related_name='advertiser_politicalbuys', limit_choices_to={'organization_type': u'AD'})
     advertiser_signatory = models.ForeignKey('Person', blank=True, null=True)
