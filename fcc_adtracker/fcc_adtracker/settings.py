@@ -160,6 +160,7 @@ INSTALLED_APPS = (
     'django_nose',
     'ajax_select', 
     'scraper',
+    'fecdata',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -266,7 +267,14 @@ HAYSTACK_CONNECTIONS = {
 }
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
+FCC_SCRAPER_LOG = ''
+SCRAPER_USER_AGENT_STRING = ''
+SCRAPE_DELAY_TIME = 1
+SCRAPER_LOCAL_DOC_DIR = ''
+SEARCH_URL_EXPR = ''
+CSV_EXPORT_DIR = ''
+FEC_DATA_DIR = ''
+AD_HAWK_MAPPING_URL = ''
 
 try:
     from local_settings import *
