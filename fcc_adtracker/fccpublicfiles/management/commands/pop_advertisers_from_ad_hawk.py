@@ -84,9 +84,3 @@ class Command(BaseCommand):
                 except Committee.DoesNotExist:
                     pass
     
-    # fix crossroads
-    american_crossroads = TV_Advertiser.objects.get(primary_committee__fec_id='C00487363')
-    crossroads_gps = Committee.objects.get(fec_id='C90011719')
-    american_crossroads.advertiser_name = "CROSSROADS (AMERICAN CROSSROADS AND CROSSROADS GPS)"
-    american_crossroads.secondary_committees.add(crossroads_gps)
-    american_crossroads.save()
