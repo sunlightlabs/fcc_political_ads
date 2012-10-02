@@ -306,7 +306,7 @@ class Migration(SchemaMigration):
             'total_spent_raw': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '19', 'decimal_places': '2'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'updated_by': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'fccpublicfiles_politicalbuy_updated'", 'null': 'True', 'to': "orm['auth.User']"}),
-            'uuid_key': ('django.db.models.fields.CharField', [], {'default': "UUID('a4c22580-e029-4139-a8d3-62ae13c7c88c')", 'unique': 'True', 'max_length': '36', 'blank': 'True'})
+            'uuid_key': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '36', 'blank': 'True'})
         },
         'fccpublicfiles.politicalspot': {
             'Meta': {'object_name': 'PoliticalSpot'},
