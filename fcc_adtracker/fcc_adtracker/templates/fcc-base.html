@@ -1,10 +1,14 @@
-{% extends sfapp_base_template|default:"sfapp/base-sidebar.html" %}{% load static from staticfiles %}{% load recent_buy_sidebar from sidebars %}
+{% extends sfapp_base_template|default:"sfapp/base-sidebar.html" %}{% load static from staticfiles %}{% load recent_buy_sidebar from sidebars %}{% load kwacros %}
 {% block title %}{% block pagetitle %}Home{% endblock pagetitle %} | Political Ad Sleuth{% endblock title %}
 
 {% block ga %}UA-22821126-17{% endblock ga %}
 
+{% kwacro share_base_text %}Become a Political Ad Sleuth with Sunlight Foundation & Free Press to find out who’s buying up airwaves this election!{% endkwacro %}
+
 {% block og %}
-    <meta property="og:title" content="{% block og_title %}Become a Political Ad Sleuth with Sunlight Foundation & Free Press to find out who’s buying up airwaves this election!{% endblock og_title %}">
+    <meta property="description" content="Political Ad Sleuth is a new tool from Sunlight Foundation in partnership with Free Press that allows you to see who is buying up the airwaves and influencing your vote.">
+    <meta property="og:app_id" content="421532484557236">
+    <meta property="og:title" content="{% block og_title %}{% usekwacro share_base_text %}{% endblock og_title %}">
     <meta property="og:description" content="Political Ad Sleuth is a new tool from Sunlight Foundation in partnership with Free Press that allows you to see who is buying up the airwaves and influencing your vote.">
     <meta property="og:type" content="article">
     <meta property="og:url" content="{{request.build_absolute_uri}}">

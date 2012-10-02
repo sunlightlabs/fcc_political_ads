@@ -1,8 +1,10 @@
-{% extends "fcc-base.html" %}{% load static from staticfiles %} {% load fccpublicfiles_extras %}
+{% extends "fcc-base.html" %}{% load static from staticfiles %} {% load fccpublicfiles_extras kwacros %}
 {% block pagetitle %}Political Buy {% if obj.advertiser %}for {{ obj.advertiser }}{% endif %} :: {{ obj.broadcasters.all|join:", " }}{% endblock pagetitle %}
 
-{% block og_title %}I just learned {{obj.advertiser.name}} bought ads on {{ obj.broadcasters_callsign_list|join:", " }} on Political Ad Sleuth from Sunlight Foundation & Free Press{% endblock og_title %}
+{% kwacro share_base_text %}I just learned {{obj.advertiser.name}} bought ads on {{ obj.broadcasters_callsign_list|join:", " }} on Political Ad Sleuth{% endkwacro %}
 
+{% block og_title %}{% usekwacro share_base_text %} from Sunlight Foundation & Free Press{% endblock og_title %}
+{% block tweet_text %}{% usekwacro share_base_text %} {{request.build_absolute_uri}} from @sunfoundation @freepress #freethefiles{% endblock tweet_text %}
 
 {% block head %}
 {{ block.super }}
@@ -43,7 +45,7 @@
 
 {% block content %}
     <div id="headerFloat" class="clearfix">
-	
+
 		{% if message %}
 	    <div class="messages alert fade in">
 	        <button type="button" class="close" data-dismiss="alert">x</button>
@@ -53,9 +55,9 @@
 	        </ul>
 	    </div>
 		{% endif %}
-	
+
         <h2 class="withTip"><small class="clearfix">Political Buy:</small> {{ obj.advertiser|default:"" }}</h2>
-        <p class="editBtn"><a id="enter_button" class="btn clear" title="Enter details about this ad buy" href="{{ obj.get_edit_url }}">Enter Ad Data!</a></p> 
+        <p class="editBtn"><a id="enter_button" class="btn clear" title="Enter details about this ad buy" href="{{ obj.get_edit_url }}">Enter Ad Data!</a></p>
     </div>
     <div class="row module">
         <div id="buyData" class="span5">
@@ -77,7 +79,7 @@
             </dl>
         </div>
         <div id="internalLinks" class="span2 sideCallout">
-           
+
 			<b>More Information</b>
            <ul class="unstyled">
                 {% if obj.advertiser.fec_id != '' %}

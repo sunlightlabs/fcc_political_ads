@@ -1,7 +1,13 @@
 {# This is an updated version of broadcaster_list.html that uses a table, as suggested by the wire frames #}
 {# I haven't removed broadcaster_list.html, which includes station addresses, etc; unclear if we'll still want that in the future. -jf #}
+{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load url from future %}{% load humanize kwacros %}
 
-{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load url from future %}{% load humanize %}
+{% kwacro share_base_text %}See all the political ad buys in {{ state_name }} on Political Ad Sleuth{% endkwacro %}
+
+{% block og_title %}{% usekwacro share_base_text %} from Sunlight Foundation & Free Press{% endblock og_title %}
+{% block tweet_text %}{% usekwacro share_base_text %} {{request.build_absolute_uri}} via @sunfoundation @freepress #freethefiles{% endblock tweet_text %}
+
+
 {% block bodyclass %}broadcasters{% endblock bodyclass %}
 {% block pagetitle %}{{ state_name }} Broadcasters{% endblock pagetitle %}
 {% block content %}
@@ -61,7 +67,7 @@
 
 {% block js %}
     {{ block.super }}
-	
+
 
     <script src="{% static 'js/map_stations.js' %}" type="text/javascript" charset="utf-8"></script>
     <script>
