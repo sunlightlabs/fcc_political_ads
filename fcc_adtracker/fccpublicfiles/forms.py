@@ -42,7 +42,7 @@ class OrganizationForm(forms.ModelForm):
 class SimpleOrganizationForm(forms.ModelForm):
     class Meta:
         model = Organization
-        exclude = ('addresses', 'employees', 'is_public', 'related_advertiser', 'notes')
+        exclude = ('addresses', 'employees', 'is_public', 'related_advertiser', 'notes', 'fec_id')
     organization_type = forms.CharField(widget=forms.HiddenInput)
 
 
@@ -113,7 +113,8 @@ class PoliticalBuyFormFull(forms.ModelForm):
             'broadcasters',
             'data_entry_notes',
         )
-        
+    total_spent_raw = forms.DecimalField(required=False)
+    num_spots_raw = forms.IntegerField(required=False)
     is_invalid = forms.BooleanField(required=False)
     data_entry_notes = forms.CharField(widget=forms.Textarea(attrs={'cols': 5}), required=False)
     contract_start_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-mini'}), required=False)

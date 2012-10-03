@@ -74,7 +74,7 @@ class TV_Advertiser(models.Model):
         if (self.candidate):
             return "%s (%s)" % (self.advertiser_name, self.candidate_name)
         else:
-            return self.candidate_name
+            return self.advertiser_name
         
         
 
@@ -373,7 +373,8 @@ class PoliticalSpot(MildModeratedModel):
 
 class state_summary(models.Model):
     state_id = models.CharField(max_length=2, blank=True, null=True)
-    num_broadcasters = models.PositiveIntegerField(blank=True, null=True, help_text="Unclear what goes in here now.")
+    num_broadcasters = models.PositiveIntegerField(blank=True, null=True, help_text="All broadcasters")
+    num_mandated_broadcasters = models.PositiveIntegerField(blank=True, null=True, help_text="only mandated broadcasters")
     tot_buys = models.PositiveIntegerField(blank=True, null=True)
     pres_buys =  models.PositiveIntegerField(blank=True, null=True)
     sen_buys =  models.PositiveIntegerField(blank=True, null=True)
@@ -409,7 +410,8 @@ class dma_summary(models.Model):
     rank1011 = models.PositiveIntegerField(blank=True, null=True)
     rank1112 = models.PositiveIntegerField(blank=True, null=True)
     
-    num_broadcasters = models.PositiveIntegerField(blank=True, null=True, help_text="only mandated broadcasters")
+    num_broadcasters = models.PositiveIntegerField(blank=True, null=True, help_text="all broadcasters")
+    num_mandated_broadcasters = models.PositiveIntegerField(blank=True, null=True, help_text="only mandated broadcasters")
     tot_buys = models.PositiveIntegerField(blank=True, null=True)
     pres_buys =  models.PositiveIntegerField(blank=True, null=True)
     sen_buys =  models.PositiveIntegerField(blank=True, null=True)

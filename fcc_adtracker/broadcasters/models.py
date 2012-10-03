@@ -21,6 +21,7 @@ class Broadcaster(models.Model):
     facility_type = models.CharField(max_length=3, blank=True, null=True, help_text='FCC assigned facility_type')
     community_city = models.CharField(max_length=20, blank=True, null=True)
     community_state = USStateField(choices=us_states.US_STATES, blank=True, null=True)
+    is_mandated = models.NullBooleanField(default=False, null=True, help_text="Is this station mandated to post political files online.")
     
 
     class Meta:
