@@ -7,6 +7,7 @@ img { max-width: none; }
 #logo a { background: url(../img/logo.png) top left no-repeat; width: 135px; height: 80px;}
 .social-icons { float: right; clear: both; position: relative; margin-top: -30px; margin-bottom: 20px; }
 nav { margin-top: -20px;}
+nav.subnav { margin-top: 0px; margin-bottom: 10px; }
 
 #map_canvas { height: 100% }
 #map_form { margin-bottom: 0; }
