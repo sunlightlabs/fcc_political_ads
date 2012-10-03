@@ -92,6 +92,8 @@ class Command(BaseCommand):
             state_id = state['community_state']
             print "state %s" % state_id
             (this_state_summary, created) = state_summary.objects.get_or_create(state_id=state_id)
+            mandated = Broadcaster.objects.filter(community_state=state_id, is_mandated=True).aggregate(total=Count('pk'))['total']
+            this_state_summary.num_mandated_broadcasters = mandated
             this_state_summary.num_broadcasters = state['count']
             all_ads = PoliticalBuy.objects.filter(community_state=state_id)
             
@@ -103,7 +105,10 @@ class Command(BaseCommand):
             print "dma %s" % dma
             dma_id = dma['dma_id']
             (this_dma_summary, created) = dma_summary.objects.get_or_create(dma_id=dma_id)
+            
+            mandated = Broadcaster.objects.filter(dma_id=dma_id, is_mandated=True).aggregate(total=Count('pk'))['total']
             this_dma_summary.num_broadcasters = dma['count']
+            this_dma_summary.num_mandated_broadcasters = mandated
             all_ads = PoliticalBuy.objects.filter(dma_id=dma_id)
             
             summarize_ads(this_dma_summary, all_ads)

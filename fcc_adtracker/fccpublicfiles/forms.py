@@ -42,7 +42,7 @@ class OrganizationForm(forms.ModelForm):
 class SimpleOrganizationForm(forms.ModelForm):
     class Meta:
         model = Organization
-        exclude = ('addresses', 'employees', 'is_public')
+        exclude = ('addresses', 'employees', 'is_public', 'related_advertiser', 'notes')
     organization_type = forms.CharField(widget=forms.HiddenInput)
 
 
