@@ -21,6 +21,15 @@ def make_ad_buy_from_pdf_file(pdf_file):
         pol_buy = PoliticalBuy()
         pol_buy.is_FCC_doc= True
         pol_buy.related_FCC_file = pdf_file
+        
+        pol_buy.candidate_type = pdf_file.candidate_type()
+        pol_buy.fcc_folder_name = pdf_file.raw_name_guess
+        pol_buy.nielsen_dma = pdf_file.nielsen_dma
+        pol_buy.dma_id = pdf_file.dma_id
+        pol_buy.community_state =pdf_file.community_state
+        pol_buy.upload_time = pdf_file.upload_time
+        
+        
         pol_buy.save(auser)
     
         if pdf_file.folder.broadcaster:

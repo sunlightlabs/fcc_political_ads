@@ -6,7 +6,8 @@ utc=pytz.UTC
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Sum, Count
 from django.contrib.localflavor.us import us_states
-from scraper.models import *
+from broadcasters.models import Broadcaster
+from fccpublicfiles.models import PoliticalBuy, dma_summary, state_summary
 
 STATES_DICT = dict(us_states.US_STATES)
 
@@ -14,7 +15,7 @@ STATES_DICT = dict(us_states.US_STATES)
 
 today = datetime.datetime.now()
 one_week_ago = today - datetime.timedelta(days=7)
-one_week_ago = utc.localize(one_week_ago)
+one_week_ago = utc.localize(one_week_ago).date()
 
 
 def summarize_ads(this_obj_summary, all_ads):
@@ -35,7 +36,7 @@ def summarize_ads(this_obj_summary, all_ads):
     for ad in all_ads:
         total_buys += 1
         time = ad.upload_time
-        adtype = ad.candidate_type()
+        adtype = ad.candidate_type
     
         if adtype == 'Non-Candidate Issue Ads':
             outside_buys += 1
@@ -84,26 +85,31 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **options):
-        mandated_broadcasters = StationData.objects.filter(is_mandated_station=True)
+        all_broadcasters = Broadcaster.objects.all()
         
-        states = mandated_broadcasters.values('communityState').annotate(count=Count('pk')).order_by('communityState')
+        states = all_broadcasters.values('community_state').annotate(count=Count('pk')).order_by('community_state')
         for state in states:
-            state_id = state['communityState']
+            state_id = state['community_state']
             print "state %s" % state_id
             (this_state_summary, created) = state_summary.objects.get_or_create(state_id=state_id)
+            mandated = Broadcaster.objects.filter(community_state=state_id, is_mandated=True).aggregate(total=Count('pk'))['total']
+            this_state_summary.num_mandated_broadcasters = mandated
             this_state_summary.num_broadcasters = state['count']
-            all_ads = PDF_File.objects.filter(community_state=state_id)
+            all_ads = PoliticalBuy.objects.filter(community_state=state_id)
             
             summarize_ads(this_state_summary, all_ads)
         
-        dmas = mandated_broadcasters.values('nielsenDma_id').annotate(count=Count('pk'))
+        dmas = all_broadcasters.values('dma_id').annotate(count=Count('pk')).order_by('dma_id')
         #print dmas
         for dma in dmas:
             print "dma %s" % dma
-            dma_id = dma['nielsenDma_id']
+            dma_id = dma['dma_id']
             (this_dma_summary, created) = dma_summary.objects.get_or_create(dma_id=dma_id)
+            
+            mandated = Broadcaster.objects.filter(dma_id=dma_id, is_mandated=True).aggregate(total=Count('pk'))['total']
             this_dma_summary.num_broadcasters = dma['count']
-            all_ads = PDF_File.objects.filter(dma_id=dma_id)
+            this_dma_summary.num_mandated_broadcasters = mandated
+            all_ads = PoliticalBuy.objects.filter(dma_id=dma_id)
             
             summarize_ads(this_dma_summary, all_ads)
             
