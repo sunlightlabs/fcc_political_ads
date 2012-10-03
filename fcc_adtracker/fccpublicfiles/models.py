@@ -172,13 +172,21 @@ class PoliticalBuy(MildModeratedModel):
     num_spots_raw = models.PositiveIntegerField(null=True, verbose_name='Number of Ad Spots')
     
     # JF Adds
-    # Are the summary fields completed? 
+    # Are the summary fields completed? We're still using is_complete for this, actually. 
     is_summarized = models.NullBooleanField(default=False, verbose_name="Data Entry Is Complete", help_text="Are all the summary fields filled in?")
     # Did this come from the FCC?
     is_FCC_doc = models.NullBooleanField(default=False, help_text="Did this document come from the FCC? ")
     related_FCC_file = models.ForeignKey(PDF_File, blank=True, null=True)
     is_invalid = models.NullBooleanField(default=False, help_text="Is this document unprocessable, a duplicate, or devoid of any relevant information? ", null=True)
     data_entry_notes = models.TextField(blank=True, null=True, help_text="Explain any complications in entering summary data")
+    """ Fields migrated from PDF_File, but now here as well. """
+    candidate_type = models.CharField(max_length=31, blank=True, null=True, help_text="candidate type in pdf_file")
+    fcc_folder_name = models.CharField(max_length=255, blank=True, null=True, help_text="As raw name guess in pdf_file")
+    nielsen_dma = models.CharField(max_length=60, blank=True, null=True, help_text='Nielsen Designated Market Area')
+    dma_id =  models.PositiveIntegerField(blank=True, null=True, editable=False, help_text='DMA ID, from Nielsen')
+    community_state = models.CharField(max_length=7, blank=True, null=True)
+    ignore_post_save = models.NullBooleanField(default=False, null=True, help_text="flag to avoid calling doc_cloud needlessly")
+    upload_time = models.DateField(blank=True, null=True, default=datetime.date.today)
     
     """ This is a user-defined setting that lets an authenticated user
     mark a record as not needing any more work. The idea is that
@@ -287,7 +295,7 @@ class PoliticalBuy(MildModeratedModel):
 
 @receiver(post_save, sender=PoliticalBuy)
 def set_doccloud_data(sender, instance, signal, *args, **kwargs):
-    if instance.documentcloud_doc:
+    if instance.documentcloud_doc and not instance.ignore_post_save:
         doc = instance.documentcloud_doc
         #doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
         doccloud_data = {}
@@ -305,6 +313,8 @@ def set_doccloud_data(sender, instance, signal, *args, **kwargs):
     
         if doc.dc_data != doccloud_data:
             doc.dc_data = doccloud_data
+            
+        
 
 
 @receiver(pre_delete, sender=PoliticalBuy)
@@ -358,6 +368,74 @@ class PoliticalSpot(MildModeratedModel):
         if self.airing_start_date:
             name_string = u'{0} ({1} to {2})'.format(name_string, self.airing_start_date, self.airing_end_date)
         return name_string
+
+# summary fields, previously only for FCC data. 
+
+class state_summary(models.Model):
+    state_id = models.CharField(max_length=2, blank=True, null=True)
+    num_broadcasters = models.PositiveIntegerField(blank=True, null=True, help_text="Unclear what goes in here now.")
+    tot_buys = models.PositiveIntegerField(blank=True, null=True)
+    pres_buys =  models.PositiveIntegerField(blank=True, null=True)
+    sen_buys =  models.PositiveIntegerField(blank=True, null=True)
+    house_buys =  models.PositiveIntegerField(blank=True, null=True)
+    state_buys = models.PositiveIntegerField(blank=True, null=True)
+    local_buys = models.PositiveIntegerField(blank=True, null=True)
+    outside_buys = models.PositiveIntegerField(blank=True, null=True)
+    recent_pres_buys =  models.PositiveIntegerField(blank=True, null=True)  
+    recent_sen_buys =  models.PositiveIntegerField(blank=True, null=True)
+    recent_house_buys =  models.PositiveIntegerField(blank=True, null=True)
+    recent_outside_buys = models.PositiveIntegerField(blank=True, null=True)
+    total_files_entered = models.PositiveIntegerField(blank=True, null=True)
+    tot_spending_from_entry = models.PositiveIntegerField(blank=True, null=True)
+    tot_est_low = models.PositiveIntegerField(blank=True, null=True)
+    tot_est_ave = models.PositiveIntegerField(blank=True, null=True)
+    tot_est_high = models.PositiveIntegerField(blank=True, null=True)
+    percent_estimated = models.PositiveIntegerField(blank=True, null=True)
+    
+    def get_absolute_url(self):
+        return "/fcc/by-state/%s/" % (self.state_id)
+        
+    def get_station_url(self):
+        return "/fcc/stations/state/%s/" % (self.state_id)  
+
+    def name(self):
+        return STATES_DICT[self.state_id]
+    
+
+class dma_summary(models.Model):
+    dma_id = models.PositiveIntegerField(blank=True, null=True, editable=False, help_text='DMA ID, from Nielsen')
+    dma_name = models.CharField(max_length=255, blank=True, null=True, help_text="Better name - set from file")
+    fcc_dma_name = models.CharField(max_length=255, blank=True, null=True)
+    rank1011 = models.PositiveIntegerField(blank=True, null=True)
+    rank1112 = models.PositiveIntegerField(blank=True, null=True)
+    
+    num_broadcasters = models.PositiveIntegerField(blank=True, null=True, help_text="only mandated broadcasters")
+    tot_buys = models.PositiveIntegerField(blank=True, null=True)
+    pres_buys =  models.PositiveIntegerField(blank=True, null=True)
+    sen_buys =  models.PositiveIntegerField(blank=True, null=True)
+    house_buys =  models.PositiveIntegerField(blank=True, null=True)
+    state_buys = models.PositiveIntegerField(blank=True, null=True)
+    local_buys = models.PositiveIntegerField(blank=True, null=True)
+    outside_buys = models.PositiveIntegerField(blank=True, null=True)
+    recent_pres_buys =  models.PositiveIntegerField(blank=True, null=True)  
+    recent_sen_buys =  models.PositiveIntegerField(blank=True, null=True)
+    recent_house_buys =  models.PositiveIntegerField(blank=True, null=True)
+    recent_outside_buys = models.PositiveIntegerField(blank=True, null=True)
+    total_files_entered = models.PositiveIntegerField(blank=True, null=True)
+    tot_spending_from_entry = models.PositiveIntegerField(blank=True, null=True)
+    tot_est_low = models.PositiveIntegerField(blank=True, null=True)
+    tot_est_ave = models.PositiveIntegerField(blank=True, null=True)
+    tot_est_high = models.PositiveIntegerField(blank=True, null=True)
+    percent_estimated = models.PositiveIntegerField(blank=True, null=True)    
+    
+    def get_absolute_url(self):
+        return "/fcc/by-dma/%s/" % (self.dma_id)
+        
+    def get_station_url(self):
+        return "/fcc/stations/dma/%s/" % (self.dma_id)
+    
+    def name(self):
+        return self.dma_name
 
 
 reversion.register(Person, follow=['role_set', 'organization_set', 'politicalbuy_set'])
