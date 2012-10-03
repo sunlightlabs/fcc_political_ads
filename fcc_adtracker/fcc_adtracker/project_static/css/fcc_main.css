@@ -48,7 +48,7 @@ ul#locations {
 }
 
 .featureImg {  float: right; margin-right: 20px; }
-.featureImg img { margin-top: 180px;}
+.featureImg img { margin-top: 70px;}
 
 #freepress { background: url(../img/logo_freepress.png) top left no-repeat; width: 118px; height: 40px; margin-top: 10px;}
 #newAmerica { background: url(../img/logo_newAmerica.png) top left no-repeat; width: 156px; height: 28px; margin-top: 20px; margin-right: 0;}
