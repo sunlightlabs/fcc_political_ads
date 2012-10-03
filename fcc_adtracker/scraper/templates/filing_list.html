@@ -2,14 +2,11 @@
 {% block bodyclass %}states{% endblock bodyclass %}
 {% block pagetitle %}Recent FCC political ad filings {{ preposition }} {{ geography_name }}{% endblock pagetitle %}
 {% block content %}
-<h2>FCC political ad filings {{ preposition }} {{ geography_name }}</h2>
+
+<h2 class="clearfix">FCC political ad filings {{ preposition }} {{ geography_name }}</h2>
 {% include "_subnav.html" %}
 
-
- <p>Found {{count}} filings{% if broadcaster %} at {{broadcaster }}{% endif %}. {% updatetime %}.
-     
-    
-
+<p class="tip">Found {{count}} filings{% if broadcaster %} at {{broadcaster }}{% endif %}. {% updatetime %}.</p>
 <a id="downloadBtn" class="btn" href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">Download CSV</a>	
 
 <table class="table table-striped">
