@@ -6,8 +6,8 @@
 <h2>Last week: political ad filings from the last 7 days, by {{ geography_name }}</h2>
 {% include "_subnav.html" %}
 
-<p class="tip">{% include "_data_disclaimer_short.html" %}<br/>Click on a {{ geography_name }} name to see filings there.  {% updatetime %}.</p> 
-<a id="downloadBtn" class="btn" href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">Download CSV</a>	
+<p class="tip">{% include "_data_disclaimer_short.html" %}<br/>Click on a {{ geography_name }} name to see filings there.  {% updatetime %}.</p>
+<a id="downloadBtn" class="btn" href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">Download CSV</a>
 <table class="table table-striped tablesorter sortable" id="ad-data">
 	<thead>
         <tr>
@@ -16,7 +16,7 @@
 			<th>Recent non-candidates<br> (last 7 days)</th>
 			<th>Recent President<br> (last 7 days)</th>
 			<th>Recent Senate<br> (last 7 days)</th>
-			<th>Recent US House<br> (last 7 days)</th>						
+			<th>Recent US House<br> (last 7 days)</th>
         </tr>
     </thead>
     <tbody>
@@ -24,15 +24,15 @@
 	<tr>
 		<td><a href="{{ geo.get_absolute_url}}">{{geo.name|safe}}</a><br>see <a href="{{ geo.get_station_url }}">all stations</a></td>
 		<td> {{geo.num_mandated_broadcasters}} of {{geo.num_broadcasters}}</td>
-		<td> {{geo.recent_outside_buys}}</td>				
+		<td> {{geo.recent_outside_buys}}</td>
 		<td> {{geo.recent_pres_buys}}</td>
 		<td> {{geo.recent_sen_buys}}</td>
-		<td> {{geo.recent_house_buys}}</td>										
+		<td> {{geo.recent_house_buys}}</td>
 	</tr>
 {% endfor %}
-	<tbody>
+	</tbody>
 </table>
-
+{% include "_mandated_explanation.html" %}
 {% endblock content %}
 
 {% block js %}
@@ -40,11 +40,11 @@
     <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.widgets.min.js' %}"></script>
 	<script type="text/javascript">
-	
-	$(document).ready(function() 
-	    { 
-	        $("#ad-data").tablesorter( {sortList: [[2,1]]} ); 
-	    } 
-	); 
+
+	$(document).ready(function()
+	    {
+	        $("#ad-data").tablesorter( {sortList: [[2,1]]} );
+	    }
+	);
 	</script>
 {% endblock %}
