@@ -272,3 +272,11 @@ table .Unapproved { background: url(../img/bg_unapproved.png) center 8px no-repe
 #politicalspot-add { float: right; }
 
 .withLine li li { border: none; padding: 0px; }
+
+.barChart { float: left; width: 220px; }
+.barChart li { position: relative; margin-bottom: 3px; height: 22px;}
+.tagValue { position: absolute; height: 100%; background-color: #e7c740; -moz-box-shadow: inset 0 1px 5px #ad8f10; -webkit-box-shadow: inset 0 1px 5px #ad8f10; box-shadow: inset 0 1px 5px #ad8f10;}
+.tagNumber { z-index: 2; position: relative; float: right; display: block; padding-right: 10px; }
+.tagNumber a { color: #fff; font-family: Georgia, "Times New Roman", Times, serif; }
+.tagPercent { text-indent: -9999em; display: block; float: left;}
+.marketName { width: 120px; display: inline-block;}
