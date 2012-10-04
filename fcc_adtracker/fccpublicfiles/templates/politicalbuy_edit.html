@@ -15,9 +15,9 @@
         <button type="button" class="close" data-dismiss="alert">x</button>
         <ul>
             <li class="failure">Not Saved! Please fix errors in these fields: {% for field in form %}
-				{% if field.errors %}{{ field.label }}; {% endif %}
-				{% endfor %}
-			</li>
+                {% if field.errors %}{{ field.label }}; {% endif %}
+                {% endfor %}
+            </li>
         </ul>
     </div>
     {% endif %}
@@ -32,30 +32,28 @@
                 {% csrf_token %}
                 <fieldset>
                     <legend class="clearfix">Essential Data</legend>
-					                  
-						<ul class="unstyled clearfix">
-						
-						<li>
-							<label>Is there a problem with this file?</label>
-							<label class="tip checkbox">{{form.is_invalid}} Many uploaded files are not ad buys; if there's a problem with this file, please check this box. You can describe the issue in the data entry notes field below.</label>
-						</li>
+                        <ul class="unstyled clearfix">
+                        <li>
+                            <label>Is there a problem with this file?</label>
+                            <label class="tip checkbox">{{form.is_invalid}} Many uploaded files are not ad buys; if there's a problem with this file, please check this box. You can describe the issue in the data entry notes field below.</label>
+                        </li>
                         <li class="input-append">
                             <label>{{form.advertiser.label}}</label>
                             {{form.advertiser}}
                             {{form.advertiser.errors}}
-							<p class="tip"><a href="/help/#advertiser">How do I find the advertiser?</a></p>
+                            <p class="tip"><a target='_blank' href="/help/#advertiser">How do I find the advertiser?</a></p>
                         </li>
                         <li class="input-prepend">
                             <label>Grand Total: Gross amount spent</label>
                             {{form.total_spent_raw}}
-							{% if form.total_spent_raw.errors %}<ul class="errorlist"><li><b>Enter the the grand total without commas or dollar signs!</b></li></ul>{% else %}<p class="tip" style="margin-bottom:0px;padding:0px;">Don't use commas or dollar signs!</p>{% endif %}
-                            <p class="tip"><a href="/help/#total">How do I find the total amount?</a></p>
+                            {% if form.total_spent_raw.errors %}<ul class="errorlist"><li><b>Enter the the grand total without commas or dollar signs!</b></li></ul>{% else %}<p class="tip" style="margin-bottom:0px;padding:0px;">Don't use commas or dollar signs!</p>{% endif %}
+                            <p class="tip"><a target='_blank' href="/help/#total">How do I find the total amount?</a></p>
                         </li>
                         <li>
-                            <label>{{form.num_spots_raw.label}}</label>
+                            <label>Total number of spots</label>
                             {{form.num_spots_raw}}
                             {{form.num_spots_raw.errors}}
-							<p class="tip"><a href="/help/#spots">How do I find the number of ad spots?</a></p>
+                            <p class="tip"><a target='_blank' href="/help/#spots">How do I find the number of ad spots?</a></p>
                         </li>
                         {% comment %}
                             The following date inputs use the .date class to
@@ -64,21 +62,21 @@
                                 both django and bootstrap.datepicker like that one
                         {% endcomment %}
                         <li class="input-append">
-                            <label>Ad air start date</label>
+                            <label>Contract start date</label>
                             {{form.contract_start_date}}
                             {{form.contract_start_date.errors}}
                         </li>
                         <li class="input-append">
-                            <label>Ad air end date</label>
+                            <label>Contract end date</label>
                             {{form.contract_end_date}}
                             {{form.contract_end_date.errors}}
                         </li>
-						<p class="tip"><a href="/help/#dates">Where&rsquo;s the ad air start and end date?</a></p>
+                        <p class="tip"><a target='_blank' href="/help/#dates">Where&rsquo;s the ad air start and end date?</a></p>
                         <li>
                             <label>{{form.broadcasters.label}}</label>
                             {{form.broadcasters}}
                             {{form.broadcasters.errors}}
-							<p class="tip"><a href="/help/#broadcaster">Who is the broadcaster?</a></p>
+                            <p class="tip"><a target='_blank' href="/help/#broadcaster">Who is the broadcaster?</a></p>
                         </li>
                     </ul>
                 </fieldset>
@@ -95,65 +93,64 @@
                 <fieldset>
                     <legend>Additional Data</legend>
                     <ul>
-	                    <li>
+                        <li>
                             <label>{{form.contract_number.label}}</label>
                             {{form.contract_number}}
                             {{form.contract_number.errors}}
-						<p class="tip"><a href="/help/#contract">How do I find the contract number?</a></p>
+                        <p class="tip"><a target='_blank' href="/help/#contract">How do I find the contract number?</a></p>
                         </li>
 
                         <li class="input-append">
                             <label>Media Buyer</label>
                             {{form.bought_by}}
                             {{form.bought_by.errors}}
-							<p class="tip"><a href="/help/#buyer">Who is the media buyer</a></p>
+                            <p class="tip"><a target='_blank' href="/help/#buyer">Who is the media buyer</a></p>
                         </li>
                         <li class="input-append">
                             <label>{{form.advertiser_signatory.label}}</label>
                             {{form.advertiser_signatory}}
                             {{form.advertiser_signatory.errors}}
-							<p class="tip"><a href="/help/#signatory">What is the advertiser signatory?</a></p>
+                            <p class="tip"><a target='_blank' href="/help/#signatory">What is the advertiser signatory?</a></p>
                         </li>
                         <li>
                             <label>{{form.lowest_unit_price.label}}</label>
                             {{form.lowest_unit_price}}
                             {{form.lowest_unit_price.errors}}
                         </li>
-						<li>
-							<label>Data entry notes</label>
-							{{ form.data_entry_notes }}
-							<label class="tip checkbox">Is there anything odd or unusual about this form? Add any notes you have here. </label>
-						</li>
-						<li>
-	                        <button class="btn btn-sunlight" value="Submit">Submit</button>
-	                    </li>
+                        <li>
+                            <label>Data entry notes</label>
+                            {{ form.data_entry_notes }}
+                            <label class="tip checkbox">Is there anything odd or unusual about this form? Add any notes you have here. </label>
+                        </li>
+                        <li>
+                            <button class="btn btn-sunlight" value="Submit">Submit</button>
+                        </li>
                     </ul>
                 </fieldset>
-  
+
             </form>
         </div>
         <div id="original_document" class="span8">
-		{% if obj.is_FCC_doc %}
-			{% if obj.related_FCC_file.dc_slug %}
-           		{% include "_FCC_documentcloud_embed.html" with document_slug=obj.related_FCC_file.dc_slug width=940 height=768 %}
-			{% else %}
-				This document isn't available on document cloud--instead see <a href="{{obj.related_FCC_file.raw_url }}">the original file at the FCC</a>.
-			{% endif %}
-		{% else %}
-			<p>The document should appear below. Not visible? DocumentCloud may be processing the file, but you should at least see a page <a href='{{ obj.documentcloud_doc.get_absolute_url }}'>on DocumentCloud</a>. {% if obj.is_FCC_doc %}This file is also <a href="{{ obj.related_FCC_file.raw_url }}">available as a PDF</a> from the FCC.{% endif %}</p>
-           	{% include "doccloud/_documentcloud_embed.html" with document=obj.documentcloud_doc width=940 height=768 %}
-		{% endif %}
-	
-	
-	<!--
-	
+        {% if obj.is_FCC_doc %}
+            {% if obj.related_FCC_file.dc_slug %}
+                {% include "_FCC_documentcloud_embed.html" with document_slug=obj.related_FCC_file.dc_slug width=940 height=768 %}
+            {% else %}
+                This document isn't available on document cloud--instead see <a href="{{obj.related_FCC_file.raw_url }}">the original file at the FCC</a>.
+            {% endif %}
+        {% else %}
+            <p>The document should appear below. Not visible? DocumentCloud may be processing the file, but you should at least see a page <a href='{{ obj.documentcloud_doc.get_absolute_url }}'>on DocumentCloud</a>. {% if obj.is_FCC_doc %}This file is also <a href="{{ obj.related_FCC_file.raw_url }}">available as a PDF</a> from the FCC.{% endif %}</p>
+            {% include "doccloud/_documentcloud_embed.html" with document=obj.documentcloud_doc width=940 height=768 %}
+        {% endif %}
+
+
+    <!--
         {% if obj and obj.documentcloud_doc.access_level != 'private' %}
         <p>The document should appear below. Not visible? DocumentCloud may be processing the file, but you should at least see a page <a href='{{ obj.documentcloud_doc.get_absolute_url }}'>on DocumentCloud</a>. {% if obj.is_FCC_doc %}This file is also <a href="{{ obj.related_FCC_file.raw_url }}">available as a PDF</a> from the FCC.{% endif %}</p>
         {% include "doccloud/_documentcloud_embed.html" with document=obj.documentcloud_doc width=620 height=760 %}
         {% else %}
         <p>Document is private or unavailable on DocumentCloud. Let us know if this is an error.</p>
         {% endif %}
--->
+    -->
 
         </div>
     </div>
