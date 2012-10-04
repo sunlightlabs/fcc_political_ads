@@ -30,7 +30,31 @@ class Command(BaseCommand):
                 ad_buy.ignore_post_save=True
                 ad_buy.save(updated_by)
 
+        unset_adv_buys = PoliticalBuy.objects.filter(advertiser__isnull=False, advertiser_display_name__isnull=True)
+        for ad_buy in unset_adv_buys:
+            
+            ad_buy.advertiser_display_name = adv.advertiser.name
+            updated_by = ad_buy.updated_by
+            # Don't call document cloud
+            ad_buy.ignore_post_save=True
+            ad_buy.save(updated_by)
+            
+        missing_callsigns = PoliticalBuy.objects.filter(broadcaster_callsign__isnull=True)
+        for ad_buy in missing_callsigns:
+            related_broadcasters = ad_buy.broadcasters.all()
+            if len(related_broadcasters) > 0:
+                bdcallsign = related_broadcasters[0].callsign
                 
+                ad_buy.broadcaster_callsign = bdcallsign
+                updated_by = ad_buy.updated_by
+                # Don't call document cloud
+                ad_buy.ignore_post_save=True
+                ad_buy.save(updated_by)
+                
+            
+            
+        
+        
         #uncategorized_ad_buys = PoliticalBuy.objects.filter(advertiser__isnull=False, is_FCC_doc=False)
 
             

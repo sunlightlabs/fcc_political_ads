@@ -1,0 +1,39 @@
+{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load updatetime from update %}
+{% block bodyclass %}states{% endblock bodyclass %}
+{% block pagetitle %}Recent FCC political ad filings {{ preposition }} {{ geography_name }}{% endblock pagetitle %}
+{% block content %}
+
+<h2 class="clearfix">FCC political ad filings {{ preposition }} {{ geography_name }}</h2>
+{% include "_subnav.html" %}
+
+<p class="tip">Found {{count}} filings{% if broadcaster %} at {{broadcaster }}{% endif %}. {% updatetime %}.</p>
+<a id="downloadBtn" class="btn" href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">Download CSV</a>	
+
+<table class="table table-striped">
+	<thead>
+        <tr>
+            <th>TV Station</th>
+			<th>State</th>
+			<th>TV Market</th>
+			<th>Date</th>
+			<th>Type</th>
+			<th>Advertiser / FCC Info</th>
+			<th>File source</th>
+        </tr>
+    </thead>
+    <tbody>
+	{% for filing in filings %}
+	<tr>
+		<td><a href="{{ filing.get_station_url }}">{{ filing.broadcaster_callsign }}</a></td>
+		<td><a href="{{ filing.get_state_url }}">{{filing.community_state}}</a></td>
+		<td><a href="{{ filing.get_dma_url }}">{{filing.nielsen_dma}}</a></td>
+		<td>{{filing.date_display}}</td>
+		<td>{{ filing.candidate_type }}</td>
+		<td>{% if filing.advertiser_display_name %}<a href="{{filing.get_absolute_url}}">{{filing.advertiser_display_name }}</a>{% else %}Unknown{% endif %}</td>
+		<td>{% if filing.is_FCC_doc %}FCC{% else %}submission{% endif %}</td>
+	</tr>
+{% endfor %}
+	<tbody>
+</table>
+
+{% endblock content %}

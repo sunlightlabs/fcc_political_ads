@@ -90,6 +90,12 @@ class Command(BaseCommand):
         states = all_broadcasters.values('community_state').annotate(count=Count('pk')).order_by('community_state')
         for state in states:
             state_id = state['community_state']
+            try:
+                STATES_DICT[state_id]
+            except KeyError:
+                # only summarize US states
+                continue
+            
             print "state %s" % state_id
             (this_state_summary, created) = state_summary.objects.get_or_create(state_id=state_id)
             mandated = Broadcaster.objects.filter(community_state=state_id, is_mandated=True).aggregate(total=Count('pk'))['total']

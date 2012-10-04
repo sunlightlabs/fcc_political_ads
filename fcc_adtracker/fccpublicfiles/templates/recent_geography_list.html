@@ -1,0 +1,50 @@
+{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load updatetime from update %}
+{% block bodyclass %}states{% endblock bodyclass %}
+{% block pagetitle %}Find recent FCC political ad filings by {{ geography_name }}{% if subgeography %} in {{subgeography}}{% endif %}{% endblock pagetitle %}
+{% block content %}
+
+<h2>Last week: political ad filings from the last 7 days, by {{ geography_name }}</h2>
+{% include "_subnav.html" %}
+
+<p class="tip">This page shows only filings made in the last 7 days. Only stations required by the FCC to put their political files online are included. Click on a {{ geography_name }} name to see filings there.  {% updatetime %}.</p> 
+<a id="downloadBtn" class="btn" href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">Download CSV</a>	
+<table class="table table-striped tablesorter sortable" id="ad-data">
+	<thead>
+        <tr>
+            <th>{{ geography_name|upper }}</th>
+			<th>Stations mandated</th>
+			<th>Recent non-candidates<br> (last 7 days)</th>
+			<th>Recent President<br> (last 7 days)</th>
+			<th>Recent Senate<br> (last 7 days)</th>
+			<th>Recent US House<br> (last 7 days)</th>						
+        </tr>
+    </thead>
+    <tbody>
+	{% for geo in geography_list %}
+	<tr>
+		<td><a href="{{ geo.get_absolute_url}}">{{geo.name|safe}}</a><br>see <a href="{{ geo.get_station_url }}">all stations</a></td>
+		<td> {{geo.num_mandated_broadcasters}} of {{geo.num_broadcasters}}</td>
+		<td> {{geo.recent_outside_buys}}</td>				
+		<td> {{geo.recent_pres_buys}}</td>
+		<td> {{geo.recent_sen_buys}}</td>
+		<td> {{geo.recent_house_buys}}</td>										
+	</tr>
+{% endfor %}
+	<tbody>
+</table>
+
+{% endblock content %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.widgets.min.js' %}"></script>
+	<script type="text/javascript">
+	
+	$(document).ready(function() 
+	    { 
+	        $("#ad-data").tablesorter( {sortList: [[2,1]]} ); 
+	    } 
+	); 
+	</script>
+{% endblock %}

@@ -15,6 +15,9 @@ from mildmoderator.managers import MildModeratedModelManager
 from mildmoderator.models import MildModeratedModel
 from weekday_field import fields as wf_fields
 from uuid import uuid4
+from django.contrib.localflavor.us import us_states
+
+STATES_DICT = dict(us_states.US_STATES)
 
 import copy
 import datetime
@@ -186,7 +189,9 @@ class PoliticalBuy(MildModeratedModel):
     dma_id =  models.PositiveIntegerField(blank=True, null=True, editable=False, help_text='DMA ID, from Nielsen')
     community_state = models.CharField(max_length=7, blank=True, null=True)
     ignore_post_save = models.NullBooleanField(default=False, null=True, help_text="flag to avoid calling doc_cloud needlessly")
-    upload_time = models.DateField(blank=True, null=True, default=datetime.date.today)
+    upload_time = models.DateField(blank=True, null=True, default=None)
+    broadcaster_callsign = models.CharField(max_length=7, blank=True, null=True, help_text="first broadcaster callsign.")
+    advertiser_display_name = models.CharField(max_length=211, blank=True, null=True)
     
     """ This is a user-defined setting that lets an authenticated user
     mark a record as not needing any more work. The idea is that
@@ -227,7 +232,7 @@ class PoliticalBuy(MildModeratedModel):
     def date_display(self):
         date_str = ''
         if self.is_FCC_doc:
-            date_str = u"{0}".format(self.related_FCC_file.upload_time.strftime("%m/%d/%y"))
+            date_str = u"{0}".format(self.upload_time.strftime("%m/%d/%y"))
         else:
             date_str = u"{0}".format(self.contract_end_date.strftime("%m/%d/%y"))
         return date_str
@@ -274,6 +279,15 @@ class PoliticalBuy(MildModeratedModel):
     @models.permalink
     def get_edit_url(self):
         return ('politicalbuy_edit', (), {'uuid_key': str(self.uuid_key)})
+
+    def get_station_url(self):
+        return "/political-files/tv-station/%s/" % (self.broadcaster_callsign)
+
+    def get_state_url(self):
+        return "/political-files/state/%s/" % (self.community_state)
+
+    def get_dma_url(self):
+        return "/political-files/dma/%s/" % (self.dma_id)          
 
     def total_spent(self):
         """ Returns a total spent figure, from either the grand total on the document, or calculated from ad buys. """
@@ -394,10 +408,10 @@ class state_summary(models.Model):
     percent_estimated = models.PositiveIntegerField(blank=True, null=True)
     
     def get_absolute_url(self):
-        return "/fcc/by-state/%s/" % (self.state_id)
+        return "/political-files/by-state/%s/" % (self.state_id)
         
     def get_station_url(self):
-        return "/fcc/stations/state/%s/" % (self.state_id)  
+        return "/political-files/stations/state/%s/" % (self.state_id)  
 
     def name(self):
         return STATES_DICT[self.state_id]
@@ -431,10 +445,10 @@ class dma_summary(models.Model):
     percent_estimated = models.PositiveIntegerField(blank=True, null=True)    
     
     def get_absolute_url(self):
-        return "/fcc/by-dma/%s/" % (self.dma_id)
+        return "/political-files/by-dma/%s/" % (self.dma_id)
         
     def get_station_url(self):
-        return "/fcc/stations/dma/%s/" % (self.dma_id)
+        return "/political-files/stations/dma/%s/" % (self.dma_id)
     
     def name(self):
         return self.dma_name

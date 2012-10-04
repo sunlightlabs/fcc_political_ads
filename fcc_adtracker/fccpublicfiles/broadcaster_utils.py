@@ -11,7 +11,7 @@ def sum_broadcaster_spent(broadcaster):
 
 def sum_broadcaster_buys(broadcaster):
     # Will only count the spots that have been entered
-    buys = PoliticalBuy.objects.filter(broadcasters__pk=broadcaster.pk).aggregate(total_buys=Count('pk'))
+    buys = PoliticalBuy.objects.filter(broadcasters__pk=broadcaster.pk).aggregate(total_buys=Count(''))
     if buys['total_buys']:
         #print "%s political buys: %s" % (broadcaster, buys['total_buys'])
         return buys['total_buys']
