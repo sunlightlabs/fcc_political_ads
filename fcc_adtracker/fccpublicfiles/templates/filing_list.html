@@ -1,13 +1,18 @@
-{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load updatetime from update %}
+{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load updatetime from update %}{% load kwacros %}
 {% block bodyclass %}states{% endblock bodyclass %}
-{% block pagetitle %}Recent FCC political ad filings {{ preposition }} {{ geography_name }}{% endblock pagetitle %}
-{% block content %}
+{% block pagetitle %}Recent political ad filings {{ preposition }} {{ geography_name }}{% endblock pagetitle %}
 
-<h2 class="clearfix">FCC political ad filings {{ preposition }} {{ geography_name }}</h2>
+{% kwacro share_base_text %}See recently added political ad buys {{ preposition }} {{ geography_name }} on Political Ad Sleuth{% endkwacro %}
+
+{% block og_title %}{% usekwacro share_base_text %} from Sunlight Foundation & Free Press{% endblock og_title %}
+{% block tweet_text %}{% usekwacro share_base_text %} {{request.build_absolute_uri}} via @sunfoundation @freepress #freethefiles{% endblock tweet_text %}
+
+{% block content %}
+<h2 class="clearfix">Political ad filings {{ preposition }} {{ geography_name }}</h2>
 {% include "_subnav.html" %}
 
 <p class="tip">Found {{count}} filings{% if broadcaster %} at {{broadcaster }}{% endif %}. {% updatetime %}.</p>
-<a id="downloadBtn" class="btn" href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">Download CSV</a>	
+<a id="downloadBtn" class="btn" href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">Download CSV</a>
 
 <table class="table table-striped">
 	<thead>
@@ -17,7 +22,7 @@
 			<th>TV Market</th>
 			<th>Date</th>
 			<th>Type</th>
-			<th>Advertiser / FCC Info</th>
+			<th>Advertiser/File Info</th>
 			<th>File source</th>
         </tr>
     </thead>
@@ -29,11 +34,11 @@
 		<td><a href="{{ filing.get_dma_url }}">{{filing.nielsen_dma}}</a></td>
 		<td>{{filing.date_display}}</td>
 		<td>{{ filing.candidate_type }}</td>
-		<td>{% if filing.advertiser_display_name %}<a href="{{filing.get_absolute_url}}">{{filing.advertiser_display_name }}</a>{% else %}Unknown{% endif %}</td>
+		<td><a href="{{filing.get_absolute_url}}">{% if filing.advertiser_display_name %}{{filing.advertiser_display_name }}{% else %}Unknown Advertiser{% endif %}</a></td>
 		<td>{% if filing.is_FCC_doc %}FCC{% else %}submission{% endif %}</td>
 	</tr>
 {% endfor %}
-	<tbody>
+	</tbody>
 </table>
 
 {% endblock content %}

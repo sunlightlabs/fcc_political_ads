@@ -1,13 +1,19 @@
-{% extends "fcc-base.html" %}{% load static from staticfiles %}
+{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load kwacros %}
 {% block bodyclass %}states{% endblock bodyclass %}
 {% block pagetitle %}Find recent FCC political ad filings by {{ geography_name }}{% if subgeography %} in {{subgeography}}{% endif %}{% endblock pagetitle %}
+
+{% kwacro share_base_text %}See recently added political ad buys by {{ geography_name }}{% if subgeography %} in {{subgeography}}{% endif %} on Political Ad Sleuth{% endkwacro %}
+
+{% block og_title %}{% usekwacro share_base_text %} from Sunlight Foundation & Free Press{% endblock og_title %}
+{% block tweet_text %}{% usekwacro share_base_text %} {{request.build_absolute_uri}} via @sunfoundation @freepress #freethefiles{% endblock tweet_text %}
+
 {% block content %}
 <h2>Find recent FCC political ad filings by {{ geography_name }}{% if subgeography %} in {{subgeography}}{% endif %}</h2>
 {% include "_subnav.html" %}
 
-<p class="tip">Only stations required by the FCC to put their political files online are included. Click on a {{ geography_name }} name to see filings there.</p> 
+<p class="tip">Click on a {{ geography_name }} name to see filings there.</p>
 
-<a id="downloadBtn" class="btn" href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">Download CSV</a>	
+<a id="downloadBtn" class="btn" href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">Download CSV</a>
 <table class="table table-striped">
 	<thead>
         <tr>
@@ -17,9 +23,9 @@
     </thead>
     <tbody>
 	{% for geography in geography_list %}
-	<tr><td><a href="/political-files/tv-station/{{ geography.callsign }}/">{{geography.geography_name}}</a></td><td>{{ geography.location1|upper}}</td><td>{{ geography.location2}}</td><td>{% if geography.is_mandated %}Yes{% else %}No{% endif %}</tr>
+	<tr><td><a href="/political-files/tv-station/{{ geography.callsign }}/">{{geography.geography_name}}</a></td><td>{{ geography.location1|upper}}</td><td>{{ geography.location2}}</td><td>{% if geography.is_mandated %}Yes{% else %}No{% endif %}</td></tr>
 {% endfor %}
-	<tbody>
+	</tbody>
 </table>
 
 {% endblock content %}
