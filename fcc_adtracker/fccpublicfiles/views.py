@@ -24,7 +24,7 @@ from name_cleaver import IndividualNameCleaver
 DOCUMENTCLOUD_DEFAULT_ACCESS_LEVEL = getattr(settings, 'DOCUMENTCLOUD_DEFAULT_ACCESS_LEVEL', 'private')
 
 STATES_DICT = dict(us_states.US_STATES)
-CACHE_TIME = 0 * 60
+CACHE_TIME = 15 * 60
 
 
 def politicalbuy_view(request, uuid_key, template_name='politicalbuy_view.html', message=None):

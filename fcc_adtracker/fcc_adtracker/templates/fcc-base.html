@@ -78,7 +78,8 @@
                 {% else %}
                 <li class="signup"><a href="{% url register_volunteer %}">Sign Up!</a></li>
                 {% endif %}
-                <li class="first"><a href="{% url fcc_most_recent %}">Browse Ads</a></li>
+				<li class="states"><a href="{% url state_list %}">Ads by State</a></li>
+				<li class="first"><a href="{% url fcc_most_recent %}">Newest Ads</a></li>
     		</ul>
     	</nav>
     {% endblock %}
