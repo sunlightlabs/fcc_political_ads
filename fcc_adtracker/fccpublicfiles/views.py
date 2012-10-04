@@ -206,7 +206,7 @@ def state_fcc_list(request):
 
     states = state_summary.objects.filter(tot_buys__gte=0).order_by('-tot_buys')
 
-    return render_to_response('geography_list.html', {
+    return render(request, 'geography_list.html', {
         'geography_name': 'state',
         'geography_name_short': 'state',
         'geography_list': states,
@@ -220,7 +220,7 @@ def recent_state_fcc_list(request):
 
     states = state_summary.objects.filter(tot_buys__gte=0).order_by('-tot_buys')
 
-    return render_to_response('recent_geography_list.html', {
+    return render(request, 'recent_geography_list.html', {
         'geography_name': ' state',
         'geography_name_short': 'state',
         'geography_list': states,
@@ -233,7 +233,7 @@ def recent_state_fcc_list(request):
 def dma_fcc_list(request):
 
     dmas = dma_summary.objects.filter(tot_buys__gte=0).order_by('-tot_buys')
-    return render_to_response('geography_list.html', {
+    return render(request, 'geography_list.html', {
         'geography_name': 'TV market',
         'geography_name_short': 'dma',
         'geography_list': dmas,
@@ -245,7 +245,7 @@ def dma_fcc_list(request):
 def recent_dma_fcc_list(request):
 
     dmas = dma_summary.objects.filter(tot_buys__gte=0).order_by('-tot_buys')
-    return render_to_response('recent_geography_list.html', {
+    return render(request, 'recent_geography_list.html', {
         'geography_name': 'TV market',
         'geography_name_short': 'dma',
         'geography_list': dmas,
@@ -282,7 +282,7 @@ def station_state_list(request, state_id):
             broadcaster['geography_name_short'] = broadcaster['callsign']
             broadcaster['location1'] = "%s" % (broadcaster['community_city'])
             broadcaster['location2'] = broadcaster['nielsen_dma']
-        return render_to_response('broadcaster_list.html', {
+        return render(request, 'broadcaster_list.html', {
             'geography_name': 'TV station',
             'geography_name_short': 'tv-station',
             'geography_list': broadcasters,
@@ -308,7 +308,7 @@ def station_dma_list(request, dma_id):
         broadcaster['geography_name_short'] = broadcaster['callsign']
         broadcaster['location1'] = "%s, %s" % (broadcaster['community_city'], broadcaster['community_state'])
         broadcaster['location2'] = broadcaster['nielsen_dma']
-    return render_to_response('broadcaster_list.html', {
+    return render(request, 'broadcaster_list.html', {
         'geography_name': 'TV station',
         'geography_name_short': 'tv-station',
         'geography_list': broadcasters,
@@ -325,7 +325,7 @@ def filing_dma_list(request, dma_id):
     count = filings.aggregate(numfilings=Count('pk'))['numfilings']
     if filings:
         dma_name = filings[0].nielsen_dma
-    return render_to_response('filing_list.html', {
+    return render(request, 'filing_list.html', {
         'filings': filings,
         'geography_name': dma_name,
         'preposition': 'in',
@@ -345,7 +345,7 @@ def filing_station_list(request, callsign):
     except Broadcaster.DoesNotExist:
         pass
 
-    return render_to_response('filing_list.html', {
+    return render(request, 'filing_list.html', {
         'filings': filings,
         'geography_name': callsign,
         'preposition': 'from',
@@ -364,7 +364,7 @@ def filing_state_list(request, state_id):
         filings = PoliticalBuy.objects.filter(community_state=state_id).order_by('-upload_time')
         count = filings.aggregate(numfilings=Count('pk'))['numfilings']
 
-        return render_to_response('filing_list.html', {
+        return render(request, 'filing_list.html', {
             'filings': filings,
             'geography_name': state_name,
             'preposition': 'in',
@@ -385,7 +385,7 @@ def fcc_most_recent(request):
     filings = PoliticalBuy.objects.filter(upload_time__gte=one_week_ago).order_by('-upload_time')
     count = filings.aggregate(numfilings=Count('pk'))['numfilings']
 
-    return render_to_response('filing_list.html', {
+    return render(request, 'filing_list.html', {
         'filings': filings,
         'geography_name': 'the last week',
         'preposition': 'in',
