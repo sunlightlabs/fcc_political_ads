@@ -50,7 +50,7 @@
                             <p class="tip"><a target='_blank' href="/help/#total">How do I find the total amount?</a></p>
                         </li>
                         <li>
-                            <label>Total number of spots</label>
+                            <label>Number of spots</label>
                             {{form.num_spots_raw}}
                             {{form.num_spots_raw.errors}}
                             <p class="tip"><a target='_blank' href="/help/#spots">How do I find the number of ad spots?</a></p>
@@ -71,7 +71,7 @@
                             {{form.contract_end_date}}
                             {{form.contract_end_date.errors}}
                         </li>
-                        <p class="tip"><a target='_blank' href="/help/#dates">Where&rsquo;s the ad air start and end date?</a></p>
+                        <p class="tip"><a target='_blank' href="/help/#dates">Where&rsquo;s the start and end date?</a></p>
                         <li>
                             <label>{{form.broadcasters.label}}</label>
                             {{form.broadcasters}}
@@ -82,7 +82,7 @@
                 </fieldset>
               <ul>
                     <li>
-                        <label>Let us know if you've entered all of the summary information (the fields above) from the document:</label>
+                        <label>Please check this box to let us know you entered all of the summary information (the fields above) from the document:</label>
                         <label class="tip checkbox">{{form.is_complete}} Summary information complete</label>
                         {{form.is_complete.errors}}
                     </li>

@@ -1,10 +1,10 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %}
-{% block title %}Submit Document{% endblock title %}
+{% block pagetitle %}Submit a Political File{% endblock pagetitle %}
 
 {% block content %}
 <div style="display:block; height: 1200px;">
     <h3 class="withTip">Submit a Political File</h3>
-    <p class="tip">Have a pdfs of political ad purchases from television stations? Please send it to us using the form below.</p>
+    <p class="tip">Have PDFs of political ad purchases from television stations? Please <strong>upload one advertiser contract at a time</strong> using the form below. Once you successfully uploaded the file, please take a few moments to enter information about the ad buy as directed.</p>
     {% if messages %}
     <ul class="messages">
         {% for message in messages %}
