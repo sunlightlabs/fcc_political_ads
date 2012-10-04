@@ -17,7 +17,7 @@
         <div class="span9">
             <div id="state_broadcasters" class="module">
                 {% if not profile or not profile.state %}
-                    <p>Please <a href="{% url edit_profile %}">fill out your profile</a>, including your city, state and zipcode so we can show you stations in your state!</p>
+                    <p>Please <a href="{% url edit_profile %}">fill out your profile</a>, including your city, state and ZIP so we can show your local stations and those in your state.</p>
                 {% else %}
                     <h3>What's Happening Around You</h3>
                         <table class="table table-striped">
@@ -38,21 +38,21 @@
                                 </tr>
                                 {% endif %}
                             </tbody>
-                        </table>   
+                        </table>
                     {% comment %}  Map on this page?
                         <section id="map">
                             {% include "broadcasters/_map_searchform.html" %}
                         </section>
                     {% endcomment %}
-                
+
             </div>
             <div id="user_contributions" class="module">
-                <h3>Your contributions</h3>
+                <h3>Your uploads</h3>
                 {% if politicalbuy_list %}
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            
+
                             <th>Last Modified</th>
                             <th>Station(s)</th>
                             <th>Advertiser</th>
@@ -76,16 +76,16 @@
                     </tbody>
                 </table>
                 {% else %}
-                <p>We do not currently have any submissions associated with your account. Submit a political file document to get started!</p>
+                <p>We do not currently have any submissions associated with your account. Submit a political file document (at right) to get started!</p>
                 {% endif %}
             </div>
         </div>
         <div class="span3">
             <section class="module boxCallout">
-                <h4 class="withTip">Submit Discovered Files</h4>
-                <p class="tip">Go to a station and want to upload the files? Upload them now!</p>
+                <h4 class="withTip">Submit Political Files</h4>
+                <p class="tip">Did you go to a station and scan files? Upload them now!</p>
                 <a class="btn" href="/political-files/submit/">Upload</a>
-            </section>    
+            </section>
             <section id="profile" class="module">
                 <h3>About you</h3>
                 <dl class="pushInward">
