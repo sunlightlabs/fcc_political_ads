@@ -37,20 +37,20 @@ class TV_Advertiser(models.Model):
     # The same person can run for two seats; if that's the case, prefer senate over house--typically they're in a safe seat in the house and are fighting over the senate seat. Not perfect, but it's basically impossible to sort out, especially since the people filing the forms are often wrong
     candidate =  models.ForeignKey(Candidate, null=True)
     candidate_name = models.CharField(max_length=255, blank=True, null=True)
-    # Many advertisers are related to multiple C-records; one for the superpac, one for electioneering, one for non-committee, etc. Which one is the primary one? Generally prefer the hierarchy used by ad hawk. 
+    # Many advertisers are related to multiple C-records; one for the superpac, one for electioneering, one for non-committee, etc. Which one is the primary one? Generally prefer the hierarchy used by ad hawk.
     primary_committee = models.ForeignKey(Committee, related_name='primary committee', null=True)
     secondary_committees = models.ManyToManyField(Committee, null=True, related_name='secondary committees', help_text=" ")
     committee_name = models.CharField(max_length=255, blank=True, null=True)
     advertiser_name = models.CharField(max_length=255, blank=True, null=True, help_text="Usually most prominent committee name, if there is one. Starting place is ad hawk's mapping. Human editing required for Crossroads. ")
-    
+
     # Hmm, not sure one is really needed
     ad_hawk_url = models.CharField(max_length=255, blank=True, null=True)
     ie_url = models.CharField(max_length=255, blank=True, null=True)
     ftum_url = models.CharField(max_length=255, blank=True, null=True)
-    
+
     # Ad hawk doesn't cover candidate ads
     is_in_adhawk = models.NullBooleanField(null=True, help_text = "Was this in ad hawk?")
-    
+
     # how many states have we played in
     num_states = models.PositiveIntegerField(blank=True, null=True)
     # how many states this week?
@@ -58,35 +58,35 @@ class TV_Advertiser(models.Model):
     ## ditto for dmas
     num_dmas = models.PositiveIntegerField(blank=True, null=True)
     num_recent_dmas = models.PositiveIntegerField(blank=True, null=True)
-    
+
     num_broadcasters = models.PositiveIntegerField(blank=True, null=True)
     num_recent_broadcasters = models.PositiveIntegerField(blank=True, null=True)
-    
+
     num_buys = models.PositiveIntegerField(blank=True, null=True)
     num_recent_buys = models.PositiveIntegerField(blank=True, null=True)
 
     total_amount_guess_high = models.PositiveIntegerField(blank=True, null=True)
     total_amount_guess = models.PositiveIntegerField(blank=True, null=True)
     total_amount_guess_low = models.PositiveIntegerField(blank=True, null=True)
-    
+
     recent_amount_guess_high= models.PositiveIntegerField(blank=True, null=True)
     recent_amount_guess = models.PositiveIntegerField(blank=True, null=True)
     recent_amount_guess_low = models.PositiveIntegerField(blank=True, null=True)
-    
+
     def __unicode__(self):
         if (self.candidate):
             return "%s (%s)" % (self.advertiser_name, self.candidate_name)
         else:
             return self.advertiser_name
-        
-        
+
+
 
 # helper table for lookups
 class TV_Advertiser_Alias(models.Model):
     parent =  models.ForeignKey(TV_Advertiser, null=True)
     advertiser_name_raw = models.CharField(max_length=255, blank=True, null=True)
     advertiser_name_clean = models.CharField(max_length=255, blank=True, null=True)
-    
+
     def __unicode__(self):
         return self.advertiser_name_raw
 # TK: Station_Race, Acti
@@ -158,7 +158,7 @@ class GenericPublicDocument(MildModeratedModel):
 
 class PoliticalBuy(MildModeratedModel):
     """A subset of PublicFile, the PoliticalBuy records purchases of air time (generally for political ads)"""
-    # Don't require documents -- allows us to reference other documents w/out copying them to our account. 
+    # Don't require documents -- allows us to reference other documents w/out copying them to our account.
     documentcloud_doc = models.ForeignKey(Document, null=True, default=None)
     contract_number = models.CharField(blank=True, max_length=100)
     advertiser = models.ForeignKey('Organization', blank=True, null=True, related_name='advertiser_politicalbuys', limit_choices_to={'organization_type': u'AD'})
@@ -173,9 +173,9 @@ class PoliticalBuy(MildModeratedModel):
     lowest_unit_price = models.NullBooleanField(default=None, blank=True, null=True)
     total_spent_raw = models.DecimalField(max_digits=19, decimal_places=2, null=True, verbose_name='Grand Total')
     num_spots_raw = models.PositiveIntegerField(null=True, verbose_name='Number of Ad Spots')
-    
+
     # JF Adds
-    # Are the summary fields completed? We're still using is_complete for this, actually. 
+    # Are the summary fields completed? We're still using is_complete for this, actually.
     is_summarized = models.NullBooleanField(default=False, verbose_name="Data Entry Is Complete", help_text="Are all the summary fields filled in?")
     # Did this come from the FCC?
     is_FCC_doc = models.NullBooleanField(default=False, help_text="Did this document come from the FCC? ")
@@ -192,7 +192,7 @@ class PoliticalBuy(MildModeratedModel):
     upload_time = models.DateField(blank=True, null=True, default=None)
     broadcaster_callsign = models.CharField(max_length=7, blank=True, null=True, help_text="first broadcaster callsign.")
     advertiser_display_name = models.CharField(max_length=211, blank=True, null=True)
-    
+
     """ This is a user-defined setting that lets an authenticated user
     mark a record as not needing any more work. The idea is that
     a superuser will need to come along afterward to the moderated object
@@ -206,12 +206,12 @@ class PoliticalBuy(MildModeratedModel):
 
     def broadcasters_callsign_list(self):
         return [x.callsign for x in self.broadcasters.all()]
-    
+
     def doc_source(self):
         if self.is_FCC_doc:
             return 'FCC'
         else:
-            return 'Submission' 
+            return 'Submission'
 
     def broadcasters_state_list(self):
         return [x.community_state for x in self.broadcasters.all()]
@@ -244,19 +244,19 @@ class PoliticalBuy(MildModeratedModel):
             return broadcaster
         except:
             return None
-    
+
     def station_display(self):
         try:
             first_broadcaster = self.broadcasters.all()[0]
             return first_broadcaster.callsign
         except IndexError:
             return None
-        
+
     def name(self):
         all_broadcasters = self.broadcasters.all()
         broadcaster = "Unknown"
         if len(all_broadcasters) > 0:
-            first_broadcaster = self.broadcasters.all()[0]  
+            first_broadcaster = self.broadcasters.all()[0]
             broadcaster = "%s (%s, %s)" % (first_broadcaster.callsign, first_broadcaster.community_city, first_broadcaster.community_state)
         advertiser = 'Unknown'
         if self.advertiser:
@@ -287,7 +287,7 @@ class PoliticalBuy(MildModeratedModel):
         return "/political-files/state/%s/" % (self.community_state)
 
     def get_dma_url(self):
-        return "/political-files/dma/%s/" % (self.dma_id)          
+        return "/political-files/dma/%s/" % (self.dma_id)
 
     def total_spent(self):
         """ Returns a total spent figure, from either the grand total on the document, or calculated from ad buys. """
@@ -314,21 +314,21 @@ def set_doccloud_data(sender, instance, signal, *args, **kwargs):
         #doccloud_data = copy.deepcopy(DOCUMENTCLOUD_META)
         doccloud_data = {}
         doccloud_data['callsign'] = [ str(x) for x in instance.broadcasters_callsign_list() ]
-    
+
         if (instance.is_FCC_doc):
             doccloud_data['uploader'] = "auto"
             doccloud_data['Collection'] = 'PoliticalAdSleuthFCC'
-        
+
         else:
-            doccloud_data['uploader'] = "submission"        
-            # only put the manual documents here... 
+            doccloud_data['uploader'] = "submission"
+            # only put the manual documents here...
             doccloud_data['contributedto'] = "freethefiles"
-            doccloud_data['Collection'] = 'PoliticalAdSleuth'           
-    
+            doccloud_data['Collection'] = 'PoliticalAdSleuth'
+
         if doc.dc_data != doccloud_data:
             doc.dc_data = doccloud_data
-            
-        
+
+
 
 
 @receiver(pre_delete, sender=PoliticalBuy)
@@ -383,7 +383,7 @@ class PoliticalSpot(MildModeratedModel):
             name_string = u'{0} ({1} to {2})'.format(name_string, self.airing_start_date, self.airing_end_date)
         return name_string
 
-# summary fields, previously only for FCC data. 
+# summary fields, previously only for FCC data.
 
 class state_summary(models.Model):
     state_id = models.CharField(max_length=2, blank=True, null=True)
@@ -396,7 +396,7 @@ class state_summary(models.Model):
     state_buys = models.PositiveIntegerField(blank=True, null=True)
     local_buys = models.PositiveIntegerField(blank=True, null=True)
     outside_buys = models.PositiveIntegerField(blank=True, null=True)
-    recent_pres_buys =  models.PositiveIntegerField(blank=True, null=True)  
+    recent_pres_buys =  models.PositiveIntegerField(blank=True, null=True)
     recent_sen_buys =  models.PositiveIntegerField(blank=True, null=True)
     recent_house_buys =  models.PositiveIntegerField(blank=True, null=True)
     recent_outside_buys = models.PositiveIntegerField(blank=True, null=True)
@@ -406,16 +406,16 @@ class state_summary(models.Model):
     tot_est_ave = models.PositiveIntegerField(blank=True, null=True)
     tot_est_high = models.PositiveIntegerField(blank=True, null=True)
     percent_estimated = models.PositiveIntegerField(blank=True, null=True)
-    
+
     def get_absolute_url(self):
         return "/political-files/state/%s/" % (self.state_id)
-        
+
     def get_station_url(self):
-        return "/political-files/stations/state/%s/" % (self.state_id)  
+        return "/political-files/stations/state/%s/" % (self.state_id)
 
     def name(self):
-        return STATES_DICT[self.state_id]
-    
+        return STATES_DICT.get(self.state_id, self.state_id)
+
 
 class dma_summary(models.Model):
     dma_id = models.PositiveIntegerField(blank=True, null=True, editable=False, help_text='DMA ID, from Nielsen')
@@ -423,7 +423,7 @@ class dma_summary(models.Model):
     fcc_dma_name = models.CharField(max_length=255, blank=True, null=True)
     rank1011 = models.PositiveIntegerField(blank=True, null=True)
     rank1112 = models.PositiveIntegerField(blank=True, null=True)
-    
+
     num_broadcasters = models.PositiveIntegerField(blank=True, null=True, help_text="all broadcasters")
     num_mandated_broadcasters = models.PositiveIntegerField(blank=True, null=True, help_text="only mandated broadcasters")
     tot_buys = models.PositiveIntegerField(blank=True, null=True)
@@ -433,7 +433,7 @@ class dma_summary(models.Model):
     state_buys = models.PositiveIntegerField(blank=True, null=True)
     local_buys = models.PositiveIntegerField(blank=True, null=True)
     outside_buys = models.PositiveIntegerField(blank=True, null=True)
-    recent_pres_buys =  models.PositiveIntegerField(blank=True, null=True)  
+    recent_pres_buys =  models.PositiveIntegerField(blank=True, null=True)
     recent_sen_buys =  models.PositiveIntegerField(blank=True, null=True)
     recent_house_buys =  models.PositiveIntegerField(blank=True, null=True)
     recent_outside_buys = models.PositiveIntegerField(blank=True, null=True)
@@ -442,14 +442,14 @@ class dma_summary(models.Model):
     tot_est_low = models.PositiveIntegerField(blank=True, null=True)
     tot_est_ave = models.PositiveIntegerField(blank=True, null=True)
     tot_est_high = models.PositiveIntegerField(blank=True, null=True)
-    percent_estimated = models.PositiveIntegerField(blank=True, null=True)    
-    
+    percent_estimated = models.PositiveIntegerField(blank=True, null=True)
+
     def get_absolute_url(self):
         return "/political-files/dma/%s/" % (self.dma_id)
-        
+
     def get_station_url(self):
         return "/political-files/stations/dma/%s/" % (self.dma_id)
-    
+
     def name(self):
         return self.dma_name
 
