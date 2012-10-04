@@ -3,8 +3,8 @@
 
 img { max-width: none; }
 
-#logo { width: 135px; height: 80px; padding-top: 10px; float: left; }
-#logo a { background: url(../img/logo.png) top left no-repeat; width: 135px; height: 80px;}
+#logo { width: 276px; height: 71px; padding-top: 30px; float: left; margin-bottom: 45px; }
+#logo a { background: url(../img/logo.png) top left no-repeat; width: 276px; height: 71px;}
 .social-icons { float: right; clear: both; position: relative; margin-top: -30px; margin-bottom: 20px; }
 nav { margin-top: -20px;}
 nav.subnav { margin-top: 0px; margin-bottom: 10px; }
@@ -50,7 +50,8 @@ ul#locations {
 .featureImg {  float: right; margin-right: 20px; }
 .featureImg img { margin-top: 70px;}
 
-#freepress { background: url(../img/logo_freepress.png) top left no-repeat; width: 118px; height: 40px; margin-top: 10px;}
+#additionalLogo { position: absolute; }
+#freepress { background: url(../img/logo_freepress.png) top left no-repeat; width: 118px; height: 40px; position: relative; top: -98px; left: 670px;  }
 #newAmerica { background: url(../img/logo_newAmerica.png) top left no-repeat; width: 156px; height: 28px; margin-top: 20px; margin-right: 0;}
 
 /*
@@ -238,7 +239,7 @@ fieldset ul { padding-top: 18px; }
 #pager label { color: #76716E; margin-right: 5px; }
 .row .input-mini { width: 72px; }
 
-.form-search { float: right; margin-top: 60px; margin-bottom: 5px;  }
+.form-search { float: right; margin-top: 75px; margin-bottom: 5px;  }
 .form-search li { float: left; display: block; clear: none; margin-left: 10px; margin-bottom: 5px; }
 .form-search li.clear { clear: both; float: right; }
 
@@ -273,7 +274,7 @@ table .Unapproved { background: url(../img/bg_unapproved.png) center 8px no-repe
 
 .withLine li li { border: none; padding: 0px; }
 
-.barChart { float: left; width: 220px; }
+.barChart { float: left; width: 470px; }
 .barChart li { position: relative; margin-bottom: 3px; height: 22px;}
 .tagValue { position: absolute; height: 100%; background-color: #e7c740; -moz-box-shadow: inset 0 1px 5px #ad8f10; -webkit-box-shadow: inset 0 1px 5px #ad8f10; box-shadow: inset 0 1px 5px #ad8f10;}
 .tagNumber { z-index: 2; position: relative; float: right; display: block; padding-right: 10px; }
