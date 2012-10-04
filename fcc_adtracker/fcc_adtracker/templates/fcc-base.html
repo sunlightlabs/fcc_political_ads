@@ -83,11 +83,7 @@
     		</ul>
     	</nav>
     {% endblock %}
-    {% if user.is_authenticated %}
-        <h1 id="logo"><a class="textReplace" href="{% url user_dashboard %}">Political Ad Sleuth</a></h1>
-    {% else %}
         <h1 id="logo"><a class="textReplace" href="/">Political Ad Sleuth</a></h1>
-    {% endif %}
         <form class="form-search" action="{% url haystack_search %}">
             <ul>
                 <li>
