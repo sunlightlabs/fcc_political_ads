@@ -11,14 +11,14 @@
 <h2>Find recent FCC political ad filings by {{ geography_name }}{% if subgeography %} in {{subgeography}}{% endif %}</h2>
 {% include "_subnav.html" %}
 
-<p class="tip">Click on a {{ geography_name }} name to see filings there.</p>
+<p class="tip">{% include "_data_disclaimer_short.html" %}<br />Click on a {{ geography_name }} name to see filings there.</p>
 
 <a id="downloadBtn" class="btn" href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">Download CSV</a>
 <table class="table table-striped">
 	<thead>
         <tr>
             <th>{{ geography_name|upper }}</th>
-            <th>LOCATION</th><th>TV MARKET</th><th>MANDATED REPORTER?</th>
+            <th>LOCATION</th><th>TV MARKET</th><th>MANDATED<a href="#mandated">*</a></th>
         </tr>
     </thead>
     <tbody>
@@ -27,5 +27,5 @@
 {% endfor %}
 	</tbody>
 </table>
-
+{% include "_mandated_explanation.html" %}
 {% endblock content %}
