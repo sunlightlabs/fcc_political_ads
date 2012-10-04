@@ -408,7 +408,7 @@ class state_summary(models.Model):
     percent_estimated = models.PositiveIntegerField(blank=True, null=True)
     
     def get_absolute_url(self):
-        return "/political-files/by-state/%s/" % (self.state_id)
+        return "/political-files/state/%s/" % (self.state_id)
         
     def get_station_url(self):
         return "/political-files/stations/state/%s/" % (self.state_id)  
@@ -445,7 +445,7 @@ class dma_summary(models.Model):
     percent_estimated = models.PositiveIntegerField(blank=True, null=True)    
     
     def get_absolute_url(self):
-        return "/political-files/by-dma/%s/" % (self.dma_id)
+        return "/political-files/dma/%s/" % (self.dma_id)
         
     def get_station_url(self):
         return "/political-files/stations/dma/%s/" % (self.dma_id)
