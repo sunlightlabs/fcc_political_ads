@@ -13,6 +13,7 @@ class Command(BaseCommand):
         nonfcc_docs = PoliticalBuy.objects.filter(is_FCC_doc=False)
         for doc in nonfcc_docs:
             doc.upload_time = doc.contract_end_date
+            doc.ignore_post_save = True
             doc.save(None)
             
         fcc_docs = PoliticalBuy.objects.filter(is_FCC_doc=True)
