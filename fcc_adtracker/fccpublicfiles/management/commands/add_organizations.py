@@ -1,3 +1,5 @@
+""" Will readd existing orgs. """
+
 import urllib2
 import urllib
 import csv
@@ -34,7 +36,7 @@ def add_advertisers(advertisers_queryset):
 
 class Command(BaseCommand):
     args = '<cycle>'
-    help = "Add lotsa orgs."
+    help = "One off to add lotsa orgs."
     
     requires_model_validation = False
     
@@ -46,6 +48,7 @@ class Command(BaseCommand):
         adhawk_advertisers = TV_Advertiser.objects.filter(is_in_adhawk=True)
         for ah in adhawk_advertisers:
             name = Organization(name=ah.advertiser_name, organization_type='AD',related_advertiser=ah, created_by=user)
+            print "Adding ad hawk group %s" % (ah.advertiser_name)
             name.save(user)
 
         for advertiser_id in advertiser_list:
@@ -53,6 +56,10 @@ class Command(BaseCommand):
             try:
                 advertiser = TV_Advertiser.objects.get(primary_committee__fec_id=advertiser_id)
             except:
+                try:
+                    advertiser = TV_Advertiser.objects.get(secondary_committees__fec_id=advertiser_id)
+                except:
+                    continue
                 continue
         
             try:
