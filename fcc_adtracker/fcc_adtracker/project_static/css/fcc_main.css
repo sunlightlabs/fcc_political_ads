@@ -228,6 +228,7 @@ a.caldisabled {
 #noaccount_signup input { width: 220px; }
 #noaccount_signup  input[type=checkbox] { width: 15px; }
 #noaccount_signup select { width: 230px; }
+#noaccount_signup li.bottomBtn {clear: both}
 #stationNames select { width: 480px; height: 100px; }
 fieldset { margin-bottom: 1em; }
 fieldset ul { padding-top: 18px; }
@@ -256,14 +257,14 @@ table.sortable > thead th:hover { color: #827b78; }
 #filterBox span { font-size: 105%; margin-bottom: 5px; display: block; }
 #filterBox li { margin-bottom: 0px; color: #98928f; }
 .closeBtn { background: url(../img/icon_close.png) top left no-repeat; height: 14px; float: left; width: 14px; margin-right: 5px;  margin-top: 1px; }
-.closeBtn:hover { background: url(../img/icon_close.png) bottom left no-repeat; } 
+.closeBtn:hover { background: url(../img/icon_close.png) bottom left no-repeat; }
 
 #headerFloat { border-bottom: 1px solid #F0EDED; margin-bottom: 40px; }
 #headerFloat.nofloat h2{ width: 100%; padding-top: 0px;}
 #headerFloat h2, #headerFloat h3 { float: left; width: 380px; padding-top: 15px;}
 #headerFloat p { float: right; width: 175px;  padding: 10px 15px; }
 #headerFloat p.editBtn { text-align: right; }
- 
+
 #downloadBtn { float: right; }
 table .tip { display: table-cell; }
 
