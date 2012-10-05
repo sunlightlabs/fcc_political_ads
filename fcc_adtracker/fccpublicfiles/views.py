@@ -380,14 +380,14 @@ def filing_state_list(request, state_id):
 def fcc_most_recent(request):
 
     today = datetime.datetime.today()
-    one_week_ago = today - datetime.timedelta(days=7)
+    three_days_ago = today - datetime.timedelta(days=3)
 
-    filings = PoliticalBuy.objects.filter(upload_time__gte=one_week_ago).order_by('-upload_time')
+    filings = PoliticalBuy.objects.filter(upload_time__gte=three_days_ago).order_by('-upload_time')
     count = filings.aggregate(numfilings=Count('pk'))['numfilings']
 
     return render(request, 'filing_list.html', {
         'filings': filings,
-        'geography_name': 'the last week',
+        'geography_name': 'the last three days',
         'preposition': 'in',
         'count': count,
         'sfapp_base_template': 'sfapp/base-full.html',

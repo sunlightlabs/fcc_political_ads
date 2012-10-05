@@ -1,13 +1,19 @@
-{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load updatetime from update %}
+{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load updatetime from update %}{% load kwacros %}
 {% block bodyclass %}states{% endblock bodyclass %}
 {% block pagetitle %}Find recent FCC political ad filings by {{ geography_name }}{% if subgeography %} in {{subgeography}}{% endif %}{% endblock pagetitle %}
+
+{% kwacro share_base_text %}See political ad filings by {{ geography_name }}{% if subgeography %} in {{subgeography}}{% endif %} on Political Ad Sleuth{% endkwacro %}
+
+{% block og_title %}{% usekwacro share_base_text %} from Sunlight Foundation & Free Press{% endblock og_title %}
+{% block tweet_text %}{% usekwacro share_base_text %} {{request.build_absolute_uri}} via @sunfoundation @freepress #freethefiles{% endblock tweet_text %}
+
 {% block content %}
 
 <h2>Last week: political ad filings from the last 7 days, by {{ geography_name }}</h2>
 {% include "_subnav.html" %}
 
 <p class="tip">{% include "_data_disclaimer_short.html" %}<br/>Click on a {{ geography_name }} name to see filings there.  {% updatetime %}.</p>
-<a id="downloadBtn" class="btn" href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">Download CSV</a>
+{% include "_download_button.html" %}
 <table class="table table-striped tablesorter sortable" id="ad-data">
 	<thead>
         <tr>

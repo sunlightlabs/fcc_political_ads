@@ -8,12 +8,12 @@
 {% block tweet_text %}{% usekwacro share_base_text %} {{request.build_absolute_uri}} via @sunfoundation @freepress #freethefiles{% endblock tweet_text %}
 
 {% block content %}
-<h2 class="clearfix">Political ad filings {{ preposition }} {{ geography_name }}</h2>
+<h2 class="clearfix">Ad filings {{ preposition }} {{ geography_name }}</h2>
 {% include "_subnav.html" %}
 
 <p class="tip">{% include "_data_disclaimer_short.html" %}</p>
 <p class="tip">Found {{count}} filings{% if broadcaster %} at {{broadcaster }}{% endif %}. {% updatetime %}.</p>
-<a id="downloadBtn" class="btn" href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/all_ads.csv">Download CSV</a>
+{% include "_download_button.html" %}
 
 <table class="table table-striped">
 	<thead>

@@ -78,8 +78,10 @@
                 {% else %}
                 <li class="signup"><a href="{% url register_volunteer %}">Sign Up!</a></li>
                 {% endif %}
-				<li class="states"><a href="{% url state_list %}">Ads by State</a></li>
-				<li class="first"><a href="{% url fcc_most_recent %}">Newest Ads</a></li>
+				<li class="states"><a href="{% url state_list %}">By State</a></li>
+				<li class="newest"><a href="{% url fcc_most_recent %}">Newest Ads</a></li>
+				
+				<li class="market_report first" ><a href="{% url fcc_most_recent %}">7-Day Market Report</a>
     		</ul>
     	</nav>
     {% endblock %}
@@ -92,6 +94,9 @@
                 </li>
                 <li>
                     <button class="btn" type="submit">Search</button>
+                </li>
+                <li class="clear">
+                    <a href="/search/">Advanced search</a>
                 </li>
             </ul>
         </form>
