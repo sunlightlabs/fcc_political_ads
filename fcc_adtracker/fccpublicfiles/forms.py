@@ -7,6 +7,9 @@ from fccpublicfiles.models import PoliticalBuy, PoliticalSpot, Organization, Per
 from fccpublicfiles.widgets import SelectTimeWidget
 from broadcasters.models import Broadcaster
 
+from weekday_field import forms as wf_forms
+
+
 SELECT_YEARS = range(2008, 2017)
 
 
@@ -73,12 +76,13 @@ class PoliticalSpotForm(forms.ModelForm):
 class RelatedPoliticalSpotForm(forms.ModelForm):
     class Meta:
         model = PoliticalSpot
-        exclude = ('is_public',)
+        exclude = ('is_public', 'notes')
     document = forms.ModelChoiceField(queryset=PoliticalBuy.objects.all(), widget=forms.HiddenInput)
-    airing_start_date = forms.DateField(widget=SelectDateWidget(years=SELECT_YEARS, attrs={'class':'input-small'}))
-    airing_end_date = forms.DateField(widget=SelectDateWidget(years=SELECT_YEARS, attrs={'class':'input-small'}))
-    timeslot_begin = forms.TimeField(widget=SelectTimeWidget(twelve_hr=True, use_seconds=False, attrs={'class':'time input-mini'}))
-    timeslot_end = forms.TimeField(widget=SelectTimeWidget(twelve_hr=True, use_seconds=False, attrs={'class':'time input-mini'}))
+    airing_days = wf_forms.WeekdayFormField(widget=forms.CheckboxSelectMultiple)
+    airing_start_date = forms.DateField(widget=SelectDateWidget(years=SELECT_YEARS, attrs={'class': 'input-small'}))
+    airing_end_date = forms.DateField(widget=SelectDateWidget(years=SELECT_YEARS, attrs={'class': 'input-small'}))
+    timeslot_begin = forms.TimeField(widget=SelectTimeWidget(twelve_hr=True, use_seconds=False, attrs={'class': 'time input-mini'}))
+    timeslot_end = forms.TimeField(widget=SelectTimeWidget(twelve_hr=True, use_seconds=False, attrs={'class': 'time input-mini'}))
 
 
 class PoliticalBuyFormBase(forms.ModelForm):
@@ -94,7 +98,8 @@ class PrelimDocumentForm(DocCloudFormBase, PoliticalBuyFormBase):
         super(PrelimDocumentForm, self).__init__(*args, **kwargs)
         append_ajax_class(self.fields['broadcasters'])
 
-# Unfortunately we gotta make none of these forms required so that it's easy to enter invalid forms. 
+
+# Unfortunately we gotta make none of these forms required so that it's easy to enter invalid forms.
 class PoliticalBuyFormFull(forms.ModelForm):
     class Meta:
         model = PoliticalBuy
