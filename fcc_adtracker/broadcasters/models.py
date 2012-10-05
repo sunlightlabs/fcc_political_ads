@@ -33,9 +33,8 @@ class Broadcaster(models.Model):
         return locals()
     fcc_profile_url = property(**fcc_profile_url())
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('broadcasters.views.broadcaster_detail', (), {'callsign': self.callsign})
+        return "/political-files/tv-station/%s/" %  self.callsign
 
     def __unicode__(self):
         if self.callsign:

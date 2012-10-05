@@ -31,7 +31,7 @@
                                 {% for broadcaster in broadcaster_list %}
                                 <tr>
                                     <td>{{ broadcaster }}</td>
-                                    <td><a href="{% url broadcaster_politicalbuys_view broadcaster.callsign %}">{{ broadcaster.politicalbuy_set.count}} files</a></td>
+                                    <td><a href="{{ broadcaster.get_absolute_url }}">{{ broadcaster.politicalbuy_set.count}} files</a></td>
                                     {% empty %}
                                         <td>No broadcasters found for this state.</td>
                                     {% endfor %}

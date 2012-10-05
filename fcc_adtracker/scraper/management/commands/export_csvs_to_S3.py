@@ -26,7 +26,7 @@ def write_csv_to_file(file_description, local_file, fields, rows):
 
 def all_ads_to_file():
     most_recent_scrape=Scrape_Time.objects.all().order_by('-run_time')[0].run_time
-    file_description="All ads available as of %s" % most_recent_scrape.strftime("%Y-%m-%d %H:%m")
+    file_description="This file only contains ads from the FCC's site available as of %s" % most_recent_scrape.strftime("%Y-%m-%d %H:%m")
     print file_description
     file_name =  "%s/all_ads.csv" % (CSV_EXPORT_DIR)
     fields = ['id', 'station', 'file_upload_time', 'tv_market', 'tv_market_id', 'ad_type', 'fcc_folder', 'file_name', 'source_file_url']
