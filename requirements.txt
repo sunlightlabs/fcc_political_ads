@@ -29,3 +29,4 @@ requests>=0.9.0
 -e git+https://github.com/toastdriven/django-haystack.git@433e154f76a450ffc095792c6f2e051ef508fc2d#egg=django_haystack
 pytz
 python-memcached
+python-magic==0.4.3

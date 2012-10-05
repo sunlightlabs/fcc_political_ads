@@ -9,6 +9,7 @@ from broadcasters.models import Broadcaster
 
 from weekday_field import forms as wf_forms
 
+import magic
 
 SELECT_YEARS = range(2008, 2017)
 
@@ -93,10 +94,20 @@ class PoliticalBuyFormBase(forms.ModelForm):
 
 class PrelimDocumentForm(DocCloudFormBase, PoliticalBuyFormBase):
     broadcasters = forms.ModelMultipleChoiceField(queryset=Broadcaster.objects.all())
+    file = forms.FileField(widget=forms.ClearableFileInput(attrs={'accept': 'application/pdf,.pdf'}))
 
     def __init__(self, *args, **kwargs):
         super(PrelimDocumentForm, self).__init__(*args, **kwargs)
         append_ajax_class(self.fields['broadcasters'])
+
+    def clean_file(self):
+        data = self.cleaned_data['file']
+        chunk = data.read(1024)
+        mimetype = magic.from_buffer(chunk, mime=True)
+        if mimetype != 'application/pdf':
+            raise forms.ValidationError('File does not validate as a pdf. Please select a PDF file to upload.')
+
+        return data
 
 
 # Unfortunately we gotta make none of these forms required so that it's easy to enter invalid forms.
