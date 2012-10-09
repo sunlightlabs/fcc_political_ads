@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.contrib.localflavor.us import us_states
 from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
 
 from locations.models import AddressLabel
 from broadcasters.models import Broadcaster, BroadcasterAddress
@@ -19,6 +20,17 @@ STATES_DICT = dict(us_states.US_STATES)
 
 BROADCASTER_SERIALIZED_FIELDS = ('channel', 'community_city', 'community_state')
 
+ADDRESS_JSON_FIELDS = (
+    'address1',
+    'address2',
+    'city',
+    'state',
+    'zipcode',
+    'lat',
+    'lng',
+)
+
+
 def _sanitize_broadcaster_for_serliazation(broadcaster):
     """docstring for _sanitize_broadcaster_json"""
     bc_dict = dict(copy.copy(broadcaster.__dict__))
@@ -27,6 +39,7 @@ def _sanitize_broadcaster_for_serliazation(broadcaster):
     bc_dict['combined_name'] = '{0} [{1} {2}]'.format(broadcaster.callsign, broadcaster.network_affiliate, broadcaster.channel)
     return bc_dict
 
+
 def _make_broadcasteraddress_dict(bc_ad_obj):
     '''
     Transform a BroadcasterAddress into a dictionary that can be modified and serialized to json
@@ -34,12 +47,10 @@ def _make_broadcasteraddress_dict(bc_ad_obj):
     obj_dict = {
         'broadcaster': dict(copy.copy(bc_ad_obj.broadcaster.__dict__)),
         'combined_address': bc_ad_obj.address.combined_address,
-        'address': dict(copy.copy(bc_ad_obj.address.__dict__))
     }
     obj_dict['broadcaster'].pop('id')
     obj_dict['broadcaster'].pop('_state')
-    obj_dict['address'].pop('id')
-    obj_dict['address'].pop('_state')
+    obj_dict['address'] = dict([(field, bc_ad_obj.address.__dict__[field]) for field in ADDRESS_JSON_FIELDS])
     obj_dict['address']['label'] = bc_ad_obj.label.name
     return obj_dict
 
@@ -50,8 +61,8 @@ def state_broadcasters_json(request, state_id):
     state_name = STATES_DICT.get(state_id, None)
     if state_name:
         state_broadcaster_list = Broadcaster.objects.filter(community_state=state_id).order_by('callsign')
-        obj_list = [ _sanitize_broadcaster_for_serliazation(bc) for bc in state_broadcaster_list]
-        jsonout = json.dumps(obj_list)
+        obj_list = [_sanitize_broadcaster_for_serliazation(bc) for bc in state_broadcaster_list]
+        jsonout = json.dumps(obj_list, cls=DjangoJSONEncoder)
         return HttpResponse(jsonout, content_type='application/json')
     else:
         return HttpResponseNotFound(json.dumps({'error': '"{0}" does not match a valid state abbreviation'.format(state_id)}), content_type='application/json')
@@ -82,7 +93,7 @@ def nearest_broadcasters_list(request):
                 obj_dict['distance'] = miles_away
                 obj_list.append(obj_dict)
         sorted_obj_list = sorted(obj_list, key=lambda x: x['distance'])
-        jsonout = json.dumps(sorted_obj_list)
+        jsonout = json.dumps(sorted_obj_list, cls=DjangoJSONEncoder)
         return HttpResponse(jsonout, content_type='application/json')
     else:
         return HttpResponseBadRequest('You must include lat, lon args')
@@ -109,5 +120,5 @@ def state_broadcaster_addresses(request, state_id, label_slug):
     for obj in state_broadcaster_list:
         obj_dict = _make_broadcasteraddress_dict(obj)
         obj_list.append(obj_dict)
-    jsonout = json.dumps(obj_list)
+    jsonout = json.dumps(obj_list, cls=DjangoJSONEncoder)
     return HttpResponse(jsonout, content_type='application/json')
