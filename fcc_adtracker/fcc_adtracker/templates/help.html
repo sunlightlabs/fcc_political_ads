@@ -1,136 +1,145 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %}
 {% block bodyclass %}help{% endblock bodyclass %}
 {% block pagetitle %}Help{% endblock pagetitle %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+        .help p, .help li {
+            font-size: 16px;
+            line-height: 24px;
+        }
+        .help p {
+            margin-bottom: 24px;
+        }
+        .pagenav {
+            margin: 48px 0;
+        }
+        .youtube-player {
+            margin-bottom: 20px;
+            border: none;
+        }
+    </style>
+{% endblock css %}
+
+
 {% block content %}
-<div style="font-size:16px; line-height: 1.5em; margin:0px;">
-	<h2>Political Ad Sleuth FAQ</h2>
-There are two parts of our process: <a href="#collecting">collecting</a> the files and uploading them to the site, and <a href="#entering">entering</a> the ad buy data in them. On Aug. 2, the  Federal Communications Commission began requiring ABC, CBS, NBC and Fox affiliates in the top 50 media markets to post their files online--we are automatically uploading those documents (see the most recent at right). Unfortunately stations only have to post ad buy information since then--there's no online record of ad buys in July, for example. Once the documents are posted into Political Ad Sleuth, we need your help to enter the ad buy data for them. Most important is the summary information for each buy: who bought the ad, what station aired it, when it was aired, how much it cost, and how many spots were purchased. You can also enter additional details for every political ad, including which show, what time and which days.<br /><br />
+    <h2>Political Ad Sleuth FAQ</h2>
+    <p>There are two parts of our process: <a href="#collecting">collecting</a> the files and uploading them to the site, and <a href="#entering">entering</a> the ad buy data in them. On Aug. 2, the  Federal Communications Commission began requiring ABC, CBS, NBC and Fox affiliates in the top 50 media markets to post their files online--we are automatically uploading those documents (see the most recent at right). Unfortunately stations only have to post ad buy information since then--there's no online record of ad buys in July, for example. Once the documents are posted into Political Ad Sleuth, we need your help to enter the ad buy data for them. Most important is the summary information for each buy: who bought the ad, what station aired it, when it was aired, how much it cost, and how many spots were purchased. You can also enter additional details for every political ad, including which show, what time and which days.</p>
 
-	Read further for additional guidance on the different ways you can be a Political Ad Sleuth. <br />
-	<br />
-	<h3><a name="entering"></a>Entering Data From Uploaded Documents</h3>
-	<a href="#advertiser">Who is the advertiser?</a><br />
-	<br />
-	<a href="#total">Which number do I use for the Grand Total?</a><br />
-	<br />
-	<a href="#spots">How do I find the number of ad spots?</a><br />
-	<br />
-	<a href="#dates">Where&rsquo;s the ad flight start and end date?</a><br />
-	<br />
-	<a href="#broadcaster">Who is the broadcaster?</a><br />
-	<br />
-	<a href="#contract">How do I find the contract number?</a><br />
-	<br />
-	<a href="#buyer">Who is the media buyer?</a><br />
-	<br />
-	<a href="#signatory">What is the advertiser signatory?</a><br />
-	<br />
-	<a href="#unitprice">How do I find the unit price?</a><br />
-	<br />
-	<a href="#whenrun">How do I tell when the spots are supposed to run?</a><br />
-	<br />
-	<a href="#show">Why do you want to know the show during which the ad was set to run?</a><br />
-	<br />
-	<a href="#who">Why do you want to know who I am?</a><br />
-	<br />
-	<h3><a name="collecting"></a>Collecting Files</h3>
-	<!--
-	<a href="#find">How do I find my local television station?</a><br />
-	<br />
-	-->
-	<a href="#visit">What should I expect and how do I prepare for a station visit?</a><br />
-	<br />
-	<a href="#ask">When I get to the station, what do I ask for?</a><br />
-	<br />
-	<a href="#filelooklike">What does a file look like?</a><br />
-	<br />
-	
-	<h3>Submitting Documents</h3>
-	Note that not all political ad buy contracts look the same. Although they share many similarities, each station&rsquo;s file is unique. That said, here are some common issues you might come across:<br />
-	<br />
-	
-	<a name="advertiser"></a><b>Who is the advertiser?</b><br />
-	<br />
-	The advertiser is the person or group behind the advertisement. For example, this might be &ldquo;Obama for America,&rdquo; or &ldquo;Crossroads GPS.&rdquo;<br /><br />
-	<a name="total"></a><b>Which number do I use for the Grand Total?</b><br />
-	<br />
-	Typically, orders will show the total gross amount spent on the advertising buy. That&rsquo;s the number to enter in this field. You might also see a &ldquo;net&rdquo; price and/or a commission value. The commission is the percentage (usually 15%) the media buyer takes for placing the ad. The net amount is the amount the station receives from the advertiser after that commission is deducted. We want to know how much the advertiser spent, so we want the gross amount.<br />
-	<br />
-	<a name="spots"></a><b>How do I find the number of ad spots?</b><br />
-	<br />
-	Most orders will show the total number of spots somewhere on the form, either at the bottom of the table showing specific air times, or somewhere near the gross amount. <br />
-	<br />
-	<a name="dates"></a><b>Where&rsquo;s the ad air start and end date?</b><br />
-	<br />
-	You can usually find the dates when the ad will run at the top of the document. Sometimes it&rsquo;s called the &ldquo;flight dates.&rdquo; <br />
-	<br />
-	<a name="broadcaster"></a><b>Who is the broadcaster?</b><br />
-	<br />
-	The broadcaster is the station selling the ad. Enter the station using its call sign, such as WUSA.<br />
-	<br />
-	<a name="contract"></a><b>How do I find the contract number?</b><br />
-	<br />
-	The contract number is located at the top of most ad orders. It is usually six or seven digits long, and is placed next to &ldquo;Contract / Rev&rdquo; or &ldquo;Order / Rev&rdquo; If you don't find it, it's okay to skip it. <br />
-	<br />
-	<a name="buyer"></a><b>Who is the media buyer?</b><br />
-	<br />
-	The media buyer is the "middle man" between the campaign or group and the TV station. This might be listed as the &ldquo;Agency,&rdquo; and is often something like &ldquo;Media Strategies LLC.&rdquo;<br />
-	<br />
-	<a name="signatory"></a><b>What is the advertiser signatory?</b><br />
-	<br />
-	The advertiser signatory is the actual person who is authorizing the ad on behalf of the advertiser. This name is usually found on buy requests, but not usually on the actual order form. We want to get these names, where possible, because this might be the only place that connects an individual to an organization.<br /><br />
-	<a name="unitprice"></a><b>What&rsquo;s the lowest unit price?</b><br />
-	<br />
-	Under FCC regulations, political candidates &mdash; but not independent organizations, like PACs &mdash; have to be offered the lowest advertised price for any spot it requests. Sometimes this is noted on the order.<br />
-	<br />
-	<a name="whenrun"></a><b>How do I tell when the spots are supposed to run?</b><br />
-	<br />
-	The forms usually have information about the entire order at the top, followed by a table of purchased spots, such as this:<br />
-	<img src="http://assets.sunlightfoundation.com/uploads/adspotsimage.png" style="padding:10px;"/>
-	<br />
-	Each purchased spot shows the time or time range it will air. In the above example, the spot is set to run during the 5 to 5:30 p.m. slot, when &ldquo;News at 5&rdquo; airs.<br />
-	<br />
-	We see the spot is 30 seconds long, that five have been ordered for each of two weeks (with one week off in between) for a total of 10, and that each spot costs $65 for a total of $650.<br />
-	<br />
-	Furthermore, we see what days the spots are set to run. They can run Monday through Friday the first week; not at all the second week; and Monday through Thursday the third week.<br />
-	<br />
-	<a name="show"></a><b>Why do you want to know the show during which the ad was set to run?</b><br />
-	<br />
-	This is useful for a number of reasons, but the most basic is that it allows for comparisons in whom advertisers are trying to reach. If candidate A is advertising during sporting events and candidate B is advertising during daytime soap operas, it provides some insights into the viewers those campaigns are trying to reach.<br />
-	<br />
-	<a name="who"></a><b>Why do you want to know who I am?</b><br />
-	<br />
-	Because this information is about politics, we are concerned some people may want to vandalize our database with junk data. By keeping track of who is entering what data, we can ensure that information is accurate. Don&rsquo;t worry, we aren&rsquo;t sharing personal information about you.
-	<br /><br />
-	<h3>Collecting Files - Overview</h3>
-	Never been to a broadcast station? Don&rsquo;t know where to start? Here is a video and some easy steps to get you sleuthing in no time.<br /><iframe width="560" height="315" src="http://www.youtube.com/embed/VKpa0jkewgs" frameborder="0" allowfullscreen style="padding:10px;"></iframe>
-	<br />
-	<!--
-	<b><a name="find"></a>How do I find my local television station?</b><br />
-	<br />
-	Finding your local TV station is easy, simply enter your ZIP Code on Political Ad Sleuth (link) and we&rsquo;ll locate the nearest station.<br />
-	<br />
-	-->
-	<b><a name="visit"></a>What should I expect and how do I prepare for a station visit?</b><br />
-	<br />
-	Before you go, you should call the station(s) to make an appointment. Appointments are not required, but most stations appreciate the advance notice. Also bring the following:<br />
-	
-	<br />- A digital camera or cellphone (or even better a portable scanner if you have one) to take pictures of files during your visit.<br />
-	<br />- Money for copies and collect receipts for any copying charges. Stations are allowed to charge a &ldquo;reasonable rate&rdquo; for copies, though often they will make copies for free. Please note that Sunlight and Free Press are unable to reimburse volunteers for copies. If the cost of copying seems unreasonable or prevents you from acquiring these files, please contact <a href="mailto:outreach@politicaladsleuth.com ">outreach@politicaladsleuth.com</a>. Taking pictures of documents with a digital camera or cellphone is also a good alternative.<br />
-	<br />- The <a href="http://www.freepress.net/files/publicfiles-checklist.pdf">Public File Inspection Checklist</a> to keep track of what materials you need to collect and also help note any materials that are not present in the file.<br />
-	<br />
-	<a name="ask"></a><b>When I get to the station, what do I ask for?</b><br />
-	<br />
-	Stations are required to show the public files to anyone who asks to see them. Show up at your appointed time during regular business hours and ask to see the station&rsquo;s political files for 2012. The political file contains information about what political ads were aired during this period, and who paid for them. You don&rsquo;t need to explain why you want to see the file. For more information on viewing stations&rsquo; public files, please consult the FCC guide, <a href="http://www.fcc.gov/guides/public-and-broadcasting-july-2008">The Public and Broadcasting: How to Get the Most Service from Your Local Station</a>.<br />
-	<br />
-	<a name="filelooklike"></a><b>What does a file look like?</b><br />
-	The station&rsquo;s political file contains a range of information regarding political advertising that has been purchased at the station &mdash; including the date(s) and time(s) that the advertising aired, the rate charged and the name of the candidate referenced. The file should also contain detailed information about who purchased the advertisement (i.e. a campaign, a PAC, a super PAC or a third-party organization).<br />
-	<br />
-	The political file itself is typically a filing cabinet with several different folders inside it &mdash; likely one for each campaign, PAC, super PAC or third-party group that purchased political advertising. It&rsquo;s very important to get copies of these files. The information PACs, super PACs and third-party groups are required to disclose can help us learn who is really paying for ads. Stations vary on how far back their records go, but generally speaking the most recent two to three months should be sufficient.<br />
-	<br />
-	For examples of what these files look like, visit our <a href="http://www.documentcloud.org/public/search/Collection:%20%22PoliticalAdSleuth%22">DocumentCloud collection</a><br />
-	</div>
+    <p>Read further for additional guidance on the different ways you can be a Political Ad Sleuth.</p>
+    <nav class='pagenav'>
+        <h3 id="entering">Entering Data From Uploaded Documents</h3>
+        <ul class='unstyled'>
+            <li><a href="#advertiser">Who is the advertiser?</a></li>
+            <li><a href="#total">Which number do I use for the Grand Total?</a></li>
+            <li><a href="#spots">How do I find the number of ad spots?</a></li>
+            <li><a href="#dates">Where&rsquo;s the ad flight start and end date?</a></li>
+            <li><a href="#broadcaster">Who is the broadcaster?</a></li>
+            <li><a href="#contract">How do I find the contract number?</a></li>
+            <li><a href="#buyer">Who is the media buyer?</a></li>
+            <li><a href="#signatory">What is the advertiser signatory?</a></li>
+            <li><a href="#unitprice">How do I find the unit price?</a></li>
+            <li><a href="#whenrun">How do I tell when the spots are supposed to run?</a></li>
+            <li><a href="#show">Why do you want to know the show during which the ad was set to run?</a></li>
+            <li><a href="#who">Why do you want to know who I am?</a></li>
+        </ul>
+
+        <h3 id="collecting">Collecting Files</h3>
+        <ul class='unstyled'>
+            {# <li><a href="#find">How do I find my local television station?</a></li> #}
+            <li><a href="#visit">What should I expect and how do I prepare for a station visit?</a></li>
+            <li><a href="#ask">When I get to the station, what do I ask for?</a></li>
+            <li><a href="#filelooklike">What does a file look like?</a></li>
+        </ul>
+    </nav>
+
+    <h3>Submitting Documents</h3>
+    <p>Note that not all political ad buy contracts look the same. Although they share many similarities, each station&rsquo;s file is unique. That said, here are some common issues you might come across:</p>
 
 
+    <h5 id="advertiser">Who is the advertiser?</h5>
+
+    <p>The advertiser is the person or group behind the advertisement. For example, this might be &ldquo;Obama for America,&rdquo; or &ldquo;Crossroads GPS.&rdquo;</p>
+
+    <h5 id="total">Which number do I use for the Grand Total?</h5>
+
+    <p>Typically, orders will show the total gross amount spent on the advertising buy. That&rsquo;s the number to enter in this field. You might also see a &ldquo;net&rdquo; price and/or a commission value. The commission is the percentage (usually 15%) the media buyer takes for placing the ad. The net amount is the amount the station receives from the advertiser after that commission is deducted. We want to know how much the advertiser spent, so we want the gross amount.</p>
+
+    <h5 id="spots">How do I find the number of ad spots?</h5>
+
+    <p>Most orders will show the total number of spots somewhere on the form, either at the bottom of the table showing specific air times, or somewhere near the gross amount.</p>
+
+    <h5 id="dates">Where&rsquo;s the ad air start and end date?</h5>
+
+    <p>You can usually find the dates when the ad will run at the top of the document. Sometimes it&rsquo;s called the &ldquo;flight dates.&rdquo;</p>
+
+    <h5 id="broadcaster">Who is the broadcaster?</h5>
+
+    <p>The broadcaster is the station selling the ad. Enter the station using its call sign, such as WUSA.</p>
+
+    <h5 id="contract">How do I find the contract number?</h5>
+
+    <p>The contract number is located at the top of most ad orders. It is usually six or seven digits long, and is placed next to &ldquo;Contract / Rev&rdquo; or &ldquo;Order / Rev&rdquo; If you don't find it, it's okay to skip it.</p>
+
+    <h5 id="buyer">Who is the media buyer?</h5>
+
+    <p>The media buyer is the "middle man" between the campaign or group and the TV station. This might be listed as the &ldquo;Agency,&rdquo; and is often something like &ldquo;Media Strategies LLC.&rdquo;</p>
+
+    <h5 id="signatory">What is the advertiser signatory?</h5>
+
+    <p>The advertiser signatory is the actual person who is authorizing the ad on behalf of the advertiser. This name is usually found on buy requests, but not usually on the actual order form. We want to get these names, where possible, because this might be the only place that connects an individual to an organization.</p>
+
+    <h5 id="unitprice">What&rsquo;s the lowest unit price?</h5>
+
+    <p>Under FCC regulations, political candidates &mdash; but not independent organizations, like PACs &mdash; have to be offered the lowest advertised price for any spot it requests. Sometimes this is noted on the order.</p>
+
+    <h5 id="whenrun">How do I tell when the spots are supposed to run?</h5>
+
+    <p>The forms usually have information about the entire order at the top, followed by a table of purchased spots, such as this:</p>
+    <img alt="Example of table of ad spots in political buy document" src="http://assets.sunlightfoundation.com/uploads/adspotsimage.png" style="padding:10px;"/>
+
+    <p>Each purchased spot shows the time or time range it will air. In the above example, the spot is set to run during the 5 to 5:30 p.m. slot, when &ldquo;News at 5&rdquo; airs.</p>
+
+    <p>We see the spot is 30 seconds long, that five have been ordered for each of two weeks (with one week off in between) for a total of 10, and that each spot costs $65 for a total of $650.</p>
+
+    <p>Furthermore, we see what days the spots are set to run. They can run Monday through Friday the first week; not at all the second week; and Monday through Thursday the third week.</p>
+
+    <h5 id="show">Why do you want to know the show during which the ad was set to run?</h5>
+
+    <p>This is useful for a number of reasons, but the most basic is that it allows for comparisons in whom advertisers are trying to reach. If candidate A is advertising during sporting events and candidate B is advertising during daytime soap operas, it provides some insights into the viewers those campaigns are trying to reach.</p>
+
+    <h5 id="who">Why do you want to know who I am?</h5>
+
+    <p>Because this information is about politics, we are concerned some people may want to vandalize our database with junk data. By keeping track of who is entering what data, we can ensure that information is accurate. Don&rsquo;t worry, we aren&rsquo;t sharing personal information about you.</p>
+
+    <h3>Collecting Files - Overview</h3>
+    <p>Never been to a broadcast station? Don&rsquo;t know where to start? Here is a video and some easy steps to get you sleuthing in no time.</p>
+    <iframe class="youtube-player" width="560" height="315" src="http://www.youtube.com/embed/VKpa0jkewgs"></iframe>
+
+    {% comment %}
+    <b><a name="find"></a>How do I find my local television station?</b>
+
+    Finding your local TV station is easy, simply enter your ZIP Code on Political Ad Sleuth (link) and we&rsquo;ll locate the nearest station.
+    {% endcomment %}
+
+    <h5 id="visit">What should I expect and how do I prepare for a station visit?</h5>
+
+    <p>Before you go, you should call the station(s) to make an appointment. Appointments are not required, but most stations appreciate the advance notice. Also bring the following:</p>
+    <ul>
+        <li>A digital camera or cellphone (or even better a portable scanner if you have one) to take pictures of files during your visit.</li>
+        <li>Money for copies and collect receipts for any copying charges. Stations are allowed to charge a &ldquo;reasonable rate&rdquo; for copies, though often they will make copies for free. Please note that Sunlight and Free Press are unable to reimburse volunteers for copies. If the cost of copying seems unreasonable or prevents you from acquiring these files, please contact <a href="mailto:outreach@politicaladsleuth.com ">outreach@politicaladsleuth.com</a>. Taking pictures of documents with a digital camera or cellphone is also a good alternative.</li>
+        <li>The <a href="http://www.freepress.net/files/publicfiles-checklist.pdf">Public File Inspection Checklist</a> to keep track of what materials you need to collect and also help note any materials that are not present in the file.</li>
+    </ul>
+
+    <h5 id="ask">When I get to the station, what do I ask for?</h5>
+
+    <p>Stations are required to show the public files to anyone who asks to see them. Show up at your appointed time during regular business hours and ask to see the station&rsquo;s political files for 2012. The political file contains information about what political ads were aired during this period, and who paid for them. You don&rsquo;t need to explain why you want to see the file. For more information on viewing stations&rsquo; public files, please consult the FCC guide, <a href="http://www.fcc.gov/guides/public-and-broadcasting-july-2008">The Public and Broadcasting: How to Get the Most Service from Your Local Station</a>.</p>
+
+    <h5 id="filelooklike">What does a file look like?</h5>
+    <p>The station&rsquo;s political file contains a range of information regarding political advertising that has been purchased at the station &mdash; including the date(s) and time(s) that the advertising aired, the rate charged and the name of the candidate referenced. The file should also contain detailed information about who purchased the advertisement (i.e. a campaign, a PAC, a super PAC or a third-party organization).</p>
+
+    <p>The political file itself is typically a filing cabinet with several different folders inside it &mdash; likely one for each campaign, PAC, super PAC or third-party group that purchased political advertising. It&rsquo;s very important to get copies of these files. The information PACs, super PACs and third-party groups are required to disclose can help us learn who is really paying for ads. Stations vary on how far back their records go, but generally speaking the most recent two to three months should be sufficient.</p>
+
+    <p>For examples of what these files look like, visit our <a href="http://www.documentcloud.org/public/search/Collection:%20%22PoliticalAdSleuth%22">DocumentCloud collection</a></p>
 {% endblock content %}
-
