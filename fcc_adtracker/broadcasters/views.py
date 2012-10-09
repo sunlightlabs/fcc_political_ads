@@ -5,6 +5,7 @@ from django.contrib.localflavor.us import us_states
 from django.conf import settings
 from django.views.decorators.cache import never_cache
 from django.db.models import Count
+from django.core.serializers.json import DjangoJSONEncoder
 
 from broadcasters.models import Broadcaster, BroadcasterAddress
 from broadcasters.json_views import _make_broadcasteraddress_dict
@@ -30,7 +31,6 @@ if STATES_GEOCENTERS_JSON_FILE:
 MAX_DOCUMENTS_TO_SHOW_IN_SIDEBAR = 5
 
 
-
 def state_broadcaster_list(request, state_id, template_name='broadcasters/broadcaster_table.html'):
     state_id = state_id.upper()
     state_name = STATES_DICT.get(state_id, None)
@@ -41,11 +41,10 @@ def state_broadcaster_list(request, state_id, template_name='broadcasters/broadc
         #broadcaster_list = Broadcaster.objects.filter(community_state=state_id).prefetch_related('broadcasteraddress_set')
         # instead grab the list and annotate it
         broadcaster_list = annotate_broadcaster_queryset(Broadcaster.objects.filter(community_state=state_id))
-        
+
         ad_buys = PoliticalBuy.objects.filter(broadcasters__community_state=state_id, is_public=True).order_by('created_at')[:MAX_DOCUMENTS_TO_SHOW_IN_SIDEBAR]
-        
-        
-        return render(request, template_name, {'broadcaster_list': broadcaster_list, 'state_name': state_name, 'state_geocenter': state_geocenter, 'ad_buys':ad_buys})
+
+        return render(request, template_name, {'broadcaster_list': broadcaster_list, 'state_name': state_name, 'state_geocenter': state_geocenter, 'ad_buys': ad_buys})
     else:
         raise Http404('State with abbrevation "{state_id}" not found.'.format(state_id=state_id))
 
@@ -56,18 +55,22 @@ def state_list(request, template_name='broadcasters/state_list.html'):
         state['state_name'] = STATES_DICT[state['community_state']]
     return render(request, template_name, {'states': states})
 
+
 # Don't cache this, because the view changes if you're logged in.
 @never_cache
 def broadcaster_detail(request, callsign, template_name='broadcasters/broadcaster_detail.html'):
     if not callsign.isupper():
-        return HttpResponsePermanentRedirect(reverse('broadcaster_politicalbuys_view', kwargs={'callsign':callsign.upper()}))
+        return HttpResponsePermanentRedirect(reverse('broadcaster_politicalbuys_view', kwargs={'callsign': callsign.upper()}))
 
     studio_address = None
     try:
         obj = BroadcasterAddress.objects.get(broadcaster__callsign=callsign.upper(), label__name__iexact='studio')
-        studio_address = obj 
+        studio_address = obj
         state_geocenter = states_geocenters.get(obj.broadcaster.community_state, None) if states_geocenters else None
-        obj_json = json.dumps(_make_broadcasteraddress_dict(obj))
+        try:
+            obj_json = json.dumps(_make_broadcasteraddress_dict(obj), cls=DjangoJSONEncoder)
+        except TypeError:
+            obj_json = None
     except BroadcasterAddress.DoesNotExist:
         try:
             broadcaster = Broadcaster.objects.get(callsign=callsign.upper())
@@ -81,8 +84,8 @@ def broadcaster_detail(request, callsign, template_name='broadcasters/broadcaste
 
     ad_buys = None
     try:
-        ad_buys = obj['broadcaster'].politicalbuy_set.all()    
-        # if they're not logged in, only show the spots that have been approved. 
+        ad_buys = obj['broadcaster'].politicalbuy_set.all()
+        # if they're not logged in, only show the spots that have been approved.
         if not request.user.is_authenticated():
             ad_buys = ad_buys.filter(is_public=True)
 
@@ -90,7 +93,7 @@ def broadcaster_detail(request, callsign, template_name='broadcasters/broadcaste
         # No ad buys
         pass
 
-    return render(request, template_name, {'obj': obj, 'obj_json': obj_json, 'state_geocenter': state_geocenter, 'ad_buys':ad_buys, 'studio_address':studio_address})
+    return render(request, template_name, {'obj': obj, 'obj_json': obj_json, 'state_geocenter': state_geocenter, 'ad_buys': ad_buys, 'studio_address': studio_address})
 
 
 def featured_broadcasters(request, template_name='broadcasters/broadcasters_featured.html'):
