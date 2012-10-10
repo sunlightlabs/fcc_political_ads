@@ -126,7 +126,7 @@
         data-services="twitter-tweet, facebook"
         data-options="linkBack={{request.build_absolute_uri|urlencode}}&amp;size=16&amp;showCounts=right"
         {# tweet_text needs to be urlencoded, which means that http://djangosnippets.org/snippets/363/ may be a fine idea. #}
-        data-twitter-tweet-options="defaultText={% block tweet_text %}Become a Political Ad Sleuth w/@sunfoundation @freepress & find out who’s buying airwaves this election! #freethefiles{% endblock tweet_text %}">
+        data-twitter-tweet-options="defaultText={% block tweet_text %}Become a Political Ad Sleuth w/@sunfoundation @freepress &amp; find out who’s buying airwaves this election! #freethefiles{% endblock tweet_text %}">
     </div>
 {% endblock gigya_html %}
 {{ block.super }}
