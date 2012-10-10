@@ -1,47 +1,10 @@
 {% extends "fcc-base.html" %}{% load static from staticfiles %} {% load fccpublicfiles_extras kwacros %}
 {% block pagetitle %}Political Buy {% if obj.advertiser %}for {{ obj.advertiser }}{% endif %} :: {{ obj.broadcasters.all|join:", " }}{% endblock pagetitle %}
 
-{% kwacro share_base_text %}I just learned {{obj.advertiser.name}} bought ads on {{ obj.broadcasters_callsign_list|join:", " }} on Political Ad Sleuth{% endkwacro %}
+{% kwacro share_base_text %}{% if obj.advertiser.name %}I just learned {{obj.advertiser.name}} bought ads{% else %}I just learned about this paid ad{% endif %} on {{ obj.broadcasters_callsign_list|join:", " }} via Political Ad Sleuth{% endkwacro %}
 
 {% block og_title %}{% usekwacro share_base_text %} from Sunlight Foundation & Free Press{% endblock og_title %}
-{% block tweet_text %}{% usekwacro share_base_text %} {{request.build_absolute_uri}} from @sunfoundation @freepress #freethefiles{% endblock tweet_text %}
-
-{% block head %}
-{{ block.super }}
-{% comment %}
-    Putting CSS here for testing/example purposes. Should go in fcc_main.css
-    * Using tablesorter plugin for jQuery: http://mottie.github.com/tablesorter/
-        provides sorting in table. th should have styles that make it appear clickable.
-        We can rename the classes that the js adds (tablesorter-headerSortDown, etc.) via js config.
-        "h:i A" or "g:i A" string format works for sorting on time
-
-        This table needs better layout...
-        Group by "show info" (name, timeslot start & end)
-        and airing info? I'd say multiple tbodies, but I don't think
-        tablesorter supports that in the way we want
-
-        tablesorter pager plugin allows us to add a 'pager'
-{% endcomment %}
-<style type="text/css">
-    table.sortable > thead th {
-        font-weight: bold;
-        color: #FF0000;
-        cursor: pointer;
-    }
-    table.sortable > thead th:hover {
-        font-weight: bold;
-        color: #00FF00;
-        cursor: pointer;
-    }
-    th.tablesorter-headerSortDown {
-
-    }
-    #buy-metadata > dt, #buy-metadata > dd {
-        float: left;
-        margin-right: 12px;
-    }
-</style>
-{% endblock head %}
+{% block tweet_text %}{% usekwacro share_base_text %} from @sunfoundation @freepress #freethefiles{% endblock tweet_text %}
 
 {% block content %}
     <div id="headerFloat" class="clearfix">

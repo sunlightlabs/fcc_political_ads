@@ -211,6 +211,8 @@ a.caldisabled {
 .table th { padding-bottom: 10px; }
 .table { margin: 30px 0; }
 
+table.sortable > thead th, table.sortable > thead th:hover { cursor: pointer; }
+
 .row .span8 { padding-right: 30px; width: 590px; }
 .row #searchResults.span8 { padding-right: 0px; width: 620px;}
 .row .span9 { padding-right: 30px; width: 670px; }
