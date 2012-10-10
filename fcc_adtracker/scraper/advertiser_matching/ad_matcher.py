@@ -13,7 +13,7 @@ regex_array = [
     'candidate_type':re.compile('.'), 
     'regexes': [re.compile('^AMERICAN CROSSROADS'), re.compile('^AM CROSSROADS'), re.compile('^AMER CROSSROADS'), re.compile('^AMRCN CROSSROADS')],
     },
-    {'advertiser_name':'Crossroads GPS',
+    {'advertiser_name':'CROSSROADS GPS',
     'candidate_type':re.compile('.'), 
     'regexes': [re.compile('^CROSSROADS GPS'), re.compile('^CROSSROADS GRASSROOTS')],
     },
