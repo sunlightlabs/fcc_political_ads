@@ -40,7 +40,7 @@ class Command(BaseCommand):
                 orphan.dc_title = dc_file.dc_title
                 orphan.in_document_cloud = True
                 orphan.save()
-            except dc_reference.DoesNotExist:
+            except (dc_reference.DoesNotExist, dc_reference.MultipleObjectsReturned):
                 orphan.in_document_cloud = False
                 orphan.save()
                 print "** No match for %s" % (our_title)
