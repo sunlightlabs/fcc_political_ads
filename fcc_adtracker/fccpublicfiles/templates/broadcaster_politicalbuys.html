@@ -6,7 +6,7 @@
 {% kwacro share_base_text %}See all the political ad buys for {{ obj.broadcaster.callsign }} on Political Ad Sleuth{% endkwacro %}
 
 {% block og_title %}{% usekwacro share_base_text %} from Sunlight Foundation & Free Press{% endblock og_title %}
-{% block tweet_text %}{% usekwacro share_base_text %} {{request.build_absolute_uri}} via @sunfoundation @freepress #freethefiles{% endblock tweet_text %}
+{% block tweet_text %}{% usekwacro share_base_text %} via @sunfoundation @freepress #freethefiles{% endblock tweet_text %}
 
 
 {% block content %}
