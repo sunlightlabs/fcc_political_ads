@@ -33,6 +33,7 @@
     });
 </script>
 <script src="{% static 'js/fcc_site.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="http://assets.sunlightfoundation.com.s3.amazonaws.com/site/4.0/scripts/gigya.min.js"></script>
 <script type="text/javascript" charset="utf-8">
     var feedback_widget_options = {};
     feedback_widget_options.display = "overlay";
@@ -74,7 +75,6 @@
       loadChartbeat : function() { oldonload(); loadChartbeat(); };
     })();
 </script>
-    <script type="text/javascript" src="http://assets.sunlightfoundation.com.s3.amazonaws.com/site/4.0/scripts/gigya.min.js"></script>
 {% endblock js %}
 
 {% block css %}
@@ -126,7 +126,7 @@
         data-services="twitter-tweet, facebook"
         data-options="linkBack={{request.build_absolute_uri|urlencode}}&amp;size=16&amp;showCounts=right"
         {# tweet_text needs to be urlencoded, which means that http://djangosnippets.org/snippets/363/ may be a fine idea. #}
-        data-twitter-tweet-options="defaultText={% block tweet_text %}Become a Political Ad Sleuth w/@sunfoundation @freepress &amp; find out who’s buying airwaves this election! #freethefiles{% endblock tweet_text %}">
+        data-twitter-tweet-options="defaultText={% block tweet_text %}Become a Political Ad Sleuth w/@sunfoundation @freepress %26 find out who’s buying airwaves this election! #freethefiles{% endblock tweet_text %}">
     </div>
 {% endblock gigya_html %}
 {{ block.super }}
