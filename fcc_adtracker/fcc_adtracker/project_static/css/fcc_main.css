@@ -284,3 +284,5 @@ table .Unapproved { background: url(../img/bg_unapproved.png) center 8px no-repe
 .tagNumber a { color: #fff; font-family: Georgia, "Times New Roman", Times, serif; }
 .tagPercent { text-indent: -9999em; display: block; float: left;}
 .marketName { width: 120px; display: inline-block;}
+
+.youtube-player { margin-bottom: 20px; border: none;}
