@@ -29,22 +29,30 @@ def all_ads_to_file():
     file_description="This file contains ads uploaded by volunteers and from the FCC's site available as of %s" % most_recent_scrape.strftime("%Y-%m-%d %H:%m")
     print file_description
     file_name =  "%s/all_ad_buys.csv" % (CSV_EXPORT_DIR)
-    fields = ['id', 'station', 'file_upload_date', 'tv_market', 'tv_market_id', 'ad_type', 'fcc_folder', 'file_name', 'source_file_url', 'advertiser_name', 'total_spent_raw', 'num_spots_raw', 'contract_number', 'source']
+    fields = ['id', 'station', 'file_upload_date', 'tv_market', 'tv_market_id', 'ad_type', 'fcc_folder', 'file_name', 'source_file_url', 'advertiser_name', 'is_invalid', 'is_invoice', 'total_spent_raw', 'num_spots_raw', 'contract_number', 'source']
     all_rows = PoliticalBuy.objects.all()
     file_rows = []
     for row in all_rows:
         
         raw_url = ""
         this_file_name = ""
-
+        
         if row.is_FCC_doc:
             related_doc = row.related_FCC_file
             raw_url = related_doc.raw_url
             this_file_name = related_doc.file_name()
         else:
             raw_url = row.documentcloud_doc.get_absolute_url()
+        is_invalid = ""
+        is_invoice = ""
         
-        file_rows.append([row.pk, row.broadcaster_callsign, row.upload_time.strftime("%Y-%m-%d"), row.nielsen_dma, row.dma_id, row.candidate_type, row.fcc_folder_name, this_file_name, raw_url, row.advertiser_display_name, row.total_spent_raw, row.num_spots_raw, row.contract_number, row.doc_source()])
+        if (row.is_invalid):
+            is_invalid = 'Y'
+
+        if (row.is_invoice):
+            is_invoice = 'Y'        
+        
+        file_rows.append([row.pk, row.broadcaster_callsign, row.upload_time.strftime("%Y-%m-%d"), row.nielsen_dma, row.dma_id, row.candidate_type, row.fcc_folder_name, this_file_name, raw_url, row.advertiser_display_name, is_invalid, is_invoice, row.total_spent_raw, row.num_spots_raw, row.contract_number, row.doc_source()])
     
     write_csv_to_file(file_description, file_name, fields, file_rows)
     
