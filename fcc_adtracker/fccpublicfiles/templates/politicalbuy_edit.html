@@ -34,9 +34,9 @@
                     <legend class="clearfix">Essential Data</legend>
                         <ul class="unstyled clearfix">
                         <li>
-                            <label><b>Don't enter data if:</label>
+                            <label><strong>Don't enter data if:</strong></label>
                             <label class="tip checkbox">{{form.is_invalid}} This isn't an ad buy. <a target='_blank' href="/help/#otherdocuments" title="What other documents are there?">Like what?</a></label>
-							<label class="tip checkbox">{{form.is_invoice}} This is an ad invoice. <a target='_blank' href="/help/#excludeinvoices" title="Explanation of why not to enter invoice data">Why?</a></label>
+                            <label class="tip checkbox">{{form.is_invoice}} This is an ad invoice. <a target='_blank' href="/help/#excludeinvoices" title="Explanation of why not to enter invoice data">Why?</a></label>
                         </li>
                         <li class="input-append">
                             <label>{{form.advertiser.label}}</label>
@@ -69,12 +69,12 @@
                                 both django and bootstrap.datepicker like that one
                         {% endcomment %}
                         <li class="input-append">
-                            <label>Contract start date</label>
+                            <label>Flight start date</label>
                             {{form.contract_start_date}}
                             {{form.contract_start_date.errors}}
                         </li>
                         <li class="input-append">
-                            <label>Contract end date</label>
+                            <label>Flight end date</label>
                             {{form.contract_end_date}}
                             {{form.contract_end_date.errors}}
                         </li>
