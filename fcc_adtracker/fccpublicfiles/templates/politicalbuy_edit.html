@@ -56,6 +56,12 @@
                             {{form.num_spots_raw.errors}}
                             <p class="tip"><a target='_blank' href="/help/#spots">How do I find the number of ad spots?</a></p>
                         </li>
+                        <li>
+                            <label>{{form.contract_number.label}}</label>
+                            {{form.contract_number}}
+                            {{form.contract_number.errors}}
+                        <p class="tip"><a target='_blank' href="/help/#contract">How do I find the contract number?</a></p>
+                        </li>
                         {% comment %}
                             The following date inputs use the .date class to
                                 apply a datepicker to a input and an span.add-on
@@ -83,23 +89,12 @@
                 </fieldset>
               <ul>
                     <li>
-                        <label>Please check this box to let us know you entered all of the summary information (the fields above) from the document:</label>
-                        <label class="tip checkbox">{{form.is_complete}} Summary information complete</label>
-                        {{form.is_complete.errors}}
-                    </li>
-                    <li>
                         <button class="btn" value="Submit">Submit</button>
                     </li>
                 </ul>
                 <fieldset>
                     <legend>Additional Data</legend>
                     <ul>
-                        <li>
-                            <label>{{form.contract_number.label}}</label>
-                            {{form.contract_number}}
-                            {{form.contract_number.errors}}
-                        <p class="tip"><a target='_blank' href="/help/#contract">How do I find the contract number?</a></p>
-                        </li>
 
                         <li class="input-append">
                             <label>Media Buyer</label>
