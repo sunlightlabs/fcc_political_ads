@@ -88,6 +88,7 @@
                         <li class="elementWithLine">
                             <label class="control-label" for="id_old_password">Current password</label>
                             {{ form.old_password }}
+                            <p class="help-block tip">If you registered via twitter or facebook, leave this blank when setting an initial password for your account.</p>
                             {% for error in form.old_password.errors %}
                             <span class="errorlist help-inline">{{error}}</span>
                             {% empty %}
