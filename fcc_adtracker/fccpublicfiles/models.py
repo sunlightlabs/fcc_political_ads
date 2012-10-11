@@ -181,6 +181,7 @@ class PoliticalBuy(MildModeratedModel):
     is_FCC_doc = models.NullBooleanField(default=False, help_text="Did this document come from the FCC? ")
     related_FCC_file = models.ForeignKey(PDF_File, blank=True, null=True)
     is_invalid = models.NullBooleanField(default=False, help_text="Is this document unprocessable, a duplicate, or devoid of any relevant information? ", null=True)
+    is_invoice = models.NullBooleanField(default=False, help_text="Is this document an invoice?", null=True)
     data_entry_notes = models.TextField(blank=True, null=True, help_text="Explain any complications in entering summary data")
     """ Fields migrated from PDF_File, but now here as well. """
     candidate_type = models.CharField(max_length=31, blank=True, null=True, help_text="candidate type in pdf_file")
@@ -198,10 +199,9 @@ class PoliticalBuy(MildModeratedModel):
     a superuser will need to come along afterward to the moderated object
     and approve the "completeness".
     """
+    
     is_complete = models.BooleanField(default=False, verbose_name="Data Entry Is Complete", )
-
     uuid_key = UUIDField(version=4, default=lambda: uuid4(), unique=True, editable=False)
-
     broadcasters = models.ManyToManyField(Broadcaster, null=True)
 
     def broadcasters_callsign_list(self):

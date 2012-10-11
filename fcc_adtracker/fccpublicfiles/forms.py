@@ -126,12 +126,14 @@ class PoliticalBuyFormFull(forms.ModelForm):
             'bought_by',
             'lowest_unit_price',
             'is_complete',
+            'is_invoice',
             'broadcasters',
             'data_entry_notes',
         )
     total_spent_raw = forms.DecimalField(required=False)
     num_spots_raw = forms.IntegerField(required=False)
     is_invalid = forms.BooleanField(required=False)
+    is_invoice = forms.BooleanField(required=False)
     data_entry_notes = forms.CharField(widget=forms.Textarea(attrs={'cols': 5}), required=False)
     contract_start_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-mini'}), required=False)
     contract_end_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-mini'}), required=False)

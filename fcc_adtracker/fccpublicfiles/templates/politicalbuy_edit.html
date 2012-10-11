@@ -34,14 +34,15 @@
                     <legend class="clearfix">Essential Data</legend>
                         <ul class="unstyled clearfix">
                         <li>
-                            <label>Is there a problem with this file?</label>
-                            <label class="tip checkbox">{{form.is_invalid}} Many uploaded files are not ad buys; if there's a problem with this file, please check this box. You can describe the issue in the data entry notes field below.</label>
+                            <label><b>Don't enter data if:</label>
+                            <label class="tip checkbox">{{form.is_invalid}} This isn't an ad buy. <a target='_blank' href="/help/#otherdocuments" title="What other documents are there?">Like what?</a></label>
+							<label class="tip checkbox">{{form.is_invoice}} This is an ad invoice. <a target='_blank' href="/help/#excludeinvoices" title="Explanation of why not to enter invoice data">Why?</a></label>
                         </li>
                         <li class="input-append">
                             <label>{{form.advertiser.label}}</label>
                             {{form.advertiser}}
                             {{form.advertiser.errors}}
-                            <p class="tip"><a target='_blank' href="/help/#advertiser">How do I find the advertiser?</a></p>
+                            <p class="tip"><a target='_blank' href="/help/#advertiser" title="Help finding the advertiser">How do I find the advertiser?</a></p>
                         </li>
                         <li class="input-prepend">
                             <label>Grand Total: Gross amount spent</label>
