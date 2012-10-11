@@ -320,7 +320,14 @@ def station_dma_list(request, dma_id):
 @cache_page(CACHE_TIME)
 def filing_dma_list(request, dma_id):
     dma_name = None
-
+    dma_summary_found = False
+    this_dma_summary = None
+    try:
+        this_dma_summary = dma_summary.objects.filter(dma_id=dma_id)
+        dma_summary_found = True
+    except dma_summary.DoesNotExist:
+        pass
+    
     filings = PoliticalBuy.objects.filter(dma_id=dma_id).order_by('-upload_time')
     count = filings.aggregate(numfilings=Count('pk'))['numfilings']
     if filings:
@@ -331,6 +338,8 @@ def filing_dma_list(request, dma_id):
         'preposition': 'in',
         'count': count,
         'sfapp_base_template': 'sfapp/base-full.html',
+        'has_summary_data':dma_summary_found,
+        'dma_summary':this_dma_summary
     })
 
 

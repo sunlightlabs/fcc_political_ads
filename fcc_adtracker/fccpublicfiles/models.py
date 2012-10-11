@@ -181,7 +181,7 @@ class PoliticalBuy(MildModeratedModel):
     is_FCC_doc = models.NullBooleanField(default=False, help_text="Did this document come from the FCC? ")
     related_FCC_file = models.ForeignKey(PDF_File, blank=True, null=True)
     is_invalid = models.NullBooleanField(default=False, help_text="Is this document unprocessable, a duplicate, or devoid of any relevant information? ", null=True)
-    is_invoice = models.NullBooleanField(default=False, help_text="Is this document an invoice?", null=True)
+    is_invoice = models.NullBooleanField(default=False, help_text="Is this document an invoice?xf", null=True)
     data_entry_notes = models.TextField(blank=True, null=True, help_text="Explain any complications in entering summary data")
     """ Fields migrated from PDF_File, but now here as well. """
     candidate_type = models.CharField(max_length=31, blank=True, null=True, help_text="candidate type in pdf_file")
@@ -300,8 +300,11 @@ class PoliticalBuy(MildModeratedModel):
         return values['total_num_spots']
 
     def doc_status(self):
-        if self.is_complete:
+        if self.is_invoice or self.is_invalid:
             return 'Summarized'
+        elif self.total_spent_raw:
+            if self.total_spent_raw > 0:
+                return 'Summarized'
         elif self.is_FCC_doc and not self.related_FCC_file.in_document_cloud:
             return 'Not loaded'
         else:

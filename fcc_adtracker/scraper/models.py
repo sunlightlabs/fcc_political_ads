@@ -101,6 +101,7 @@ class dc_reference(models.Model):
     # from DC
     dc_slug = models.CharField(max_length=255, blank=True, null=True, help_text="Document cloud slug")
     dc_title = models.CharField(max_length=255, blank=True, null=True, help_text="Document cloud title")
+    #source_url = models.CharField(max_length=255, blank=True, null=True, help_text="Original source url, when available")
     source = models.ForeignKey('doc_source', null=True)
 
     def __unicode__(self):
@@ -155,9 +156,7 @@ class PDF_File(models.Model):
         rawpath = get_file_path(self.raw_url)
         return ":".join(rawpath[1:-1])
     def file_name(self):
-        
         rawpath = get_file_path(self.raw_url)
-        print rawpath
         return (rawpath[-1:][0])
         
     def search_text(self):

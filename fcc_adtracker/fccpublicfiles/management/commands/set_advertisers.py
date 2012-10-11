@@ -29,7 +29,7 @@ class Command(BaseCommand):
     
     def handle(self, *args, **options):
         count = 0
-        buys = PoliticalBuy.objects.all().select_related('related_FCC_file')
+        buys = PoliticalBuy.objects.filter(advertiser__isnull=True).select_related('related_FCC_file')
         
         am = ad_matcher()
 #        assert False
