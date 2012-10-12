@@ -59,6 +59,10 @@ class MildModeratedModel(models.Model):
             #    self.is_public = False
 
         return super(MildModeratedModel, self).save(*args, **kwargs)
+        
+    def save_no_update(self):
+        this_user = self.updated_by
+        self.save(this_user)
 
 
 
