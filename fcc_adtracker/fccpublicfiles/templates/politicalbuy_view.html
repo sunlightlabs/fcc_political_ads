@@ -33,6 +33,8 @@
                 <dt>Stations:</dt>
                 <dd>{% for broadcaster in obj.broadcasters.all %}
                 <a href="{% url broadcaster_politicalbuys_view callsign=broadcaster.callsign %}">{{ broadcaster.callsign }}, Channel {{ broadcaster.channel }}</a>{% endfor %}</dd>
+				<dt class="clear">Market:</dt>
+				<dd>{{obj.nielsen_dma }}</dd>
                 <dt class="clear">Contract:</dt>
                 <dd>{{obj.contract_start_date}} - {{ obj.contract_end_date }}</dd>
                 <dt class="clear">Total Spent:</dt>
