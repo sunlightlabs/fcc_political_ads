@@ -17,6 +17,9 @@ from weekday_field import fields as wf_fields
 from uuid import uuid4
 from django.contrib.localflavor.us import us_states
 
+
+from fccpublicfiles.managers import PoliticalDocStatusManager
+
 STATES_DICT = dict(us_states.US_STATES)
 
 import copy
@@ -199,7 +202,7 @@ class PoliticalBuy(MildModeratedModel):
     a superuser will need to come along afterward to the moderated object
     and approve the "completeness".
     """
-    
+
     is_complete = models.BooleanField(default=False, verbose_name="Data Entry Is Complete", )
     uuid_key = UUIDField(version=4, default=lambda: uuid4(), unique=True, editable=False)
     broadcasters = models.ManyToManyField(Broadcaster, null=True)
@@ -298,6 +301,8 @@ class PoliticalBuy(MildModeratedModel):
         """ Returns the sum of the num_spots values for all related political spot objects. """
         values = self.politicalspot_set.all().aggregate(total_num_spots=Sum('num_spots'))
         return values['total_num_spots']
+
+    status_objects = PoliticalDocStatusManager()
 
     def doc_status(self):
         if self.is_invoice or self.is_invalid:

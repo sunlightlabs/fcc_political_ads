@@ -22,6 +22,7 @@ from name_cleaver import IndividualNameCleaver
 
 
 DOCUMENTCLOUD_DEFAULT_ACCESS_LEVEL = getattr(settings, 'DOCUMENTCLOUD_DEFAULT_ACCESS_LEVEL', 'private')
+NEEDS_ENTRY_DMAS = getattr(settings, 'NEEDS_ENTRY_DMAS', None)
 
 STATES_DICT = dict(us_states.US_STATES)
 CACHE_TIME = 15 * 60
@@ -327,7 +328,7 @@ def filing_dma_list(request, dma_id):
         dma_summary_found = True
     except dma_summary.DoesNotExist:
         pass
-    
+
     filings = PoliticalBuy.objects.filter(dma_id=dma_id).order_by('-upload_time')
     count = filings.aggregate(numfilings=Count('pk'))['numfilings']
     if filings:
@@ -403,4 +404,6 @@ def fcc_most_recent(request):
     })
 
 
-
+def needs_entry(self):
+    obj = PoliticalBuy.status_objects.get_one_that_needs_entry(dma_id_filter=NEEDS_ENTRY_DMAS)
+    return redirect('politicalbuy_edit', uuid_key=obj.uuid_key)

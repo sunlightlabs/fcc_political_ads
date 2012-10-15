@@ -8,6 +8,7 @@ img { max-width: none; }
 .social-icons { float: right; clear: both; position: relative; margin-top: -30px; margin-bottom: 20px; }
 nav { margin-top: -20px;}
 nav.subnav { margin-top: 0px; margin-bottom: 10px; }
+.listNav li { margin-left: 16px; padding-left: 16px; }
 
 #map_canvas { height: 100% }
 #map_form { margin-bottom: 0; }
