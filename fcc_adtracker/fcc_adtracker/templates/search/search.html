@@ -39,7 +39,7 @@
                         <h5>{{key|replace:'_, '|title}}</h5>
                         <ul class='unstyled'>
                 {% for item in value %}
-                            <li><a href="{% url haystack_search %}?q={{query}}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}{% if item.0 not in selected_facets.values %}&amp;selected_facets={{key}}_exact:{{ item.0|urlencode }}{% endif %}">{{ item.0 }}</a> <span class="resultCount">({{ item.1 }})</span></li>{% endfor %}
+                            <li><a href="{% url haystack_search %}?q={{query}}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}{% if item.0 not in selected_facets.values %}&amp;selected_facets={{key}}_exact:{{ item.0|urlencode }}{% endif %}{% for df in date_filters %}&amp;{{df.0}}={{ df.1 }}{% endfor %}">{{ item.0 }}</a> <span class="resultCount">({{ item.1 }})</span></li>{% endfor %}
                         </ul>
                     </li>
                 </li>
@@ -54,7 +54,7 @@
                 <ul class="unstyled">
                     {% for key, value in selected_facets.items %}
                     <li>
-                        <a class="closeBtn textReplace" href="{% url haystack_search %}?q={{query}}{% for k, v in selected_facets.items %}{% if k != key %}&amp;selected_facets={{k}}:{{ v|urlencode }}{% endif %}{% endfor %}">Remove</a>
+                        <a class="closeBtn textReplace" href="{% url haystack_search %}?q={{query}}{% for df in date_filters %}&amp;{{df.0}}={{ df.1 }}{% endfor %}{% for k, v in selected_facets.items %}{% if k != key %}&amp;selected_facets={{k}}:{{ v|urlencode }}{% endif %}{% endfor %}">Remove</a>
                         <strong>{% ifequal key 's' %}State{% else %}{{key|replace:'_, '|title}}{% endifequal %}</strong>: {{value}} </li>
                     {% endfor %}
                 </ul>
@@ -95,7 +95,7 @@
 
         {% if page.has_previous or page.has_next %}
             <div>
-                {% if page.has_previous %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+                {% if page.has_previous %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}{% for df in date_filters %}&amp;{{df.0}}={{ df.1 }}{% endfor %}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
                 |
                 {% if page.has_next %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}{% for df in date_filters %}&amp;{{df.0}}={{ df.1 }}{% endfor %}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
             </div>
