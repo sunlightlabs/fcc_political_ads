@@ -28,7 +28,8 @@ def make_ad_buy_from_pdf_file(pdf_file):
         pol_buy.dma_id = pdf_file.dma_id
         pol_buy.community_state =pdf_file.community_state
         pol_buy.upload_time = pdf_file.upload_time
-        
+        pol_buy.contract_start_date = pdf_file.upload_time
+        pol_buy.contract_end_date = pdf_file.upload_time
         pol_buy.advertiser_display_name = pdf_file.raw_name_guess + "-" + pdf_file.file_name()
         pol_buy.broadcaster_callsign = pdf_file.folder.broadcaster.callsign
         
