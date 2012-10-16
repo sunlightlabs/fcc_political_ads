@@ -23,6 +23,8 @@ def read_url(url):
     # deal with comma issue
     final_url = final_url.replace("%2C", ",")
     final_url = final_url.replace("%2c", ",")
+    final_url = final_url.replace("%27", "'")
+    
     print("trying to read url: %s" % (final_url))
     page = opener.open(final_url).read()
     return page
