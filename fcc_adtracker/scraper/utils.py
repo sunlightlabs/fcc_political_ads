@@ -19,6 +19,10 @@ def read_url(url):
     opener.addheaders = [('User-agent', SCRAPER_USER_AGENT_STRING)]
     parsed_url = urlparse(url)
     final_url = "%s://%s%s" % (parsed_url.scheme, parsed_url.netloc, urllib2.quote(parsed_url.path))
+    
+    # deal with comma issue
+    final_url = final_url.replace("%2C", ",")
+    final_url = final_url.replace("%2c", ",")
     print("trying to read url: %s" % (final_url))
     page = opener.open(final_url).read()
     return page
@@ -27,6 +31,7 @@ def read_url(url):
 folder_url_re = re.compile(r'https://stations.fcc.gov/station-profile/(.*?)/political-files/browse->(.*)')
 file_url_re = re.compile(r'https://stations.fcc.gov/collect/files/(\d+)/Political File/(.+)')
 
+#https://stations.fcc.gov/station-profile/wpvi-tv/political-files/browse->2012->state->delaware->markell_for_delaware
 def clean_path(url):
     url = url.replace('&gt;', '>')
     url = url.replace('%3e', '>')
