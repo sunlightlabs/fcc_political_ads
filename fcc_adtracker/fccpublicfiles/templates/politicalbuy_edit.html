@@ -138,14 +138,14 @@
             {% include "doccloud/_documentcloud_embed.html" with document=obj.documentcloud_doc width=940 height=768 %}
         {% endif %}
 
-    <!--
+    {% comment %}
         {% if obj and obj.documentcloud_doc.access_level != 'private' %}
         <p>The document should appear below. Not visible? DocumentCloud may be processing the file, but you should at least see a page <a href='{{ obj.documentcloud_doc.get_absolute_url }}'>on DocumentCloud</a>. {% if obj.is_FCC_doc %}This file is also <a href="{{ obj.related_FCC_file.raw_url }}">available as a PDF</a> from the FCC.{% endif %}</p>
         {% include "doccloud/_documentcloud_embed.html" with document=obj.documentcloud_doc width=620 height=760 %}
         {% else %}
         <p>Document is private or unavailable on DocumentCloud. Let us know if this is an error.</p>
         {% endif %}
-    -->
+    {% endcomment %}
 
         </div>
     </div>

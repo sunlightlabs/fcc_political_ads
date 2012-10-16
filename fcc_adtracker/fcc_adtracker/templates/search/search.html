@@ -6,10 +6,10 @@
 {% block content %}
 <div class="row">
     <div class="span12">
-	{% if query %}
-		<h2 id="resultsTitle">Search Results for: <span>&#8220;{{query}}&#8221;</span></h2>
-	{% else %}
-		<h2 id="resultsTitle">Advanced Search</h2>
+    {% if query %}
+        <h2 id="resultsTitle">Search Results for: <span>&#8220;{{query}}&#8221;</span></h2>
+    {% else %}
+        <h2 id="resultsTitle">Advanced Search</h2>
          <form method="get" action="." class='form'>
              <ul>
                  {% for field in form %}
@@ -24,7 +24,7 @@
                  </li>
              </ul>
          </form>
-	{% endif %}
+    {% endif %}
     </div>
 </div>
 {% if query %}
@@ -67,20 +67,22 @@
                     <tr><th>File</th>
                         <th>Advertiser</th>
                         <th>Station</th>
-                        <th>Date</th>
+                        <th>Contract/Flight Start</th>
+                        <th>Contract/Flight End</th>
                         <th>City, State</th>
-						<th>Status</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for result in page.object_list %}
                     <tr>
-	<td>{% if result.object.related_FCC_file %}<a href="{{ result.object.get_absolute_url }}">{{ result.object.related_FCC_file }}</a>{% endif %}</td>
+    <td>{% if result.object.related_FCC_file %}<a href="{{ result.object.get_absolute_url }}">{{ result.object.related_FCC_file }}</a>{% endif %}</td>
                         <td><a href="{{ result.object.get_absolute_url }}">{{ result.object.advertiser_display }}</a></td>
                         <td>{{ result.object.station_display }}</td>
-                        <td>{{ result.object.date_display }}</td>
+                        <td>{{ result.object.contract_start_date|date:'m/d/Y' }}</td>
+                        <td>{{ result.object.contract_end_date|date:'m/d/Y' }}</td>
                         <td>{{ result.object.citystate_display}}</td>
-						<td>{{ result.object.doc_status }}</td>
+                        <td>{{ result.object.doc_status }}</td>
                     </tr>
                     {% empty %}
                     <tr>
@@ -95,7 +97,7 @@
             <div>
                 {% if page.has_previous %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
                 |
-                {% if page.has_next %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+                {% if page.has_next %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}{% for df in date_filters %}&amp;{{df.0}}={{ df.1 }}{% endfor %}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
             </div>
         {% endif %}
 

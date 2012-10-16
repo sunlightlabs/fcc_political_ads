@@ -70,6 +70,9 @@ SCRAPER_LOCAL_DOC_DIR = ''
 
 CSV_EXPORT_DIR = ''
 
+# Set a tuple of DMA ids that we want a 'needs entry' to select ads from.
+NEEDS_ENTRY_DMAS = (510, 535, 548, 528, 556)
+
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
