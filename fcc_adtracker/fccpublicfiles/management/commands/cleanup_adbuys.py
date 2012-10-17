@@ -33,7 +33,7 @@ class Command(BaseCommand):
         unset_adv_buys = PoliticalBuy.objects.filter(advertiser__isnull=False, advertiser_display_name__isnull=True)
         for ad_buy in unset_adv_buys:
             
-            ad_buy.advertiser_display_name = adv.advertiser.name
+            ad_buy.advertiser_display_name = ad_buy.advertiser.name
             updated_by = ad_buy.updated_by
             # Don't call document cloud
             ad_buy.ignore_post_save=True
