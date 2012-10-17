@@ -109,6 +109,7 @@ def parse_pdf_div(div_html):
     (fileid, fileclass, title, href) = (None, None, None, None)
     if pdf:
         [fileid, fileclass, title, href] = pdf[0]
+        print "Found file match in %s " % (div_html)
     else:
         print "No match in file re %s" % (div_html)
     return (fileid, fileclass, title, href)
@@ -176,13 +177,18 @@ class folder_placeholder(object):
                     numfiles = int(sizefound)
                 except ValueError: 
                     pass 
-                #print "\nFound: %s %s %s" % (typefound, sizefound, datefound)
+                print "\t Typefound:: %s %s %s" % (typefound, sizefound, datefound)
 
 
                 firstdiv = folderli.find("div")
                 #print "firstdiv is: %s" % (str(firstdiv))
                 if typefound == 'Folder':
                     (folder_class, folder_link) = parse_folder_div(str(firstdiv))
+                    
+                    folder_link = folder_link.replace("&gt;", "%3e")
+                    folder_link = folder_link.replace("%2C", ",")
+                    
+                    print "\n\n\t\tFolder Path: %s \n from div %s" % (folder_link, str(firstdiv))
                     #print "\tFolder: '%s' link: '%s'" % (folder_class, folder_link)
                     folderstub = {
                         'size':numfiles,
@@ -194,7 +200,7 @@ class folder_placeholder(object):
                     self.childfolders.append(folderstub)
                     # parse the folder link
                     
-                    #print "\t\tFolder Path: callsign: %s path: %s" % (callSign, path)
+      
                     #summary_filehandle.write("%s,%s,%s\n" % (numfiles, callSign, str(path) ) )
 
                 elif typefound == 'PDF':
@@ -211,7 +217,9 @@ class folder_placeholder(object):
                     self.childfiles.append(filestub)
 
                 else:
-                    assert False
+                    # They allow .xls and .txt files as well, among others
+                    print "\nunknown type found: %s" % (typefound)
+                    continue
 
     
     def save_files(self):
