@@ -41,6 +41,7 @@ class Command(BaseCommand):
             url_array = []
             for arg in args:
                 url_to_process = args[0]
+                url_to_process = url_to_process.replace("%3E", ">")
                 (callSign, pathArray) = parse_folder_url(url_to_process)
                 if not callSign:
                     raise CommandError("Couldn't find callsign in folder URL: %s" % (url_to_process))
