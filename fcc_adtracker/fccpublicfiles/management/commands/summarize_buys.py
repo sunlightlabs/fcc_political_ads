@@ -69,7 +69,6 @@ def summarize_ads(this_obj_summary, all_ads):
     this_obj_summary.outside_buys = outside_buys
     this_obj_summary.sen_buys = sen_buys
     this_obj_summary.house_buys = house_buys
-    this_obj_summary.house_buys = state_buys
     this_obj_summary.local_buys = local_buys
     this_obj_summary.state_buys = state_buys
     this_obj_summary.recent_pres_buys = recent_pres_buys
