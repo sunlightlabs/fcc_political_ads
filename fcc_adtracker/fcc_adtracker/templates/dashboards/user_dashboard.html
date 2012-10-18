@@ -1,4 +1,4 @@
-{% extends "fcc-base.html" %}
+{% extends "fcc-base.html" %}{% load static from staticfiles %}
 {% block pagetitle %}Your Dashboard{% endblock pagetitle %}
 
 {% block content %}
@@ -15,39 +15,80 @@
 
     <div class="row">
         <div class="span9">
-            <div id="state_broadcasters" class="module">
-                {% if not profile or not profile.state %}
+            <h3>Ways you can help</h3>
+            <nav class="subnav withTip">
+                <ul class="nav nav-pills">
+                    <li>
+                        <a href="#gatherfiles">Gather files</a>
+                    </li>
+                    <li>
+                        <a href="#enterdata">Enter Data</a>
+                    </li>
+                </ul>
+            </nav>
+            <div id="gatherfiles" class="module">
+                <h4>Gather Files</h4>
+                <ul>
+                    <li><strong>Already know what to <a href="/help/#filelooklike">look for</a></strong>? Go to <a href="#state_broadcasters">one of these stations</a> near you.</li>
+                    <li><strong>Don’t know what to look for or want help getting started?</strong> <a href="#get_trained">Get assistance from Free Press</a>.</li>
+                </ul>
+                <div id="state_broadcasters">
+                    <h5>Stations near you</h5>
+                    {% if not profile or not profile.state %}
                     <p>Please <a href="{% url edit_profile %}">fill out your profile</a>, including your city, state and ZIP so we can show your local stations and those in your state.</p>
-                {% else %}
-                    <h3>What's Happening Around You</h3>
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Broadcaster</th>
-                                    <th>Number of Political Ad Buys</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for broadcaster in broadcaster_list %}
-                                <tr>
-                                    <td>{{ broadcaster }}</td>
-                                    <td><a href="{{ broadcaster.get_absolute_url }}">{{ broadcaster.politicalbuy_set.count}} files</a></td>
-                                    {% empty %}
-                                        <td>No broadcasters found for this state.</td>
-                                    {% endfor %}
-                                </tr>
-                                {% endif %}
-                            </tbody>
-                        </table>
-                    {% comment %}  Map on this page?
-                        <section id="map">
-                            {% include "broadcasters/_map_searchform.html" %}
-                        </section>
-                    {% endcomment %}
-
+                    {% else %}
+                    <table class="table table-striped sortable">
+                        <thead>
+                            <tr>
+                                <th>Broadcaster</th>
+                                <th>City</th>
+                                <th>Number of Political Ad Files</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for broadcaster in broadcaster_list %}
+                            <tr>
+                                <td><a href="{{ broadcaster.get_absolute_url }}">{{ broadcaster.callsign }} {% if broadcaster.network_affiliate %} ({{ broadcaster.network_affiliate }}){% endif %}</a></td>
+                                <td>{{ broadcaster.community_city }}</td>
+                                <td>{{ broadcaster.politicalbuy_set.count}} files collected</td>
+                                {% empty %}
+                                    <td>No broadcasters found for this state.</td>
+                                {% endfor %}
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                    {% if broadcaster.count > 10 %}
+                    <div id="pager" class="pager clear">
+                        <span class="pagedisplay tip withTip"></span>
+                        <ul class="unstyled form-inline form-vertical pagerDetails clearfix">
+                            <li>
+                                <label>Results per page</label>
+                                <select class="pagesize">
+                                    <option value="10">10</option>
+                                    <option selected="selected" value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </li>
+                            <li id="btnFirst"><a href="#" class="first textReplace">First</a></li>
+                            <li id="btnPrev"><a href="#" class="prev textReplace">Prev</a></li>
+                            <li id="btnNext"><a href="#" class="next textReplace">Next</a></li>
+                            <li id="btnLast"><a href="#" class="last textReplace">Last</a></li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class='clearfix'>
+                    <h5 id="get_trained">Don’t know what to look for or want help getting started?<br /> Get assistance from Free Press.</h5>
+                    {% include "_free_press_form.html" %}
+                </div>
             </div>
-            <div id="user_contributions" class="module">
-                <h3>Your uploads</h3>
+            <div id="enterdata" class="module">
+                <h4>Enter Data</h4>
+                <h5>Enter data from a random ad</h5>
+                <p><a class='btn' href="{% url needs_entry %}">Enter an Ad</a></p>
+                <h5>Enter data from your uploads</h5>
                 {% if politicalbuy_list %}
                 <table class="table table-striped">
                     <thead>
@@ -78,10 +119,6 @@
                 {% else %}
                 <p>We do not currently have any submissions associated with your account. Submit a political file document (at right) to get started!</p>
                 {% endif %}
-            </div>
-            <div class='clearfix'>
-                <h4>I would like to receive email alerts from Free Press</h4>
-                {% include "_free_press_form.html" %}
             </div>
         </div>
         <div class="span3">
@@ -127,9 +164,27 @@
 
 {% block js %}
     {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.widgets.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.pager.min.js' %}"></script>
     <script type="text/javascript">
-        jQuery(document).ready(function($) {
-
-        });
+    jQuery(document).ready(function($) {
+        var table_el = $('table.sortable');
+        var pagerOptions = {
+            container: $(".pager"),
+            page: 0,
+            size: 10
+        };
+        var rowCount = table_el.children('tbody > tr').length;
+        // if (rowCount > pagerOptions.size) {
+            table_el.tablesorter({
+                 cssChildRow: "row-child"
+            }).tablesorterPager(pagerOptions);
+        // }
+        // else
+        // {
+        //     $('.pager').hide();
+        // }
+    });
     </script>
 {% endblock js %}

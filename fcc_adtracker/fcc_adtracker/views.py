@@ -1,19 +1,14 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.localflavor.us import us_states
-from django.contrib.contenttypes.models import ContentType
-from django.db.models import Q
+
 from django.conf import settings
 
 from broadcasters.models import Broadcaster
 from volunteers.forms import NonUserProfileForm
 from volunteers.models import Profile
-from fccpublicfiles.models import PoliticalBuy, PoliticalSpot, Organization
+from fccpublicfiles.models import PoliticalBuy, Organization
 from fccpublicfiles.forms import PrelimDocumentForm
-
-from reversion.models import Revision, Version
 
 FEATURED_ADVERTISER_IDS = getattr(settings, 'FEATURED_ADVERTISER_IDS', ())
 
@@ -36,21 +31,10 @@ def user_dashboard(request):
     """
     try:
         profile = request.user.get_profile()
-        broadcaster_list = Broadcaster.objects.filter(community_state=profile.state)
+        broadcaster_list = Broadcaster.objects.filter(community_state=profile.state, is_mandated=False)
     except Profile.DoesNotExist:
         profile = broadcaster_list = None
-    """
-    user_revisions = Revision.objects.filter(user=request.user)
-    user_versions = Version.objects.filter(revision_id__in=user_revisions)
-    pbuy_type = ContentType.objects.get_for_model(PoliticalBuy)
-    pspot_type = ContentType.objects.get_for_model(PoliticalSpot)
-    politicalspot_version_list = user_versions.filter(content_type=pspot_type) \
-                            .distinct('object_id')
-    politicalspot_ids = [vers.object_id for vers in politicalspot_version_list]
-    politicalbuy_version_list = user_versions.filter(content_type=pbuy_type) \
-                            .distinct('object_id')
-    politicalbuy_ids = [vers.object_id for vers in politicalbuy_version_list]
-    """
+
     politicalbuy_list = PoliticalBuy.objects.filter(created_by=request.user).order_by('-created_at')
 
     form = PrelimDocumentForm()
@@ -63,5 +47,3 @@ def user_dashboard(request):
         'sfapp_base_template': 'sfapp/base-full.html'
     }
     return render(request, 'dashboards/user_dashboard.html', resp_obj)
-
-
