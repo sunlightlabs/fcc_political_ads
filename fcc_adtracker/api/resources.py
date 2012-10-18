@@ -15,6 +15,8 @@ from tastypie.paginator import Paginator
 from fccpublicfiles.models import PoliticalBuy
 from haystack.query import SearchQuerySet
 
+from dateutil import parser
+
 uuid_re_str = r'(?P<uuid_key>[a-f0-9-]{32,36})'
 
 API_NAME = 'v1'
@@ -39,14 +41,25 @@ class PoliticalFileResource(ModelResource):
                   'contract_start_date', 'contract_end_date', \
                   'nielsen_dma', 'community_state', \
                   'candidate_type', 'upload_time', 'updated_at')
+        ordering = ('updated_at', 'contract_start_date', 'contract_end_date')
+        filtering = {
+            "nielsen_dma_id": ('exact',),
+            "community_state": ('exact',),
+            "contract_start_date": ('exact', 'lte', 'gte'),
+            "contract_end_date": ('exact', 'lte', 'gte'),
+        }
 
+    description = fields.CharField(help_text='Description calculated from parsed and entered data')
     nielsen_dma_id = fields.IntegerField(attribute='dma_id', null=True, blank=True)
-    advertiser = fields.CharField()
-    broadcasters = fields.ListField()
+    advertiser = fields.CharField(help_text='Advertiser name: should be a political entity (most likely a committee)')
+    broadcasters = fields.ListField(help_text='List of broadcaster station callsigns')
     doc_status = fields.CharField()
     total_spent = fields.DecimalField()
     num_spots = fields.IntegerField(attribute='num_spots_raw', null=True, blank=True)
     doc_source = fields.CharField()
+
+    def dehydrate_description(self, bundle):
+        return bundle.obj.name()
 
     def dehydrate_advertiser(self, bundle):
         return bundle.obj.advertiser or None
@@ -77,14 +90,9 @@ class PoliticalFileResource(ModelResource):
         # Due to the way Django parses URLs, ``get_multiple`` won't work without
         # a trailing slash.
         return [
-            url(r"^(?P<resource_name>%s)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('dispatch_list'), name="api_dispatch_list"),
-            url(r"^(?P<resource_name>%s)/schema%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_schema'), name="api_get_schema"),
-        ]
-
-    def override_urls(self):
-        return [
-            url(r"^(?P<resource_name>{0})/{1}/$".format(self._meta.resource_name, uuid_re_str), self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
-            url(r"^(?P<resource_name>{0})/search/$".format(self._meta.resource_name), self.wrap_view('get_search'), name="api_get_search"),
+            url(r"^(?P<resource_name>{0}){1}$".format(self._meta.resource_name, trailing_slash()), self.wrap_view('dispatch_list'), name="api_dispatch_list"),
+            url(r"^(?P<resource_name>{0})/{1}{2}$".format(self._meta.resource_name, uuid_re_str, trailing_slash()), self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
+            url(r"^(?P<resource_name>{0})/schema{1}$".format(self._meta.resource_name, trailing_slash()), self.wrap_view('get_schema'), name="api_get_schema"),
         ]
 
     def get_resource_uri(self, bundle_or_obj):
@@ -117,7 +125,7 @@ class PoliticalFileResource(ModelResource):
         sorted_objects = self.apply_sorting(objects, options=request.GET)
 
         req_data = request.GET.copy()
-        limit = req_data.get('limit', self._meta.limit)
+        limit = int(req_data.get('limit', self._meta.limit))
         if limit > self._meta.max_limit:
             limit = self._meta.max_limit
             req_data['limit'] = unicode(limit)
@@ -130,54 +138,14 @@ class PoliticalFileResource(ModelResource):
         to_be_serialized = self.alter_list_data_to_serialize(request, to_be_serialized)
         return self.create_response(request, to_be_serialized)
 
-    def get_search_uri(self):
-        """
-        Returns a URL specific to this resource's search endpoint.
-        """
-        kwargs = {
-            'resource_name': self._meta.resource_name,
-            'api_name': self._meta.api_name
-        }
+    def build_filters(self, filters=None):
+        if filters is None:
+            filters = {}
 
-        try:
-            return self._build_reverse_url("api_get_search", kwargs=kwargs)
-        except NoReverseMatch:
-            return None
+        orm_filters = super(PoliticalFileResource, self).build_filters(filters)
 
-    def get_search(self, request, **kwargs):
-        """
-        Queries haystack search index and returns a serialized list of resources.
-        """
-        self.method_check(request, allowed=['get'])
-        self.is_authenticated(request)
-        self.throttle_check(request)
+        if "q" in filters:
+            sqs = SearchQuerySet().auto_query(filters['q'])
+            orm_filters["pk__in"] = [i.pk for i in sqs]
 
-        query = request.GET.get('q', None)
-        if not query:
-            return self.create_response(request, BadRequest("Search endpoint requires an argument assigned to a 'q' query parameter"), response_class=HttpBadRequest)
-        sqs = SearchQuerySet().models(PoliticalBuy).load_all().auto_query(query)
-
-        # if 'start_date' in request.GET:
-        #         start_date = request.GET.get('start_date', None)
-        #         sqs = sqs.filter(start_date__gte=self.cleaned_data['start_date'])
-
-        object_list = [search_result.object for search_result in sqs]
-
-        req_data = request.GET.copy()
-        limit = req_data.get('limit', self._meta.limit)
-        if limit > self._meta.max_limit:
-            limit = self._meta.max_limit
-            req_data['limit'] = unicode(limit)
-        paginator = Paginator(req_data, object_list, resource_uri=self.get_search_uri(), limit=limit)
-
-        try:
-            to_be_serialized = paginator.page()
-        except InvalidPage:
-            raise Http404("Sorry, no results on that page.")
-
-        bundles = [self.build_bundle(obj=obj, request=request) for obj in to_be_serialized['objects']]
-        to_be_serialized['objects'] = [self.full_dehydrate(bundle) for bundle in bundles]
-        to_be_serialized = self.alter_list_data_to_serialize(request, to_be_serialized)
-
-        self.log_throttled_access(request)
-        return self.create_response(request, to_be_serialized)
+        return orm_filters
