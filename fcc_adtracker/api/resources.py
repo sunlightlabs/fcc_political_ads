@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import url
 from django.core.urlresolvers import NoReverseMatch
 from django.core.paginator import InvalidPage
@@ -18,10 +19,17 @@ uuid_re_str = r'(?P<uuid_key>[a-f0-9-]{32,36})'
 
 API_NAME = 'v1'
 
+API_MAX_RESULTS_PER_PAGE = getattr(settings, 'API_MAX_RESULTS_PER_PAGE', 500)
+API_LIMIT_PER_PAGE = getattr(settings, 'API_LIMIT_PER_PAGE', 20)
+
+# Made methods that return lists of objects respect a max_limit meta option.
+
 
 class PoliticalFileResource(ModelResource):
     class Meta:
         queryset = PoliticalBuy.objects.all()
+        limit = API_LIMIT_PER_PAGE
+        max_limit = API_MAX_RESULTS_PER_PAGE
         resource_name = 'politicalfile'
         api_name = API_NAME
         allowed_methods = ['get']
@@ -37,6 +45,7 @@ class PoliticalFileResource(ModelResource):
     broadcasters = fields.ListField()
     doc_status = fields.CharField()
     total_spent = fields.DecimalField()
+    num_spots = fields.IntegerField(attribute='num_spots_raw', null=True, blank=True)
     doc_source = fields.CharField()
 
     def dehydrate_advertiser(self, bundle):
@@ -59,8 +68,11 @@ class PoliticalFileResource(ModelResource):
 
     def base_urls(self):
         """
-        Custom Overriding: "The standard URLs this ``Resource`` should respond to."
-        - exclude pk resources
+        ***
+        Override:
+            - exclude pk resources
+        ***
+        "The standard URLs this ``Resource`` should respond to."
         """
         # Due to the way Django parses URLs, ``get_multiple`` won't work without
         # a trailing slash.
@@ -86,6 +98,38 @@ class PoliticalFileResource(ModelResource):
             kwargs['uuid_key'] = bundle_or_obj.uuid_key
         return self._build_reverse_url("api_dispatch_detail", kwargs=kwargs)
 
+    def get_list(self, request, **kwargs):
+        """
+        ***
+        Override:
+            - Implements max_limit
+        ***
+        Returns a serialized list of resources.
+
+        Calls ``obj_get_list`` to provide the data, then handles that result
+        set and serializes it.
+
+        Should return a HttpResponse (200 OK).
+        """
+        # TODO: Uncached for now. Invalidation that works for everyone may be
+        #       impossible.
+        objects = self.obj_get_list(request=request, **self.remove_api_resource_names(kwargs))
+        sorted_objects = self.apply_sorting(objects, options=request.GET)
+
+        req_data = request.GET.copy()
+        limit = req_data.get('limit', self._meta.limit)
+        if limit > self._meta.max_limit:
+            limit = self._meta.max_limit
+            req_data['limit'] = unicode(limit)
+        paginator = self._meta.paginator_class(req_data, sorted_objects, resource_uri=self.get_resource_list_uri(), limit=limit)
+        to_be_serialized = paginator.page()
+
+        # Dehydrate the bundles in preparation for serialization.
+        bundles = [self.build_bundle(obj=obj, request=request) for obj in to_be_serialized['objects']]
+        to_be_serialized['objects'] = [self.full_dehydrate(bundle) for bundle in bundles]
+        to_be_serialized = self.alter_list_data_to_serialize(request, to_be_serialized)
+        return self.create_response(request, to_be_serialized)
+
     def get_search_uri(self):
         """
         Returns a URL specific to this resource's search endpoint.
@@ -101,6 +145,9 @@ class PoliticalFileResource(ModelResource):
             return None
 
     def get_search(self, request, **kwargs):
+        """
+        Queries haystack search index and returns a serialized list of resources.
+        """
         self.method_check(request, allowed=['get'])
         self.is_authenticated(request)
         self.throttle_check(request)
@@ -115,7 +162,13 @@ class PoliticalFileResource(ModelResource):
         #         sqs = sqs.filter(start_date__gte=self.cleaned_data['start_date'])
 
         object_list = [search_result.object for search_result in sqs]
-        paginator = Paginator(request.GET, object_list, resource_uri=self.get_search_uri(), limit=20)
+
+        req_data = request.GET.copy()
+        limit = req_data.get('limit', self._meta.limit)
+        if limit > self._meta.max_limit:
+            limit = self._meta.max_limit
+            req_data['limit'] = unicode(limit)
+        paginator = Paginator(req_data, object_list, resource_uri=self.get_search_uri(), limit=limit)
 
         try:
             to_be_serialized = paginator.page()
