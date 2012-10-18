@@ -29,7 +29,6 @@ class Command(BaseCommand):
                 print "Found id  %s in '%s' " % (fcc_id.group(0), our_title)
             else:
                 print "*** no match in %s" % (our_title)
-                assert False
                 continue
             
             try:
