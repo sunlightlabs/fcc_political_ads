@@ -3,6 +3,8 @@ import csv
 
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
+from datetime import datetime
+from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
@@ -65,7 +67,17 @@ class Command(BaseCommand):
     help = "Dump the big files to a predefined spot in the filesystem. They need to then get moved to S3"
     requires_model_validation = False
     
+    
+    option_list = BaseCommand.option_list + (
+        make_option('-b', '--backup',
+                    action='store_true',
+                    dest='make_backup',
+                    default=False,
+                    help='make a backup copy of the data, pushed to S3 with a timestamp'),
+        )
+    
     def handle(self, *args, **options):
+        make_backup = options.get('make_backup')
         
         conn = S3Connection(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
         b = conn.get_bucket('politicaladsleuth-assets')
@@ -75,9 +87,12 @@ class Command(BaseCommand):
         all_ads_to_file()
         
         for file_to_upload in (['all_ad_buys.csv']):
-            print "pushing to S3: %s" % file_to_upload
+            
             local_file_path = "%s/%s" % (CSV_EXPORT_DIR, file_to_upload)
             print local_file_path
             s3_string = "media/csv/%s" % file_to_upload
+            if (make_backup):
+                s3_string = "media/csv/adbuybackup%s.csv" % datetime.now().strftime('%Y-%m-%d-%H-%M')
+            print "pushing to S3: %s" % s3_string
             k.key = s3_string
             k.set_contents_from_filename(local_file_path, policy='public-read')
