@@ -158,9 +158,11 @@ INSTALLED_APPS = (
 
     'south',
     'django_nose',
-    'ajax_select', 
+    'ajax_select',
     'scraper',
     'fecdata',
+
+    'tastypie',
 )
 
 # A sample logging configuration. The only tangible logging

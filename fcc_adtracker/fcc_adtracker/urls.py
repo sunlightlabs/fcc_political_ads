@@ -4,6 +4,13 @@ from django.views.generic.simple import direct_to_template
 from broadcasters.urls import json_urlpatterns
 from ajax_select import urls as ajax_select_urls
 
+from tastypie.api import Api
+from api.resources import PoliticalFileResource, API_NAME
+
+v1_api = Api(api_name=API_NAME)
+v1_api.register(PoliticalFileResource())
+
+
 from django.contrib import admin
 
 admin.autodiscover()
@@ -23,6 +30,9 @@ urlpatterns = patterns('',
     #url(r'^stations/', include('broadcasters.urls')),
 #    url(r'^states/(?P<state_id>\w{2})/$', 'broadcasters.views.state_broadcaster_list', name='state_broadcaster_list'),
 #    url(r'^states/$', 'broadcasters.views.state_list', name='state_list'),
+
+    url(r'^api/', include(v1_api.urls)),
+
     url(r'^$', 'fcc_adtracker.views.home_view', name='home'),
 
     (r'^admin/lookups/', include(ajax_select_urls)),
