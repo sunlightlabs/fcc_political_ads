@@ -2,7 +2,6 @@
 {% block pagetitle %}Submit a Political File{% endblock pagetitle %}
 
 {% block content %}
-<div style="display:block; height: 1200px;">
     <h3 class="withTip">Submit a Political File</h3>
     <p class="tip">Have PDFs of political ad purchases from television stations? Please <strong>upload one advertiser contract at a time</strong> using the form below. Once you successfully uploaded the file, please take a few moments to enter information about the ad buy as directed.</p>
     <p class="tip"><strong>Important:</strong> Sometimes political files contain information such as bank account or credit card numbers that should not be made public. Before you upload any documents to Political Ad Sleuth, please review them and delete or redact any credit card or bank account information (often contained on any photocopied checks that were included in the political file). Do not upload any of this information.</p>
@@ -27,10 +26,13 @@
             <li class="bottomBtn"><input type="submit" value="Submit" class="btn" name="Submit"></li>
         </ul>
     </form>
-</div>
 {% endblock content %}
 
 {% block sidebar %}
+<div class='clearfix'>
+    <h5 id="get_trained">Don’t know what to look for or want help getting started?<br /> Get assistance from Free Press.</h5>
+    {% include "_free_press_form.html" %}
+</div>
 {% endblock sidebar %}
 
 {% block head %}
