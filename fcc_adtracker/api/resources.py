@@ -1,12 +1,16 @@
 from django.conf import settings
 from django.conf.urls import url
 from django.utils.http import urlquote
+from django.http import HttpResponse
 
 from tastypie import fields
 from tastypie.resources import ModelResource, Bundle
 from tastypie.cache import SimpleCache
 from tastypie.utils import trailing_slash
+from tastypie.utils.mime import build_content_type
 from tastypie.paginator import Paginator
+
+from api.serializers import ExpandedSerializer
 
 from fccpublicfiles.models import PoliticalBuy
 from haystack.query import SearchQuerySet
@@ -21,8 +25,35 @@ API_LIMIT_PER_PAGE = getattr(settings, 'API_LIMIT_PER_PAGE', 20)
 # Made methods that return lists of objects respect a max_limit meta option.
 
 
-class PoliticalFileResource(ModelResource):
+class ExpandedModelResource(ModelResource):
+    """Adds some helpers to work with the ExpandedSerializer, which returns csv"""
+
+    def create_response(self, request, data, response_class=HttpResponse, **response_kwargs):
+        """
+        ***
+        Override:
+            - check format for csv and change content-disposition as appropriate.
+        ***
+        Extracts the common "which-format/serialize/return-response" cycle.
+
+        Mostly a useful shortcut/hook.
+        """
+        desired_format = self.determine_format(request)
+        serialized = self.serialize(request, data, desired_format)
+        response = response_class(content=serialized, content_type=build_content_type(desired_format), **response_kwargs)
+
+        if desired_format is self._meta.serializer.content_types['csv']:
+            get_dict = request.GET.dict()
+            get_dict.pop('format')
+            arg_str = '__'.join(['_'.join(g) for g in get_dict.items()])
+            fname = '{0}__{1}'.format(self._meta.resource_name, arg_str)[:252]
+            response['Content-Disposition'] = 'attachment; filename="{0}.csv"'.format(fname)
+        return response
+
+
+class PoliticalFileResource(ExpandedModelResource):
     class Meta:
+        serializer = ExpandedSerializer()
         queryset = PoliticalBuy.objects.all()
         limit = API_LIMIT_PER_PAGE
         max_limit = API_MAX_RESULTS_PER_PAGE
