@@ -30,3 +30,9 @@ requests>=0.9.0
 pytz
 python-memcached
 python-magic==0.4.3
+
+python-dateutil==1.5
+lxml==3.0.1
+PyYAML==3.10
+mimeparse==0.1.3
+django-tastypie==0.9.11
