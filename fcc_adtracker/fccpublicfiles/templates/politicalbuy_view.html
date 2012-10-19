@@ -1,4 +1,4 @@
-{% extends "fcc-base.html" %}{% load static from staticfiles %} {% load fccpublicfiles_extras kwacros %}
+{% extends "fcc-base.html" %}{% load static from staticfiles %} {% load fccpublicfiles_extras kwacros %}{% load humanize %}
 {% block pagetitle %}Political Buy {% if obj.advertiser %}for {{ obj.advertiser }}{% endif %} :: {{ obj.broadcasters.all|join:", " }}{% endblock pagetitle %}
 
 {% kwacro share_base_text %}{% if obj.advertiser.name %}I just learned {{obj.advertiser.name}} bought ads{% else %}I just learned about this paid ad{% endif %} on {{ obj.broadcasters_callsign_list|join:", " }} via Political Ad Sleuth{% endkwacro %}
@@ -27,20 +27,23 @@
             <dl class="moduleSm floatedList clearfix stationProfile">
 				<dt>File Source:</dt><dd>{% if obj.is_FCC_doc %}<a href="https://stations.fcc.gov/">FCC site</a>{% else %}Submission{% endif %}</dd>
 				{% if obj.is_FCC_doc %}
-				<dt>Ad Type:</dt><dd>{{ obj.related_FCC_file.ad_type}}</dd>
-				<dt>File Location:</dt><dd><a href="{{obj.related_FCC_file.raw_url }}">{% for folder in obj.related_FCC_file.path %}/{{folder }}{% endfor %}</a></dd>
-				{% endif %}
+				<dt>Ad Type:</dt><dd>{{ obj.related_FCC_file.ad_type}}</dd>{% endif %}
+				{% if obj.advertiser %}<dt>Advertiser:</dt><dd>{{ obj.advertiser.name }} </a></dd>{% endif %}
                 <dt>Stations:</dt>
                 <dd>{% for broadcaster in obj.broadcasters.all %}
                 <a href="{% url broadcaster_politicalbuys_view callsign=broadcaster.callsign %}">{{ broadcaster.callsign }}, Channel {{ broadcaster.channel }}</a>{% endfor %}</dd>
 				<dt class="clear">Market:</dt>
 				<dd>{{obj.nielsen_dma }}</dd>
-                <dt class="clear">Contract:</dt>
-                <dd>{{obj.contract_start_date}} - {{ obj.contract_end_date }}</dd>
-                <dt class="clear">Total Spent:</dt>
-                <dd>{% if obj.total_spent %}${{ obj.total_spent }}{% else %}Unknown{% endif %}</dd>
+				<dt class="clear">Total Spent:</dt>
+                <dd>{% if obj.total_spent %}${{ obj.total_spent_raw|intcomma }}{% if obj.using_pp_data %}*{% endif %}{% else %}Unknown{% endif %}</dd>
+                {% if obj.contract_number %}<dt class="clear">Contract:</dt>
+                <dd>{{obj.contract_number}}{% if obj.using_pp_data %}*{% endif %}</dd>{% endif %}
+				<dt class="clear">Dates:</dt>
+				<dd>{{obj.contract_start_date|date:"n/d/y" }} - {{ obj.contract_end_date|date:"n/d/y" }}</dd>
+                
                 <dt class="clear">Number of Ad Spots:</dt>
                 <dd>{{obj.num_spots_raw|default:"Unknown" }}</dd>
+			
             </dl>
         </div>
         <div id="internalLinks" class="span2 sideCallout">
@@ -56,11 +59,13 @@
                 {% endif %}
 -->
                 <li><p><a href="{{obj.related_FCC_file.raw_url }}">Original Document</a></p></li>
+{% if obj.using_pp_data %}<li>* Data from Pro Publica's <a href="https://projects.propublica.org/free-the-files/">free the files</a> project.</li>{% endif %}
             </ul>
 		{% endif %}
         </div>
     </div>
     <div class="module">
+
         <h3>Ad Spots Purchased by {{ obj.advertiser|default:"" }}</h3>
         <!-- <a id="downloadBtn" class="btn clear" href="#">Download CSV</a> -->
         <div id="pager" class="pager clear">

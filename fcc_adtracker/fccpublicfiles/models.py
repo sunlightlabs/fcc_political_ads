@@ -7,7 +7,7 @@ from django.conf import settings
 from django.template.defaultfilters import slugify
 from django_extensions.db.fields import UUIDField
 from doccloud.models import Document
-from scraper.models import PDF_File
+from scraper.models import PDF_File, ftf_reference
 from broadcasters.models import Broadcaster
 from locations.models import Address
 from fecdata.models import Candidate, Committee
@@ -75,6 +75,8 @@ class TV_Advertiser(models.Model):
     recent_amount_guess_high= models.PositiveIntegerField(blank=True, null=True)
     recent_amount_guess = models.PositiveIntegerField(blank=True, null=True)
     recent_amount_guess_low = models.PositiveIntegerField(blank=True, null=True)
+    
+    is_displayed = models.NullBooleanField(null=True, default=False, help_text="should this appear on it's own page and on summary pages?")
 
     def __unicode__(self):
         if (self.candidate):
@@ -197,6 +199,9 @@ class PoliticalBuy(MildModeratedModel):
     broadcaster_callsign = models.CharField(max_length=7, blank=True, null=True, help_text="first broadcaster callsign.")
     advertiser_display_name = models.CharField(max_length=211, blank=True, null=True)
 
+    using_pp_data = models.NullBooleanField(default=False, null=True, help_text="flag to avoid calling doc_cloud needlessly")
+    pp_data_ref = models.ForeignKey(ftf_reference, null=True)
+
     """ This is a user-defined setting that lets an authenticated user
     mark a record as not needing any more work. The idea is that
     a superuser will need to come along afterward to the moderated object
@@ -307,8 +312,8 @@ class PoliticalBuy(MildModeratedModel):
     def doc_status(self):
         if self.is_invoice or self.is_invalid:
             return 'Summarized'
-        elif self.total_spent_raw:
-            if self.total_spent_raw > 0:
+        elif self.num_spots_raw:
+            if self.num_spots_raw > 0:
                 return 'Summarized'
         elif self.is_FCC_doc and not self.related_FCC_file.in_document_cloud:
             return 'Not loaded'

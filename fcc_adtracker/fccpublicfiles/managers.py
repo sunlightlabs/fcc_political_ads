@@ -29,10 +29,10 @@ class PoliticalDocStatusManager(models.Manager):
             Q(is_invoice=True) | Q(is_invalid=True)
         )
 
-    def has_raw_total_spent(self):
+    def has_num_spots_raw(self):
         qs = super(PoliticalDocStatusManager, self).get_query_set()
         return qs.filter(
-            Q(total_spent_raw__isnull=False) | Q(total_spent_raw__gt=0)
+            Q(num_spots_raw__isnull=False) | Q(num_spots_raw__gt=0)
         )
 
     def needs_entry(self, **kwargs):
@@ -41,7 +41,7 @@ class PoliticalDocStatusManager(models.Manager):
         dma_id_filter = kwargs.get('dma_id_filter', None)
         if dma_id_filter:
             qs = qs.filter(dma_id__in=dma_id_filter)
-        return qs.exclude(id__in=self.has_raw_total_spent()).exclude(id__in=self.non_adbuy_docs())
+        return qs.exclude(id__in=self.has_num_spots_raw()).exclude(id__in=self.non_adbuy_docs())
 
     def get_one_that_needs_entry(self, **kwargs):
         dma_id_filter = kwargs.get('dma_id_filter', None)

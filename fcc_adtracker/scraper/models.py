@@ -106,7 +106,25 @@ class dc_reference(models.Model):
 
     def __unicode__(self):
         return self.dc_title
-
+        
+class ftf_reference(models.Model):
+    # data entered by ProPublica users
+    status = models.CharField(max_length=15, blank=True, null=True, help_text="freed?")
+    link = models.CharField(max_length=255, blank=True, null=True, help_text="link to PP file")
+    callsign = models.CharField(max_length=15, blank=True, null=True, help_text="callsign")
+    market = models.CharField(max_length=127, blank=True, null=True, help_text="market")
+    v_committee = models.CharField(max_length=255, blank=True, null=True, help_text="verified committee")
+    v_amt = models.IntegerField(null=True)
+    v_agncy= models.CharField(max_length=255, blank=True, null=True, help_text="verified agency")
+    v_contract_no = models.CharField(max_length=31, blank=True, null=True, help_text="freed?")
+    pp_scrape_date = models.DateTimeField(null=True)
+    fcc_upload_date= models.DateTimeField(null=True)
+    fcc_metadata = models.CharField(max_length=511, blank=True, null=True, help_text="concatted from their file")
+    file_url= models.CharField(max_length=511, blank=True, null=True, help_text="url from FEC")
+    doc_id = models.CharField(max_length=15, null=True, help_text="14-digit FEC identifier")
+    
+    def __unicode__(self):
+        return self.file_url
 
 # Represents the basic info in a folder. Folders have types, parents, and children, but that's 'recoverable' from the URL
 class Folder(models.Model):
