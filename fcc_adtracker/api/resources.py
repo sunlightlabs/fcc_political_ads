@@ -1,21 +1,19 @@
 from django.conf import settings
 from django.conf.urls import url
-from django.core.urlresolvers import NoReverseMatch
-from django.core.paginator import InvalidPage
-from django.http import Http404
+from django.utils.http import urlquote
+from django.http import HttpResponse
 
 from tastypie import fields
-from tastypie.http import HttpBadRequest
-from tastypie.exceptions import BadRequest
 from tastypie.resources import ModelResource, Bundle
 from tastypie.cache import SimpleCache
 from tastypie.utils import trailing_slash
+from tastypie.utils.mime import build_content_type
 from tastypie.paginator import Paginator
+
+from api.serializers import ExpandedSerializer
 
 from fccpublicfiles.models import PoliticalBuy
 from haystack.query import SearchQuerySet
-
-from dateutil import parser
 
 uuid_re_str = r'(?P<uuid_key>[a-f0-9-]{32,36})'
 
@@ -27,8 +25,35 @@ API_LIMIT_PER_PAGE = getattr(settings, 'API_LIMIT_PER_PAGE', 20)
 # Made methods that return lists of objects respect a max_limit meta option.
 
 
-class PoliticalFileResource(ModelResource):
+class ExpandedModelResource(ModelResource):
+    """Adds some helpers to work with the ExpandedSerializer, which returns csv"""
+
+    def create_response(self, request, data, response_class=HttpResponse, **response_kwargs):
+        """
+        ***
+        Override:
+            - check format for csv and change content-disposition as appropriate.
+        ***
+        Extracts the common "which-format/serialize/return-response" cycle.
+
+        Mostly a useful shortcut/hook.
+        """
+        desired_format = self.determine_format(request)
+        serialized = self.serialize(request, data, desired_format)
+        response = response_class(content=serialized, content_type=build_content_type(desired_format), **response_kwargs)
+
+        if desired_format is self._meta.serializer.content_types['csv']:
+            get_dict = request.GET.dict()
+            get_dict.pop('format')
+            arg_str = '__'.join(['_'.join(g) for g in get_dict.items()])
+            fname = '{0}__{1}'.format(self._meta.resource_name, arg_str)[:252]
+            response['Content-Disposition'] = 'attachment; filename="{0}.csv"'.format(fname)
+        return response
+
+
+class PoliticalFileResource(ExpandedModelResource):
     class Meta:
+        serializer = ExpandedSerializer()
         queryset = PoliticalBuy.objects.all()
         limit = API_LIMIT_PER_PAGE
         max_limit = API_MAX_RESULTS_PER_PAGE
@@ -50,6 +75,7 @@ class PoliticalFileResource(ModelResource):
         }
 
     description = fields.CharField(help_text='Description calculated from parsed and entered data')
+    source_file_uri = fields.CharField()
     nielsen_dma_id = fields.IntegerField(attribute='dma_id', null=True, blank=True)
     advertiser = fields.CharField(help_text='Advertiser name: should be a political entity (most likely a committee)')
     broadcasters = fields.ListField(help_text='List of broadcaster station callsigns')
@@ -60,6 +86,14 @@ class PoliticalFileResource(ModelResource):
 
     def dehydrate_description(self, bundle):
         return bundle.obj.name()
+
+    def dehydrate_source_file_uri(self, bundle):
+        if bundle.obj.documentcloud_doc:
+            return bundle.obj.documentcloud_doc.get_absolute_url()
+        elif bundle.obj.related_FCC_file:
+            return u'{0}'.format(urlquote(bundle.obj.related_FCC_file.raw_url, ':/'))
+        else:
+            return None
 
     def dehydrate_advertiser(self, bundle):
         return bundle.obj.advertiser or None
