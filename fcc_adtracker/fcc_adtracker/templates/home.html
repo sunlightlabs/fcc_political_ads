@@ -7,129 +7,14 @@
         <h2 id='page-intro'>Search, Upload, Share<br> Political Ad Information</h2>
         <h3>Help us find out who's trying to influence your vote.</h3>
         <div class="featureText">
-            <p>Use this site to get the latest information on political ads purchased at television stations around the country. These files provide the only information we have on who's behind some of the shadowy groups pouring money into the election. This site is updated several times a day. You can sort it by <a href="/political-files/states/">state</a> and individual <a href="/political-files/dmas/">television market</a>. Note: This information <a href="/about/">is not complete</a> but it is the most comprehensive data available. With your help, we're trying to fill the gaps. For information on how you can help, <a href="/account/register/">check here</a>.
+            <p>Use this site to get the latest information on political ads purchased at television stations around the country. These files provide the only information we have on who's behind some of the shadowy groups pouring money into the election. You can sort it by <a href="/political-files/states/">state</a> and individual <a href="/political-files/dmas/">television market</a> or <a href="http://politicaladsleuth.com/search/">search by date</a>. Some of it we have thanks to ProPublica’s <a href="https://projects.propublica.org/free-the-files/">Free the Files</a>. Note: This information <a href="/about/">is not complete</a> but it is the most comprehensive data available. With your help, we're trying to fill the gaps by <a href="http://politicaladsleuth.com/political-files/needs-entry/">entering data</a>. For information on how you can help, <a href="/account/register/">check here</a>.
         </div>
     </div>
     <div class="span3 featureImg">
         <img src="{% static 'img/img_fccBallot.png' %}" alt="Ballot Box">
     </div>
 </div>
-<div class="row module">
-    <div class="span8">
-        {% comment %}
-        <div class="module clearfix">
-            <h3 class="withTip">Top TV Markets</h3>
-            <span class="tip">All Ad Filings</span>
-            <ul class="barChart unstyled">
-                <li>
-                    <span class="marketName"><a href="#">Florida</a></span>
-                    <span class="tagValue" style="width:80%;">
-                        <span class="tagPercent">80%</span>
-                        <span class="tagNumber"><a href="#">30</a></span>
-                    </span>
-                </li>
-                <li>
-                    <span class="marketName"><a href="#">Michigan</a></span>
-                    <span class="tagValue" style="width:60%;">
-                        <span class="tagPercent">60%</span>
-                        <span class="tagNumber"><a href="#">10</a></span>
-                    </span>
-                </li>
-                <li>
-                    <span class="marketName"><a href="#">New Hampshire</a></span>
-                    <span class="tagValue" style="width:60%;">
-                        <span class="tagPercent">60%</span>
-                        <span class="tagNumber"><a href="#">10</a></span>
-                    </span>
-                </li>
-                <li>
-                    <span class="marketName"><a href="#">Washington</a></span>
-                    <span class="tagValue" style="width:60%;">
-                        <span class="tagPercent">60%</span>
-                        <span class="tagNumber"><a href="#">10</a></span>
-                    </span>
-                </li>
-                <li>
-                    <span class="marketName"><a href="#">New Mexico</a></span>
-                    <span class="tagValue" style="width:60%;">
-                        <span class="tagPercent">60%</span>
-                        <span class="tagNumber"><a href="#">10</a></span>
-                    </span>
-                </li>
-            </ul>
-        </div>
-        <div class="module clearfix">
-            <h3 class="withTip">Top TV Markets</h3>
-            <span class="tip">All Ad Filings</span>
-            <ul class="barChart unstyled">
-                <li>
-                    <span class="marketName"><a href="#">Florida</a></span>
-                    <span class="tagValue" style="width:80%;">
-                        <span class="tagPercent">80%</span>
-                        <span class="tagNumber"><a href="#">30</a></span>
-                    </span>
-                </li>
-                <li>
-                    <span class="marketName"><a href="#">Michigan</a></span>
-                    <span class="tagValue" style="width:60%;">
-                        <span class="tagPercent">60%</span>
-                        <span class="tagNumber"><a href="#">10</a></span>
-                    </span>
-                </li>
-                <li>
-                    <span class="marketName"><a href="#">New Hampshire</a></span>
-                    <span class="tagValue" style="width:60%;">
-                        <span class="tagPercent">60%</span>
-                        <span class="tagNumber"><a href="#">10</a></span>
-                    </span>
-                </li>
-                <li>
-                    <span class="marketName"><a href="#">Washington</a></span>
-                    <span class="tagValue" style="width:60%;">
-                        <span class="tagPercent">60%</span>
-                        <span class="tagNumber"><a href="#">10</a></span>
-                    </span>
-                </li>
-                <li>
-                    <span class="marketName"><a href="#">New Mexico</a></span>
-                    <span class="tagValue" style="width:60%;">
-                        <span class="tagPercent">60%</span>
-                        <span class="tagNumber"><a href="#">10</a></span>
-                    </span>
-                </li>
-            </ul>
-        </div>
-        {% endcomment %}
-    </div>
-    <div class="span4">
 
-        {% if featured_advertiser_list %}
-        <div>
-            <h3>Prominent Advertisers</h3>
-            <ul class="unstyled">
-                <li>
-                    {% for advertiser in featured_advertiser_list %}
-                    <h5>{{ advertiser.name }}</h5>
-                    {% if advertiser.advertiser_politicalbuys.all %}
-                    <ul>
-                        {% for pb in advertiser.advertiser_politicalbuys.all|slice:":6" %}
-                            <li><a href="{{ pb.get_absolute_url }}">{{pb.broadcasters_callsign_list|join:',' }} ({{pb.contract_start_date|date:"SHORT_DATE_FORMAT"}}-{{pb.contract_end_date|date:"SHORT_DATE_FORMAT"}})</a></li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    <p>No buys currently recorded.</p>
-                    {% endif %}
-                    {% endfor %}
-                </li>
-            </ul>
-        </div>
-        {% endif %}
-        <div>
-        {% recent_buy_sidebar %}
-        </div>
-
-    </div>
-</div>
 
 {% endblock content %}
 
