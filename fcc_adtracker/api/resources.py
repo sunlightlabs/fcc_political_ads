@@ -1,12 +1,8 @@
 from django.conf import settings
 from django.conf.urls import url
-from django.core.urlresolvers import NoReverseMatch
-from django.core.paginator import InvalidPage
-from django.http import Http404
+from django.utils.http import urlquote
 
 from tastypie import fields
-from tastypie.http import HttpBadRequest
-from tastypie.exceptions import BadRequest
 from tastypie.resources import ModelResource, Bundle
 from tastypie.cache import SimpleCache
 from tastypie.utils import trailing_slash
@@ -14,8 +10,6 @@ from tastypie.paginator import Paginator
 
 from fccpublicfiles.models import PoliticalBuy
 from haystack.query import SearchQuerySet
-
-from dateutil import parser
 
 uuid_re_str = r'(?P<uuid_key>[a-f0-9-]{32,36})'
 
@@ -50,6 +44,7 @@ class PoliticalFileResource(ModelResource):
         }
 
     description = fields.CharField(help_text='Description calculated from parsed and entered data')
+    source_file_uri = fields.CharField()
     nielsen_dma_id = fields.IntegerField(attribute='dma_id', null=True, blank=True)
     advertiser = fields.CharField(help_text='Advertiser name: should be a political entity (most likely a committee)')
     broadcasters = fields.ListField(help_text='List of broadcaster station callsigns')
@@ -60,6 +55,14 @@ class PoliticalFileResource(ModelResource):
 
     def dehydrate_description(self, bundle):
         return bundle.obj.name()
+
+    def dehydrate_source_file_uri(self, bundle):
+        if bundle.obj.documentcloud_doc:
+            return bundle.obj.documentcloud_doc.get_absolute_url()
+        elif bundle.obj.related_FCC_file:
+            return u'{0}'.format(urlquote(bundle.obj.related_FCC_file.raw_url, ':/'))
+        else:
+            return None
 
     def dehydrate_advertiser(self, bundle):
         return bundle.obj.advertiser or None
