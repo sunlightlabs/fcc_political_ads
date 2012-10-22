@@ -31,6 +31,7 @@ urlpatterns = patterns('',
 #    url(r'^states/(?P<state_id>\w{2})/$', 'broadcasters.views.state_broadcaster_list', name='state_broadcaster_list'),
 #    url(r'^states/$', 'broadcasters.views.state_list', name='state_list'),
 
+    url(r'^api/locksmith/', include('locksmith.auth.urls')),
     url(r'^api/', include(v1_api.urls)),
 
     url(r'^$', 'fcc_adtracker.views.home_view', name='home'),
