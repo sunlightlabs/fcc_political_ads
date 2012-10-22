@@ -11,6 +11,7 @@ from tastypie.utils.mime import build_content_type
 from tastypie.paginator import Paginator
 
 from api.serializers import ExpandedSerializer
+from api.authentication import LocksmithKeyAuthentication
 
 from fccpublicfiles.models import PoliticalBuy
 from haystack.query import SearchQuerySet
@@ -21,6 +22,7 @@ API_NAME = 'v1'
 
 API_MAX_RESULTS_PER_PAGE = getattr(settings, 'API_MAX_RESULTS_PER_PAGE', 500)
 API_LIMIT_PER_PAGE = getattr(settings, 'API_LIMIT_PER_PAGE', 20)
+API_OUTFILE_PREFIX = getattr(settings, 'API_OUTFILE_PREFIX', 'api')
 
 # Made methods that return lists of objects respect a max_limit meta option.
 
@@ -45,14 +47,19 @@ class ExpandedModelResource(ModelResource):
         if desired_format is self._meta.serializer.content_types['csv']:
             get_dict = request.GET.dict()
             get_dict.pop('format')
+            get_dict.pop('apikey')
             arg_str = '__'.join(['_'.join(g) for g in get_dict.items()])
-            fname = '{0}__{1}'.format(self._meta.resource_name, arg_str)[:252]
+            if arg_str:
+                fname = '{0}__{1}'.format(API_OUTFILE_PREFIX, arg_str)[:252]
+            else:
+                fname = API_OUTFILE_PREFIX
             response['Content-Disposition'] = 'attachment; filename="{0}.csv"'.format(fname)
         return response
 
 
 class PoliticalFileResource(ExpandedModelResource):
     class Meta:
+        authentication = LocksmithKeyAuthentication()
         serializer = ExpandedSerializer()
         queryset = PoliticalBuy.objects.all()
         limit = API_LIMIT_PER_PAGE
