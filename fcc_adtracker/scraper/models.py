@@ -167,6 +167,11 @@ class PDF_File(models.Model):
     dma_id = models.PositiveIntegerField(blank=True, null=True, editable=False, help_text='DMA ID, from Nielsen')
     community_state = models.CharField(max_length=7, blank=True, null=True)
 
+    is_backed_up =  models.NullBooleanField(default=False, help_text="Has this been saved to S3")
+    local_file_path =  models.CharField(max_length=511, blank=True, null=True, help_text='local file path')
+    s3_full_url = models.CharField(max_length=600, blank=True, null=True, help_text='s3 url')
+    not_at_fcc = models.NullBooleanField(default=False, help_text="Has the file gone missing?")
+    missing_as_of_date = models.DateTimeField(blank=True, null=True, auto_now=False, help_text="When did we first notice the file was missing?")
     
     def path(self):
         return get_file_path(self.raw_url)

@@ -13,7 +13,7 @@ from django.core.files import File
 SCRAPER_USER_AGENT_STRING = getattr(settings, 'SCRAPER_USER_AGENT_STRING', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.36 Safari/535.7')
 
 
-def read_url(url):
+def read_url(url, dry_run=False):
     # read url with our headers.
     opener = urllib2.build_opener()
     opener.addheaders = [('User-agent', SCRAPER_USER_AGENT_STRING)]
@@ -25,8 +25,10 @@ def read_url(url):
     final_url = final_url.replace("%2c", ",")
     final_url = final_url.replace("%27", "'")
     
-    print("trying to read url: %s" % (final_url))
-    page = opener.open(final_url).read()
+    #print("trying to read url: %s" % (final_url))
+    page = None
+    if not dry_run:
+        page = opener.open(final_url).read()
     return page
 
 # assumes we're looking at 2012
