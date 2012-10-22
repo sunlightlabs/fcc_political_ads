@@ -61,8 +61,8 @@ def all_ads_to_file():
         if (row.using_pp_data):
             data_entry_by = "ProPublica"
             
-        row.pp_adv_name = ''
-        if pp_data_ref:
+        pp_adv_name = ''
+        if row.pp_data_ref:
             pp_adv_name = row.pp_data_ref.v_committee
         
         file_rows.append([row.pk, row.broadcaster_callsign, row.upload_time.strftime("%Y-%m-%d"), row.contract_start_date.strftime("%Y-%m-%d"), row.contract_end_date.strftime("%Y-%m-%d"), row.nielsen_dma, row.dma_id, row.candidate_type, row.fcc_folder_name, this_file_name, raw_url, advertiser_name, pp_adv_name, is_invalid, is_invoice, row.total_spent_raw, row.num_spots_raw, row.contract_number, row.doc_source(), data_entry_by, row.data_entry_notes])
