@@ -44,7 +44,7 @@ ul#locations {
     overflow-y: scroll;
     overflow-x: hidden;
     list-style-type: none;
-    margin: 0px;
+    margin: 0;
     padding: 0 10px;
 }
 
@@ -197,6 +197,15 @@ a.caldisabled {
     color:#fff;
 }
 
+/* img styles */
+
+.img-framed {
+    border: solid 1px #EFEFEF;
+    background-color: #FCFCFC;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
 
 /* Styles for a minimal template, such as a popover edit form */
 
@@ -236,6 +245,10 @@ table.sortable > thead th, table.sortable > thead th:hover { cursor: pointer; }
 fieldset { margin-bottom: 1em; }
 fieldset ul { padding-top: 18px; }
 .compact .tip { width: 330px; }
+form li input { margin-bottom: 0; }
+form li p.tip { margin-top: 2px; }
+.form li { margin-bottom: 25px;}
+
 #pager { text-align: left;}
 .pagerDetails { background-color: #FCFCFC; padding: 5px; border-top: 1px solid #F4F4F4; border-bottom: 1px solid #F4F4F4; }
 #pager .pageNumDisplay { text-align: left; }
@@ -287,3 +300,16 @@ table .Unapproved { background: url(../img/bg_unapproved.png) center 8px no-repe
 .marketName { width: 120px; display: inline-block;}
 
 .youtube-player { margin-bottom: 20px; border: none;}
+
+/* Help pages */
+
+.help p, .help li {
+    font-size: 16px;
+    line-height: 24px;
+}
+.help section {
+    margin-bottom: 30px;
+}
+.pagenav {
+    margin: 48px 0;
+}
