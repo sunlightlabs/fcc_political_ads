@@ -35,7 +35,7 @@
                         <ul class="unstyled clearfix">
                         <li>
                             <label><strong>Don't enter data if:</strong></label>
-                            <label class="tip checkbox">{{form.is_invalid}} This isn't an ad buy. <a target='_blank' href="/help/#otherdocuments" title="What other documents are there?">Like what?</a></label>
+                            <label class="tip checkbox">{{form.is_invalid}} This isn't an ad buy. <a target='_blank' href="/help/#otherdocuments" title="What other documents are there?">What is an ad buy?</a></label>
                             <label class="tip checkbox">{{form.is_invoice}} This is an ad invoice. <a target='_blank' href="/help/#excludeinvoices" title="Explanation of why not to enter invoice data">Why?</a></label>
                         </li>
                         <li class="input-append">
@@ -43,6 +43,23 @@
                             {{form.advertiser}}
                             {{form.advertiser.errors}}
                             <p class="tip"><a target='_blank' href="/help/#advertiser" title="Help finding the advertiser">How do I find the advertiser?</a></p>
+                        </li>
+                        <li>
+                            <label>{{form.contract_number.label}}</label>
+                            {{form.contract_number}}
+                            {{form.contract_number.errors}}
+                        <p class="tip"><a target='_blank' href="/help/#contract">How do I find the contract number?</a></p>
+                        </li>
+                        <li class="input-append">
+                            <label>Flight start date</label>
+                            {{form.contract_start_date}}
+                            {{form.contract_start_date.errors}}
+                        </li>
+                        <li class="input-append">
+                            <label>Flight end date</label>
+                            {{form.contract_end_date}}
+                            {{form.contract_end_date.errors}}
+                            <p class="tip"><a target='_blank' href="/help/#dates">Where&rsquo;s the start and end date?</a></p>
                         </li>
                         <li class="input-prepend">
                             <label>Grand Total: Gross amount spent</label>
@@ -56,29 +73,6 @@
                             {{form.num_spots_raw.errors}}
                             <p class="tip"><a target='_blank' href="/help/#spots">How do I find the number of ad spots?</a></p>
                         </li>
-                        <li>
-                            <label>{{form.contract_number.label}}</label>
-                            {{form.contract_number}}
-                            {{form.contract_number.errors}}
-                        <p class="tip"><a target='_blank' href="/help/#contract">How do I find the contract number?</a></p>
-                        </li>
-                        {% comment %}
-                            The following date inputs use the .date class to
-                                apply a datepicker to a input and an span.add-on
-                            Also, the date format needs to be in the m/d/Y format as
-                                both django and bootstrap.datepicker like that one
-                        {% endcomment %}
-                        <li class="input-append">
-                            <label>Flight start date</label>
-                            {{form.contract_start_date}}
-                            {{form.contract_start_date.errors}}
-                        </li>
-                        <li class="input-append">
-                            <label>Flight end date</label>
-                            {{form.contract_end_date}}
-                            {{form.contract_end_date.errors}}
-                        </li>
-                        <p class="tip"><a target='_blank' href="/help/#dates">Where&rsquo;s the start and end date?</a></p>
                         <li>
                             <label>{{form.broadcasters.label}}</label>
                             {{form.broadcasters}}
