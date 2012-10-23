@@ -1,0 +1,129 @@
+{% extends "fcc-base.html" %}{% load static from staticfiles %}
+{% block bodyclass %}api{% endblock bodyclass %}
+{% block pagetitle %}Political Ad Sleuth API{% endblock pagetitle %}
+
+{% block content %}
+    <h2>Political Ad Sleuth API</h2>
+    <div id="description" class="module">
+        <p>Listed below are the public methods currently supported by the Political Ad Sleuth API. All requests must be signed with a valid Sunlight labs API key. You can register for one here: <a href='http://services.sunlightlabs.com/accounts/register'>http://services.sunlightlabs.com/accounts/register</a></p>
+    </div>
+    <div class="module">
+        <p>The Political Ad Sleuth API provides programmatic access to ad buy data available on Political Ad Sleuth. This data is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>. The endpoints are structured as follows:</p>
+        <pre><code>http://politicaladsleuth.com/api/v1/?apikey=&lt;YOUR_KEY&gt;</code></pre>
+        <p>The primary endpoint is:</p>
+        <pre><code>http://politicaladsleuth.com/api/v1/politicalfile/?apikey=&lt;YOUR_KEY&gt;</code></pre>
+        <p> This will return a listing of political file entries. This endpoint can be refined using parameters to <a href="#querying">query or filter results</a>.</p>
+    </div>
+    <div class="module">
+        <h3>Common Parameters</h3>
+        <dl>
+            <dt>apikey</dt>
+            <dd><strong>Required</strong> if the <tt class="docutils literal"><span class="pre">X-APIKEY</span></tt> HTTP header is not used.</dd>
+
+            <dt class="clear">format</dt>
+            <dd>Acceptable values are <code>json</code>, <code>jsonp</code>, <code>csv</code>, <code>xml</code> or <code>yaml</code>. Requests for <code>csv</code> will return tabular data with a content disposition of 'attachment', making it useful for file downloads.</dd>
+
+            <dt class="clear">limit</dt>
+            <dd>The number of results to return per page, defaults to 20. The maximum number of records per page is 500.</dd>
+
+            <dt class="clear">offset</dt>
+            <dd>The number of results to move past in returning a result set. Useful in conjunction with <code>limit</code> to fetch results in a paginated fashion.</dd>
+        </dl>
+    </div>
+    <div id="querying" class="module">
+        <h3>Querying/Filtering Parameters</h3>
+        <p>The Political Ad Sleuth API provides a few ways to filter and query data. All of the parameters described below can be combined.</p>
+        <section class="module">
+            <h5>q</h5>
+            <p>Search against advertiser names, stations, etc using the same search index that powers the front end search. For example:</p>
+            <p>A search for "Crossroads"</p>
+            <pre><code>http://politicaladsleuth.com/api/v1/politicalfile/?apikey=&lt;YOUR_KEY&gt;&amp;q=Crossroads</code></pre>
+            <p></p>
+            <p>A search for "Obama For America"</p>
+            <pre><code>http://politicaladsleuth.com/api/v1/politicalfile/?apikey=&lt;YOUR_KEY&gt;&amp;q=Obama+For+America</code></pre>
+        </section>
+        <section class="module">
+            <h5>nielsen_dma_id</h5>
+            <p>You can filter by Nielsen Designated Market Area (DMA) id.</p>
+            <pre><code>http://politicaladsleuth.com/api/v1/politicalfile/?apikey=&lt;YOUR_KEY&gt;&amp;nielsen_dma_id=560</code></pre>
+        </section>
+        <section class="module">
+            <h5>community_state</h5>
+            <p>You can filter on the FCC's designated "Community State" using the two-letter state abbreviation for the state.</p>
+            <pre><code>http://politicaladsleuth.com/api/v1/politicalfile/?apikey=&lt;YOUR_KEY&gt;&amp;community_state=NC</code></pre>
+        </section>
+        <section class="module">
+            <h5>contract_start_date and contract_end_date</h5>
+            <p>You can filter by contract_start_date and/or contract_end_date:</p>
+            <pre><code>http://politicaladsleuth.com/api/v1/politicalfile/?apikey=&lt;YOUR_KEY&gt;&amp;contract_start_date=2012-08-17&amp;contract_end_date=2012-08-17</code></pre>
+            <p>You can specify exact matches or date ranges. A date range filter might look like:</p>
+            <pre><code>http://politicaladsleuth.com/api/v1/politicalfile/?apikey=&lt;YOUR_KEY&gt;&amp;ccontract_start_date__gte=2012-08-17&amp;contract_end_date__lte=2012-08-30</code></pre>
+            <p>Note that the contract_start_date and contract_end_date are either set by volunteers or guessed by our FCC import tools. As such, these values will be approximate and not exact.</p>
+        </section>
+    </div>
+    <div id="ordering">
+        <h3>Ordering Parameters</h3>
+        <p>Results can be ordered by <code>updated_at</code>, <code>contract_start_date</code> or <code>contract_end_date</code>. These arguments must be passed to a <code>order_by</code> parameter. A reverse sort can be requested by prepending a minus sign to the argument. To  sort in ascending order:</p>
+        <pre><code>http://politicaladsleuth.com/api/v1/politicalfile/?apikey=&lt;YOUR_KEY&gt;&amp;order_by=updated_at</code></pre>
+        <p>To sort in descending order:</p>
+        <pre><code>http://politicaladsleuth.com/api/v1/politicalfile/?apikey=&lt;YOUR_KEY&gt;&amp;order_by=-updated_at</code></pre>
+    </div>
+    <div class="modules">
+        <h3>Results</h3>
+        <p>The political file list endpoint <code>http://politicaladsleuth.com/api/v1/politicalfile/?apikey=&lt;YOUR_KEY&gt;&format=json</code> will return a list like:</p>
+        <pre>
+{
+    "meta": {
+        "limit": 20,
+        "next": "/api/v1/politicalfile/?apikey=&lt;YOUR_KEY&gt;&limit=20&offset=20&format=json",
+        "offset": 0,
+        "previous": null,
+        "total_count": 34447
+    },
+    "objects": [{
+        "advertiser": null,
+        "broadcasters": ["WRAL-TV"],
+        "candidate_type": "Non-Candidate Issue Ads",
+        "community_state": "NC",
+        "contract_end_date": "2012-08-17",
+        "contract_number": null,
+        "contract_start_date": "2012-08-17",
+        "description": "Non-Candidate Issue Ads:RNC, 08/17/12 on WRAL-TV (Raleigh, NC)",
+        "doc_source": "FCC",
+        "doc_status": "Needs entry",
+        "nielsen_dma": "Raleigh, NC",
+        "nielsen_dma_id": 560,
+        "num_spots": null,
+        "resource_uri": "/api/v1/politicalfile/5acbd927-5668-40b9-b842-b79b670dd120/",
+        "source_file_uri": "https://stations.fcc.gov/collect/files/8688/Political%20File/2012/Non-Candidate%20Issue%20Ads/RNC/RNC%208.18-8.24.12%20%2813452276041527%29_.pdf",
+        "total_spent": null,
+        "updated_at": "2012-10-10T19:10:20.089361+00:00",
+        "upload_time": "2012-08-17",
+        "uuid_key": "5acbd927-5668-40b9-b842-b79b670dd120"
+    }, {
+        "advertiser": null,
+        "broadcasters": ["WRAL-TV"],
+        "candidate_type": "US House",
+        "community_state": "NC",
+        "contract_end_date": "2012-08-13",
+        "contract_number": null,
+        "contract_start_date": "2012-08-13",
+        "description": "Federal:US House:NC-07:MIKE REP. MCINTYRE, 08/13/12 on WRAL-TV (Raleigh, NC)",
+        "doc_source": "FCC",
+        "doc_status": "Needs entry",
+        "nielsen_dma": "Raleigh, NC",
+        "nielsen_dma_id": 560,
+        "num_spots": null,
+        "resource_uri": "/api/v1/politicalfile/b3c7227c-77bb-4dcd-830b-b5fb786ef733/",
+        "source_file_uri": "https://stations.fcc.gov/collect/files/8688/Political%20File/2012/Federal/US%20House/NC-07/MIKE%20REP.%20MCINTYRE/MIKE%20MCINTYRE%20FOR%20US%20REP%20NC7%2010.23-10-29.12%20%2813448820092743%29_.pdf",
+        "total_spent": null,
+        "updated_at": "2012-10-10T19:10:20.100967+00:00",
+        "upload_time": "2012-08-13",
+        "uuid_key": "b3c7227c-77bb-4dcd-830b-b5fb786ef733"
+    },
+    ...
+    ]
+}
+        </pre>
+    </div>
+{% endblock content %}
