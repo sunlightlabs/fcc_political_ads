@@ -167,7 +167,7 @@ class PoliticalFileResource(ExpandedModelResource):
 
         req_data = request.GET.copy()
         limit = int(req_data.get('limit', self._meta.limit))
-        if limit > self._meta.max_limit:
+        if limit > self._meta.max_limit or limit is 0:
             limit = self._meta.max_limit
             req_data['limit'] = unicode(limit)
         paginator = self._meta.paginator_class(req_data, sorted_objects, resource_uri=self.get_resource_list_uri(), limit=limit)
