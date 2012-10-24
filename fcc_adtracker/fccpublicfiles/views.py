@@ -1,5 +1,6 @@
 import datetime
-
+from operator import itemgetter
+    
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
@@ -407,3 +408,38 @@ def fcc_most_recent(request):
 def needs_entry(self):
     obj = PoliticalBuy.status_objects.get_one_that_needs_entry(dma_id_filter=NEEDS_ENTRY_DMAS)
     return redirect('politicalbuy_edit', uuid_key=obj.uuid_key)
+
+@cache_page(CACHE_TIME)
+def advertiser_list(request):
+    # only show biggie advertisters that we've explicitly set to display
+    advertisers = TV_Advertiser.objects.filter(is_displayed=True)
+    
+    return render(request, 'advertiser_list.html', {
+        'advertisers': advertisers,
+        'sfapp_base_template': 'sfapp/base-full.html',
+    })
+    
+@cache_page(CACHE_TIME)
+def advertiser_detail(request, advertiser_pk):
+    advertiser = get_object_or_404(TV_Advertiser, pk=advertiser_pk)
+    today = datetime.datetime.today()
+    week_ago = today - datetime.timedelta(days=50)
+    advertising_org  = Organization.objects.get(organization_type='AD', related_advertiser=advertiser)
+    print advertising_org
+    recent_ads = PoliticalBuy.objects.filter(advertiser=advertising_org, contract_start_date__gte=week_ago).order_by('-contract_start_date')
+    
+    market_summary_raw = recent_ads.values('nielsen_dma', 'dma_id').annotate(market_total=Count('id'))
+    
+
+    market_summary = sorted(market_summary_raw, key=itemgetter('market_total'), reverse=True)
+    
+    top_market_summary = None
+    if market_summary:
+        top_market_summary = market_summary[0]
+    
+    return render(request, 'advertiser_detail.html', {
+        'advertiser': advertiser,
+        'market_summary':market_summary,
+        'top_market_summary':top_market_summary,
+        'filings':recent_ads,
+    })

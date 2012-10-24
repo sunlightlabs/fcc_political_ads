@@ -32,4 +32,6 @@ urlpatterns = patterns('',
     url(r'^political-files/state/(?P<state_id>\w{2})/$', 'fccpublicfiles.views.filing_state_list', name='filing_state_list'),
     url(r'^political-files/tv-station/(?P<callsign>[\w\-]+)/$', 'fccpublicfiles.views.filing_station_list', name='filing_station_list'),
     url(r'^political-files/most-recent/', 'fccpublicfiles.views.fcc_most_recent', name='fcc_most_recent'),
+    url(r'^political-files/advertisers/', 'fccpublicfiles.views.advertiser_list', name='advertiser_list'),  
+    url(r'^political-files/advertiser/[\w-]+/(?P<advertiser_pk>\d+)/$', 'fccpublicfiles.views.advertiser_detail', name='advertiser_detail'),      
 )

@@ -16,6 +16,7 @@ from mildmoderator.models import MildModeratedModel
 from weekday_field import fields as wf_fields
 from uuid import uuid4
 from django.contrib.localflavor.us import us_states
+from django.template.defaultfilters import slugify
 
 
 from fccpublicfiles.managers import PoliticalDocStatusManager
@@ -83,7 +84,10 @@ class TV_Advertiser(models.Model):
             return "%s (%s)" % (self.advertiser_name, self.candidate_name)
         else:
             return self.advertiser_name
-
+            
+    def get_absolute_url(self):
+        url = "/political-files/advertiser/%s/%s/" % (slugify(self.advertiser_name), self.pk)
+        return url
 
 
 # helper table for lookups
