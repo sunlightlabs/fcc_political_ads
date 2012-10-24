@@ -7,17 +7,22 @@ from django.conf import settings
 from broadcasters.models import Broadcaster
 from volunteers.forms import NonUserProfileForm
 from volunteers.models import Profile
-from fccpublicfiles.models import PoliticalBuy, Organization
+from fccpublicfiles.models import PoliticalBuy, dma_summary
 from fccpublicfiles.forms import PrelimDocumentForm
 
 FEATURED_ADVERTISER_IDS = getattr(settings, 'FEATURED_ADVERTISER_IDS', ())
 
+TOP_THINGS_LIMIT = 10
+
 
 def home_view(request):
-    featured_advertiser_list = Organization.objects.filter(organization_type='AD', id__in=FEATURED_ADVERTISER_IDS)
+    top_recent_pres_buys = dma_summary.objects.filter(pres_buys__isnull=False).order_by('-pres_buys')[:TOP_THINGS_LIMIT]
+    top_recent_outside_buys = dma_summary.objects.filter(recent_outside_buys__isnull=False).order_by('-recent_outside_buys')[:TOP_THINGS_LIMIT]
+
     resp_obj = {
         'form': NonUserProfileForm,
-        'featured_advertiser_list': featured_advertiser_list,
+        'top_recent_pres_buys': top_recent_pres_buys,
+        'top_recent_outside_buys': top_recent_outside_buys,
         'states_dict': us_states.US_STATES,
         'sfapp_base_template': 'sfapp/base-full.html'
     }
