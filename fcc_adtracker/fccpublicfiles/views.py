@@ -428,7 +428,7 @@ def advertiser_detail(request, advertiser_pk):
     print advertising_org
     recent_ads = PoliticalBuy.objects.filter(advertiser=advertising_org, contract_start_date__gte=week_ago).order_by('-contract_start_date')
     
-    market_summary_raw = recent_ads.values('nielsen_dma', 'dma_id').annotate(market_total=Count('id'))
+    market_summary_raw = recent_ads.values('nielsen_dma', 'dma_id').order_by('nielsen_dma', 'dma_id').annotate(market_total=Count('id'))
     
 
     market_summary = sorted(market_summary_raw, key=itemgetter('market_total'), reverse=True)
