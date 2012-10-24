@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Sum, Count
 from django.contrib.localflavor.us import us_states
 from broadcasters.models import Broadcaster
-from fccpublicfiles.models import PoliticalBuy, dma_summary, state_summary
+from fccpublicfiles.models import PoliticalBuy, dma_summary, state_summary, TV_Advertiser, Organization
 
 STATES_DICT = dict(us_states.US_STATES)
 
@@ -117,6 +117,28 @@ class Command(BaseCommand):
             all_ads = PoliticalBuy.objects.filter(dma_id=dma_id)
             
             summarize_ads(this_dma_summary, all_ads)
+            
+        # Now summarize advertisers we care about
+        displayed_advertisers = TV_Advertiser.objects.filter(is_displayed=True)
+        
+        for adv in displayed_advertisers:
+            all_ads = PoliticalBuy.objects.filter(advertiser__related_advertiser=adv)
+            recent_ads = PoliticalBuy.objects.filter(advertiser__related_advertiser=adv, upload_time__gte=one_week_ago)
+            
+            
+            
+            adv.num_states = len(all_ads.values('community_state').distinct())
+            adv.num_recent_state = len(recent_ads.values('community_state').distinct())
+            adv.num_dmas = len(all_ads.values('dma_id').distinct())
+            adv.num_recent_dmas = len(recent_ads.values('dma_id').distinct())
+            adv.num_broadcasters = len(all_ads.values('broadcaster_callsign').distinct())
+            adv.num_recent_broadcasters = len(recent_ads.values('broadcaster_callsign').distinct())
+            adv.num_buys = len(all_ads)
+            adv.num_recent_buys = len(recent_ads)
+            
+            adv.save()
+            #total_amount_guess = 
+            #recent_amount_guess = 
             
            
             

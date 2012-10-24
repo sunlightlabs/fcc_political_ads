@@ -13,10 +13,12 @@
 
     </div>
     <div class="row module">
+	<p class="tip">TV Stations aren't required to identify advertisers in a regular way; the totals here reflect ads that we've been able to associate with top known advertising groups.</p>
         <div id="buyData" class="span5">
             <dl class="moduleSm floatedList clearfix stationProfile">
 				<dt>Candidate:</dt><dd>{% if advertiser.candidate_name %}{{ advertiser.candidate_name}}{% else %}None{% endif %}</dd>
-				<dt>Recent files</dt><dd>{{filings|length}}</dd>
+				<dt>Total Filings</dt><dd>{{ advertiser.num_buys}}</dd>
+				<dt>Toal Markets</dt><dd>{{ advertiser.num_dmas}}</dd>
 				<dt>Top recent market</dt><dd>{% if top_market_summary %}{{ top_market_summary.nielsen_dma }}{% endif %}</dd>
             </dl>
         </div>
@@ -40,7 +42,7 @@
     <div class="module">
 		
 		<h3 id="market_summary">Market summary - filings in the last 7 days</h2>
-		<p class="tip">This is a count of all known documents filed in the last 7 days.  <b>It is not a count of how many ads appeareed in these markets!</b></p>
+		<p class="tip">This is a count of all known documents filed in the last 7 days.  <b>It is not a count of how many ads appeared in these markets!</b></p>
 		<table class="table table-striped tablesorter sortable" id="ad-data">
 			<thead>
 		        <tr>

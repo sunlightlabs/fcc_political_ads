@@ -10,16 +10,18 @@
 {% block content %}
 <h2 class="clearfix">Top Advertisers</h2>
 {% include "_subnav.html" %}
-
+<p class="tip">TV Stations aren't required to identify advertisers in a regular way; the totals here reflect ads that we've been able to associate with top known advertising groups.</p>
 <p class="tip">{% include "_data_disclaimer_short.html" %}</p>
 {% include "_download_button.html" %}
 
-<table class="table table-striped">
+<table class="table table-striped tablesorter sortable" id="ad-data">
 	<thead>
         <tr>
             <th>Advertiser Name</th>
 			<th>Candidate</th>
-			<th>Another Detail</th> 
+			<th>Filings</th>
+			<th>Markets</th>
+			<th></th> 
        </tr>
     </thead>
     <tbody>
@@ -27,6 +29,8 @@
 	<tr>
 		<td><a href="{{ advertiser.get_absolute_url }}">{{ advertiser.advertiser_name }}</a></td>
 		<td>{% if advertiser.candidate_name %}{{ advertiser.candidate_name}}{% else %}None{% endif %}</td>
+		<td>{{ advertiser.num_buys}}</td>
+		<td>{{ advertiser.num_dmas}}</td>		
 		<td>{% if advertiser.ad_hawk_url %}Watch ads on <a href="http://adhawk.sunlightfoundation.com{{ advertiser.ad_hawk_url }}">Ad Hawk</a><br>{% endif %}{% if advertiser.ftum_url %}See spending on <a href="{{ advertiser.ftum_url}}">Follow the Unlimited Money</a><br>{% endif %}</td>
 	</tr>
 {% endfor %}
@@ -34,3 +38,18 @@
 </table>
 
 {% endblock content %}
+
+{% block js %}
+    {{ block.super }}
+	<script type="text/javascript" src="http://assets.sunlightfoundation.com.s3.amazonaws.com/site/4.0/scripts/gigya.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.widgets.min.js' %}"></script>
+    <script type="text/javascript">
+
+    $(document).ready(function()
+        {
+            $("#ad-data").tablesorter( {sortList: [[2,1]]} );
+        }
+    );
+    </script>
+{% endblock js %}
