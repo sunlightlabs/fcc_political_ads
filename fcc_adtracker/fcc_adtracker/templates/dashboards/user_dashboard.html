@@ -96,6 +96,7 @@
 
                             <th>Last Modified</th>
                             <th>Station(s)</th>
+                            <th>Is this an ad buy?</th>
                             <th>Advertiser</th>
                             <th># Spots</th>
                             <th>$ Spent</th>
@@ -107,7 +108,16 @@
                         <tr class="{% if politicalbuy.is_public %}live{% else %}not-live{% endif %}">
                             <!-- <td class="{{ politicalbuy.is_public|yesno:'Approved,Unapproved,Unknown'|title }} tip">{{ politicalbuy.is_public|yesno:'Approved,Unapproved,Unknown'|title }}</td> -->
                             <td>{% if politicalbuy.updated_at %}{{ politicalbuy.updated_at|date:"SHORT_DATETIME_FORMAT" }}{% else %}Unknown{% endif %}</td>
-                            <td>{{ politicalbuy.broadcasters.all|join:", " }} {{ politicabuy.created_at }}</td>
+                            <td>{{ politicalbuy.broadcasters_callsign_list|join:", " }}</td>
+                            <td>{% spaceless %}
+                                {% if politicalbuy.is_invoice %}
+                                Marked <strong>invoice</strong>
+                                {% elif politicalbuy.is_invalid %}
+                                Marked <strong>invalid</strong>
+                                {% else %}
+                                Ad buy or unmarked
+                                {% endif %}{% endspaceless %}
+                            </td>
                             <td>{{ politicalbuy.advertiser|default:'Unknown' }}</td>
                             <td>{{ politicalbuy.total_num_spots|default:'Unknown' }}</td>
                             <td>{% if politicalbuy.total_spent %}${{ politicalbuy.total_spent }}{% else %}Unknown{% endif %}</td>

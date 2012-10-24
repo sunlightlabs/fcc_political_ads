@@ -76,7 +76,7 @@ class TV_Advertiser(models.Model):
     recent_amount_guess_high= models.PositiveIntegerField(blank=True, null=True)
     recent_amount_guess = models.PositiveIntegerField(blank=True, null=True)
     recent_amount_guess_low = models.PositiveIntegerField(blank=True, null=True)
-    
+
     is_displayed = models.NullBooleanField(null=True, default=False, help_text="should this appear on it's own page and on summary pages?")
 
     def __unicode__(self):
@@ -309,7 +309,11 @@ class PoliticalBuy(MildModeratedModel):
     def total_num_spots(self):
         """ Returns the sum of the num_spots values for all related political spot objects. """
         values = self.politicalspot_set.all().aggregate(total_num_spots=Sum('num_spots'))
-        return values['total_num_spots']
+        aggregate_num_spots = values.get('total_num_spots', None)
+        if aggregate_num_spots and aggregate_num_spots >= self.num_spots_raw:
+            return aggregate_num_spots
+        else:
+            return self.num_spots_raw
 
     status_objects = PoliticalDocStatusManager()
 
@@ -323,6 +327,7 @@ class PoliticalBuy(MildModeratedModel):
             return 'Not loaded'
         else:
             return 'Needs entry'
+
 
 @receiver(post_save, sender=PoliticalBuy)
 def set_doccloud_data(sender, instance, signal, *args, **kwargs):
