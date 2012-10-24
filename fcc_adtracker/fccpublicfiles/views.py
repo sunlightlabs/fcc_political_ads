@@ -423,7 +423,7 @@ def advertiser_list(request):
 def advertiser_detail(request, advertiser_pk):
     advertiser = get_object_or_404(TV_Advertiser, pk=advertiser_pk)
     today = datetime.datetime.today()
-    week_ago = today - datetime.timedelta(days=50)
+    week_ago = today - datetime.timedelta(days=7)
     advertising_org  = Organization.objects.get(organization_type='AD', related_advertiser=advertiser)
     print advertising_org
     recent_ads = PoliticalBuy.objects.filter(advertiser=advertising_org, contract_start_date__gte=week_ago).order_by('-contract_start_date')
