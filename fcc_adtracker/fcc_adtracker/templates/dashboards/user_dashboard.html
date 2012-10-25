@@ -33,7 +33,7 @@
                     <li><strong>Don’t know what to look for or want help getting started?</strong> <a href="#get_trained">Get assistance from Free Press</a>.</li>
                 </ul>
                 <div id="state_broadcasters">
-                    <h5>Stations near you</h5>
+                    <h5>Non-mandated stations near you<a href="#mandated">*</a></h5>
                     {% if not profile or not profile.state %}
                     <p>Please <a href="{% url edit_profile %}">fill out your profile</a>, including your city, state and ZIP so we can show your local stations and those in your state.</p>
                     {% else %}
@@ -78,6 +78,7 @@
                         </ul>
                     </div>
                     {% endif %}
+                    {% include "_mandated_explanation.html" %}
                 </div>
                 <div class='clearfix'>
                     <h5 id="get_trained">Don’t know what to look for or want help getting started?<br /> Get assistance from Free Press.</h5>
