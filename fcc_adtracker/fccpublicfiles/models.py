@@ -205,6 +205,8 @@ class PoliticalBuy(MildModeratedModel):
 
     using_pp_data = models.NullBooleanField(default=False, null=True, help_text="flag to avoid calling doc_cloud needlessly")
     pp_data_ref = models.ForeignKey(ftf_reference, null=True)
+    # needed for doc status
+    in_document_cloud = models.NullBooleanField(default=False, help_text="Has this been saved to document cloud and created as an ad buy?")
 
     """ This is a user-defined setting that lets an authenticated user
     mark a record as not needing any more work. The idea is that
@@ -323,7 +325,7 @@ class PoliticalBuy(MildModeratedModel):
         elif self.total_spent_raw:
             if self.total_spent_raw > 0:
                 return 'Summarized'
-        elif self.is_FCC_doc and not self.related_FCC_file.in_document_cloud:
+        elif self.is_FCC_doc and not self.in_document_cloud:
             return 'Not loaded'
         else:
             return 'Needs entry'

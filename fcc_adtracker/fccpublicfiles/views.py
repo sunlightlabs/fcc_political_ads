@@ -27,7 +27,7 @@ DOCUMENTCLOUD_DEFAULT_ACCESS_LEVEL = getattr(settings, 'DOCUMENTCLOUD_DEFAULT_AC
 NEEDS_ENTRY_DMAS = getattr(settings, 'NEEDS_ENTRY_DMAS', None)
 
 STATES_DICT = dict(us_states.US_STATES)
-CACHE_TIME = 15 * 60
+CACHE_TIME = 0 * 60
 RESULTS_PER_PAGE = 100
 
 
@@ -455,7 +455,7 @@ def advertiser_list(request):
 def advertiser_detail(request, advertiser_pk):
     advertiser = get_object_or_404(TV_Advertiser, pk=advertiser_pk)
     today = datetime.datetime.today()
-    week_ago = today - datetime.timedelta(days=7)
+    week_ago = today - datetime.timedelta(days=70)
     advertising_org = Organization.objects.get(organization_type='AD', related_advertiser=advertiser)
     filings = PoliticalBuy.objects.filter(advertiser=advertising_org, contract_start_date__gte=week_ago).order_by('-contract_start_date')
     pagenum = request.GET.get('page', 1)

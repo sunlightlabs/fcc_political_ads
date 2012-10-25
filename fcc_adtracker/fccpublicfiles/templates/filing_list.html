@@ -1,4 +1,4 @@
-{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load updatetime from update %}{% load kwacros %}
+{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load updatetime from update %}{% load kwacros %}{% load humanize %}
 {% block bodyclass %}states{% endblock bodyclass %}
 {% block pagetitle %}Recent political ad filings {{ preposition }} {{ geography_name }}{% endblock pagetitle %}
 
@@ -33,11 +33,11 @@
 <table class="table table-striped" style="margin-top:0px; margin-bottom:0px;">
 	<thead>
         <tr>
-            <th>TV Station - Market</th>
+            <th>TV Station</th>
+			<th>Market</th>
 			<th>Date</th>
 			<th>Type</th>
 			<th>Status</th>
-			<th>Advertiser</th>
 			<th>Spots</th>
 			<th>Cost</th>
 			<th>Advertiser/File Info</th>
@@ -46,13 +46,13 @@
     <tbody>
 	{% for filing in this_page.object_list %}
 	<tr>
-		<td><a href="{{ filing.get_station_url }}">{{ filing.broadcaster_callsign }}</a> - <a href="{{ filing.get_dma_url }}">{{filing.nielsen_dma}}</a></td>
+		<td>{{ filing.broadcaster_callsign }}</td>
+		<td>{{filing.nielsen_dma}}</td>
 		<td>{{filing.date_display}}</td>
 		<td>{{ filing.candidate_type }}</td>
 		<td>{{ filing.doc_status }}{% ifequal filing.doc_status 'Needs entry' %}<br><a href="{{ filing.get_edit_url }}">enter this ad</a>{% endifequal %}</td>
-		<td>{{ filing.advertiser|default:'Unknown' }}</td>
-        <td>{{ filing.total_num_spots|default:'' }}</td>
-        <td>{{ filing.total_spent_raw|default:'' }}</td>
+        <td>{{ filing.num_spots_raw|default:'' }}</td>
+        <td>{{ filing.total_spent_raw|default:''|floatformat:"0"|intcomma  }}</td>
 		<td><a href="{{filing.get_absolute_url}}">{% if filing.advertiser_display_name %}{{filing.advertiser_display_name }}{% else %}Unknown Advertiser{% endif %}</a></td>
 	</tr>
 {% endfor %}

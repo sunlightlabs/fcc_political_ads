@@ -32,6 +32,7 @@ def make_ad_buy_from_pdf_file(pdf_file):
         pol_buy.contract_end_date = pdf_file.upload_time
         pol_buy.advertiser_display_name = pdf_file.raw_name_guess + "-" + pdf_file.file_name()
         pol_buy.broadcaster_callsign = pdf_file.folder.broadcaster.callsign
+        pol_buy.in_document_cloud = pdf_file.in_document_cloud
         
         pol_buy.save(auser)
     

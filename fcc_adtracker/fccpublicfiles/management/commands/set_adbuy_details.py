@@ -28,6 +28,7 @@ class Command(BaseCommand):
             doc.broadcaster_callsign = related_pdf.folder.broadcaster.callsign
             doc.ignore_post_save = True
             doc.fcc_folder_name = related_pdf.raw_name_guess
+            doc.in_document_cloud = related_pdf.in_document_cloud
             doc.save(None)
             print "***setting dma:%s state %s candiddate %s callsign %s" % (related_pdf.dma_id, related_pdf.community_state, related_pdf.candidate_type(), doc.broadcaster_callsign )
             

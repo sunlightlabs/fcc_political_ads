@@ -83,20 +83,22 @@
 		<table class="table table-striped" id="ad-list">
 			<thead>
 		        <tr>
-		            <th>TV Station</th>
-					<th>TV Market</th>
-					<th>Status</th>
+		            <th>TV Station - Market</th>
 					<th>Date</th>
+					<th>Status</th>
+					<th>Spots</th>
+					<th>Cost</th>
 					<th></th>
 		       </tr>
 		    </thead>
 		    <tbody>
 					{% for filing in this_page.object_list %}
 					<tr>
-						<td><a href="{{ filing.get_station_url }}">{{ filing.broadcaster_callsign }}</a></td>
-						<td><a href="{{ filing.get_dma_url }}">{{filing.nielsen_dma}}</a></td>
-						<td>{{ filing.doc_status }}{% ifequal filing.doc_status 'Needs entry' %}<br><a href="{{ filing.get_edit_url }}">enter this ad</a>{% endifequal %}</td>
+						<td>{{ filing.broadcaster_callsign }} - {{filing.nielsen_dma}}</td>
 						<td>{{filing.date_display}}</td>
+						<td>{{ filing.doc_status }}{% ifequal filing.doc_status 'Needs entry' %}<br><a href="{{ filing.get_edit_url }}">enter this ad</a>{% endifequal %}</td>
+						<td>{{ filing.num_spots_raw|default:'' }}</td>
+				        <td>{{ filing.total_spent_raw|default:''|floatformat:"0"|intcomma  }}</td>
 						<td><a href="{{filing.get_absolute_url}}">see filing</a></td>
 					</tr>
 				{% endfor %}
