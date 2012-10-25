@@ -1,6 +1,6 @@
 import datetime
 from operator import itemgetter
-    
+
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
@@ -9,7 +9,7 @@ from django.utils.html import escape
 from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.contrib.localflavor.us import us_states
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from doccloud.models import Document
 
@@ -297,23 +297,20 @@ def station_state_list(request, state_id):
     else:
         raise Http404('State with abbrevation "{state_id}" not found.'.format(state_id=state_id))
 
+
 def paginate_filing_list(filings, pagenum):
+    paginator = Paginator(filings, RESULTS_PER_PAGE)
+    try:
+        page = paginator.page(pagenum)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        page = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        page = paginator.page(paginator.num_pages)
 
-    p = Paginator(filings, RESULTS_PER_PAGE)
-    last_page = p.num_pages
-    this_page_range = p.page_range
-    print this_page_range
-    min_page= this_page_range[0]
-    max_page= this_page_range[-1]
-    print "min_page: %s maxpage %s" % (min_page, max_page)
-    if pagenum < min_page:
-        pagenum = min_page
-    elif pagenum > max_page:
-        pagenum = max_page
-    this_page = p.page(pagenum)
+    return page, paginator
 
-    return this_page, last_page
-    
 
 @cache_page(CACHE_TIME)
 def station_dma_list(request, dma_id):
@@ -338,10 +335,9 @@ def station_dma_list(request, dma_id):
     })
 
 
-
 @cache_page(CACHE_TIME)
 def filing_dma_list(request, dma_id):
-    
+
     dma_name = None
     dma_summary_found = False
     this_dma_summary = None
@@ -352,21 +348,21 @@ def filing_dma_list(request, dma_id):
         pass
 
     filings = PoliticalBuy.objects.filter(dma_id=dma_id).order_by('-upload_time')
-    pagenum = int(request.GET.get('page', 1))
-    (this_page, last_page) = paginate_filing_list(filings, pagenum)
+    pagenum = request.GET.get('page', 1)
+    (this_page, paginator) = paginate_filing_list(filings, pagenum)
 
-    count = filings.aggregate(numfilings=Count('pk'))['numfilings']
-    if filings:
+    count = paginator.count
+    if count > 0:
         dma_name = filings[0].nielsen_dma
     return render(request, 'filing_list.html', {
         'this_page': this_page,
-        'last_page':last_page,
+        'last_page': paginator.num_pages,
         'geography_name': dma_name,
         'preposition': 'in',
         'count': count,
         'sfapp_base_template': 'sfapp/base-full.html',
-        'has_summary_data':dma_summary_found,
-        'dma_summary':this_dma_summary
+        'has_summary_data': dma_summary_found,
+        'dma_summary': this_dma_summary
     })
 
 
@@ -374,10 +370,10 @@ def filing_dma_list(request, dma_id):
 def filing_station_list(request, callsign):
 
     filings = PoliticalBuy.objects.filter(broadcaster_callsign__iexact=callsign).order_by('-upload_time')
-    pagenum = int(request.GET.get('page', 1))
-    (this_page, last_page) = paginate_filing_list(filings, pagenum)
-    
-    count = filings.aggregate(numfilings=Count('pk'))['numfilings']
+    pagenum = request.GET.get('page', 1)
+    (this_page, paginator) = paginate_filing_list(filings, pagenum)
+
+    count = paginator.count
     broadcaster = None
     try:
         broadcaster = Broadcaster.objects.get(callsign=callsign)
@@ -386,7 +382,7 @@ def filing_station_list(request, callsign):
 
     return render(request, 'filing_list.html', {
         'this_page': this_page,
-        'last_page':last_page,
+        'last_page': paginator.num_pages,
         'geography_name': callsign,
         'preposition': 'from',
         'count': count,
@@ -396,26 +392,22 @@ def filing_station_list(request, callsign):
     })
 
 
-
-
 @cache_page(CACHE_TIME)
 def filing_state_list(request, state_id):
     state_name = STATES_DICT.get(state_id, None)
     if state_name:
 
         filings = PoliticalBuy.objects.filter(community_state=state_id).order_by('-upload_time')
-        
-        pagenum = int(request.GET.get('page', 1))
-        (this_page, last_page) = paginate_filing_list(filings, pagenum)
-        
-        count = filings.aggregate(numfilings=Count('pk'))['numfilings']
+
+        pagenum = request.GET.get('page', 1)
+        (this_page, paginator) = paginate_filing_list(filings, pagenum)
 
         return render(request, 'filing_list.html', {
             'this_page': this_page,
-            'last_page':last_page,
+            'last_page': paginator.num_pages,
             'geography_name': state_name,
             'preposition': 'in',
-            'count': count,
+            'count': paginator.count,
             'sfapp_base_template': 'sfapp/base-full.html',
         })
 
@@ -430,16 +422,15 @@ def fcc_most_recent(request):
     three_days_ago = today - datetime.timedelta(days=3)
 
     filings = PoliticalBuy.objects.filter(upload_time__gte=three_days_ago).order_by('-upload_time')
-    pagenum = int(request.GET.get('page', 1))
-    (this_page, last_page) = paginate_filing_list(filings, pagenum)
-    count = filings.aggregate(numfilings=Count('pk'))['numfilings']
+    pagenum = request.GET.get('page', 1)
+    (this_page, paginator) = paginate_filing_list(filings, pagenum)
 
     return render(request, 'filing_list.html', {
         'this_page': this_page,
-        'last_page':last_page,
+        'last_page': paginator.num_pages,
         'geography_name': 'the last three days',
         'preposition': 'in',
-        'count': count,
+        'count': paginator.count,
         'sfapp_base_template': 'sfapp/base-full.html',
     })
 
@@ -448,41 +439,40 @@ def needs_entry(self):
     obj = PoliticalBuy.status_objects.get_one_that_needs_entry(dma_id_filter=NEEDS_ENTRY_DMAS)
     return redirect('politicalbuy_edit', uuid_key=obj.uuid_key)
 
+
 @cache_page(CACHE_TIME)
 def advertiser_list(request):
     # only show biggie advertisters that we've explicitly set to display
     advertisers = TV_Advertiser.objects.filter(is_displayed=True)
-    
+
     return render(request, 'advertiser_list.html', {
         'advertisers': advertisers,
         'sfapp_base_template': 'sfapp/base-full.html',
     })
-    
+
+
 @cache_page(CACHE_TIME)
 def advertiser_detail(request, advertiser_pk):
     advertiser = get_object_or_404(TV_Advertiser, pk=advertiser_pk)
     today = datetime.datetime.today()
     week_ago = today - datetime.timedelta(days=7)
-    advertising_org  = Organization.objects.get(organization_type='AD', related_advertiser=advertiser)
-    print advertising_org
+    advertising_org = Organization.objects.get(organization_type='AD', related_advertiser=advertiser)
     filings = PoliticalBuy.objects.filter(advertiser=advertising_org, contract_start_date__gte=week_ago).order_by('-contract_start_date')
-    count = filings.aggregate(numfilings=Count('pk'))['numfilings']
-    pagenum = int(request.GET.get('page', 1))
-    (this_page, last_page) = paginate_filing_list(filings, pagenum)
+    pagenum = request.GET.get('page', 1)
+    (this_page, paginator) = paginate_filing_list(filings, pagenum)
     market_summary_raw = filings.values('nielsen_dma', 'dma_id').order_by('nielsen_dma', 'dma_id').annotate(market_total=Count('id'))
-    
 
     market_summary = sorted(market_summary_raw, key=itemgetter('market_total'), reverse=True)
-    
+
     top_market_summary = None
     if market_summary:
         top_market_summary = market_summary[0]
-    
+
     return render(request, 'advertiser_detail.html', {
         'advertiser': advertiser,
-        'market_summary':market_summary,
-        'top_market_summary':top_market_summary,
+        'market_summary': market_summary,
+        'top_market_summary': top_market_summary,
         'this_page': this_page,
-        'last_page':last_page,
-        'count':count,
+        'last_page': paginator.num_pages,
+        'count': paginator.count,
     })
