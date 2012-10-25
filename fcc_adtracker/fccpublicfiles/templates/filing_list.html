@@ -15,7 +15,22 @@
 <p class="tip">Found {{count}} filings{% if broadcaster %} at {{broadcaster }}{% endif %}. {% updatetime %}.</p>
 {% include "_download_button.html" %}
 
-<table class="table table-striped">
+
+<div id="pager" class="pager clear" style="margin-top:0px; margin-bottom:0px;">
+    <span class="pagedisplay tip withTip"></span>
+    <ul class="unstyled form-inline form-vertical pagerDetails clearfix">
+        <li>
+            <label>Showing results {{this_page.start_index}}-{{this_page.end_index}}</label>
+
+        </li>
+        <li id="btnFirst"><a href="?page=1" class="first textReplace" title="Go to first page of results">First</a></li>
+        <li id="btnPrev"><a href="?page={{this_page.previous_page_number}}" class="prev textReplace" title="Go to previous page of results">Prev</a></li>
+        <li id="btnNext"><a href="?page={{this_page.next_page_number}}" class="next textReplace" title="Go to next page of results">Next</a></li>
+        <li id="btnLast"><a href="?page={{last_page}}" class="last textReplace" title="Go to last page of results">Last</a></li>
+    </ul>
+</div>
+
+<table class="table table-striped" style="margin-top:0px; margin-bottom:0px;">
 	<thead>
         <tr>
             <th>TV Station</th>
@@ -28,7 +43,7 @@
         </tr>
     </thead>
     <tbody>
-	{% for filing in filings %}
+	{% for filing in this_page.object_list %}
 	<tr>
 		<td><a href="{{ filing.get_station_url }}">{{ filing.broadcaster_callsign }}</a></td>
 		<td><a href="{{ filing.get_state_url }}">{{filing.community_state}}</a></td>

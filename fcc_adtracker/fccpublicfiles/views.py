@@ -9,6 +9,7 @@ from django.utils.html import escape
 from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.contrib.localflavor.us import us_states
+from django.core.paginator import Paginator
 
 from doccloud.models import Document
 
@@ -26,7 +27,8 @@ DOCUMENTCLOUD_DEFAULT_ACCESS_LEVEL = getattr(settings, 'DOCUMENTCLOUD_DEFAULT_AC
 NEEDS_ENTRY_DMAS = getattr(settings, 'NEEDS_ENTRY_DMAS', None)
 
 STATES_DICT = dict(us_states.US_STATES)
-CACHE_TIME = 15 * 60
+CACHE_TIME = 0 * 60
+RESULTS_PER_PAGE = 100
 
 
 def politicalbuy_view(request, uuid_key, template_name='politicalbuy_view.html', message=None):
@@ -295,6 +297,23 @@ def station_state_list(request, state_id):
     else:
         raise Http404('State with abbrevation "{state_id}" not found.'.format(state_id=state_id))
 
+def paginate_filing_list(filings, pagenum):
+
+    p = Paginator(filings, RESULTS_PER_PAGE)
+    last_page = p.num_pages
+    this_page_range = p.page_range
+    print this_page_range
+    min_page= this_page_range[0]
+    max_page= this_page_range[-1]
+    print "min_page: %s maxpage %s" % (min_page, max_page)
+    if pagenum < min_page:
+        pagenum = min_page
+    elif pagenum > max_page:
+        pagenum = max_page
+    this_page = p.page(pagenum)
+
+    return this_page, last_page
+    
 
 @cache_page(CACHE_TIME)
 def station_dma_list(request, dma_id):
@@ -319,8 +338,10 @@ def station_dma_list(request, dma_id):
     })
 
 
+
 @cache_page(CACHE_TIME)
 def filing_dma_list(request, dma_id):
+    
     dma_name = None
     dma_summary_found = False
     this_dma_summary = None
@@ -331,11 +352,15 @@ def filing_dma_list(request, dma_id):
         pass
 
     filings = PoliticalBuy.objects.filter(dma_id=dma_id).order_by('-upload_time')
+    pagenum = int(request.GET.get('page', 1))
+    (this_page, last_page) = paginate_filing_list(filings, pagenum)
+
     count = filings.aggregate(numfilings=Count('pk'))['numfilings']
     if filings:
         dma_name = filings[0].nielsen_dma
     return render(request, 'filing_list.html', {
-        'filings': filings,
+        'this_page': this_page,
+        'last_page':last_page,
         'geography_name': dma_name,
         'preposition': 'in',
         'count': count,
@@ -349,6 +374,9 @@ def filing_dma_list(request, dma_id):
 def filing_station_list(request, callsign):
 
     filings = PoliticalBuy.objects.filter(broadcaster_callsign__iexact=callsign).order_by('-upload_time')
+    pagenum = int(request.GET.get('page', 1))
+    (this_page, last_page) = paginate_filing_list(filings, pagenum)
+    
     count = filings.aggregate(numfilings=Count('pk'))['numfilings']
     broadcaster = None
     try:
@@ -357,7 +385,8 @@ def filing_station_list(request, callsign):
         pass
 
     return render(request, 'filing_list.html', {
-        'filings': filings,
+        'this_page': this_page,
+        'last_page':last_page,
         'geography_name': callsign,
         'preposition': 'from',
         'count': count,
@@ -367,16 +396,23 @@ def filing_station_list(request, callsign):
     })
 
 
+
+
 @cache_page(CACHE_TIME)
 def filing_state_list(request, state_id):
     state_name = STATES_DICT.get(state_id, None)
     if state_name:
 
         filings = PoliticalBuy.objects.filter(community_state=state_id).order_by('-upload_time')
+        
+        pagenum = int(request.GET.get('page', 1))
+        (this_page, last_page) = paginate_filing_list(filings, pagenum)
+        
         count = filings.aggregate(numfilings=Count('pk'))['numfilings']
 
         return render(request, 'filing_list.html', {
-            'filings': filings,
+            'this_page': this_page,
+            'last_page':last_page,
             'geography_name': state_name,
             'preposition': 'in',
             'count': count,
@@ -394,10 +430,13 @@ def fcc_most_recent(request):
     three_days_ago = today - datetime.timedelta(days=3)
 
     filings = PoliticalBuy.objects.filter(upload_time__gte=three_days_ago).order_by('-upload_time')
+    pagenum = int(request.GET.get('page', 1))
+    (this_page, last_page) = paginate_filing_list(filings, pagenum)
     count = filings.aggregate(numfilings=Count('pk'))['numfilings']
 
     return render(request, 'filing_list.html', {
-        'filings': filings,
+        'this_page': this_page,
+        'last_page':last_page,
         'geography_name': 'the last three days',
         'preposition': 'in',
         'count': count,
@@ -426,9 +465,10 @@ def advertiser_detail(request, advertiser_pk):
     week_ago = today - datetime.timedelta(days=7)
     advertising_org  = Organization.objects.get(organization_type='AD', related_advertiser=advertiser)
     print advertising_org
-    recent_ads = PoliticalBuy.objects.filter(advertiser=advertising_org, contract_start_date__gte=week_ago).order_by('-contract_start_date')
-    
-    market_summary_raw = recent_ads.values('nielsen_dma', 'dma_id').order_by('nielsen_dma', 'dma_id').annotate(market_total=Count('id'))
+    filings = PoliticalBuy.objects.filter(advertiser=advertising_org, contract_start_date__gte=week_ago).order_by('-contract_start_date')
+    pagenum = int(request.GET.get('page', 1))
+    (this_page, last_page) = paginate_filing_list(filings, pagenum)
+    market_summary_raw = filings.values('nielsen_dma', 'dma_id').order_by('nielsen_dma', 'dma_id').annotate(market_total=Count('id'))
     
 
     market_summary = sorted(market_summary_raw, key=itemgetter('market_total'), reverse=True)
@@ -441,5 +481,6 @@ def advertiser_detail(request, advertiser_pk):
         'advertiser': advertiser,
         'market_summary':market_summary,
         'top_market_summary':top_market_summary,
-        'filings':recent_ads,
+        'this_page': this_page,
+        'last_page':last_page,
     })

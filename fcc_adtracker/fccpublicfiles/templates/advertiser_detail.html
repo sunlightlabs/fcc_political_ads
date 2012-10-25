@@ -41,8 +41,10 @@
     </div>
     <div class="module">
 		
-		<h3 id="market_summary">Market summary - filings in the last 7 days</h2>
+		<h3 id="market_summary">Market summary - filings in the last 7 days</h3>
 		<p class="tip">This is a count of all known documents filed in the last 7 days.  <b>It is not a count of how many ads appeared in these markets!</b></p>
+		
+		
 		<table class="table table-striped tablesorter sortable" id="ad-data">
 			<thead>
 		        <tr>
@@ -61,7 +63,23 @@
 		</table>
         
 		
-		<h3 id="most_recent">Documents filed in the last 7 days</h2>
+		<h3 id="most_recent">Documents filed in the last 7 days</h3>
+		
+		
+		<div id="pager" class="pager clear" style="margin-top:0px; margin-bottom:0px;">
+		    <span class="pagedisplay tip withTip"></span>
+		    <ul class="unstyled form-inline form-vertical pagerDetails clearfix">
+		        <li>
+		            <label>Showing results {{this_page.start_index}}-{{this_page.end_index}}</label>
+
+		        </li>
+		        <li id="btnFirst"><a href="?page=1" class="first textReplace" title="Go to first page of results">First</a></li>
+		        <li id="btnPrev"><a href="?page={{this_page.previous_page_number}}" class="prev textReplace" title="Go to previous page of results">Prev</a></li>
+		        <li id="btnNext"><a href="?page={{this_page.next_page_number}}" class="next textReplace" title="Go to next page of results">Next</a></li>
+		        <li id="btnLast"><a href="?page={{last_page}}" class="last textReplace" title="Go to last page of results">Last</a></li>
+		    </ul>
+		</div>
+		
 		<table class="table table-striped" id="ad-list">
 			<thead>
 		        <tr>
@@ -73,7 +91,7 @@
 		       </tr>
 		    </thead>
 		    <tbody>
-					{% for filing in filings %}
+					{% for filing in this_page.object_list %}
 					<tr>
 						<td><a href="{{ filing.get_station_url }}">{{ filing.broadcaster_callsign }}</a></td>
 						<td><a href="{{ filing.get_state_url }}">{{filing.community_state}}</a></td>
