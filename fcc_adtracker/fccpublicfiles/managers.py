@@ -39,6 +39,7 @@ class PoliticalDocStatusManager(models.Manager):
         '''A list of PoliticalBuys that aren't invoices or invalid docs, or are already complete'''
         qs = super(PoliticalDocStatusManager, self).get_query_set()
         dma_id_filter = kwargs.get('dma_id_filter', None)
+        qs = qs.filter(in_document_cloud=True)
         if dma_id_filter:
             qs = qs.filter(dma_id__in=dma_id_filter)
         org_id_filter = kwargs.get('org_id_filter', None)
