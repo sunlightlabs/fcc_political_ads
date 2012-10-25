@@ -3,7 +3,12 @@
 
 {% block content %}
 <h2 class="withTip">Sign Up</h2>
-<span class="tip">Create an account to upload and enter political ad buys that you discover.</span>
+<div class="row">
+    <div class="span4">
+        <p class="tip">Create an account to upload and enter political ad buys that you discover. You can fill out the form below or sign in with <a class="signinBtn" id="tweetBtn" href="{% url socialauth_begin 'twitter' %}">Twitter</a> or <a class="signinBtn" id="fbBtn" href="{% url socialauth_begin 'facebook' %}">Facebook</a>.</p>
+    </div>
+</div>
+
 <form class="compact" action="." method="post" accept-charset="utf-8">
     {% csrf_token %}
     <ul>

@@ -33,7 +33,7 @@
                     <li><strong>Don’t know what to look for or want help getting started?</strong> <a href="#get_trained">Get assistance from Free Press</a>.</li>
                 </ul>
                 <div id="state_broadcasters">
-                    <h5>Stations near you</h5>
+                    <h5>Non-mandated stations near you<a href="#mandated">*</a></h5>
                     {% if not profile or not profile.state %}
                     <p>Please <a href="{% url edit_profile %}">fill out your profile</a>, including your city, state and ZIP so we can show your local stations and those in your state.</p>
                     {% else %}
@@ -78,6 +78,7 @@
                         </ul>
                     </div>
                     {% endif %}
+                    {% include "_mandated_explanation.html" %}
                 </div>
                 <div class='clearfix'>
                     <h5 id="get_trained">Don’t know what to look for or want help getting started?<br /> Get assistance from Free Press.</h5>
@@ -108,7 +109,7 @@
                         <tr class="{% if politicalbuy.is_public %}live{% else %}not-live{% endif %}">
                             <!-- <td class="{{ politicalbuy.is_public|yesno:'Approved,Unapproved,Unknown'|title }} tip">{{ politicalbuy.is_public|yesno:'Approved,Unapproved,Unknown'|title }}</td> -->
                             <td>{% if politicalbuy.updated_at %}{{ politicalbuy.updated_at|date:"SHORT_DATETIME_FORMAT" }}{% else %}Unknown{% endif %}</td>
-                            <td>{{ politicalbuy.broadcasters_callsign_list|join:", " }}</td>
+                            <td>{{ politicalbuy.broadcaster_callsign }}</td>
                             <td>{% spaceless %}
                                 {% if politicalbuy.is_invoice %}
                                 Marked <strong>invoice</strong>
@@ -119,7 +120,7 @@
                                 {% endif %}{% endspaceless %}
                             </td>
                             <td>{{ politicalbuy.advertiser|default:'Unknown' }}</td>
-                            <td>{{ politicalbuy.total_num_spots|default:'Unknown' }}</td>
+                            <td>{{ politicalbuy.num_spots_raw|default:'Unknown' }}</td>
                             <td>{% if politicalbuy.total_spent %}${{ politicalbuy.total_spent }}{% else %}Unknown{% endif %}</td>
                             <td><a href="{% url politicalbuy_edit uuid_key=politicalbuy.uuid_key %}" title="Edit data for '{{ politicalbuy.documentcloud_doc }}'">Edit</a></td>
                         </tr>
