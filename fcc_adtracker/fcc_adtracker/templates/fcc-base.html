@@ -142,7 +142,10 @@
 <div class="recentbuys-sidebar">
 {# Could cache this; it's in it's own block b/c it needs to be overridden on pages. #}
 {% block recent_buys %}
+{% load cache %}
+{% cache 600 'recent_buy_sidebar'  %}
 {% recent_buy_sidebar %}
+{% endcache %}
 {% endblock %}
 </div>
 {% endblock %}
