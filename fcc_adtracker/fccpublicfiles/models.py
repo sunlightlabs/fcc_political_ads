@@ -320,8 +320,8 @@ class PoliticalBuy(MildModeratedModel):
     def doc_status(self):
         if self.is_invoice or self.is_invalid:
             return 'Summarized'
-        elif self.num_spots_raw:
-            if self.num_spots_raw > 0:
+        elif self.total_spent_raw:
+            if self.total_spent_raw > 0:
                 return 'Summarized'
         elif self.is_FCC_doc and not self.related_FCC_file.in_document_cloud:
             return 'Not loaded'
