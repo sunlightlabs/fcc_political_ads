@@ -466,6 +466,7 @@ def advertiser_detail(request, advertiser_pk):
     advertising_org  = Organization.objects.get(organization_type='AD', related_advertiser=advertiser)
     print advertising_org
     filings = PoliticalBuy.objects.filter(advertiser=advertising_org, contract_start_date__gte=week_ago).order_by('-contract_start_date')
+    count = filings.aggregate(numfilings=Count('pk'))['numfilings']
     pagenum = int(request.GET.get('page', 1))
     (this_page, last_page) = paginate_filing_list(filings, pagenum)
     market_summary_raw = filings.values('nielsen_dma', 'dma_id').order_by('nielsen_dma', 'dma_id').annotate(market_total=Count('id'))
@@ -483,4 +484,5 @@ def advertiser_detail(request, advertiser_pk):
         'top_market_summary':top_market_summary,
         'this_page': this_page,
         'last_page':last_page,
+        'count':count,
     })
