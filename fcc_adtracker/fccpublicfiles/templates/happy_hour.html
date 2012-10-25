@@ -1,0 +1,31 @@
+{% extends "fcc-base.html" %}{% load static from staticfiles %}
+{% block bodyclass %}{% endblock bodyclass %}
+{% block pagetitle %}Happy Hour{% endblock pagetitle %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+        .about p, .about li {
+            font-size: 16px;
+            line-height: 24px;
+        }
+        .about p {
+            margin-bottom: 24px;
+        }
+    </style>
+{% endblock css %}
+
+{% block content %}
+<h2>Happy Hour Links</h2>
+        <h5>Random Files in Cincinnati, Cleveland and Las Vegas </h5>
+        <p><a href="/political-files/needs-entry-random/">Go to random file</a></p>
+        <h5>Big Committees Files</h5>
+			<ul>
+				<li><a href="/political-files/needs-entry-committee/4908/">Obama for America</a></li>
+				<li><a href="/political-files/needs-entry-committee/4891/">Romney for President Inc.</a></li>
+				<li><a href="/political-files/needs-entry-committee/4/">Priorities USA Action</a> (super PAC supporting Obama)</li>
+				<li><a href="/political-files/needs-entry-committee/3/">Restore Our Future</a> (super PAC supporting Obama)</li>
+			</ul>
+
+			{% endblock content %}
+

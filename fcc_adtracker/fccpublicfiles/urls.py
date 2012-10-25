@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-
+from django.views.generic.simple import direct_to_template
 from django.contrib import admin
 
 from broadcasters import views as broadcaster_views
@@ -11,6 +11,8 @@ uuid_re_str = r'(?P<uuid_key>[a-f0-9-]{32,36})'
 urlpatterns = patterns('',
     url(r'^political-files/submit/$', 'fccpublicfiles.views.prelim_doc_form', name='document_submit'),
     url(r'^political-files/needs-entry/', 'fccpublicfiles.views.needs_entry', name='needs_entry'),
+    url(r'^political-files/needs-entry-random/', 'fccpublicfiles.views.alex_list', name='alex_list'),
+    url(r'^political-files/needs-entry-committee/(?P<org_id>\d+)/$', 'fccpublicfiles.views.committee_needs_entry', name='committee_needs_entry'),
     url(r'^political-files/edit/{}/add-spot/$'.format(uuid_re_str), 'fccpublicfiles.views.edit_related_politicalspot', name='add_related_politicalspot'),
     url(r'^political-files/edit/{}/edit-spot/(?P<spot_id>\d+)/$'.format(uuid_re_str), 'fccpublicfiles.views.edit_related_politicalspot', name='edit_related_politicalspot'),
     url(r'^political-files/edit/{}/$'.format(uuid_re_str), 'fccpublicfiles.views.politicalbuy_edit', name='politicalbuy_edit'),
@@ -33,5 +35,6 @@ urlpatterns = patterns('',
     url(r'^political-files/tv-station/(?P<callsign>[\w\-]+)/$', 'fccpublicfiles.views.filing_station_list', name='filing_station_list'),
     url(r'^political-files/most-recent/', 'fccpublicfiles.views.fcc_most_recent', name='fcc_most_recent'),
     url(r'^political-files/advertisers/', 'fccpublicfiles.views.advertiser_list', name='advertiser_list'),  
-    url(r'^political-files/advertiser/[\w-]+/(?P<advertiser_pk>\d+)/$', 'fccpublicfiles.views.advertiser_detail', name='advertiser_detail'),      
+    url(r'^political-files/advertiser/[\w-]+/(?P<advertiser_pk>\d+)/$', 'fccpublicfiles.views.advertiser_detail', name='advertiser_detail'),
+    url(r'^happy-hour/', direct_to_template, {'template': 'happy_hour.html'}),      
 )

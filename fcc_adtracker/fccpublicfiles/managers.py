@@ -41,6 +41,9 @@ class PoliticalDocStatusManager(models.Manager):
         dma_id_filter = kwargs.get('dma_id_filter', None)
         if dma_id_filter:
             qs = qs.filter(dma_id__in=dma_id_filter)
+        org_id_filter = kwargs.get('org_id_filter', None)
+        if org_id_filter:
+            qs = qs.filter(advertiser__related_advertiser__pk=org_id_filter)
         return qs.exclude(id__in=self.has_total_spent_raw()).exclude(id__in=self.non_adbuy_docs())
 
     def get_one_that_needs_entry(self, **kwargs):
@@ -50,3 +53,20 @@ class PoliticalDocStatusManager(models.Manager):
         rnd = random.randint(0, cnt - 1)
 
         return qs[rnd]
+        
+    def get_one_that_needs_entry_from_committee(self, **kwargs):
+        org_id_filter = kwargs.get('org_id_filter', None)
+        qs = self.needs_entry(org_id_filter=org_id_filter)
+        cnt = qs.count()
+        rnd = random.randint(0, cnt - 1)
+
+        return qs[rnd]
+        
+    def get_submission_that_needs_entry(self):
+        qs = self.needs_entry(is_FCC_doc=False)
+        cnt = qs.count()
+        rnd = random.randint(0, cnt - 1)
+
+        return qs[rnd]
+        
+        

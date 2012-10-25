@@ -1,4 +1,4 @@
-import datetime
+import datetime, random
 from operator import itemgetter
 
 from django.contrib.auth.decorators import login_required
@@ -12,6 +12,11 @@ from django.contrib.localflavor.us import us_states
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from doccloud.models import Document
+
+from happy_hour import alex_random_list
+random_list = alex_random_list()
+alex_list_len = len(random_list)
+
 
 from .models import *
 from fccpublicfiles.forms import PrelimDocumentForm, PoliticalBuyFormFull,\
@@ -435,8 +440,21 @@ def fcc_most_recent(request):
     })
 
 
+
+
 def needs_entry(self):
     obj = PoliticalBuy.status_objects.get_one_that_needs_entry(dma_id_filter=NEEDS_ENTRY_DMAS)
+    return redirect('politicalbuy_edit', uuid_key=obj.uuid_key)
+        
+def alex_list(self):
+    rnd = random.randint(0, alex_list_len - 1)
+    thisid = random_list[rnd]
+    print "thisid %s" % thisid
+    obj = PoliticalBuy.objects.get(id=thisid)
+    return redirect('politicalbuy_edit', uuid_key=obj.uuid_key)
+
+def committee_needs_entry(self, org_id):
+    obj = PoliticalBuy.status_objects.get_one_that_needs_entry_from_committee(org_id_filter=org_id)
     return redirect('politicalbuy_edit', uuid_key=obj.uuid_key)
 
 
