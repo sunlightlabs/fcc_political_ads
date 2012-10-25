@@ -7,6 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from scraper.models import PDF_File, dc_reference
 from broadcasters.models import Broadcaster
+from fccpublicfiles.models import PoliticalBuy
 
 
 class Command(BaseCommand):
@@ -19,6 +20,7 @@ class Command(BaseCommand):
         orphan_pdfs = PDF_File.objects.filter(dc_slug__isnull=True)
         total = 0
         total_matches = 0
+        orphan_pdfs = []
         for orphan in orphan_pdfs:
             total += 1
             our_title = orphan.file_name()
@@ -39,12 +41,18 @@ class Command(BaseCommand):
                 orphan.dc_title = dc_file.dc_title
                 orphan.in_document_cloud = True
                 orphan.save()
+                
+                
             except (dc_reference.DoesNotExist, dc_reference.MultipleObjectsReturned):
                 orphan.in_document_cloud = False
                 orphan.save()
                 print "** No match for %s" % (our_title)
                 
-                
+        missing_adbuys = PoliticalBuy.objects.filter(is_FCC_doc=True, in_document_cloud=False, related_FCC_file__in_document_cloud=True)
+        for adbuy in missing_adbuys:
+            adbuy.in_document_cloud = True
+            adbuy.save_no_update()
+            
             
                 
         print "Found %s of %s docs" % (total_matches, total)
