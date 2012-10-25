@@ -116,5 +116,5 @@
     <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.pager.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/sort_table.js' %}"></script>
 	<script type="text/javascript" src="http://assets.sunlightfoundation.com.s3.amazonaws.com/site/4.0/scripts/gigya.min.js"></script>
-
+	{% if obj.using_pp_data %}<script type="text/javascript" src="http://pixel.propublica.org/pixel.js" async="true"></script> {% endif %}
 {% endblock js %}

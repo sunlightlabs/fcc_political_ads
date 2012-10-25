@@ -33,28 +33,34 @@
 <table class="table table-striped" style="margin-top:0px; margin-bottom:0px;">
 	<thead>
         <tr>
-            <th>TV Station</th>
-			<th>State</th>
-			<th>TV Market</th>
+            <th>TV Station - Market</th>
 			<th>Date</th>
 			<th>Type</th>
+			<th>Status</th>
+			<th>Advertiser</th>
+			<th>Spots</th>
+			<th>Cost</th>
 			<th>Advertiser/File Info</th>
-			<th>File source</th>
         </tr>
     </thead>
     <tbody>
 	{% for filing in this_page.object_list %}
 	<tr>
-		<td><a href="{{ filing.get_station_url }}">{{ filing.broadcaster_callsign }}</a></td>
-		<td><a href="{{ filing.get_state_url }}">{{filing.community_state}}</a></td>
-		<td><a href="{{ filing.get_dma_url }}">{{filing.nielsen_dma}}</a></td>
+		<td><a href="{{ filing.get_station_url }}">{{ filing.broadcaster_callsign }}</a> - <a href="{{ filing.get_dma_url }}">{{filing.nielsen_dma}}</a></td>
 		<td>{{filing.date_display}}</td>
 		<td>{{ filing.candidate_type }}</td>
+		<td>{{ filing.doc_status }}{% ifequal filing.doc_status 'Needs entry' %}<br><a href="{{ filing.get_edit_url }}">enter this ad</a>{% endifequal %}</td>
+		<td>{{ filing.advertiser|default:'Unknown' }}</td>
+        <td>{{ filing.total_num_spots|default:'' }}</td>
+        <td>{{ filing.total_spent_raw|default:'' }}</td>
 		<td><a href="{{filing.get_absolute_url}}">{% if filing.advertiser_display_name %}{{filing.advertiser_display_name }}{% else %}Unknown Advertiser{% endif %}</a></td>
-		<td>{% if filing.is_FCC_doc %}FCC{% else %}submission{% endif %}</td>
 	</tr>
 {% endfor %}
 	</tbody>
 </table>
 
 {% endblock content %}
+{% block js %}
+    {{ block.super }}
+<script type="text/javascript" src="http://pixel.propublica.org/pixel.js" async="true"></script> 
+{% endblock js %}
