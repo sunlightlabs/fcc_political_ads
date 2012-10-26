@@ -7,7 +7,7 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFou
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.utils.html import escape
 from django.conf import settings
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page, never_cache
 from django.contrib.localflavor.us import us_states
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -441,11 +441,12 @@ def fcc_most_recent(request):
 
 
 
-
+@never_cache
 def needs_entry(self):
     obj = PoliticalBuy.status_objects.get_one_that_needs_entry(dma_id_filter=NEEDS_ENTRY_DMAS)
     return redirect('politicalbuy_edit', uuid_key=obj.uuid_key)
-        
+
+@never_cache
 def alex_list(self):
     rnd = random.randint(0, alex_list_len - 1)
     thisid = random_list[rnd]
