@@ -20,7 +20,6 @@ class Command(BaseCommand):
         orphan_pdfs = PDF_File.objects.filter(dc_slug__isnull=True)
         total = 0
         total_matches = 0
-        orphan_pdfs = []
         for orphan in orphan_pdfs:
             total += 1
             our_title = orphan.file_name()
