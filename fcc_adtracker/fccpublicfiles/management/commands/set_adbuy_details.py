@@ -24,12 +24,15 @@ class Command(BaseCommand):
             doc.community_state = related_pdf.community_state
             doc.candidate_type = related_pdf.candidate_type()
             doc.upload_time = related_pdf.upload_time
-            doc.advertiser_display_name = related_pdf.raw_name_guess + "-" + related_pdf.file_name()
+            if doc.advertiser:
+                 doc.advertiser_display_name = doc.advertiser.name
+            else:
+                doc.advertiser_display_name = related_pdf.raw_name_guess + "-" + related_pdf.file_name()
             doc.broadcaster_callsign = related_pdf.folder.broadcaster.callsign
-            doc.ignore_post_save = True
+            #doc.ignore_post_save = True
             doc.fcc_folder_name = related_pdf.raw_name_guess
             doc.in_document_cloud = related_pdf.in_document_cloud
-            doc.save(None)
+            doc.save_no_update()
             print "***setting dma:%s state %s candiddate %s callsign %s" % (related_pdf.dma_id, related_pdf.community_state, related_pdf.candidate_type(), doc.broadcaster_callsign )
             
             
