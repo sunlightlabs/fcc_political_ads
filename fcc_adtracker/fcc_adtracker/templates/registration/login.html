@@ -1,4 +1,4 @@
-{% extends "fcc-base.html" %}
+{% extends "fcc-base.html" %}{% load url from future %}
 
 {% block pagetitle %}Sign in{% endblock pagetitle %}
 
@@ -6,7 +6,7 @@
 <h2>Sign In</h2>
 <div class="row">
     <div class="span8">
-        <form class="form-vertical" action="." method="post" accept-charset="utf-8">
+        <form class="form" action="." method="post" accept-charset="utf-8">
             {% csrf_token %}
             <ul>
                 {{ form.as_ul }}
@@ -18,8 +18,8 @@
         </form>
     </div>
     <div class="span4">
-        <p> Sign in with <a class="signinBtn" id="tweetBtn" href="{% url socialauth_begin 'twitter' %}">Twitter</a> or <a class="signinBtn" id="fbBtn" href="{% url socialauth_begin 'facebook' %}">Facebook</a>.</p>
+        <p> Sign in with <a class="signinBtn" id="tweetBtn" href="{% url 'socialauth_begin' 'twitter' %}">Twitter</a> or <a class="signinBtn" id="fbBtn" href="{% url 'socialauth_begin' 'facebook' %}">Facebook</a>.</p>
+        <p>Forgot your password? <a href="{% url 'auth_password_reset' %}">Reset it here</a>.</p>
     </div>
 </div>
-
  {% endblock content %}

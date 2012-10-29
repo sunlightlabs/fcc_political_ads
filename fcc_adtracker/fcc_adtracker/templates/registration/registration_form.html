@@ -1,11 +1,11 @@
-{% extends "fcc-base.html" %}
+{% extends "fcc-base.html" %}{% load url from future %}
 {% block pagetitle %}Register an account{% endblock pagetitle %}
 
 {% block content %}
 <h2 class="withTip">Sign Up</h2>
 <div class="row">
     <div class="span4">
-        <p class="tip">Create an account to upload and enter political ad buys that you discover. You can fill out the form below or sign in with <a class="signinBtn" id="tweetBtn" href="{% url socialauth_begin 'twitter' %}">Twitter</a> or <a class="signinBtn" id="fbBtn" href="{% url socialauth_begin 'facebook' %}">Facebook</a>.</p>
+        <p class="tip">Create an account to upload and enter political ad buys that you discover. You can fill out the form below or sign in with <a class="signinBtn" id="tweetBtn" href="{% url 'socialauth_begin' 'twitter' %}">Twitter</a> or <a class="signinBtn" id="fbBtn" href="{% url 'socialauth_begin' 'facebook' %}">Facebook</a>.</p>
     </div>
 </div>
 
@@ -75,10 +75,11 @@
               {{ form.zipcode.errors }}
         </li>
         {% endif %}
-        <li class="bottomBtn">
+        <li>
             <button class="btn" type="submit">Register</button>
         </li>
     </ul>
 </form>
-{{nonuser_form.as_ul}}
+<p>Alreadt have an account but forgot your password? <a href="{% url 'auth_password_reset' %}">Reset it here</a>.</p>
+
 {% endblock content %}
