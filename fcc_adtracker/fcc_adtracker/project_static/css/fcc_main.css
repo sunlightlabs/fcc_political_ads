@@ -223,10 +223,6 @@ a.caldisabled {
 
 table.sortable > thead th, table.sortable > thead th:hover { cursor: pointer; }
 
-.row .span8 { padding-right: 30px; width: 590px; }
-.row #searchResults.span8 { padding-right: 0px; width: 620px;}
-.row .span9 { padding-right: 30px; width: 670px; }
-
 #resultsTitle span { text-transform: capitalize; color: #97928F; }
 .resultCount {  font-family: Georgia, "Times New Roman", Times, serif; font-style: oblique; color: #97928F; }
 

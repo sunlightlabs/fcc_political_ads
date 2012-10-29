@@ -7,7 +7,7 @@
 <div class="row">
     <div class="span12">
     {% if query %}
-        <h2 id="resultsTitle">Search Results for: <span>&#8220;{{query}}&#8221;</span></h2>
+        <h2 id="resultsTitle">Search Results for:<br><span>&#8220;{{query}}&#8221;</span></h2>
     {% else %}
         <h2 id="resultsTitle">Advanced Search</h2>
          <form method="get" action="." class='form'>
@@ -47,7 +47,9 @@
         {% endfor %}
     {% endif %}
     </div>
-    <div id="searchResults" class="span8 offset1">
+    <div id="searchResults" class="span9">
+        <p class="lead">{{paginator.count }} results</p>
+
         {% if selected_facets %}
             <div id="filterBox">
                 <span><strong>Your Selections:</strong></span>
@@ -93,13 +95,15 @@
             </table>
         {% endif %}
 
-        {% if page.has_previous or page.has_next %}
-            <div>
-                {% if page.has_previous %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}{% for df in date_filters %}&amp;{{df.0}}={{ df.1 }}{% endfor %}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
-                |
-                {% if page.has_next %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}{% for df in date_filters %}&amp;{{df.0}}={{ df.1 }}{% endfor %}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
-            </div>
-        {% endif %}
+        <div>
+            <p>
+            {% if page.has_previous or page.has_next %}
+            {% if page.has_previous %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}{% for df in date_filters %}&amp;{{df.0}}={{ df.1 }}{% endfor %}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+            |
+            {% if page.has_next %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}{% for df in date_filters %}&amp;{{df.0}}={{ df.1 }}{% endfor %}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+            {% endif %}
+            </p>
+        </div>
 
 
     </div>
