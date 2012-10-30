@@ -1,7 +1,10 @@
-{% extends "fcc-base.html" %} {% load search_extras %}
+{% extends "fcc-base.html" %} {% load search_extras kwacros %}
 
 {% block pagetitle %}Search{% if query %}: "{{query}}"{% endif %}{% endblock pagetitle %}
 
+{% kwacro sel_facets_urlenc exclude=None %}{% for key, value in selected_facets.items %}{% if key != exclude %}&amp;selected_facets={{key}}_exact:{{ value|urlencode }}{% endif %}{% endfor %}{% endkwacro %}
+
+{% kwacro date_filter_urlenc %}{% for df in date_filters %}&amp;{{df.0}}={{ df.1 }}{% endfor %}{% endkwacro %}
 
 {% block content %}
 <div class="row">
@@ -31,16 +34,31 @@
 <div class="row">
     <div class="span3">
         <h4>Narrow your search</h4>
-
         {% if facets %}
             {% for key, value in facets.fields.items %}
                 <ul class="unstyled withLine">
                     <li>
-                        <h5>{{key|replace:'_, '|title}}</h5>
+                        <h5>{{key|replace:'_, '|title}} {% if key == 'state' %}(top results){% endif %}</h5>
                         <ul class='unstyled'>
                 {% for item in value %}
-                            <li><a href="{% url haystack_search %}?q={{query}}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}{% if item.0 not in selected_facets.values %}&amp;selected_facets={{key}}_exact:{{ item.0|urlencode }}{% endif %}{% for df in date_filters %}&amp;{{df.0}}={{ df.1 }}{% endfor %}">{{ item.0 }}</a> <span class="resultCount">({{ item.1 }})</span></li>{% endfor %}
+                            <li><a href="{% url haystack_search %}?q={{query}}{% usekwacro sel_facets_urlenc %}{% if item.0 not in selected_facets.values %}&amp;selected_facets={{key}}_exact:{{ item.0|urlencode }}{% endif %}{% usekwacro date_filter_urlenc %}">{{ item.0 }}</a> <span class="resultCount">({{ item.1 }})</span></li>{% endfor %}
                         </ul>
+                        {% if key == 'state' %}
+                        <h6>Select a different state:</h6>
+                        <form method="get" action=".">
+                            <input type="hidden" name="q" value="{{query|escape}}">
+                            {% for k, v in selected_facets.items %}{% if k != 'state' %}
+                            <input type="hidden" name="selected_facets" value="{{k}}_exact:{{ v }}">{% endif %}{% endfor %}
+{% for df in date_filters %}
+                            <input type="hidden" name="{{df.0}}" value="{{ df.1 }}">{% endfor %}
+                            <select name="selected_facets">
+                                <option value="">---------------</option>{% for state in us_states %}
+                                <option value="state_exact:{{state.0}}" {% if state.0 == selected_facets.state %}selected=selected{% endif %}>{{state.1}}</option>
+                        {% endfor %}
+                            </select>
+                            <input class="btn" type="submit" value="Search">
+                        </form>
+                        {% endif %}
                     </li>
                 </li>
             </ul>
@@ -49,14 +67,13 @@
     </div>
     <div id="searchResults" class="span9">
         <p class="lead">{{paginator.count }} results</p>
-
         {% if selected_facets %}
             <div id="filterBox">
                 <span><strong>Your Selections:</strong></span>
                 <ul class="unstyled">
                     {% for key, value in selected_facets.items %}
                     <li>
-                        <a class="closeBtn textReplace" href="{% url haystack_search %}?q={{query}}{% for df in date_filters %}&amp;{{df.0}}={{ df.1 }}{% endfor %}{% for k, v in selected_facets.items %}{% if k != key %}&amp;selected_facets={{k}}:{{ v|urlencode }}{% endif %}{% endfor %}">Remove</a>
+                        <a class="closeBtn textReplace" href="{% url haystack_search %}?q={{query}}{% usekwacro sel_facets_urlenc exclude=key %}{% usekwacro date_filter_urlenc %}">Remove</a>
                         <strong>{% ifequal key 's' %}State{% else %}{{key|replace:'_, '|title}}{% endifequal %}</strong>: {{value}} </li>
                     {% endfor %}
                 </ul>
@@ -98,9 +115,9 @@
         <div>
             <p>
             {% if page.has_previous or page.has_next %}
-            {% if page.has_previous %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}{% for df in date_filters %}&amp;{{df.0}}={{ df.1 }}{% endfor %}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+            {% if page.has_previous %}<a href="{% url haystack_search %}?q={{ query }}{% usekwacro sel_facets_urlenc %}{% usekwacro date_filter_urlenc %}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
             |
-            {% if page.has_next %}<a href="{% url haystack_search %}?q={{ query }}{% for key, value in selected_facets.items %}&amp;selected_facets={{key}}:{{ value|urlencode }}{% endfor %}{% for df in date_filters %}&amp;{{df.0}}={{ df.1 }}{% endfor %}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+            {% if page.has_next %}<a href="{% url haystack_search %}?q={{ query }}{% usekwacro sel_facets_urlenc %}{% usekwacro date_filter_urlenc %}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
             {% endif %}
             </p>
         </div>

@@ -1,5 +1,5 @@
 from haystack.views import FacetedSearchView
-
+from django.contrib.localflavor.us import us_states
 
 DATE_FIELDS = ('start_date', 'end_date')
 
@@ -18,6 +18,7 @@ class ImprovedFacetedSearchView(FacetedSearchView):
             if key.startswith(DATE_FIELDS):
                 extra['date_filters'].append((key, value))
         extra['date_filters'].sort()
+        extra['us_states'] = us_states.US_STATES
         extra['sfapp_base_template'] = 'sfapp/base-full.html'
 
         return extra
