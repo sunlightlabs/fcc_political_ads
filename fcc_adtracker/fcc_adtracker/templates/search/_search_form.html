@@ -1,0 +1,20 @@
+<form method="get" action="." class='form {% if layout %}form-{{ layout }}{% endif %}'>
+    <ul>
+        <li>
+            <label>{{form.q.label}}</label>{% if layout == 'inline' %}:&nbsp;{% endif %}
+            <input type="text" id="id_q" value="{{form.q.value|default:''}}" name="q" required placeholder="Search ad buys, advertisers, etc.">
+            {{form.q.errors}}
+        </li>
+        <li class="input-append date" data-date="{{ form.start_date.value|default:'' }}" data-date-format="yyyy-mm-dd">
+            <label>{{ form.start_date.label }}</label>{% if layout == 'inline' %}:&nbsp;{% endif %}
+            <input type="text" name="start_date"  value="{{ form.start_date.value|default:'' }}" placeholder="2012-11-05, e.g." class="input-small" id="id_start_date"><span class="add-on"><i class="icon-calendar"></i></span>
+            {{ form.start_date.errors }}
+        </li>
+        <li class="input-append date" data-date="{{ form.end_date.value|default:'' }}" data-date-format="yyyy-mm-dd">
+            <label>End date</label>{% if layout == 'inline' %}:&nbsp;{% endif %}
+            <input type="text" name="end_date"  value="{{ form.end_date.value|default:'' }}" placeholder="2012-11-05, e.g." class="input-small" id="id_end_date"><span class="add-on"><i class="icon-calendar"></i></span>
+            {{ form.end_date.errors }}
+        </li>
+        <li><input type="submit" value="Search" class="btn"></li>
+    </ul>
+</form>

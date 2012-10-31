@@ -11,22 +11,10 @@
 {% block content %}
 <div class="row">
     <div class="span12">
-{% if query %}        <h2 id="resultsTitle">Search Results for: <span>&#8220;{{query}}&#8221;</span></h2>{% else %}
+{% if query %}        <h2 id="resultsTitle">Search Results for: <span>&#8220;{{query}}&#8221;</span></h2>
+        {% include "search/_search_form.html" with layout='inline' %}{% else %}
         <h2 id="resultsTitle">Advanced Search</h2>
-         <form method="get" action="." class='form'>
-             <ul>
-                 {% for field in form %}
-                 <li>
-                     <label>{{field.label}}</label>
-                     {{field}}
-                     {{field.errors}}
-                 </li>
-                 {% endfor %}
-                 <li>
-                     <input class='btn' type="submit" value="Search">
-                 </li>
-             </ul>
-         </form>{% endif %}
+        {% include "search/_search_form.html" %}{% endif %}
     </div>
 </div>
 {% if query %}
@@ -111,3 +99,23 @@
 </div>
 {% endif %}
 {% endblock %}
+
+
+{% block css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/datepicker.css' %}">
+{% endblock %}
+
+
+{% block additionaljslibs %}
+{{ block.super }}
+<script type="text/javascript" src="{% static 'js/libs/bootstrap-datepicker.js' %}"></script>
+{% endblock additionaljslibs %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        $('.date').datepicker();
+        $('.date input').attr('autocomplete', 'off');
+    </script>
+{% endblock js %}

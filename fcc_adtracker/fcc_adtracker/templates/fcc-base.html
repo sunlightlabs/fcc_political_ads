@@ -24,16 +24,16 @@
 {% endblock head %}
 
 {% block js %}
-<script src="//cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
-<script>window.jQuery.tools || document.write('<script src="{% static 'js/libs/jquery.tools.min.js' %}"><\/script>')</script>
 <script src="{% static 'js/libs/bootstrap.min.js' %}" type="text/javascript" charset="utf-8"></script>
+{% block additionaljslibs %}{% endblock additionaljslibs %}
 <script type="text/javascript">
     jQuery(document).ready(function($) {
         $(".alert").alert()
     });
 </script>
 <script src="{% static 'js/fcc_site.js' %}" type="text/javascript" charset="utf-8"></script>
-    <script type="text/javascript" src="http://assets.sunlightfoundation.com.s3.amazonaws.com/site/4.0/scripts/gigya.min.js"></script>
+{% block socialjs %}
+<script type="text/javascript" src="http://assets.sunlightfoundation.com.s3.amazonaws.com/site/4.0/scripts/gigya.min.js"></script>
 <script type="text/javascript" charset="utf-8">
     var feedback_widget_options = {};
     feedback_widget_options.display = "overlay";
@@ -75,6 +75,7 @@
       loadChartbeat : function() { oldonload(); loadChartbeat(); };
     })();
 </script>
+{% endblock socialjs %}
 {% endblock js %}
 
 {% block css %}

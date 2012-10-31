@@ -1,14 +1,12 @@
 from django import forms
-from django.forms.extras.widgets import SelectDateWidget
+from django.forms.widgets import DateInput
 
 from haystack.forms import FacetedSearchForm
 
-from fccpublicfiles.forms import SELECT_YEARS
-
 
 class DateRangeSearchForm(FacetedSearchForm):
-    start_date = forms.DateField(widget=SelectDateWidget(years=SELECT_YEARS, attrs={'class': 'input-mini'}), required=False)
-    end_date = forms.DateField(widget=SelectDateWidget(years=SELECT_YEARS, attrs={'class': 'input-mini'}), required=False)
+    start_date = forms.DateField(widget=DateInput(), required=False)
+    end_date = forms.DateField(widget=DateInput(), required=False)
 
     def search(self):
         # First, store the SearchQuerySet received from other processing.

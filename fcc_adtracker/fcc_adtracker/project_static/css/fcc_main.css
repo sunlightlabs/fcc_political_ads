@@ -55,6 +55,11 @@ ul#locations {
 #freepress { background: url(../img/logo_freepress.png) top left no-repeat; width: 118px; height: 40px; position: relative; top: -98px; left: 670px;  }
 #newAmerica { background: url(../img/logo_newAmerica.png) top left no-repeat; width: 156px; height: 28px; margin-top: 20px; margin-right: 0;}
 
+.input-append .add-on:last-child, .input-append .btn:last-child {
+    border: 2px solid #E7E4DC;
+    margin-left: -2px;
+}
+
 /*
     Calendar styles (used on datepickers)
 */
@@ -309,3 +314,13 @@ table .Unapproved { background: url(../img/bg_unapproved.png) center 8px no-repe
 .pagenav {
     margin: 48px 0;
 }
+
+/* Search page */
+.search h2 {
+    max-width: none;
+}
+
+.search h4 {
+    margin-bottom: 15px;
+}
+
