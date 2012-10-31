@@ -24,11 +24,8 @@
 {% if facets %}{% for key, value in facets.fields.items %}
         <ul class="unstyled withLine">
             <li>
-                <h5>{{key|replace:'_, '|title}} {% if key == 'state' %}(top results){% endif %}</h5>
-                <ul class='unstyled'>{% for item in value %}
-                    <li><a href="{% url haystack_search %}?q={{query}}{% usekwacro sel_facets_urlenc %}{% if item.0 not in selected_facets.values %}&amp;selected_facets={{key}}_exact:{{ item.0|urlencode }}{% endif %}{% usekwacro date_filter_urlenc %}">{{ item.0 }}</a> <span class="resultCount">({{ item.1 }})</span></li>{% endfor %}
-                </ul>{% if key == 'state' %}
-                <h6>Select a different state:</h6>
+                <h5>{{key|replace:'_, '|title}}</h5>
+                {% if key == 'state' %}
                 <form method="get" action=".">
                     {% spaceless %}
                     <input type="hidden" name="q" value="{{query|escape}}">
@@ -47,6 +44,10 @@
                     </select>
                     <input class="btn" type="submit" value="Search">
                 </form>{% endif %}
+                {% if key == 'state' %}<h6>Top Results</h6>{% endif %}
+                <ul class='unstyled'>{% for item in value %}
+                    <li><a href="{% url haystack_search %}?q={{query}}{% usekwacro sel_facets_urlenc %}{% if item.0 not in selected_facets.values %}&amp;selected_facets={{key}}_exact:{{ item.0|urlencode }}{% endif %}{% usekwacro date_filter_urlenc %}">{{ item.0 }}</a> <span class="resultCount">({{ item.1 }})</span></li>{% endfor %}
+                </ul>
             </li>
         </ul>{% endfor %}{% endif %}
     </div>
