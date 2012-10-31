@@ -316,11 +316,9 @@ table .Unapproved { background: url(../img/bg_unapproved.png) center 8px no-repe
 }
 
 /* Search page */
-.search h2 {
-    max-width: none;
-}
+.search h2 { max-width: none; }
 
-.search h4 {
-    margin-bottom: 15px;
-}
+.search h4 { margin-bottom: 15px; }
+
+.search td.filename { max-width: 200px;}
 
