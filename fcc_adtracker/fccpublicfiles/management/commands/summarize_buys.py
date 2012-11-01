@@ -111,9 +111,7 @@ class Command(BaseCommand):
             dma_id = dma['dma_id']
             (this_dma_summary, created) = dma_summary.objects.get_or_create(dma_id=dma_id)
             
-            mandated = Broadcaster.objects.filter(dma_id=dma_id).aggregate(total=Count('pk'))['total']
-            this_dma_summary.num_broadcasters = dma['count']
-            this_dma_summary.num_mandated_broadcasters = mandated
+
             all_ads = PoliticalBuy.objects.filter(dma_id=dma_id)
             
             summarize_ads(this_dma_summary, all_ads)
