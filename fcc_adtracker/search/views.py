@@ -11,7 +11,7 @@ class ImprovedFacetedSearchView(FacetedSearchView):
     def extra_context(self):
         extra = super(ImprovedFacetedSearchView, self).extra_context()
         facet_tuple = tuple([item.split(':') for item in self.request.GET.getlist('selected_facets')])
-        facet_dict = dict([(item[0].split('_exact')[0], item[1]) for item in facet_tuple])
+        facet_dict = dict([(item[0].split('_exact')[0], item[1]) for item in facet_tuple if len(item) > 1])
         extra['selected_facets'] = facet_dict
         extra['date_filters'] = []
         for key, value in self.request.GET.iteritems():
