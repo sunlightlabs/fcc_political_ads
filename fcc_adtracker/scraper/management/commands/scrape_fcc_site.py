@@ -32,10 +32,12 @@ class Command(BaseCommand):
         if (len(args) == 0):
                         
             for this_callsign in mandated_stations:
-                print "\n\nProcessing %s - logs to: %s" % (this_callsign, FCC_SCRAPER_LOG_DIRECTORY)
-                url = "https://stations.fcc.gov/station-profile/%s/political-files/browse->2012" % (this_callsign)
-                this_folder = folder_placeholder(url, 'root', this_callsign)
-                this_folder.process(process_recursively)
+                # There's confusion as to when files need to get uploaded
+                for year in (2012, 2013):
+                    print "\n\nProcessing %s : %s - logs to: %s" % (year, this_callsign, FCC_SCRAPER_LOG_DIRECTORY)
+                    url = "https://stations.fcc.gov/station-profile/%s/political-files/browse->%s" % (this_callsign, year)
+                    this_folder = folder_placeholder(url, 'root', this_callsign)
+                    this_folder.process(process_recursively)
                 
         elif len(args) > 0:
             url_array = []
