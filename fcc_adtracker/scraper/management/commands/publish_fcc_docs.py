@@ -16,7 +16,7 @@ class Command(BaseCommand):
         count = 0
         for afile in files:
             count += 1
-            print "%s Running load %s " % (count, afile)
+            #print "%s Running load %s " % (count, afile)
             result = make_ad_buy_from_pdf_file(afile)
             
             
