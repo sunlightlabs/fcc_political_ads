@@ -173,10 +173,11 @@ class folder_placeholder(object):
                 # Get the size, type and date
                 (sizefound, typefound, datefound) = parse_li(str(folderli))
                 numfiles = 0
-                try:
-                    numfiles = int(sizefound)
-                except ValueError: 
-                    pass 
+                if sizefound:
+                    try:
+                        numfiles = int(sizefound)
+                    except ValueError: 
+                        pass 
                 print "\t Typefound:: %s %s %s" % (typefound, sizefound, datefound)
 
 
