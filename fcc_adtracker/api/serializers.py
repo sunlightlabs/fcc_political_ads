@@ -7,12 +7,11 @@ from tastypie.serializers import Serializer
 
 
 class ExpandedSerializer(Serializer):
-    formats = ['json', 'jsonp', 'xml', 'yaml', 'csv']
+    formats = ['json', 'jsonp', 'xml', 'csv']
     content_types = {
         'json': 'application/json',
         'jsonp': 'text/javascript',
         'xml': 'application/xml',
-        'yaml': 'text/yaml',
         'csv': 'text/csv',
     }
 
