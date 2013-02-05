@@ -24,7 +24,7 @@ folder_re = re.compile(r'<div class="(.*?)"><a href="(.*?)">', re.I)
 # pdf_re = re.compile(r'<div id="(.*?)" class="(.*?)"><a target="_blank" title="(.*?)" href="(.*?)">')
 
 # Now there may be multiple files, some of which are converted pdfs. We want the converted pdfs only. It would be nice to grab the original files too, but unclear about sane way to process these... 
-pdf_re = re.compile(r'<div id="(.*?)" class="(.*?)">.*<a target="_blank" title="(.*?)" href="(.*?\.pdf)">', re.DOTALL)
+pdf_re = re.compile(r'<div id="(.*?)" class="(.*?)">.*<a target="_blank" title="(.*?)" href="(.*?\.pdf)">', re.DOTALL, re.IGNORECASE)
 
 
 # assumes we're looking at 2012
