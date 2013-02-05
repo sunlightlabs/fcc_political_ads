@@ -19,9 +19,13 @@ type_re = re.compile(r'<div class="type">(.*?)</div>')
 date_re = re.compile(r'<div class="date">(.*?)</div>')
 
 folder_re = re.compile(r'<div class="(.*?)"><a href="(.*?)">', re.I)
-pdf_re = re.compile(r'<div id="(.*?)" class="(.*?)"><a target="_blank" title="(.*?)" href="(.*?)">')
 
-# chokes on: <div class="name fName public file pdf"><span class="icon "></span> Trivedi order 1.pdf</div>
+# old style:
+# pdf_re = re.compile(r'<div id="(.*?)" class="(.*?)"><a target="_blank" title="(.*?)" href="(.*?)">')
+
+# Now there may be multiple files, some of which are converted pdfs. We want the converted pdfs only. It would be nice to grab the original files too, but unclear about sane way to process these... 
+pdf_re = re.compile(r'<div id="(.*?)" class="(.*?)">.*<a target="_blank" title="(.*?)" href="(.*?\.pdf)">', re.DOTALL)
+
 
 # assumes we're looking at 2012
 folder_url_re = re.compile(r'https://stations.fcc.gov/station-profile/(.*?)/political-files/browse->(.*)')
@@ -109,7 +113,7 @@ def parse_pdf_div(div_html):
     (fileid, fileclass, title, href) = (None, None, None, None)
     if pdf:
         [fileid, fileclass, title, href] = pdf[0]
-        print "Found file match in %s " % (div_html)
+        print "Found file %s match in %s " % (href, div_html)
     else:
         print "No match in file re %s" % (div_html)
     return (fileid, fileclass, title, href)
@@ -204,7 +208,8 @@ class folder_placeholder(object):
       
                     #summary_filehandle.write("%s,%s,%s\n" % (numfiles, callSign, str(path) ) )
 
-                elif typefound == 'PDF':
+
+                else:
                     (fileid, fileclass, title, href) = parse_pdf_div(str(firstdiv))
                     filestub = {
                     'fileid':fileid,
@@ -217,10 +222,7 @@ class folder_placeholder(object):
                     }
                     self.childfiles.append(filestub)
 
-                else:
-                    # They allow .xls and .txt files as well, among others
-                    print "\nunknown type found: %s" % (typefound)
-                    continue
+
 
     
     def save_files(self):
