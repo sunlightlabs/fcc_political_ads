@@ -27,7 +27,7 @@
 			<b>More Information</b>
            <ul class="unstyled">
 			{% if advertiser.ad_hawk_url %}<li style="margin-top:5px;">Watch ads on <a href="http://adhawk.sunlightfoundation.com{{ advertiser.ad_hawk_url }}">Ad Hawk</a></li>{% endif %}
-			{% if advertiser.ftum_url %}<li style="margin-top:5px;">See spending on <a href="{{ advertiser.ftum_url}}">Follow the Unlimited Money</a></li>{% endif %}	
+			{% if advertiser.ftum_url %}<li style="margin-top:5px;">See spending on <a href="{{ advertiser.ftum_url}}">Follow the Unlimited Money</a></li>{% endif %}
 			<li style="margin-top:5px;">Jump to <a href="#ad-list">recent ads</a></li>
 				<!--
                 {% if obj.advertiser.fec_id != '' %}
@@ -40,11 +40,11 @@
         </div>
     </div>
     <div class="module">
-		
+
 		<h3 id="market_summary">Market summary - filings in the last 7 days</h3>
 		<p class="tip">This is a count of all known documents filed in the last 7 days.  <b>It is not a count of how many ads appeared in these markets!</b></p>
-		
-		
+
+
 		<table class="table table-striped tablesorter sortable" id="ad-data">
 			<thead>
 		        <tr>
@@ -61,11 +61,11 @@
 			{% endfor %}
 			</tbody>
 		</table>
-        
-		
+
+
 		<h3 id="most_recent">Documents filed in the last 7 days</h3>
 		<p class="tip">Found {{ count }} documents.</p>
-		
+
 		<div id="pager" class="pager clear" style="margin-top:0px; margin-bottom:0px;">
 		    <span class="pagedisplay tip withTip"></span>
 		    <ul class="unstyled form-inline form-vertical pagerDetails clearfix">
@@ -79,7 +79,7 @@
 		        <li id="btnLast"><a href="?page={{last_page}}" class="last textReplace" title="Go to last page of results">Last</a></li>
 		    </ul>
 		</div>
-		
+
 		<table class="table table-striped" id="ad-list">
 			<thead>
 		        <tr>
@@ -112,7 +112,7 @@
 
 {% block js %}
     {{ block.super }}
-	<script type="text/javascript" src="http://assets.sunlightfoundation.com.s3.amazonaws.com/site/4.0/scripts/gigya.min.js"></script>
+	<script type="text/javascript" src="https://s3.amazonaws.com/assets.sunlightfoundation.com/social/scripts/simple-socialite-pack.min.js"></script>
     <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.widgets.min.js' %}"></script>
     <script type="text/javascript">

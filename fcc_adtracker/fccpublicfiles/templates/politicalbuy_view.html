@@ -40,10 +40,10 @@
                 <dd>{{obj.contract_number}}{% if obj.using_pp_data %}*{% endif %}</dd>{% endif %}
 				<dt class="clear">Dates:</dt>
 				<dd>{{obj.contract_start_date|date:"n/d/y" }} - {{ obj.contract_end_date|date:"n/d/y" }}</dd>
-                
+
                 <dt class="clear">Number of Ad Spots:</dt>
                 <dd>{{obj.num_spots_raw|default:"Unknown" }}</dd>
-			
+
             </dl>
         </div>
         <div id="internalLinks" class="span2 sideCallout">
@@ -115,6 +115,6 @@
     <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.widgets.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/libs/jquery.tablesorter.pager.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/sort_table.js' %}"></script>
-	<script type="text/javascript" src="http://assets.sunlightfoundation.com.s3.amazonaws.com/site/4.0/scripts/gigya.min.js"></script>
+	<script type="text/javascript" src="https://s3.amazonaws.com/assets.sunlightfoundation.com/social/scripts/simple-socialite-pack.min.js"></script>
 	{% if obj.using_pp_data %}<script type="text/javascript" src="http://pixel.propublica.org/pixel.js" async="true"></script> {% endif %}
 {% endblock js %}

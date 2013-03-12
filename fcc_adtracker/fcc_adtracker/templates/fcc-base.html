@@ -33,7 +33,7 @@
 </script>
 <script src="{% static 'js/fcc_site.js' %}" type="text/javascript" charset="utf-8"></script>
 {% block socialjs %}
-<script type="text/javascript" src="http://assets.sunlightfoundation.com.s3.amazonaws.com/site/4.0/scripts/gigya.min.js"></script>
+<script type="text/javascript" src="https://s3.amazonaws.com/assets.sunlightfoundation.com/social/scripts/simple-socialite-pack.min.js"></script>
 <script type="text/javascript" charset="utf-8">
     var feedback_widget_options = {};
     feedback_widget_options.display = "overlay";
@@ -122,15 +122,15 @@
             </ul>
         </form>
 </header>
-{% block gigya_html %}
+{% block social_html %}
     <div class="social-icons share-buttons"
-        data-gigya="auto"
-        data-services="twitter-tweet, facebook"
+        data-socialite="auto"
+        data-services="twitter-tweet, facebook-like"
         data-options="linkBack={{request.build_absolute_uri|urlencode}}&amp;size=16&amp;showCounts=right"
         {# tweet_text needs to be urlencoded, which means that http://djangosnippets.org/snippets/363/ may be a fine idea. #}
         data-twitter-tweet-options="defaultText={% block tweet_text %}Become a Political Ad Sleuth w/@sunfoundation @freepress %26 find out who’s buying airwaves this election! #freethefiles{% endblock tweet_text %}">
     </div>
-{% endblock gigya_html %}
+{% endblock social_html %}
 {{ block.super }}
 
 {% endblock container %}
