@@ -360,6 +360,7 @@ def filing_dma_list(request, dma_id):
     if count > 0:
         dma_name = filings[0].nielsen_dma
     return render(request, 'filing_list.html', {
+        #'feed_url':"markets/%s" % dma_id,
         'this_page': this_page,
         'last_page': paginator.num_pages,
         'geography_name': dma_name,
