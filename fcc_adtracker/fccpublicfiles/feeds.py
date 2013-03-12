@@ -22,3 +22,6 @@ class MarketFeed(Feed):
 
     def items(self, obj):
         return PoliticalBuy.objects.filter(dma_id=obj.dma_id, is_FCC_doc=True).order_by('-upload_time')[:30]
+        
+    def item_pubdate(self, item):
+        return item.related_FCC_file.upload_time
