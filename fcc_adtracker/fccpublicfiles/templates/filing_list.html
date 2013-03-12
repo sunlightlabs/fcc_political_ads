@@ -9,9 +9,10 @@
 
 {% block content %}
 <h2 class="clearfix">Ad filings {{ preposition }} {{ geography_name }}</h2>
+
 {% include "_subnav.html" %}
 
-<p class="tip">{% include "_data_disclaimer_short.html" %}</p>
+<p class="tip">{% if feed_url %}<img src="http://assets.sunlightfoundation.com.s3.amazonaws.com/reporting/1.0/img/feed-icon-14x14.png">&nbsp;<a href="http://politicaladsleuth.com/political-files/feeds/{{ feed_url }}/">Subscribe to RSS feed</a>&nbsp;|&nbsp;<a href="javascript:gotoscout('http://politicaladsleuth.com/political-files/feeds/{{ feed_url }}/')" class="">Create an alert</a><br>{% endif %}{% include "_data_disclaimer_short.html" %}</p>
 <p class="tip">Found {{count}} filings{% if broadcaster %} at {{broadcaster }}{% endif %}. {% updatetime %}.</p>
 {% include "_download_button.html" %}
 
@@ -62,5 +63,18 @@
 {% endblock content %}
 {% block js %}
     {{ block.super }}
-<script type="text/javascript" src="http://pixel.propublica.org/pixel.js" async="true"></script> 
+<script type="text/javascript" src="http://pixel.propublica.org/pixel.js" async="true"></script>
+<script type="text/javascript">
+
+function gotoscout(feedurl) {
+	scouturl = "http://scout.sunlightfoundation.com/import/feed?url=" + encodeURIComponent(feedurl);
+	var gotoscout = confirm("You're being sent to Scout to subscribe to feeds for your selections. If you don't have an account with Scout you'll be prompted to create one.");
+	if (gotoscout) {
+		window.location = scouturl;
+		return false;
+	}
+}
+
+</script>
+
 {% endblock js %}

@@ -239,6 +239,9 @@ class PoliticalBuy(MildModeratedModel):
 
     def isadbuy(self):
         return True
+    
+    def title(self):
+        return self.related_FCC_file
 
     def advertiser_display(self):
         return self.advertiser or 'Unknown'
