@@ -11,7 +11,7 @@ django-storages==1.1.4
 jsonfield
 django-passwords==0.2.0
 django-social-auth>=0.7.7,<0.8
-django-registration
+django-registration==0.8
 python-documentcloud==0.154
 django-extensions==0.8
 -e hg+https://bitbucket.org/schinckel/django-timedelta-field@0ca08518d3eb60f9a5168b3279dcca1913f6b1f0#egg=django_timedeltafield-0.6.2
