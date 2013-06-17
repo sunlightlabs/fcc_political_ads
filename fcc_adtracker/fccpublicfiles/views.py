@@ -284,7 +284,7 @@ def station_fcc_list(request):
 def station_state_list(request, state_id):
     state_name = STATES_DICT.get(state_id.upper(), None)
     if state_name:
-        broadcasters = Broadcaster.objects.filter(community_state=state_id).order_by('callsign').values('callsign', 'network_affiliate', 'community_city', 'community_state', 'nielsen_dma', 'is_mandated')
+        broadcasters = Broadcaster.objects.filter(community_state=state_id.upper()).order_by('callsign').values('callsign', 'network_affiliate', 'community_city', 'community_state', 'nielsen_dma', 'is_mandated')
 
         for broadcaster in broadcasters:
             broadcaster['geography_name'] = "%s (%s)" % (broadcaster['callsign'], broadcaster['network_affiliate'])
@@ -403,7 +403,7 @@ def filing_state_list(request, state_id):
     state_name = STATES_DICT.get(state_id.upper(), None)
     if state_name:
 
-        filings = PoliticalBuy.objects.filter(community_state=state_id).order_by('-upload_time')
+        filings = PoliticalBuy.objects.filter(community_state=state_id.upper()).order_by('-upload_time')
 
         pagenum = request.GET.get('page', 1)
         (this_page, paginator) = paginate_filing_list(filings, pagenum)
