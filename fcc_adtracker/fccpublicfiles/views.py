@@ -3,7 +3,7 @@ from operator import itemgetter
 
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.utils.html import escape
 from django.conf import settings
@@ -282,7 +282,7 @@ def station_fcc_list(request):
 
 @cache_page(CACHE_TIME)
 def station_state_list(request, state_id):
-    state_name = STATES_DICT.get(state_id, None)
+    state_name = STATES_DICT.get(state_id.upper(), None)
     if state_name:
         broadcasters = Broadcaster.objects.filter(community_state=state_id).order_by('callsign').values('callsign', 'network_affiliate', 'community_city', 'community_state', 'nielsen_dma', 'is_mandated')
 
@@ -400,7 +400,7 @@ def filing_station_list(request, callsign):
 
 @cache_page(CACHE_TIME)
 def filing_state_list(request, state_id):
-    state_name = STATES_DICT.get(state_id, None)
+    state_name = STATES_DICT.get(state_id.upper(), None)
     if state_name:
 
         filings = PoliticalBuy.objects.filter(community_state=state_id).order_by('-upload_time')
