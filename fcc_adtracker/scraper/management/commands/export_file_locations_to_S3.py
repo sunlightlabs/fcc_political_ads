@@ -29,14 +29,14 @@ def all_ads_to_file():
     file_description="This file only contains ads from the FCC's site available as of %s" % most_recent_scrape.strftime("%Y-%m-%d %H:%m")
     print file_description
     file_name =  "%s/all_ad_locations.csv" % (CSV_EXPORT_DIR)
-    fields = ['id', 'station', 'file_upload_time', 'tv_market', 'tv_market_id', 'ad_type', 'fcc_folder', 'file_name', 'source_file_url', 's3_file_url', 'is_backed_up', 'not_at_fcc', 'missing_as_of_date']
+    fields = ['id', 'station', 'file_upload_time', 'tv_market', 'tv_market_id', 'ad_type', 'fcc_folder', 'file_name', 'source_file_url', 's3_file_url', 'is_backed_up', 'not_at_fcc', 'missing_as_of_date', 'local_file_path']
     all_rows = PDF_File.objects.all()
     file_rows = []
     for row in all_rows:
         missing_time = ''
         if row.missing_as_of_date:
             missing_time = row.missing_as_of_date.strftime("%Y-%m-%d") 
-        file_rows.append([row.pk, row.callsign, row.upload_time.strftime("%Y-%m-%d"), row.nielsen_dma, row.dma_id, row.candidate_type(), row.raw_name_guess, row.file_name(), row.raw_url, row.s3_full_url, row.is_backed_up, row.not_at_fcc, missing_time])
+        file_rows.append([row.pk, row.callsign, row.upload_time.strftime("%Y-%m-%d"), row.nielsen_dma, row.dma_id, row.candidate_type(), row.raw_name_guess, row.file_name(), row.raw_url, row.s3_full_url, row.is_backed_up, row.not_at_fcc, missing_time, row.local_file_path])
     
     write_csv_to_file(file_description, file_name, fields, file_rows)
     
