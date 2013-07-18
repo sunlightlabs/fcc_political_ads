@@ -1,4 +1,4 @@
-Django>=1.4.1
+Django>=1.4.1,<1.5
 South==0.7.5
 psycopg2
 django-debug-toolbar
@@ -10,14 +10,14 @@ boto==2.5.1
 django-storages==1.1.4
 jsonfield
 django-passwords==0.2.0
-django-social-auth>=0.7.7
-django-registration
+django-social-auth>=0.7.7,<0.8
+django-registration==0.8
 python-documentcloud==0.154
 django-extensions==0.8
 -e hg+https://bitbucket.org/schinckel/django-timedelta-field@0ca08518d3eb60f9a5168b3279dcca1913f6b1f0#egg=django_timedeltafield-0.6.2
 -e hg+https://bitbucket.org/schinckel/django-weekday-field@f075f68d54dfe5f4a532b3819c7048a1acc42bc9#egg=django_weekday_field-dev
 -e git://github.com/sunlightlabs/django-doccloud.git#egg=django_doccloud-dev
-django-reversion==1.6.2
+django-reversion>=1.6.2,<1.7
 django-ajax-selects==1.2.5
 geopy
 unicodecsv==0.9.0

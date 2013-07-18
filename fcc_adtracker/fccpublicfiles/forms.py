@@ -135,8 +135,8 @@ class PoliticalBuyFormFull(forms.ModelForm):
     is_invalid = forms.BooleanField(required=False)
     is_invoice = forms.BooleanField(required=False)
     data_entry_notes = forms.CharField(widget=forms.Textarea(attrs={'cols': 5}), required=False)
-    contract_start_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-mini'}), required=False)
-    contract_end_date = forms.DateField(widget=SelectDateWidget(attrs={'class':'input-mini'}), required=False)
+    contract_start_date = forms.DateField(widget=SelectDateWidget(years=SELECT_YEARS, attrs={'class':'input-mini'}), required=False)
+    contract_end_date = forms.DateField(widget=SelectDateWidget(years=SELECT_YEARS,attrs={'class':'input-mini'}), required=False)
     advertiser = forms.ModelChoiceField(queryset=Organization.objects.filter(organization_type='AD'),
                                         widget=SelectWithPopUp(add_url=reverse_lazy('add_advertiser')), required=False
                                         )
