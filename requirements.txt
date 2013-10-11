@@ -3,7 +3,7 @@ South==0.7.5
 psycopg2
 django-debug-toolbar
 unittest2
--e git://github.com/sunlightlabs/sfapp.git@5a7ab67e782af470fc7d911cdc068cdd730c3c02#egg=sfapp-dev
+-e git+https://github.com/sunlightlabs/sfapp.git@d1a833e2337598547c0681696a24a811f75f2140#egg=sfapp-dev
 django-nose==1.1
 nose==1.1.2
 boto==2.5.1
