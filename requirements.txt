@@ -23,10 +23,10 @@ geopy
 unicodecsv==0.9.0
 name-cleaver==0.3.1
 
-simplejson
-requests>=0.9.0
--e git+https://github.com/toastdriven/pyelasticsearch@3bfe1a90eab6c2dfb0989047212f4bc9fb814803#egg=pyelasticsearch-dev
--e git+https://github.com/toastdriven/django-haystack.git@433e154f76a450ffc095792c6f2e051ef508fc2d#egg=django_haystack
+'simplejson(>=2.1.0)'
+'requests(>=1.0,<2.0)'
+pyelasticsearch
+django-haystack<=2.0
 pytz
 python-memcached
 python-magic==0.4.3
