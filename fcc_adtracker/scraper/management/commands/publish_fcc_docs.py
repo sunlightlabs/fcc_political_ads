@@ -1,3 +1,5 @@
+# to do -- make this routine more efficient--don't save stuff with no changes. 
+
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 

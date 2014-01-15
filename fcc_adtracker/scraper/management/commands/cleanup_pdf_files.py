@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand, CommandError
 from scraper.models import Folder, PDF_File
 from broadcasters.models import Broadcaster
 
+# to do: this runs through every file every time. It's just slow and needlessly duplicative. Do some logic to only run this on new ads, or something. Probably where ad_type is null. 
 
 class Command(BaseCommand):
     
