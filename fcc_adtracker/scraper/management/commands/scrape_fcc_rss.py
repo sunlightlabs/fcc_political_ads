@@ -16,7 +16,7 @@ class Command(BaseCommand):
     
     
     def handle(self, *args, **options):
-        rssdata = get_rss_from_file()
+        rssdata = get_rss_from_web()
         political_files = parse_xml_from_text(rssdata)
         for thisfile in political_files:
             [callsign, nielsen_dma, dma_id, community_state] = [None, None, None, None]
