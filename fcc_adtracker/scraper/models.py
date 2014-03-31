@@ -126,6 +126,7 @@ class ftf_reference(models.Model):
     def __unicode__(self):
         return self.file_url
 
+"""
 # Represents the basic info in a folder. Folders have types, parents, and children, but that's 'recoverable' from the URL
 class Folder(models.Model):
     callsign = models.CharField(max_length=12,)
@@ -144,11 +145,13 @@ class Folder(models.Model):
     
     def __unicode__(self):
         return self.raw_url
-    
+
+"""
+
 class PDF_File(models.Model):
     callsign = models.CharField(max_length=12)
     facility_id = models.PositiveIntegerField(blank=True, null=True, unique=True, editable=False, help_text='FCC assigned id')
-    folder = models.ForeignKey(Folder)
+    #folder = models.ForeignKey(Folder)
     raw_url = models.CharField(max_length=511, unique=True) # not url encoded
     size = models.CharField(max_length=31, blank=True, null=True) # how big is it in text?
     upload_time = models.DateTimeField(blank=True, null=True, auto_now=False, help_text="When was this folder last modified?")
