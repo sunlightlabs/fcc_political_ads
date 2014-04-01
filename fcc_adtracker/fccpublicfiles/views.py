@@ -13,12 +13,15 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from doccloud.models import Document
 
+from fccpublicfiles.management.commands.summarize_weekly import get_week_number, get_week_start, get_week_end
+
 from happy_hour import alex_random_list
 random_list = alex_random_list()
 alex_list_len = len(random_list)
 
 
 from .models import *
+from scraper.models import dma_weekly
 from fccpublicfiles.forms import PrelimDocumentForm, PoliticalBuyFormFull,\
         SimpleOrganizationForm, AdvertiserSignatoryForm, RelatedPoliticalSpotForm
 
@@ -258,6 +261,67 @@ def recent_dma_fcc_list(request):
         'geography_name': 'TV market',
         'geography_name_short': 'dma',
         'geography_list': dmas,
+        'sfapp_base_template': 'sfapp/base-full.html',
+    })
+
+@cache_page(CACHE_TIME)
+def weekly_dma_list(request, week_number):
+    week_start = get_week_start(int(week_number))
+    week_start_formatted = week_start.strftime('%m/%d')
+    week_end = get_week_end(int(week_number))
+    week_end_formatted = week_end.strftime('%m/%d, %Y')
+
+    weeklysummaries = dma_weekly.objects.filter(cycle_week_number=week_number, tot_buys__gt=0).order_by('-tot_buys')
+    title = "TV Markets by total ad documents filed, %s-%s" % (week_start_formatted, week_end_formatted)
+    previous_week_number = None
+    following_week_number = None
+    if int(week_number) > 1:
+        previous_week_number = int(week_number) - 1
+    if int(week_number) < get_week_number(datetime.date.today()):
+        following_week_number = int(week_number) + 1
+    
+    
+
+    dmas = dma_summary.objects.filter(tot_buys__gte=0).order_by('-tot_buys')
+    return render(request, 'weekly_dma_list.html', {
+        'title':title,
+        'geography_name': 'TV market',
+        'geography_name_short': 'dma',
+        'geography_list': weeklysummaries,
+        'following_week_number':following_week_number,
+        'previous_week_number':previous_week_number,
+        'sfapp_base_template': 'sfapp/base-full.html',
+    })
+
+
+@cache_page(CACHE_TIME)
+def current_dma_weekly(request):
+    week_number = get_week_number(datetime.date.today())
+    week_start = get_week_start(int(week_number))
+    week_start_formatted = week_start.strftime('%m/%d')
+    week_end = get_week_end(int(week_number))
+    week_end_formatted = week_end.strftime('%m/%d, %Y')
+    previous_week_number = int(week_number) - 1
+
+    weeklysummaries = dma_weekly.objects.filter(cycle_week_number=week_number, tot_buys__gt=0).order_by('-tot_buys')
+    title = "TV Markets by total ad documents filed, %s-%s" % (week_start_formatted, week_end_formatted)
+    previous_week_number = None
+    following_week_number = None
+    if int(week_number) > 1:
+        previous_week_number = int(week_number) - 1
+    if int(week_number) < get_week_number(datetime.date.today()):
+        following_week_number = int(week_number) + 1
+
+
+
+    dmas = dma_summary.objects.filter(tot_buys__gte=0).order_by('-tot_buys')
+    return render(request, 'weekly_dma_list.html', {
+        'title':title,
+        'geography_name': 'TV market',
+        'geography_name_short': 'dma',
+        'geography_list': weeklysummaries,
+        'following_week_number':following_week_number,
+        'previous_week_number':previous_week_number,
         'sfapp_base_template': 'sfapp/base-full.html',
     })
 
