@@ -34,10 +34,8 @@ def summarize_week(week_number):
         
         # sigh. 
         total_buys = 0
-        pres_buys = 0
         outside_buys = 0
-        sen_buys = 0
-        house_buys = 0
+        federal_buys = 0
         state_buys = 0
         local_buys = 0
         
@@ -47,30 +45,22 @@ def summarize_week(week_number):
             time = ad.upload_time
             adtype = ad.ad_type
 
-            if adtype == 'Non-Candidate Issue Ads':
+            if adtype.upper() == 'NON-CANDIDATE ISSUE ADS':
                 outside_buys += 1
 
-            elif adtype == 'President':
-                pres_buys += 1        
+            elif adtype.upper() == 'FEDERAL':
+                federal_buys += 1        
 
-            elif adtype == 'US Senate':
-                sen_buys += 1
-                
-            elif adtype == 'US House':
-                house_buys += 1
-
-            elif adtype == 'State':
+            elif adtype.upper() == 'STATE':
                 state_buys += 1
 
-            elif adtype == 'Local':
+            elif adtype.upper() == 'LOCAL':
                 local_buys += 1
 
         (this_obj_summary, created) = dma_weekly.objects.get_or_create(dma_id=dma_id, cycle_week_number=week_number, defaults={'dma_name': dma.dma_name, 'fcc_dma_name':dma.fcc_dma_name})
         this_obj_summary.tot_buys = total_buys 
-        this_obj_summary.pres_buys = pres_buys
+        this_obj_summary.federal_buys = federal_buys
         this_obj_summary.outside_buys = outside_buys
-        this_obj_summary.sen_buys = sen_buys
-        this_obj_summary.house_buys = house_buys
         this_obj_summary.local_buys = local_buys
         this_obj_summary.state_buys = state_buys
         this_obj_summary.save()

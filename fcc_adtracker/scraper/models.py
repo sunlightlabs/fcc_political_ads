@@ -271,9 +271,7 @@ class dma_weekly(models.Model):
     fcc_dma_name = models.CharField(max_length=255, blank=True, null=True)
     
     tot_buys = models.PositiveIntegerField(blank=True, null=True)
-    pres_buys =  models.PositiveIntegerField(blank=True, null=True)
-    sen_buys =  models.PositiveIntegerField(blank=True, null=True)
-    house_buys =  models.PositiveIntegerField(blank=True, null=True)
+    federal_buys =  models.PositiveIntegerField(blank=True, null=True)
     state_buys = models.PositiveIntegerField(blank=True, null=True)
     local_buys = models.PositiveIntegerField(blank=True, null=True)
     outside_buys = models.PositiveIntegerField(blank=True, null=True)
