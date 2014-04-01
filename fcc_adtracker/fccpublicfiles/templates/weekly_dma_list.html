@@ -25,10 +25,12 @@
             <th>{{ geography_name|upper }}</th>
 
 			<th>Total ad documents</th>
-			<th>Outside ads</th>
-			<th>Federal races</th>
-			<th>State races</th>
-			<th>Local races</th>
+			<th>Non-candidates</th>
+			<th>Presidential</th>
+			<th>Senate</th>
+			<th>US House</th>
+			<th>State</th>
+			<th>Local</th>
 
         </tr>
     </thead>
@@ -38,7 +40,9 @@
 		<td><a href="{{ geo.get_absolute_url}}">{{geo.name|safe}}</a><br>see <a href="{{ geo.get_station_url }}">all stations</a></td>
 		<td> {{geo.tot_buys}}</td>
 		<td> {{geo.outside_buys}}</td>
-		<td> {{geo.federal_buys}}</td>
+		<td> {{geo.pres_buys}}</td>
+		<td> {{geo.sen_buys}}</td>
+		<td> {{geo.house_buys}}</td>
 		<td> {{geo.state_buys}}</td>
 		<td> {{geo.local_buys}}</td>
 
