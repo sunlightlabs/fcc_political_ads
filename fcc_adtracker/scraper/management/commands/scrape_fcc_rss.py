@@ -19,15 +19,19 @@ class Command(BaseCommand):
         rssdata = get_rss_from_web()
         political_files = parse_xml_from_text(rssdata)
         for thisfile in political_files:
+            #print thisfile
             [callsign, nielsen_dma, dma_id, community_state] = [None, None, None, None]
             try:
                 thisbroadcaster = StationData.objects.get(facility_id=thisfile['facility_id'])
                 callsign = thisbroadcaster.callSign
+                nielsen_dma = thisbroadcaster.nielsenDma
+                community_state = thisbroadcaster.communityState
+                dma_id = thisbroadcaster.nielsenDma_id
             except StationData.DoesNotExist:
                 pass
             
             if thisfile['href']:
-                (pdffile, created) = PDF_File.objects.get_or_create(raw_url=thisfile['href'],   defaults={'upload_time':thisfile['time_loaded'],'ad_type':thisfile['ad_type'], 'federal_office':thisfile['federal_office'], 'federal_district':thisfile['federal_district'], 'facility_id':thisfile['facility_id'], 'callsign':callsign, 'nielsen_dma':nielsen_dma, 'dma_id':dma_id, 'community_state':community_state })
+                (pdffile, created) = PDF_File.objects.get_or_create(raw_url=thisfile['href'],   defaults={'upload_time':thisfile['time_loaded'],'ad_type':thisfile['ad_type'], 'federal_office':thisfile['federal_office'], 'federal_district':thisfile['federal_district'], 'facility_id':thisfile['facility_id'], 'callsign':callsign, 'nielsen_dma':nielsen_dma, 'dma_id':dma_id, 'community_state':community_state, 'raw_name_guess':thisfile['raw_name_guess']})
             else:
                 message = "couldn't parse pdf file %s" % thisfile
                 my_logger.warn(message)

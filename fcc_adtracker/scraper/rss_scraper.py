@@ -52,7 +52,8 @@ def parse_xml_from_text(xml):
                 date_found = dateparse(date_loaded)
                 time_found = datetime.strptime(date_loaded + " " + time_loaded + " " + time_pm, '%m/%d/%Y %I:%M %p')
             else:
-                print "!! no path / date info found"
+                pass
+                #print "!! no path / date info found"
                 
             
             urlfound = re.search(url_re, stringtext)
@@ -101,7 +102,8 @@ def parse_xml_from_text(xml):
                     political_files.append(filestub)
                     
                 else:
-                    print "Other file url %s\n\n" %  (this_url)
+                    pass
+                    #print "Other file url %s\n\n" %  (this_url)
             else:
                 # It seems that files that don't have this link haven't finished processing. Ignore them, with unknown consequences.
                 print "URL missing!! "
