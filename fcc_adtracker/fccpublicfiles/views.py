@@ -290,6 +290,7 @@ def weekly_dma_list(request, week_number):
         'geography_list': weeklysummaries,
         'following_week_number':following_week_number,
         'previous_week_number':previous_week_number,
+        'week_number':week_number,
         'sfapp_base_template': 'sfapp/base-full.html',
     })
 
@@ -322,6 +323,7 @@ def current_dma_weekly(request):
         'geography_list': weeklysummaries,
         'following_week_number':following_week_number,
         'previous_week_number':previous_week_number,
+        'week_number':week_number,
         'sfapp_base_template': 'sfapp/base-full.html',
     })
 
