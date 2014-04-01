@@ -254,6 +254,36 @@ class dma_summary(models.Model):
     
     def name(self):
         return self.dma_name
-"""
-TK: other external doc source models. 
-"""
+
+
+class dma_weekly(models.Model):
+    # what day did the week start? 
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
+    
+    # This is the week number in terms of the isocalendar week number--weeks end on sunday. 
+    # (year, week, day) = datetime.date(2014,3,5).isocalendar()
+    # cycle_week_number = (52*(year-2013)) + week
+    cycle_week_number = models.IntegerField(null=True, blank=True)    
+    
+    dma_id = models.PositiveIntegerField(blank=True, null=True, editable=False, help_text='DMA ID, from Nielsen')
+    dma_name = models.CharField(max_length=255, blank=True, null=True, help_text="Better name - set from file")
+    fcc_dma_name = models.CharField(max_length=255, blank=True, null=True)
+    
+    tot_buys = models.PositiveIntegerField(blank=True, null=True)
+    pres_buys =  models.PositiveIntegerField(blank=True, null=True)
+    sen_buys =  models.PositiveIntegerField(blank=True, null=True)
+    house_buys =  models.PositiveIntegerField(blank=True, null=True)
+    state_buys = models.PositiveIntegerField(blank=True, null=True)
+    local_buys = models.PositiveIntegerField(blank=True, null=True)
+    outside_buys = models.PositiveIntegerField(blank=True, null=True)
+    
+
+    def get_absolute_url(self):
+        return "/fcc/by-dma/%s/" % (self.dma_id)
+    
+    def get_station_url(self):
+        return "/fcc/stations/dma/%s/" % (self.dma_id)
+
+    def name(self):
+        return self.dma_name
