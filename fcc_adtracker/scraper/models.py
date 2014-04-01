@@ -280,10 +280,10 @@ class dma_weekly(models.Model):
     
 
     def get_absolute_url(self):
-        return "/fcc/by-dma/%s/" % (self.dma_id)
+        return "/political-files/dma/%s/" % (self.dma_id)
     
     def get_station_url(self):
-        return "/fcc/stations/dma/%s/" % (self.dma_id)
+        return "/political-files/stations/dma/%s/" % (self.dma_id)
 
     def name(self):
         return self.dma_name
