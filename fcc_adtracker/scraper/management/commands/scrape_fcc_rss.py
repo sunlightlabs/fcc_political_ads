@@ -5,6 +5,7 @@ from django.conf import settings
 
 from scraper.rss_scraper import parse_xml_from_text, get_rss_from_web, get_rss_from_file
 from scraper.models import PDF_File, StationData
+from broadcasters.models import Broadcaster
 
 FCC_SCRAPER_LOG_DIRECTORY = getattr(settings, 'FCC_SCRAPER_LOG')
 from scraper.local_log import fcc_logger
@@ -22,12 +23,12 @@ class Command(BaseCommand):
             #print thisfile
             [callsign, nielsen_dma, dma_id, community_state] = [None, None, None, None]
             try:
-                thisbroadcaster = StationData.objects.get(facility_id=thisfile['facility_id'])
-                callsign = thisbroadcaster.callSign
-                nielsen_dma = thisbroadcaster.nielsenDma
-                community_state = thisbroadcaster.communityState
-                dma_id = thisbroadcaster.nielsenDma_id
-            except StationData.DoesNotExist:
+                thisbroadcaster = Broadcaster.objects.get(facility_id=thisfile['facility_id'])
+                callsign = thisbroadcaster.callsign
+                nielsen_dma = thisbroadcaster.nielsen_dma
+                community_state = thisbroadcaster.community_state
+                dma_id = thisbroadcaster.dma_id
+            except Broadcaster.DoesNotExist:
                 pass
             
             if thisfile['href']:
