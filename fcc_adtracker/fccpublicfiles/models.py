@@ -17,6 +17,7 @@ from weekday_field import fields as wf_fields
 from uuid import uuid4
 from django.contrib.localflavor.us import us_states
 from django.template.defaultfilters import slugify
+from fccpublicfiles.nulls_last_queryset import NullsLastManager
 
 
 from fccpublicfiles.managers import PoliticalDocStatusManager
@@ -218,6 +219,11 @@ class PoliticalBuy(MildModeratedModel):
     uuid_key = UUIDField(version=4, default=lambda: uuid4(), unique=True, editable=False)
     broadcasters = models.ManyToManyField(Broadcaster, null=True)
 
+
+    # make nulls sort last
+    objects = models.Manager()
+    nulls_last_objects = NullsLastManager()
+    
     def broadcasters_callsign_list(self):
         return [x.callsign for x in self.broadcasters.all()]
 
