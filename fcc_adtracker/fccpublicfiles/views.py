@@ -418,7 +418,7 @@ def filing_dma_list(request, dma_id):
     except dma_summary.DoesNotExist:
         pass
 
-    filings = PoliticalBuy.objects.filter(dma_id=dma_id).order_by('-upload_time')
+    filings = PoliticalBuy.objects.filter(dma_id=dma_id).select_related('related_FCC_file').order_by('-related_FCC_file__upload_time', '-upload_time')
     pagenum = request.GET.get('page', 1)
     (this_page, paginator) = paginate_filing_list(filings, pagenum)
 
@@ -441,7 +441,7 @@ def filing_dma_list(request, dma_id):
 @cache_page(CACHE_TIME)
 def filing_station_list(request, callsign):
 
-    filings = PoliticalBuy.objects.filter(broadcaster_callsign__iexact=callsign).order_by('-upload_time')
+    filings = PoliticalBuy.objects.filter(broadcaster_callsign__iexact=callsign).select_related('related_FCC_file').order_by('-related_FCC_file__upload_time', '-upload_time')
     pagenum = request.GET.get('page', 1)
     (this_page, paginator) = paginate_filing_list(filings, pagenum)
 
@@ -469,8 +469,7 @@ def filing_state_list(request, state_id):
     state_name = STATES_DICT.get(state_id.upper(), None)
     if state_name:
 
-        filings = PoliticalBuy.objects.filter(community_state=state_id.upper()).order_by('-upload_time')
-
+        filings = PoliticalBuy.objects.filter(community_state=state_id.upper()).select_related('related_FCC_file').order_by('-related_FCC_file__upload_time', '-upload_time')
         pagenum = request.GET.get('page', 1)
         (this_page, paginator) = paginate_filing_list(filings, pagenum)
 
@@ -493,7 +492,7 @@ def fcc_most_recent(request):
     today = datetime.datetime.today()
     three_days_ago = today - datetime.timedelta(days=3)
 
-    filings = PoliticalBuy.objects.filter(upload_time__gte=three_days_ago).order_by('-upload_time')
+    filings = PoliticalBuy.objects.filter(upload_time__gte=three_days_ago).select_related('related_FCC_file').order_by('-related_FCC_file__upload_time', '-upload_time')
     pagenum = request.GET.get('page', 1)
     (this_page, paginator) = paginate_filing_list(filings, pagenum)
 

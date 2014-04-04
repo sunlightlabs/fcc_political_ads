@@ -21,7 +21,7 @@ class MarketFeed(Feed):
         return "Political Ad Sleuth: Recent ad buy documents reported in %s" % obj.dma_name
 
     def items(self, obj):
-        return PoliticalBuy.objects.filter(dma_id=obj.dma_id, is_FCC_doc=True).order_by('-upload_time')[:30]
+        return PoliticalBuy.objects.filter(dma_id=obj.dma_id, is_FCC_doc=True).order_by('-related_FCC_file__upload_time', '-upload_time')[:30]
         
     def item_pubdate(self, item):
         return item.related_FCC_file.upload_time
