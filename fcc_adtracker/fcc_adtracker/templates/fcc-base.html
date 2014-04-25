@@ -3,7 +3,7 @@
 
 {% block ga %}UA-22821126-17{% endblock ga %}
 
-{% kwacro share_base_text %}Become a Political Ad Sleuth with Sunlight Foundation & Free Press to find out who’s buying up airwaves this election!{% endkwacro %}
+{% kwacro share_base_text %}Become a Political Ad Sleuth with Sunlight Foundation & Free Press to find out who's buying up airwaves this election!{% endkwacro %}
 
 {% block og %}
     <meta property="description" content="Political Ad Sleuth is a new tool from Sunlight Foundation in partnership with Free Press that allows you to see who is buying up the airwaves and influencing your vote.">
@@ -89,10 +89,10 @@
 <header class="clearfix">
     {% block nav %}
         <nav class="clearfix">
-    		<ul class="account listNav unstyled">
-    		    <li class="help"><a href="/help/">FAQ</a></li>
-    		    <li class="about"><a href="/about/">About</a></li>
-    		    <li class="loginout"><a href="{% if user.is_authenticated %}/account/logout/{% else %}/account/login/{% endif %}">Log {% if user.is_authenticated %}Out{% else %}In{% endif %}</a></li>
+            <ul class="account listNav unstyled">
+                <li class="help"><a href="/help/">FAQ</a></li>
+                <li class="about"><a href="/about/">About</a></li>
+                <li class="loginout"><a href="{% if user.is_authenticated %}/account/logout/{% else %}/account/login/{% endif %}">Log {% if user.is_authenticated %}Out{% else %}In{% endif %}</a></li>
                 {% if user.is_authenticated %}
                 <li class="account"><a href="{% url user_dashboard %}">Account</a></li>
                 <li class="upload"><a href="{% url document_submit %}">Upload Files</a></li>
@@ -100,11 +100,11 @@
                 <li class="signup"><a href="{% url register_volunteer %}">Sign Up!</a></li>
                 {% endif %}
                 <li class="states"><a href="{% url needs_entry %}">Enter an Ad</a></li>
-				<li class="states"><a href="{% url advertiser_list %}">Top Advertisers</a></li>
-				<li class="newest"><a href="{% url fcc_most_recent %}">Newest Ads</a></li>
-				<li class="market_report first" ><a href="{% url recent_dma_fcc_list %}">Market Report</a>
-    		</ul>
-    	</nav>
+                <li class="states"><a href="{% url advertiser_list %}">Top Advertisers</a></li>
+                <li class="newest"><a href="{% url fcc_most_recent %}">Newest Ads</a></li>
+                <li class="market_report first" ><a href="{% url recent_dma_fcc_list %}">Market Report</a>
+            </ul>
+        </nav>
     {% endblock %}
         <h1 id="logo"><a class="textReplace" href="/">Political Ad Sleuth</a></h1>
         <form class="form-search" action="{% url haystack_search %}">
