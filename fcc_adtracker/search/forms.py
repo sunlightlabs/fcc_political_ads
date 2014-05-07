@@ -10,7 +10,7 @@ class DateRangeSearchForm(FacetedSearchForm):
 
     def clean_q(self):
         unclean_q = self.cleaned_data['q']
-        cleaned_q = unclean_q.replace('/', '')
+        cleaned_q = unclean_q.replace('/', ' ')
         return cleaned_q
 
 
