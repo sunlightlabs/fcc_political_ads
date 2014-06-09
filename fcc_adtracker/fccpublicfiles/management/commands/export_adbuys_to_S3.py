@@ -13,6 +13,8 @@ from django.conf import settings
 from fccpublicfiles.models import PoliticalBuy
 from scraper.models import Scrape_Time
 
+from django.core.paginator import Paginator
+
 AWS_ACCESS_KEY_ID = getattr(settings, 'AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY =  getattr(settings, 'AWS_SECRET_ACCESS_KEY')
 CSV_EXPORT_DIR =  getattr(settings, 'CSV_EXPORT_DIR')
@@ -27,7 +29,7 @@ def write_csv_to_file(file_description, local_file, fields, rows):
     
 
 def all_ads_to_file():
-    
+    chunk_size = 100
     
     row_num = 0
     
@@ -43,45 +45,49 @@ def all_ads_to_file():
     writer.writerow(fields)
     
     all_rows = PoliticalBuy.objects.all()
+    paginator = Paginator(all_rows, chunk_size)
+    
     file_rows = []
-    for row in all_rows:
-        row_num += 1
-        if row_num%1000==0:
-            print "Processed %s rows" % (row_num)
-        raw_url = ""
-        this_file_name = ""
+    for this_page in paginator.page_range:
+        for row in paginator.page(this_page).object_list:
+            row_num += 1
+            if row_num%1000==0:
+                print "Processed %s rows" % (row_num)
+                
+            raw_url = ""
+            this_file_name = ""
         
-        if row.is_FCC_doc:
-            related_doc = row.related_FCC_file
-            raw_url = related_doc.raw_url
-            this_file_name = related_doc.file_name()
-        else:
-            raw_url = row.documentcloud_doc.get_absolute_url()
-        is_invalid = ""
-        is_invoice = ""
+            if row.is_FCC_doc:
+                related_doc = row.related_FCC_file
+                raw_url = related_doc.raw_url
+                this_file_name = related_doc.file_name()
+            else:
+                raw_url = row.documentcloud_doc.get_absolute_url()
+            is_invalid = ""
+            is_invoice = ""
         
-        if (row.is_invalid):
-            is_invalid = 'Y'
+            if (row.is_invalid):
+                is_invalid = 'Y'
 
-        if (row.is_invoice):
-            is_invoice = 'Y'        
+            if (row.is_invoice):
+                is_invoice = 'Y'        
         
-        advertiser_name = ''
-        if (row.advertiser):
-            advertiser_name = row.advertiser.name
-        data_entry_by = ""
-        if (row.using_pp_data):
-            data_entry_by = "ProPublica"
+            advertiser_name = ''
+            if (row.advertiser):
+                advertiser_name = row.advertiser.name
+            data_entry_by = ""
+            if (row.using_pp_data):
+                data_entry_by = "ProPublica"
             
-        pp_adv_name = ''
-        if row.pp_data_ref:
-            pp_adv_name = row.pp_data_ref.v_committee
+            pp_adv_name = ''
+            if row.pp_data_ref:
+                pp_adv_name = row.pp_data_ref.v_committee
         
-        upload_time = ""
-        if (row.upload_time):
-            upload_time = row.upload_time.strftime("%Y-%m-%d")
+            upload_time = ""
+            if (row.upload_time):
+                upload_time = row.upload_time.strftime("%Y-%m-%d")
             
-        writer.writerow([row.pk, row.broadcaster_callsign, upload_time, row.contract_start_date.strftime("%Y-%m-%d"), row.contract_end_date.strftime("%Y-%m-%d"), row.nielsen_dma, row.dma_id, row.candidate_type, row.fcc_folder_name, this_file_name, raw_url, advertiser_name, pp_adv_name, is_invalid, is_invoice, row.total_spent_raw, row.num_spots_raw, row.contract_number, row.doc_source(), data_entry_by, row.data_entry_notes])
+            writer.writerow([row.pk, row.broadcaster_callsign, upload_time, row.contract_start_date.strftime("%Y-%m-%d"), row.contract_end_date.strftime("%Y-%m-%d"), row.nielsen_dma, row.dma_id, row.candidate_type, row.fcc_folder_name, this_file_name, raw_url, advertiser_name, pp_adv_name, is_invalid, is_invoice, row.total_spent_raw, row.num_spots_raw, row.contract_number, row.doc_source(), data_entry_by, row.data_entry_notes])
         
         #file_rows.append([row.pk, row.broadcaster_callsign, upload_time, row.contract_start_date.strftime("%Y-%m-%d"), row.contract_end_date.strftime("%Y-%m-%d"), row.nielsen_dma, row.dma_id, row.candidate_type, row.fcc_folder_name, this_file_name, raw_url, advertiser_name, pp_adv_name, is_invalid, is_invoice, row.total_spent_raw, row.num_spots_raw, row.contract_number, row.doc_source(), data_entry_by, row.data_entry_notes])
     
