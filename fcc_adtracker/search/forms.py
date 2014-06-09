@@ -8,6 +8,12 @@ class DateRangeSearchForm(FacetedSearchForm):
     start_date = forms.DateField(widget=DateInput(), required=False)
     end_date = forms.DateField(widget=DateInput(), required=False)
 
+    def clean_q(self):
+        unclean_q = self.cleaned_data['q']
+        cleaned_q = unclean_q.replace('/', ' ')
+        return cleaned_q
+
+
     def search(self):
         # First, store the SearchQuerySet received from other processing.
         sqs = super(DateRangeSearchForm, self).search()
