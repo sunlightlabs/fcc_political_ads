@@ -1,4 +1,4 @@
-{% extends sfapp_base_template|default:"sfapp/base-sidebar.html" %}{% load static from staticfiles %}{% load recent_buy_sidebar from sidebars %}{% load kwacros %}
+{% extends "sfapp/base.html" %}{% load static from staticfiles %}{% load recent_buy_sidebar from sidebars %}{% load kwacros %}
 {% block title %}{% block pagetitle %}Home{% endblock pagetitle %} | Political Ad Sleuth{% endblock title %}
 
 {% block ga %}UA-22821126-17{% endblock ga %}
@@ -83,10 +83,10 @@
 {% endblock css %}
 
 {% block container %}
-<div id="additionalLogo">
-    <a id="freepress" class="textReplace" href="http://www.freepress.net/">Free Press&gt;</a>
-</div>
-<header class="clearfix">
+    <div id="additionalLogo">
+        <a id="freepress" class="textReplace" href="http://www.freepress.net/">Free Press&gt;</a>
+    </div>
+    <header class="clearfix">
     {% block nav %}
         <nav class="clearfix">
             <ul class="account listNav unstyled">
@@ -104,7 +104,7 @@
                 <li class="market_report first" ><a href="{% url recent_dma_fcc_list %}">Market Report</a>
             </ul>
         </nav>
-    {% endblock %}
+    {% endblock nav %}
         <h1 id="logo"><a class="textReplace" href="/">Political Ad Sleuth</a></h1>
         <form class="form-search" action="{% url haystack_search %}">
             <ul>
@@ -121,7 +121,7 @@
             </ul>
         </form>
 
-</header>
+    </header>
 
 {% block social_html %}
     <div class="social-icons share-buttons"
@@ -129,11 +129,11 @@
         data-services="twitter-tweet, facebook-like"
         data-options="linkBack={{request.build_absolute_uri|urlencode}}&amp;size=16&amp;showCounts=right"
         {# tweet_text needs to be urlencoded, which means that http://djangosnippets.org/snippets/363/ may be a fine idea. #}
-        data-twitter-tweet-options="defaultText={% block tweet_text %}Become a Political Ad Sleuth w/@sunfoundation @freepress %26 find out who’s buying airwaves this election! #freethefiles{% endblock tweet_text %}">
+        data-twitter-tweet-options="defaultText={% block tweet_text %}Become a Political Ad Sleuth w/@sunfoundation @freepress %26 find out who's buying airwaves this election! #freethefiles{% endblock tweet_text %}">
     </div>
 {% endblock social_html %}
 
-{{ block.super }}
+    <div class="content"> {% block content %}{% endblock %} </div>
 
 {% endblock container %}
 

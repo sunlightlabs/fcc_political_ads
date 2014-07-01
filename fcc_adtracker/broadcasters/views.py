@@ -102,7 +102,6 @@ def featured_broadcasters(request, template_name='broadcasters/broadcasters_feat
     broadcaster_list = Broadcaster.objects.filter(community_state=FEATURED_BROADCASTER_STATE.upper())
     resp_obj = {
         'broadcaster_list': broadcaster_list,
-        'state_name': state_name,
-        'sfapp_base_template': 'sfapp/base-full.html'
+        'state_name': state_name
     }
     return render(request, template_name, resp_obj)

@@ -221,8 +221,7 @@ def state_fcc_list(request):
     return render(request, 'geography_list.html', {
         'geography_name': 'state',
         'geography_name_short': 'state',
-        'geography_list': states,
-        'sfapp_base_template': 'sfapp/base-full.html',
+        'geography_list': states
 
     })
 
@@ -235,8 +234,7 @@ def recent_state_fcc_list(request):
     return render(request, 'recent_geography_list.html', {
         'geography_name': ' state',
         'geography_name_short': 'state',
-        'geography_list': states,
-        'sfapp_base_template': 'sfapp/base-full.html',
+        'geography_list': states
 
     })
 
@@ -248,8 +246,7 @@ def dma_fcc_list(request):
     return render(request, 'geography_list.html', {
         'geography_name': 'TV market',
         'geography_name_short': 'dma',
-        'geography_list': dmas,
-        'sfapp_base_template': 'sfapp/base-full.html',
+        'geography_list': dmas
     })
 
 
@@ -260,8 +257,7 @@ def recent_dma_fcc_list(request):
     return render(request, 'recent_geography_list.html', {
         'geography_name': 'TV market',
         'geography_name_short': 'dma',
-        'geography_list': dmas,
-        'sfapp_base_template': 'sfapp/base-full.html',
+        'geography_list': dmas
     })
 
 @cache_page(CACHE_TIME)
@@ -279,8 +275,8 @@ def weekly_dma_list(request, week_number):
         previous_week_number = int(week_number) - 1
     if int(week_number) < get_week_number(datetime.date.today()):
         following_week_number = int(week_number) + 1
-    
-    
+
+
 
     dmas = dma_summary.objects.filter(tot_buys__gte=0).order_by('-tot_buys')
     return render(request, 'weekly_dma_list.html', {
@@ -290,8 +286,7 @@ def weekly_dma_list(request, week_number):
         'geography_list': weeklysummaries,
         'following_week_number':following_week_number,
         'previous_week_number':previous_week_number,
-        'week_number':week_number,
-        'sfapp_base_template': 'sfapp/base-full.html',
+        'week_number':week_number
     })
 
 
@@ -323,8 +318,7 @@ def current_dma_weekly(request):
         'geography_list': weeklysummaries,
         'following_week_number':following_week_number,
         'previous_week_number':previous_week_number,
-        'week_number':week_number,
-        'sfapp_base_template': 'sfapp/base-full.html',
+        'week_number':week_number
     })
 
 """
@@ -362,7 +356,7 @@ def station_state_list(request, state_id):
             'geography_name_short': 'tv-station',
             'geography_list': broadcasters,
             'show_location': 'True',
-            'subgeography': state_name,
+            'subgeography': state_name
         })
 
     else:
@@ -402,7 +396,7 @@ def station_dma_list(request, dma_id):
         'geography_name_short': 'tv-station',
         'geography_list': broadcasters,
         'show_location': 'True',
-        'subgeography': dma_name,
+        'subgeography': dma_name
     })
 
 
@@ -432,7 +426,6 @@ def filing_dma_list(request, dma_id):
         'geography_name': dma_name,
         'preposition': 'in',
         'count': count,
-        'sfapp_base_template': 'sfapp/base-full.html',
         'has_summary_data': dma_summary_found,
         'dma_summary': this_dma_summary
     })
@@ -458,8 +451,7 @@ def filing_station_list(request, callsign):
         'geography_name': callsign,
         'preposition': 'from',
         'count': count,
-        'broadcaster': broadcaster,
-        'sfapp_base_template': 'sfapp/base-full.html',
+        'broadcaster': broadcaster
 
     })
 
@@ -478,9 +470,8 @@ def filing_state_list(request, state_id):
             'last_page': paginator.num_pages,
             'geography_name': state_name,
             'preposition': 'in',
-            'count': paginator.count,
-            'sfapp_base_template': 'sfapp/base-full.html',
-        })
+            'count': paginator.count
+            })
 
     else:
         raise Http404('State with abbrevation "{state_id}" not found.'.format(state_id=state_id))
@@ -501,8 +492,7 @@ def fcc_most_recent(request):
         'last_page': paginator.num_pages,
         'geography_name': 'the last three days',
         'preposition': 'in',
-        'count': paginator.count,
-        'sfapp_base_template': 'sfapp/base-full.html',
+        'count': paginator.count
     })
 
 
@@ -531,8 +521,7 @@ def advertiser_list(request):
     advertisers = TV_Advertiser.objects.filter(is_displayed=True)
 
     return render(request, 'advertiser_list.html', {
-        'advertisers': advertisers,
-        'sfapp_base_template': 'sfapp/base-full.html',
+        'advertisers': advertisers
     })
 
 
@@ -559,5 +548,5 @@ def advertiser_detail(request, advertiser_pk):
         'top_market_summary': top_market_summary,
         'this_page': this_page,
         'last_page': paginator.num_pages,
-        'count': paginator.count,
+        'count': paginator.count
     })

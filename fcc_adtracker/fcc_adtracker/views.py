@@ -23,8 +23,7 @@ def home_view(request):
         'form': NonUserProfileForm,
         'top_recent_pres_buys': top_recent_pres_buys,
         'top_recent_outside_buys': top_recent_outside_buys,
-        'states_dict': us_states.US_STATES,
-        'sfapp_base_template': 'sfapp/base-full.html'
+        'states_dict': us_states.US_STATES
     }
     return render(request, 'home.html', resp_obj)
 
@@ -48,7 +47,6 @@ def user_dashboard(request):
         'profile': profile,
         'broadcaster_list': broadcaster_list,
         'politicalbuy_list': politicalbuy_list,
-        'form': form,
-        'sfapp_base_template': 'sfapp/base-full.html'
+        'form': form
     }
     return render(request, 'dashboards/user_dashboard.html', resp_obj)
