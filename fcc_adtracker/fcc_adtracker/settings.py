@@ -139,7 +139,6 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'django.contrib.humanize',
 
-    'sfapp',
     'django_extensions',
     'storages',
     'reversion',
