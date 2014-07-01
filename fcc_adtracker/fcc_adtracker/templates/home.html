@@ -1,4 +1,4 @@
-{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load recent_buy_sidebar from sidebars %}
+{% extends "fcc-base.html" %}{% load static from staticfiles %}{% load url from future %}{% load recent_buy_sidebar from sidebars %}
 {% block bodyclass %}broadcasters-featured{% endblock bodyclass %}
 
 {% block content %}
@@ -27,7 +27,7 @@
             </thead>
             <tbody>{% for dma in top_recent_pres_buys %}
                 <tr>
-                    <td><a href="{% url 'fccpublicfiles.views.filing_dma_list' dma_id=dma.dma_id %}">{{dma.dma_name}}</a></td>
+                    <td><a href="{% url 'filing-dma-list' dma_id=dma.dma_id %}">{{dma.dma_name}}</a></td>
                     <td>{{dma.pres_buys}}</td>
                     <td>{{dma.num_mandated_broadcasters}} of {{dma.num_broadcasters}}</td>
                 </tr>{% endfor %}
@@ -46,7 +46,7 @@
             </thead>
             <tbody>{% for dma in top_recent_outside_buys %}
                 <tr>
-                    <td><a href="{% url 'fccpublicfiles.views.filing_dma_list' dma_id=dma.dma_id %}">{{dma.dma_name}}</a></td>
+                    <td><a href="{% url 'filing-dma-list' dma_id=dma.dma_id %}">{{dma.dma_name}}</a></td>
                     <td>{{dma.recent_outside_buys}}</td>
                     <td>{{dma.num_mandated_broadcasters}} of {{dma.num_broadcasters}}</td>
                </tr>{% endfor %}

@@ -32,14 +32,14 @@ urlpatterns = patterns('',
 #    url(r'^political-files/stations/$', 'fccpublicfiles.views.station_fcc_list', name='station_fcc_list'),
     url(r'^political-files/stations/state/(?P<state_id>\w{2})/$', 'fccpublicfiles.views.station_state_list', name='station_state_list'),
     url(r'^political-files/stations/dma/(?P<dma_id>\d+)/$', 'fccpublicfiles.views.station_dma_list', name='station_dma_list'),
-    url(r'^political-files/dma/(?P<dma_id>\d+)/$', 'fccpublicfiles.views.filing_dma_list', name='filing_dma_list'),
+    url(r'^political-files/dma/(?P<dma_id>\d+)/$', 'fccpublicfiles.views.filing_dma_list', name='filing-dma-list'),
     url(r'^political-files/state/(?P<state_id>\w{2})/$', 'fccpublicfiles.views.filing_state_list', name='filing_state_list'),
     url(r'^political-files/tv-station/(?P<callsign>[\w\-]+)/$', 'fccpublicfiles.views.filing_station_list', name='filing_station_list'),
     url(r'^political-files/most-recent/', 'fccpublicfiles.views.fcc_most_recent', name='fcc_most_recent'),
-    url(r'^political-files/advertisers/', 'fccpublicfiles.views.advertiser_list', name='advertiser_list'),  
+    url(r'^political-files/advertisers/', 'fccpublicfiles.views.advertiser_list', name='advertiser_list'),
     url(r'^political-files/advertiser/[\w-]+/(?P<advertiser_pk>\d+)/$', 'fccpublicfiles.views.advertiser_detail', name='advertiser_detail'),
-    url(r'^political-files/feeds/market/(?P<dma_id>\d+)/$', MarketFeed()), 
-    
-    url(r'^happy-hour/', direct_to_template, {'template': 'happy_hour.html'}),   
-    
+    url(r'^political-files/feeds/market/(?P<dma_id>\d+)/$', MarketFeed()),
+
+    url(r'^happy-hour/', direct_to_template, {'template': 'happy_hour.html'}),
+
 )
