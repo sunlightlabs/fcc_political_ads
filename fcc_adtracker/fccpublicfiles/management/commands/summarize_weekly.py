@@ -28,7 +28,8 @@ def summarize_week(week_number):
     week_end = get_week_end(week_number)
 
     # Only summarize top 50 districts
-    for dma in dma_summary.objects.filter(num_broadcasters__gte=1):
+    #for dma in dma_summary.objects.filter(num_broadcasters__gte=1):
+    for dma in dma_summary.objects.all():
 
         dma_id = dma.dma_id
         
