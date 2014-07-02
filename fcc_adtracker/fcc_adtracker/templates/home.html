@@ -7,7 +7,7 @@
         <h2 id='page-intro'>Search, Upload, Share<br> Political Ad Information</h2>
         <h3>Help us find out who's trying to influence your vote.</h3>
         <div class="featureText">
-            <p>Use this site to get the latest information on political ads purchased at television stations around the country. These files provide the only information we have on who's behind some of the shadowy groups pouring money into the election. You can sort it by <a href="/political-files/states/">state</a> and individual <a href="/political-files/dmas/">television market</a> or <a href="http://politicaladsleuth.com/search/">search by date</a>. Some of it we have thanks to ProPublica’s <a href="https://projects.propublica.org/free-the-files/">Free the Files</a>. Note: This information <a href="/about/">is not complete</a> but it is the most comprehensive data available. With your help, we're trying to fill the gaps by getting paper files from TV stations and by <a href="http://politicaladsleuth.com/political-files/needs-entry/">entering data</a>. For information on how you can help, <a href="/account/register/">check here</a>.
+            <p>Use this site to get the latest information on political ads purchased at television stations around the country. These files provide the only information we have on who's behind some of the shadowy groups pouring money into the election. You can sort it by <a href="/political-files/states/">state</a> and individual <a href="/political-files/dmas/">television market</a> or <a href="http://politicaladsleuth.com/search/">search by date</a>. This information <a href="/about/">is not complete</a> but it is the most comprehensive data available. With your help, we're trying to fill the gaps by getting paper files from TV stations and by <a href="http://politicaladsleuth.com/political-files/needs-entry/">entering data</a>. For information on how you can help, <a href="/account/register/">check here</a>.
         </div>
     </div>
     <div class="span3 featureImg">
@@ -16,20 +16,18 @@
 </div>
 <div class="row module">
     <div class="span6">
-        <h4>Top markets for presidential candidate ads</h4>
+        <h4>Top markets for recent senate candidate ads</h4>
         <table class='table table-striped'>
             <thead>
                 <tr>
                     <th>TV Market</th>
-                    <th>Total Filings</th>
-                    <th>Stations mandated<a href="#mandated">*</a></th>
+                    <th>Filings in last 7 days</th>
                 </tr>
             </thead>
-            <tbody>{% for dma in top_recent_pres_buys %}
+            <tbody>{% for dma in top_recent_sen_buys %}
                 <tr>
                     <td><a href="{% if dma.dma_id %} {% url 'filing-dma-list' dma_id=dma.dma_id %}{% endif %}">{{dma.dma_name}}</a></td>
-                    <td>{{dma.pres_buys}}</td>
-                    <td>{{dma.num_mandated_broadcasters}} of {{dma.num_broadcasters}}</td>
+                    <td>{{dma.recent_sen_buys}}</td>
                 </tr>{% endfor %}
             </tbody>
         </table>
@@ -41,22 +39,18 @@
                 <tr>
                     <th>TV Market</th>
                     <th>Filings in last 7 days</th>
-                    <th>Stations mandated<a href="#mandated">*</a></th>
                 </tr>
             </thead>
             <tbody>{% for dma in top_recent_outside_buys %}
                 <tr>
                     <td><a href="{% if dma.dma_id %} {% url 'filing-dma-list' dma_id=dma.dma_id %}{% endif %}">{{dma.dma_name}}</a></td>
                     <td>{{dma.recent_outside_buys}}</td>
-                    <td>{{dma.num_mandated_broadcasters}} of {{dma.num_broadcasters}}</td>
                </tr>{% endfor %}
             </tbody>
         </table>
     </div>
 </div>
-<div class="row">
-    {% include "_mandated_explanation.html" %}
-</div>
+
 
 
 {% endblock content %}

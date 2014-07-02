@@ -18,7 +18,7 @@
 	<thead>
         <tr>
             <th>{{ geography_name|upper }}</th>
-			<th>Stations mandated<a href="#mandated">*</a></th>
+			<th>Number of Stations</th>
 			<th>Recent non-candidates<br> (last 7 days)</th>
 			<th>Recent President<br> (last 7 days)</th>
 			<th>Recent Senate<br> (last 7 days)</th>
@@ -29,7 +29,7 @@
 	{% for geo in geography_list %}
 	<tr>
 		<td><a href="{{ geo.get_absolute_url}}">{{geo.name|safe}}</a><br>see <a href="{{ geo.get_station_url }}">all stations</a></td>
-		<td> {{geo.num_mandated_broadcasters}} of {{geo.num_broadcasters}}</td>
+		<td> {{geo.num_broadcasters}}</td>
 		<td> {{geo.recent_outside_buys}}</td>
 		<td> {{geo.recent_pres_buys}}</td>
 		<td> {{geo.recent_sen_buys}}</td>
