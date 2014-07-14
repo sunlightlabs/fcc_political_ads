@@ -11,8 +11,11 @@ from django.conf import settings
 from BeautifulSoup import BeautifulSoup
 
 from models import PDF_File
+from broadcasters.models import Broadcaster
+
 from local_log import fcc_logger
 from utils import read_url
+
 
 size_re = re.compile(r'<div class="size">(.*?)</div>')
 type_re = re.compile(r'<div class="type">(.*?)</div>')
@@ -238,7 +241,50 @@ class folder_placeholder(object):
                 pass
             
             if thisfile['href']:
-                (pdffile, created) = PDF_File.objects.get_or_create(raw_url=thisfile['href'],  defaults={'size':thisfile['sizefound'],'callsign':self.callSign, 'upload_time':upload_time})
+                (facility_id, details) = parse_file_url(thisfile['href'])
+                is_outside_group = True
+                office = None
+                district = None
+                if (details[1] == 'Non-Candidate Issue Ads'):
+                    is_outside_group = True 
+                elif (details[1] == 'Federal'):
+                    office = details[2]
+                    if (office == 'US House'):
+                        district = details[3]
+                # They're not very consisten about this... 
+                path = details[1:]
+                name = path[-2:-1][0]
+
+                # hard truncate. This data's a mess.
+                federal_office = None
+                federal_district = None
+                
+                ad_type =details[1]
+                if office:
+                    federal_office = office[:31]
+                if district:
+                    federal_district = district[:31]
+                raw_name_guess = name[:255]
+                
+                nielsen_dma = None
+                callsign = None
+                nielsen_dma = None
+                community_state = None
+                dma_id = None
+                
+                try:
+                    thisbroadcaster = Broadcaster.objects.get(facility_id=facility_id)
+                    callsign = thisbroadcaster.callsign
+                    nielsen_dma = thisbroadcaster.nielsen_dma
+                    community_state = thisbroadcaster.community_state
+                    dma_id = thisbroadcaster.dma_id
+                except Broadcaster.DoesNotExist:
+                    pass
+                
+                #(pdffile, created) = PDF_File.objects.get_or_create(raw_url=thisfile['href'],  defaults={'size':thisfile['sizefound'],'callsign':self.callSign, 'upload_time':upload_time})
+                
+                (pdffile, created) = PDF_File.objects.get_or_create(raw_url=thisfile['href'],   defaults={'size':thisfile['sizefound'],'callsign':self.callSign,'upload_time':upload_time,'ad_type':ad_type, 'federal_office':federal_office, 'federal_district':federal_district, 'facility_id':facility_id, 'callsign':callsign, 'nielsen_dma':nielsen_dma, 'dma_id':dma_id, 'community_state':community_state, 'raw_name_guess':raw_name_guess})
+                
             else:
                 message = "couldn't parse pdf file %s" % thisfile
                 my_logger.warn(message)
