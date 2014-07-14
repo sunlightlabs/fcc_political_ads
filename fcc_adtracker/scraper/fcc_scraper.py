@@ -10,7 +10,7 @@ from django.conf import settings
 
 from BeautifulSoup import BeautifulSoup
 
-from models import PDF_File, Folder
+from models import PDF_File
 from local_log import fcc_logger
 from utils import read_url
 
@@ -150,6 +150,7 @@ class folder_placeholder(object):
         self.childfiles = []
         self.htmlText = None
         self.newly_created = False
+        """
         (folder, created) = Folder.objects.get_or_create(raw_url=self.url, defaults={'size':self.numFiles,'callsign':self.callSign, 'folder_class':self.folder_class})
         if not created:
             now = datetime.now()
@@ -158,6 +159,7 @@ class folder_placeholder(object):
         else:
             self.newly_created = True
         self.folder = folder
+        """
         
     def read_page(self):
         self.htmlText = read_url(self.url)
@@ -236,7 +238,7 @@ class folder_placeholder(object):
                 pass
             
             if thisfile['href']:
-                (pdffile, created) = PDF_File.objects.get_or_create(raw_url=thisfile['href'],  defaults={'size':thisfile['sizefound'],'callsign':self.callSign, 'folder':self.folder, 'upload_time':upload_time})
+                (pdffile, created) = PDF_File.objects.get_or_create(raw_url=thisfile['href'],  defaults={'size':thisfile['sizefound'],'callsign':self.callSign, 'upload_time':upload_time})
             else:
                 message = "couldn't parse pdf file %s" % thisfile
                 my_logger.warn(message)
@@ -261,13 +263,8 @@ class folder_placeholder(object):
             for child in self.childfolders:
                 if (child['size'] > 0):
                     childfolder = folder_placeholder(child['url'], child['folder_class'], self.callSign, child['size'])
-                    if ( (child['size'] > childfolder.folder.size)  or (childfolder.newly_created == True) ):
-                        childfolder.folder.size = child['size']
-                        childfolder.process()
-                        childfolder.folder.save()
-                        sleep(SCRAPE_DELAY_TIME)
-                    else:
-                        print "\n***No update to folder since last scrape: %s, %s" % (child['size'], childfolder.url)
-                        
+                    childfolder.process()
+                    sleep(SCRAPE_DELAY_TIME)
+                                          
 
     

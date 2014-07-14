@@ -33,7 +33,7 @@ class Command(BaseCommand):
                         
             for this_callsign in mandated_stations:
                 # There's confusion as to when files need to get uploaded
-                for year in (2013, 2014):
+                for year in (2014):
                     print "\n\nProcessing %s : %s - logs to: %s" % (year, this_callsign, FCC_SCRAPER_LOG_DIRECTORY)
                     url = "https://stations.fcc.gov/station-profile/%s/political-files/browse->%s" % (this_callsign, year)
                     this_folder = folder_placeholder(url, 'root', this_callsign)
