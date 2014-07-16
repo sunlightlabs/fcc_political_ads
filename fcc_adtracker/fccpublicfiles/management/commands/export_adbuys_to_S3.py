@@ -11,7 +11,7 @@ from django.conf import settings
 from django.conf import settings
 
 from fccpublicfiles.models import PoliticalBuy
-from scraper.models import Scrape_Time
+from scraper.models import Scrape_Time, StationData
 
 from django.core.paginator import Paginator
 
@@ -29,6 +29,13 @@ def write_csv_to_file(file_description, local_file, fields, rows):
     
 
 def all_ads_to_file():
+    
+    station_hash = {}
+    all_stations = StationData.objects.all()
+    for station in all_stations:
+        station_hash[station.callSign] = station.networkAfil
+    
+    
     chunk_size = 100
     
     row_num = 0
@@ -37,7 +44,7 @@ def all_ads_to_file():
     file_description="This file contains ads uploaded by volunteers and from the FCC's site available as of %s. Contract numbers and total ad buy amounts are from ProPublica's free the files project ( https://projects.propublica.org/free-the-files/ ) in rows where the 'data entry by' column is ProPublica." % most_recent_scrape.strftime("%Y-%m-%d %H:%m")
     print file_description
     file_name =  "%s/all_ad_buys.csv" % (CSV_EXPORT_DIR)
-    fields = ['id', 'station', 'file_upload_date', 'contract_start_date', 'contract_end_date', 'tv_market', 'tv_market_id', 'ad_type', 'fcc_folder', 'file_name', 'source_file_url', 'advertiser_name', 'propublica_advertiser_name', 'is_invalid', 'is_invoice', 'total_spent_raw', 'num_spots_raw', 'contract_number', 'source', 'data entry by', 'notes']
+    fields = ['id', 'station', 'file_upload_date', 'contract_start_date', 'contract_end_date', 'tv_market', 'tv_market_id', 'network_affiliation', 'ad_type', 'fcc_folder', 'file_name', 'source_file_url', 'advertiser_name', 'propublica_advertiser_name', 'is_invalid', 'is_invoice', 'total_spent_raw', 'num_spots_raw', 'contract_number', 'source', 'data entry by', 'notes']
     
     local_response = open(file_name, 'w')
     writer = csv.writer(local_response)
@@ -87,7 +94,13 @@ def all_ads_to_file():
             if (row.upload_time):
                 upload_time = row.upload_time.strftime("%Y-%m-%d")
             
-            writer.writerow([row.pk, row.broadcaster_callsign, upload_time, row.contract_start_date.strftime("%Y-%m-%d"), row.contract_end_date.strftime("%Y-%m-%d"), row.nielsen_dma, row.dma_id, row.candidate_type, row.fcc_folder_name, this_file_name, raw_url, advertiser_name, pp_adv_name, is_invalid, is_invoice, row.total_spent_raw, row.num_spots_raw, row.contract_number, row.doc_source(), data_entry_by, row.data_entry_notes])
+            affil = ""
+            try:
+                affil = station_hash[row.broadcaster_callsign]
+            except KeyError:
+                pass
+            
+            writer.writerow([row.pk, row.broadcaster_callsign, upload_time, row.contract_start_date.strftime("%Y-%m-%d"), row.contract_end_date.strftime("%Y-%m-%d"), row.nielsen_dma, row.dma_id, affil, row.candidate_type, row.fcc_folder_name, this_file_name, raw_url, advertiser_name, pp_adv_name, is_invalid, is_invoice, row.total_spent_raw, row.num_spots_raw, row.contract_number, row.doc_source(), data_entry_by, row.data_entry_notes])
         
         #file_rows.append([row.pk, row.broadcaster_callsign, upload_time, row.contract_start_date.strftime("%Y-%m-%d"), row.contract_end_date.strftime("%Y-%m-%d"), row.nielsen_dma, row.dma_id, row.candidate_type, row.fcc_folder_name, this_file_name, raw_url, advertiser_name, pp_adv_name, is_invalid, is_invoice, row.total_spent_raw, row.num_spots_raw, row.contract_number, row.doc_source(), data_entry_by, row.data_entry_notes])
     
