@@ -172,12 +172,14 @@ class PoliticalBuy(MildModeratedModel):
     documentcloud_doc = models.ForeignKey(Document, null=True, default=None)
     contract_number = models.CharField(blank=True, max_length=100)
     advertiser = models.ForeignKey('Organization', blank=True, null=True, related_name='advertiser_politicalbuys', limit_choices_to={'organization_type': u'AD'})
+    advertiser_name_exact = models.CharField(blank=True, max_length=256, help_text="If this is entered by an outside source that doesn't use the dropdowns in ad sleuth, use this field so we don't create a gazillion variants of common names")
     advertiser_signatory = models.ForeignKey('Person', blank=True, null=True)
     bought_by = models.ForeignKey('Organization', blank=True, null=True,
                                   related_name='mediabuyer_politicalbuys',
                                   limit_choices_to={'organization_type': u'MB'},
                                   help_text="The media buyer"
                                   )
+    ad_buyer_exact = models.CharField(blank=True, max_length=256, help_text="If this is entered by an outside source that doesn't use the dropdowns in ad sleuth, use this field so we don't create a gazillion variants of common names")
     contract_start_date = models.DateField(blank=True, null=True, default=datetime.date.today)
     contract_end_date = models.DateField(blank=True, null=True, default=datetime.date.today)
     lowest_unit_price = models.NullBooleanField(default=None, blank=True, null=True)
