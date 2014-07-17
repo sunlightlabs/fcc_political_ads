@@ -19,7 +19,7 @@ from fccpublicfiles.models import PoliticalBuy
 # dict mapping field names. Could go elsewhere, but... 
 default_options = {
 #    'contract_number': 'order_revision',
-    'contract_number':'contract_number'
+    'contract_number':'contract_number',
     'advertiser_name_exact': 'advertiser_name',
     'ad_buyer_exact': 'agency_name',
     'contract_start_date':'flight_date_start',
