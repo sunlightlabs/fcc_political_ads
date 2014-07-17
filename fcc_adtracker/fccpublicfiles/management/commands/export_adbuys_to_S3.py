@@ -82,6 +82,9 @@ def all_ads_to_file():
             advertiser_name = ''
             if (row.advertiser):
                 advertiser_name = row.advertiser.name
+            elif row.advertiser_name_exact:
+                advertiser_name = row.advertiser_name_exact
+            
             data_entry_by = ""
             if (row.using_pp_data):
                 data_entry_by = "ProPublica"
