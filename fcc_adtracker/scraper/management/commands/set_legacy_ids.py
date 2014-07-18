@@ -71,5 +71,5 @@ class Command(BaseCommand):
    
     
     def handle(self, *args, **options):
-        # set_underscored_ids()
+        set_underscored_ids()
         set_fcc_ids()        
