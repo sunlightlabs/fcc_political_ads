@@ -153,6 +153,8 @@ class PDF_File(models.Model):
     facility_id = models.PositiveIntegerField(blank=True, null=True, unique=True, editable=False, help_text='FCC assigned id')
     #folder = models.ForeignKey(Folder)
     raw_url = models.CharField(max_length=511, unique=True) # not url encoded
+    file_id = models.CharField(max_length=14, null=True, help_text="id of the file without the underscore.")
+    alternate_id = models.CharField(max_length=14, null=True, help_text="id of the underscored version of the file, available through the feed")
     size = models.CharField(max_length=31, blank=True, null=True) # how big is it in text?
     upload_time = models.DateTimeField(blank=True, null=True, auto_now=False, help_text="When was this folder last modified?")
     related_candidate_id = models.CharField(max_length=15, blank=True, null=True, help_text="FEC candidate id if this folder represents a candidate")

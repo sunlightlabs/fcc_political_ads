@@ -20,7 +20,8 @@ political_re = re.compile('Political\s+File', re.I)
 datetime_re = re.compile('uploaded <b>(.*?)</b> in <b><a href="(.*?)">(.*?)</a></b> on ([\d\/]+) (\d+\:\d+) ([ap]m)')
 file_url_re = re.compile(r'collect/files/(\d+)/Political File/(.+)')
 file_domain = "https://stations.fcc.gov/"
-
+id_re = re.compile("id>[\d\-\w]+:(\d{14})</id>")
+fcc_infile_identifier = re.compile(r'\((\d{14})\)_.pdf')
 
 
 def parse_file_url(url):
@@ -44,6 +45,7 @@ def parse_xml_from_text(xml):
     for  elt in tree.getiterator('{http://www.w3.org/2005/Atom}feed'):
         for childelt in elt.getiterator('{http://www.w3.org/2005/Atom}entry'):
             stringtext =  etree.tostring(childelt, pretty_print=True)
+            underscored_id = ""
             [date_found, timefound] = [None, None]
             [title, full_folder_path, folder_path, date_loaded, time_loaded, time_pm] = [None, None, None, None, None, None] 
             datafound = re.search(datetime_re, stringtext)
@@ -56,11 +58,22 @@ def parse_xml_from_text(xml):
                 #print "!! no path / date info found"
                 
             
+            idfound = re.search(id_re, stringtext)
+            if idfound:
+                this_id = idfound.group(1)
+            else:
+                print "Missing id!"
+            
             urlfound = re.search(url_re, stringtext)
             [federal_office, federal_district, office, district] = [None, None, None, None]
             is_outside_group = False
             if urlfound:
                 this_url = urlfound.group(1)
+                
+                fccidfound = re.search(fcc_infile_identifier, this_url)
+                if fccidfound:
+                    underscored_id = fccidfound.group(1)
+                
                 if re.search(political_re, this_url):
                     #print "Found political file url: %s \n\n" % (this_url)
                     
@@ -85,6 +98,12 @@ def parse_xml_from_text(xml):
                     raw_name_guess = name[:255]
                     
                     
+                    # Now fix the underscored id if we've got it
+                    if underscored_id and this_id:
+                        underscore_text = "(" + underscored_id + ")_"
+                        id_text = "(" + this_id + ")"
+                        this_url = this_url.replace(underscore_text, id_text)
+                    
                     filestub = {
                         'title':title,
                         'full_folder_path':full_folder_path,
@@ -97,7 +116,9 @@ def parse_xml_from_text(xml):
                         'federal_office':federal_office,
                         'federal_district':federal_district,
                         'raw_name_guess':raw_name_guess,
-                        'is_outside_group':is_outside_group
+                        'is_outside_group':is_outside_group,
+                        'underscored_id':underscored_id,
+                        'id':this_id
                     }
                     political_files.append(filestub)
                     
