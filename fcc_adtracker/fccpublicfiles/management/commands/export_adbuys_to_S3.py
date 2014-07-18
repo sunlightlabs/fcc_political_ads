@@ -51,7 +51,7 @@ def all_ads_to_file():
     writer.writerow([file_description])
     writer.writerow(fields)
     
-    all_rows = PoliticalBuy.objects.all()
+    all_rows = PoliticalBuy.objects.all().order_by('pk')
     paginator = Paginator(all_rows, chunk_size)
     
     file_rows = []

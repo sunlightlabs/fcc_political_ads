@@ -15,12 +15,13 @@ def set_underscored_ids():
     
     row_num = 0
     
-    all_rows = PDF_File.objects.filter(raw_url__contains=")_.pdf", alternate_id__isnull=True)
+    all_rows = PDF_File.objects.filter(raw_url__contains=")_.pdf", alternate_id__isnull=True).order_by('pk')
     paginator = Paginator(all_rows, chunk_size)
     print "Processing %s underscored rows" % (paginator.count)
     file_rows = []
     
     for this_page in paginator.page_range:
+        print "Processing %s" % (this_page)
         for row in paginator.page(this_page).object_list:
             if row_num%100==0:
                 print "Processed %s rows" % (row_num)
@@ -35,6 +36,8 @@ def set_underscored_ids():
                 underscored_id = fccidfound.group(1)
                 row.alternate_id = underscored_id
                 row.save()
+            else:
+                print "No fcc underscore id found in %s" % (this_url)
 
 
 def set_fcc_ids():
@@ -42,12 +45,13 @@ def set_fcc_ids():
 
     row_num = 0
 
-    all_rows = PDF_File.objects.filter(raw_url__contains=").pdf", file_id__isnull=True)
+    all_rows = PDF_File.objects.filter(raw_url__contains=").pdf", file_id__isnull=True).order_by('pk')
     paginator = Paginator(all_rows, chunk_size)
     print "Processing %s non_underscored rows" % (paginator.count)
     file_rows = []
 
     for this_page in paginator.page_range:
+        print "Processing %s" % (this_page)
         for row in paginator.page(this_page).object_list:
             if row_num%100==0:
                 print "Processed %s rows" % (row_num)
@@ -62,6 +66,8 @@ def set_fcc_ids():
                 this_id = fccidfound.group(1)
                 row.file_id = this_id
                 row.save()
+            else:
+                print "No fcc id found in %s" % (this_url)
 
 
 class Command(BaseCommand):
