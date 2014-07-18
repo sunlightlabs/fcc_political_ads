@@ -14,7 +14,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         chunk_size = 500
         
-        buys = PoliticalBuy.objects.exclude(is_invoice=True).exclude(is_FCC_doc=False).select_related('related_FCC_file')
+        buys = PoliticalBuy.objects.exclude(is_invoice=True).exclude(is_FCC_doc=False).select_related('related_FCC_file').order_by('pk')
         paginator = Paginator(buys, chunk_size)
         count = 0
         for this_page in paginator.page_range:
@@ -32,7 +32,7 @@ class Command(BaseCommand):
         count = 0
         invalid_count = 0
         
-        buys = PoliticalBuy.objects.exclude(is_invalid=True).exclude(is_FCC_doc=False).select_related('related_FCC_file')
+        buys = PoliticalBuy.objects.exclude(is_invalid=True).exclude(is_FCC_doc=False).select_related('related_FCC_file').order_by('pk')
         paginator = Paginator(buys, chunk_size)
         for this_page in paginator.page_range:
             for buy in paginator.page(this_page).object_list:
