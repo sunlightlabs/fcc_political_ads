@@ -45,7 +45,7 @@ def handle_feed_url(feed_url, create_new=True):
             # we've retrieved the file, so now add data to it. 
             print "**Adding data"
             
-            thisfile.document_title = result['title']
+            thisfile.document_title = result['title'][:31]
             thisfile.alternate_id = result['underscored_id']
             thisfile.file_id = result['id']
             thisfile.quickview_folder_path = result['full_folder_path']
