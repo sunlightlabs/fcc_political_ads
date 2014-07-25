@@ -9,7 +9,9 @@ def handle_feed_url(feed_url, create_new=True):
     #read = get_rss_from_file()
     results = parse_xml_from_text(read)
     for result in results:
+        result['title'] = result['title'][:31]
         print "handling %s id=%s alt_id=%s" % (result['title'], result['id'], result['underscored_id'])
+        
         # we are seeing the underscored id. Look for the non-underscored id. 
         thisfile = None
         if result['id']:
@@ -45,7 +47,7 @@ def handle_feed_url(feed_url, create_new=True):
             # we've retrieved the file, so now add data to it. 
             print "**Adding data"
             
-            thisfile.document_title = result['title'][:31]
+            thisfile.document_title = result['title']
             thisfile.alternate_id = result['underscored_id']
             thisfile.file_id = result['id']
             thisfile.quickview_folder_path = result['full_folder_path']
