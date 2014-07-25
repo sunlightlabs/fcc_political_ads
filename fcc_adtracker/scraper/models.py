@@ -152,7 +152,14 @@ class PDF_File(models.Model):
     callsign = models.CharField(max_length=12)
     facility_id = models.PositiveIntegerField(blank=True, null=True, unique=True, editable=False, help_text='FCC assigned id')
     #folder = models.ForeignKey(Folder)
-    raw_url = models.CharField(max_length=511, unique=True) # not url encoded
+    raw_url = models.CharField(max_length=511, unique=True, help_text="the URL this was scraped from") # not url encoded
+    #
+    underscore_url = models.CharField(max_length=511, null=True, help_text="the URL from the feeds") # not url encoded
+    filedir_url = models.CharField(max_length=511, null=True, help_text="the URL from the hierarchy") # not url encoded
+    containing_folder_path = models.CharField(max_length=511, null=True, help_text="the URL of the folder") # not url encoded
+    quickview_folder_path = models.CharField(max_length=511, null=True, help_text="the URL of the folder") # not url encoded
+    document_title = models.CharField(max_length=255, blank=True, null=True, help_text="the one given in the feed, not the document title per se")
+    
     file_id = models.CharField(max_length=14, null=True, help_text="id of the file without the underscore.")
     alternate_id = models.CharField(max_length=14, null=True, help_text="id of the underscored version of the file, available through the feed")
     size = models.CharField(max_length=31, blank=True, null=True) # how big is it in text?
@@ -177,6 +184,8 @@ class PDF_File(models.Model):
     s3_full_url = models.CharField(max_length=600, blank=True, null=True, help_text='s3 url')
     not_at_fcc = models.NullBooleanField(default=False, help_text="Has the file gone missing?")
     missing_as_of_date = models.DateTimeField(blank=True, null=True, auto_now=False, help_text="When did we first notice the file was missing?")
+    paths_configured = models.NullBooleanField(default=False, help_text="Have we guessed file paths that we can guess?")
+    
     
     def path(self):
         return get_file_path(self.raw_url)

@@ -22,7 +22,7 @@ file_url_re = re.compile(r'collect/files/(\d+)/Political File/(.+)')
 file_domain = "https://stations.fcc.gov/"
 id_re = re.compile("id>[\d\-\w]+:(\d{14})</id>")
 fcc_infile_identifier = re.compile(r'\((\d{14})\)_.pdf')
-
+callsign_re = re.compile("https://stations.fcc.gov/station-profile/(.+?)/document-uploads/path")
 
 def parse_file_url(url):
     url_parts = re.findall(file_url_re, url)
@@ -98,11 +98,19 @@ def parse_xml_from_text(xml):
                     raw_name_guess = name[:255]
                     
                     
+                    callsign_result = callsign_re.search(full_folder_path)
+                    if callsign_result:
+                        callsign = callsign_result.group(1).upper()
+                    
+                    
+                    underscored_url = ""
+                    filedir_url = ""
+                    ## Dont do this right now -- just make sure we've got url right. 
                     # Now fix the underscored id if we've got it
-                    if underscored_id and this_id:
-                        underscore_text = "(" + underscored_id + ")_"
-                        id_text = "(" + this_id + ")"
-                        this_url = this_url.replace(underscore_text, id_text)
+                    #if underscored_id and this_id:
+                    #    underscore_text = "(" + underscored_id + ")_"
+                    #    id_text = "(" + this_id + ")"
+                    #    filedir_url = this_url.replace(underscore_text, id_text)
                     
                     filestub = {
                         'title':title,
@@ -111,6 +119,7 @@ def parse_xml_from_text(xml):
                         'time_loaded':time_found,
                         'href':file_domain + this_url,
                         'facility_id':facility_id,
+                        'callsign':callsign,
                         'year':details[0],
                         'ad_type':ad_type,
                         'federal_office':federal_office,
@@ -132,13 +141,16 @@ def parse_xml_from_text(xml):
     return political_files
                 
 
-def get_rss_from_web():
+def get_rss(this_rss_url):
     headers = {'User-Agent': USER_AGENT}   
     data = None       
-    req = urllib2.Request(rss_url, data, headers)
+    req = urllib2.Request(this_rss_url, data, headers)
     response = urllib2.urlopen(req)
     rssdata = response.read()
     return rssdata
+    
+def get_rss_from_web():
+    return get_rss(rss_url)
 
 
 def write_rss_to_file(rssdata):
