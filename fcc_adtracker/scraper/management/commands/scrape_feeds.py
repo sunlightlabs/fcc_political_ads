@@ -1,67 +1,56 @@
 # Scrape many feeds to recover id information that may have been lost. 
 
+from optparse import make_option
+
+
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-from scraper.rss_scraper import get_rss, parse_xml_from_text, get_rss_from_file
-from scraper.management.commands.scrape_fcc_rss import handle_file
-from scraper.models import PDF_File, StationData
-from broadcasters.models import Broadcaster
+from scraper.feed_handler_utils import handle_feed_url
+from scraper.fcc_scraper import folder_placeholder
+from scraper.utils import mandated_stations
 
+FCC_SCRAPER_LOG_DIRECTORY = getattr(settings, 'FCC_SCRAPER_LOG')
 
-
-def handle_feed_url(feed_url, create_new=False):
-    read = get_rss(feed_url)
-    #read = get_rss_from_file()
-    results = parse_xml_from_text(read)
-    for result in results:
-        print "handling %s id=%s alt_id=%s" % (result['title'], result['id'], result['underscored_id'])
-        # we are seeing the underscored id. Look for the non-underscored id. 
-        thisfile = None
-        if result['id']:
-
-            try:
-                thisfile = PDF_File.objects.get(file_id=result['id'])
-                print "Found file using id"
-                
-            except PDF_File.DoesNotExist:
-                print "couldn't locate id: %s" % (result['id'])
-                pass
-                
-        else:
-            print "Missing id for %s" % (result['href'])
-            continue
+class Command(BaseCommand):        
         
-        if not thisfile and result['underscored_id']:
-            try: 
-                thisfile = PDF_File.objects.get(alternate_id=result['underscored_id'])
-                print "Found file using alternate id"
-            except PDF_File.DoesNotExist:
-                print "Couldn't locate using alternate id"
-                pass
+        
+        args = '<search_string ...>'
+        help = 'Scrape the FCC site for PDF\'s of political ad buys. With no arguments, will scrape every station. If given the URL of a folder, will scrape that folder. Logs to %s' % (FCC_SCRAPER_LOG_DIRECTORY)
+        can_import_settings = True
 
-        if thisfile:
-            # we've retrieved the file, so now add data to it. 
-            print "**Adding data"
+        option_list = BaseCommand.option_list + (
+            make_option('-n', '--non-recursive',
+                        action='store_false',
+                        dest='process_recursively',
+                        default=True,
+                        help='Only process the folder(s) given, not their children'),
+            )
+
+
+        def handle(self, *args, **options):
+            process_recursively = options.get('process_recursively')
+
+            if (len(args) == 0):
+
+                for this_callsign in mandated_stations:
+                    for year in ['2014']:
+                        print "\n\nProcessing %s : %s - logs to: %s" % (year, this_callsign, FCC_SCRAPER_LOG_DIRECTORY)
+                        url = "https://stations.fcc.gov/station-profile/%s/political-files/browse->%s" % (this_callsign, year)
+                        this_folder = folder_placeholder(url, 'root', this_callsign)
+                        this_folder.process_feeds(process_recursively)
+
+            elif len(args) > 0:
+                url_array = []
+                for this_callsign in args:
+                    for year in ['2014']:
+                        print "\n\nProcessing %s : %s - logs to: %s" % (year, this_callsign, FCC_SCRAPER_LOG_DIRECTORY)
+                        url = "https://stations.fcc.gov/station-profile/%s/political-files/browse->%s" % (this_callsign, year)
+                        this_folder = folder_placeholder(url, 'root', this_callsign)
+                        this_folder.process_feeds(process_recursively)
+
+
+            else:
+                raise CommandError('Invalid arguments')
+                
             
-            thisfile.document_title = result['title']
-            thisfile.alternate_id = result['underscored_id']
-            thisfile.file_id = result['id']
-            thisfile.quickview_folder_path = result['full_folder_path']
-            thisfile.underscore_url = result['href']
-            
-            thisfile.save()
-        else:
-            print "This file apparently doesn't exist %s" % (result['href'])
-            if create_new:
-                print "Creating new file for %s" % (result['href'])
-                handle_file(result)
-
-class Command(BaseCommand):
-    
-    
-    def handle(self, *args, **options):
-
-        feed_url = "https://stations.fcc.gov/station-profile/kaal/rss/feed-/political_file/2014"
-        feed_url = "https://stations.fcc.gov/station-profile/wkrc-tv/rss/feed-/political_file/2012/federal/us_senate/sherrod_brown/order_41246"
-        handle_feed_url(feed_url)

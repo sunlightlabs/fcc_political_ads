@@ -20,7 +20,9 @@ political_re = re.compile('Political\s+File', re.I)
 datetime_re = re.compile('uploaded <b>(.*?)</b> in <b><a href="(.*?)">(.*?)</a></b> on ([\d\/]+) (\d+\:\d+) ([ap]m)')
 file_url_re = re.compile(r'collect/files/(\d+)/Political File/(.+)')
 file_domain = "https://stations.fcc.gov/"
-id_re = re.compile("id>[\d\-\w]+:(\d{14})</id>")
+
+## oddly the opening parentheses isn't always there
+id_re = re.compile("id>[\d\-\w]+:(\d{14})")
 fcc_infile_identifier = re.compile(r'\((\d{14})\)_.pdf')
 callsign_re = re.compile("https://stations.fcc.gov/station-profile/(.+?)/document-uploads/path")
 
@@ -57,12 +59,12 @@ def parse_xml_from_text(xml):
                 pass
                 #print "!! no path / date info found"
                 
-            
+            this_id = None
             idfound = re.search(id_re, stringtext)
             if idfound:
                 this_id = idfound.group(1)
             else:
-                print "Missing id!"
+                print "Missing id in %s" % stringtext
             
             urlfound = re.search(url_re, stringtext)
             [federal_office, federal_district, office, district] = [None, None, None, None]

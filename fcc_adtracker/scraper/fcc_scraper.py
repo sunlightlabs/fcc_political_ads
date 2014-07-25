@@ -16,12 +16,16 @@ from broadcasters.models import Broadcaster
 from local_log import fcc_logger
 from utils import read_url
 
+from scraper.feed_handler_utils import handle_feed_url
+
 
 size_re = re.compile(r'<div class="size">(.*?)</div>')
 type_re = re.compile(r'<div class="type">(.*?)</div>')
 date_re = re.compile(r'<div class="date">(.*?)</div>')
 
 folder_re = re.compile(r'<div class="(.*?)"><a href="(.*?)">', re.I)
+
+folder_path_re = re.compile("station-profile/(.+?)/political-files/browse->(.+)", re.I)
 
 # old style:
 # pdf_re = re.compile(r'<div id="(.*?)" class="(.*?)"><a target="_blank" title="(.*?)" href="(.*?)">')
@@ -123,6 +127,26 @@ def parse_pdf_div(div_html):
 
 
 
+#folder_url = "https://stations.fcc.gov/station-profile/wkrc-tv/political-files/browse-%3E2012-%3Efederal-%3Eus_senate-%3Esherrod_brown-%3Eorder_41246"
+
+#"https://stations.fcc.gov/station-profile/wkrc-tv/rss/feed-/political_file/2012/federal/us_senate/sherrod_brown/order_41246"
+#    gets transformed into:
+
+
+def get_feed_url_from_folder_url(folder_url):
+    parts = re.search(folder_path_re, folder_url)
+    feed_url = None
+    if parts:
+        callsign = parts.group(1)
+        folder_path = parts.group(2)
+        folder_list = folder_path.split("->")
+        folder_list_formatted = "/".join(folder_list).lower()
+        feed_url = "https://stations.fcc.gov/station-profile/%s/rss/feed-/political_file/%s" % (callsign, folder_list_formatted)
+    return feed_url
+        
+    
+    
+
 class folder_placeholder(object):
     url = None
     # This is the css styling of the folder, which tells us what kind of folder it is
@@ -187,7 +211,7 @@ class folder_placeholder(object):
                         numfiles = int(sizefound)
                     except ValueError: 
                         pass 
-                print "\t Typefound:: %s %s %s" % (typefound, sizefound, datefound)
+                #print "\t Typefound:: %s %s %s" % (typefound, sizefound, datefound)
 
 
                 firstdiv = folderli.find("div")
@@ -311,6 +335,35 @@ class folder_placeholder(object):
                     childfolder = folder_placeholder(child['url'], child['folder_class'], self.callSign, child['size'])
                     childfolder.process()
                     sleep(SCRAPE_DELAY_TIME)
-                                          
 
-    
+
+    def process_feeds(self, recursive=True):
+        try:
+            self.read_page()
+            self.parse()
+            
+            
+        # If we hit an error just log it and keep rolling. 
+        except:
+            tb = traceback.format_exc()
+            message = "*** Error trying to process URL:%s ***\n%s" % (self.url, tb)
+            my_logger.warn(message)
+            print message
+            return
+
+        feed_url = get_feed_url_from_folder_url(self.url)
+        print "\n\n**** NOW HANDLING FEED URL: %s" % (feed_url)
+        
+        handle_feed_url(feed_url)
+        
+        if recursive:
+            for child in self.childfolders:
+                if (child['size'] > 0):
+                    childfolder = folder_placeholder(child['url'], child['folder_class'], self.callSign, child['size'])
+                    childfolder.process_feeds(recursive=recursive)
+                    sleep(SCRAPE_DELAY_TIME)
+
+
+
+
+
