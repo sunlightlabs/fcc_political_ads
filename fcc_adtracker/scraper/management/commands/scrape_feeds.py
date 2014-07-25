@@ -11,6 +11,7 @@ from scraper.fcc_scraper import folder_placeholder
 from scraper.utils import mandated_stations
 
 FCC_SCRAPER_LOG_DIRECTORY = getattr(settings, 'FCC_SCRAPER_LOG')
+YEARS_WE_CARE_ABOUT = ['2013', '2014']
 
 class Command(BaseCommand):        
         
@@ -34,7 +35,7 @@ class Command(BaseCommand):
             if (len(args) == 0):
 
                 for this_callsign in mandated_stations:
-                    for year in ['2014']:
+                    for year in YEARS_WE_CARE_ABOUT:
                         print "\n\nProcessing %s : %s - logs to: %s" % (year, this_callsign, FCC_SCRAPER_LOG_DIRECTORY)
                         url = "https://stations.fcc.gov/station-profile/%s/political-files/browse->%s" % (this_callsign, year)
                         this_folder = folder_placeholder(url, 'root', this_callsign)
@@ -43,7 +44,7 @@ class Command(BaseCommand):
             elif len(args) > 0:
                 url_array = []
                 for this_callsign in args:
-                    for year in ['2014']:
+                    for year in YEARS_WE_CARE_ABOUT:
                         print "\n\nProcessing %s : %s - logs to: %s" % (year, this_callsign, FCC_SCRAPER_LOG_DIRECTORY)
                         url = "https://stations.fcc.gov/station-profile/%s/political-files/browse->%s" % (this_callsign, year)
                         this_folder = folder_placeholder(url, 'root', this_callsign)
