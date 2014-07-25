@@ -21,6 +21,10 @@ def handle_feed_url(feed_url, create_new=True):
             except PDF_File.DoesNotExist:
                 print "couldn't locate id: %s" % (result['id'])
                 pass
+            
+            except PDF_File.MultipleObjectsReturned:
+                pass
+            
                 
         else:
             print "Missing id for %s" % (result['href'])
@@ -33,6 +37,9 @@ def handle_feed_url(feed_url, create_new=True):
             except PDF_File.DoesNotExist:
                 print "Couldn't locate using alternate id"
                 pass
+            except PDF_File.MultipleObjectsReturned:
+                pass
+            
 
         if thisfile:
             # we've retrieved the file, so now add data to it. 
