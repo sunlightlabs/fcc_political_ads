@@ -29,7 +29,7 @@ def handle_file(thisfile):
         callsign = thisfile['callsign']
 
     if thisfile['href']:
-        (pdffile, created) = PDF_File.objects.get_or_create(raw_url=thisfile['href'],   defaults={'upload_time':thisfile['time_loaded'],'ad_type':thisfile['ad_type'], 'federal_office':thisfile['federal_office'], 'federal_district':thisfile['federal_district'], 'facility_id':thisfile['facility_id'], 'callsign':callsign, 'nielsen_dma':nielsen_dma, 'dma_id':dma_id, 'community_state':community_state, 'raw_name_guess':thisfile['raw_name_guess'], 'file_id':thisfile['id'], 'alternate_id':thisfile['underscored_id'], 'quickview_folder_path':thisfile['full_folder_path'], 'document_title':thisfile['title']})
+        (pdffile, created) = PDF_File.objects.get_or_create(raw_url=thisfile['href'],   defaults={'upload_time':thisfile['time_loaded'],'ad_type':thisfile['ad_type'][:31], 'federal_office':thisfile['federal_office'], 'federal_district':thisfile['federal_district'], 'facility_id':thisfile['facility_id'], 'callsign':callsign, 'nielsen_dma':nielsen_dma, 'dma_id':dma_id, 'community_state':community_state, 'raw_name_guess':thisfile['raw_name_guess'], 'file_id':thisfile['id'], 'alternate_id':thisfile['underscored_id'], 'quickview_folder_path':thisfile['full_folder_path'], 'document_title':thisfile['title']})
     else:
         message = "couldn't parse pdf file %s" % thisfile
         my_logger.warn(message)
