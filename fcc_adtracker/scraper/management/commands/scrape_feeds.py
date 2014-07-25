@@ -9,6 +9,7 @@ from django.conf import settings
 from scraper.feed_handler_utils import handle_feed_url
 from scraper.fcc_scraper import folder_placeholder
 from scraper.utils import mandated_stations
+from scraper.models import PDF_File
 
 FCC_SCRAPER_LOG_DIRECTORY = getattr(settings, 'FCC_SCRAPER_LOG')
 YEARS_WE_CARE_ABOUT = ['2013', '2014']
@@ -33,8 +34,9 @@ class Command(BaseCommand):
             process_recursively = options.get('process_recursively')
 
             if (len(args) == 0):
-
-                for this_callsign in mandated_stations:
+                all_station_values = PDF_File.objects.all().order_by('callsign').values('callsign').distinct()
+                for this_station in all_station_values:
+                    this_callsign = this_station['callsign']
                     for year in YEARS_WE_CARE_ABOUT:
                         print "\n\nProcessing %s : %s - logs to: %s" % (year, this_callsign, FCC_SCRAPER_LOG_DIRECTORY)
                         url = "https://stations.fcc.gov/station-profile/%s/political-files/browse->%s" % (this_callsign, year)

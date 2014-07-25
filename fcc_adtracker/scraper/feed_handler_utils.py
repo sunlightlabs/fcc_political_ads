@@ -2,8 +2,9 @@
 from scraper.rss_scraper import get_rss, parse_xml_from_text, get_rss_from_file
 from scraper.models import PDF_File, StationData
 from broadcasters.models import Broadcaster
+from scraper.management.commands.scrape_fcc_rss import handle_file
 
-def handle_feed_url(feed_url, create_new=False):
+def handle_feed_url(feed_url, create_new=True):
     read = get_rss(feed_url)
     #read = get_rss_from_file()
     results = parse_xml_from_text(read)
