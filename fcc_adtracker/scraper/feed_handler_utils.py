@@ -8,6 +8,9 @@ def handle_feed_url(feed_url, create_new=True):
     read = get_rss(feed_url)
     #read = get_rss_from_file()
     results = parse_xml_from_text(read)
+    if not results:
+        print "No results -- skipping"
+        return None
     for result in results:
         result['title'] = result['title'][:31]
         print "handling %s id=%s alt_id=%s" % (result['title'], result['id'], result['underscored_id'])

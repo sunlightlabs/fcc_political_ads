@@ -41,7 +41,11 @@ def parse_file_url(url):
 def parse_xml_from_text(xml):
     datefound = date.today()
     political_files = []
-    tree = etree.parse(StringIO(xml))
+    try:
+        tree = etree.parse(StringIO(xml))
+    except etree.XMLSyntaxError:
+        print "Apparently malformed xml!"
+        return None
     results = []
     
     for  elt in tree.getiterator('{http://www.w3.org/2005/Atom}feed'):
