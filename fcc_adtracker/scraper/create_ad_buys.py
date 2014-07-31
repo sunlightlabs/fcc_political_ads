@@ -14,14 +14,14 @@ def make_ad_buy_from_pdf_file(pdf_file_pk):
         return None
 
     auser = User.objects.all()[0]
-
+    print "processing %s" % (pdf_file.__dict__)
     pol_buy = PoliticalBuy()
     pol_buy.is_FCC_doc= True
     pol_buy.related_FCC_file = pdf_file
     
     pol_buy.candidate_type = pdf_file.candidate_type()[:31]
     pol_buy.fcc_folder_name = pdf_file.raw_name_guess[:255]
-    pol_buy.nielsen_dma = pdf_file.nielsen_dma[:60]
+    pol_buy.nielsen_dma = pdf_file.nielsen_dma
     pol_buy.dma_id = pdf_file.dma_id
     pol_buy.community_state =pdf_file.community_state[:7]
     pol_buy.upload_time = pdf_file.upload_time
