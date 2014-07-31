@@ -1,4 +1,4 @@
-import csv
+import csv, re
 
 from dateutil.parser import parse as dateparse
 from optparse import make_option
@@ -13,6 +13,7 @@ from broadcasters.models import Broadcaster
 from django.contrib.auth.models import User
 from fccpublicfiles.models import PoliticalBuy
 
+fcc_infile_identifier = re.compile(r'\((\d{14})\)')
 
 
 
@@ -103,46 +104,61 @@ def enter_pdf_file(thisfile):
         return None
 
 
+def get_fcc_id(stringtext):
+    if not stringtext:
+        return None
+    this_id = None
+    idfound = re.search(fcc_infile_identifier, stringtext)
+    if idfound:
+        this_id = idfound.group(1)
+        #print "Got id  %s from %s" % (this_id, stringtext)
+    else:
+        print "Missing id in %s" % stringtext
+    return this_id
+            
 def handle_row_data(this_data, create_new_ads):
+    #print this_data
     # does it exist as a pdf file? 
     pdffile = None
     adbuy = None
-    try:
-        pdffile = PDF_File.objects.get(raw_url=this_data['raw_url'])
-    except PDF_File.DoesNotExist:
-        
-        if create_new_ads:
-            print "Missing file %s -- now creating" % (this_data['raw_url'])
-            
-            pdffile = enter_pdf_file(this_data)
-            if pdffile:
-                adbuy = make_ad_buy_from_pdf_file(pdffile.pk)
-        else:
-            print "Missing file %s -- skipping" % (this_data['raw_url'])
-            
-            
-    # if we don't have the related ad buy, get it. 
-    if pdffile:
+    fcc_id = get_fcc_id(this_data['raw_url'])
+    if fcc_id:
         try:
-            adbuy = PoliticalBuy.objects.get(related_FCC_file=pdffile)
-        except PoliticalBuy.DoesNotExist:
-            # This shouldn't really happen...
-            print "No PoliticalBuy found for ad buy %s" % (pdffile)
-            return None
-    
-        if this_data['total_spent_raw']:
-            this_data['total_spent_raw'] = clean_numeric(this_data['total_spent_raw'])
-    
-        for key in this_data.keys():
+            pdffile = PDF_File.objects.get(alternate_id=fcc_id)
+        except PDF_File.DoesNotExist:
+        
+            if create_new_ads:
+                print "Missing file %s -- now creating" % (this_data['raw_url'])
+            
+                pdffile = enter_pdf_file(this_data)
+                if pdffile:
+                    adbuy = make_ad_buy_from_pdf_file(pdffile.pk)
+            else:
+                print "Missing file %s -- skipping" % (this_data['raw_url'])
+            
+            
+        # if we don't have the related ad buy, get it. 
+        if pdffile:
             try:
-                current_value = getattr(adbuy, key)
-            except AttributeError:
-                continue
-            if not current_value:
-                if this_data[key]:
-                    setattr(adbuy, key, this_data[key]) 
-                    print "Setting %s %s in %s" % (key, this_data[key], adbuy)
-        adbuy.save(auser)
+                adbuy = PoliticalBuy.objects.get(related_FCC_file=pdffile)
+            except PoliticalBuy.DoesNotExist:
+                # This shouldn't really happen...
+                print "No PoliticalBuy found for ad buy %s" % (pdffile)
+                return None
+    
+            if this_data['total_spent_raw']:
+                this_data['total_spent_raw'] = clean_numeric(this_data['total_spent_raw'])
+    
+            for key in this_data.keys():
+                try:
+                    current_value = getattr(adbuy, key)
+                except AttributeError:
+                    continue
+                if not current_value:
+                    if this_data[key]:
+                        setattr(adbuy, key, this_data[key]) 
+                        print "Setting %s %s in %s" % (key, this_data[key], adbuy)
+            adbuy.save(auser)
         
     return None
     

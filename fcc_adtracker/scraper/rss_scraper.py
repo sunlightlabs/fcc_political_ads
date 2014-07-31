@@ -26,6 +26,17 @@ id_re = re.compile("id>[\d\-\w]+:(\d{14})")
 fcc_infile_identifier = re.compile(r'\((\d{14})\)_.pdf')
 callsign_re = re.compile("https://stations.fcc.gov/station-profile/(.+?)/document-uploads/path")
 
+
+def get_id(stringtext):
+    this_id = None
+    idfound = re.search(id_re, stringtext)
+    if idfound:
+        this_id = idfound.group(1)
+        print "Got id  %s from %s" % (this_id, stringtext)
+    else:
+        print "Missing id in %s" % stringtext
+    return this_id
+    
 def parse_file_url(url):
     url_parts = re.findall(file_url_re, url)
     (fac_id, pathArray) = (None, None)
@@ -63,12 +74,7 @@ def parse_xml_from_text(xml):
                 pass
                 #print "!! no path / date info found"
                 
-            this_id = None
-            idfound = re.search(id_re, stringtext)
-            if idfound:
-                this_id = idfound.group(1)
-            else:
-                print "Missing id in %s" % stringtext
+            this_id = get_id(stringtext)
             
             urlfound = re.search(url_re, stringtext)
             [federal_office, federal_district, office, district] = [None, None, None, None]
