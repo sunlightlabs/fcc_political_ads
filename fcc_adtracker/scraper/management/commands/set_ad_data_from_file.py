@@ -124,7 +124,7 @@ def handle_row_data(this_data, create_new_ads):
     fcc_id = get_fcc_id(this_data['raw_url'])
     if fcc_id:
         try:
-            pdffile = PDF_File.objects.get(alternate_id=fcc_id)
+            pdffile = PDF_File.objects.get(file_id=fcc_id)
         except PDF_File.DoesNotExist:
         
             if create_new_ads:
