@@ -121,10 +121,14 @@ def handle_row_data(this_data, create_new_ads):
     # does it exist as a pdf file? 
     pdffile = None
     adbuy = None
-    fcc_id = get_fcc_id(this_data['raw_url'])
-    if fcc_id:
+    fac_id = None
+    
+    if this_data['raw_url']:
+        fcc_id = get_fcc_id(this_data['raw_url'])
+        fac_id, pathArray = parse_file_url(this_data['raw_url'])
+    if fcc_id and fac_id:
         try:
-            pdffile = PDF_File.objects.get(file_id=fcc_id)
+            pdffile = PDF_File.objects.get(file_id=fcc_id, facility_id=fac_id)
         except PDF_File.DoesNotExist:
         
             if create_new_ads:
