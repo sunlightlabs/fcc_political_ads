@@ -15,7 +15,7 @@
 <p class="tip">{% if feed_url %}<img src="http://assets.sunlightfoundation.com.s3.amazonaws.com/reporting/1.0/img/feed-icon-14x14.png">&nbsp;<a href="http://politicaladsleuth.com/political-files/feeds/{{ feed_url }}/">Subscribe to RSS feed</a>&nbsp;|&nbsp;<a href="javascript:gotoscout('http://politicaladsleuth.com/political-files/feeds/{{ feed_url }}/')" class="">Create an alert</a><br>{% endif %}{% include "_data_disclaimer_short.html" %}</p>
 <p class="tip">Found {{count}} filings{% if broadcaster %} at {{broadcaster }}{% endif %}. {% updatetime %}.</p>
 
-{% ifequal geography_name 'PHILADELPHIA' %}<a id="downloadBtn" class="btn" href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/dma_504_ad_buys.csv">Download CSV of Philadelphia files</a>&nbsp;{% endifequal %}
+{% ifequal geography_name 'PHILADELPHIA, PA' %}<a id="downloadBtn" class="btn" href="http://politicaladsleuth-assets.s3.amazonaws.com/media/csv/dma_504_ad_buys.csv">Download CSV of Philadelphia files</a>&nbsp;{% endifequal %}
 {% include "_download_button.html" %}
 
 
