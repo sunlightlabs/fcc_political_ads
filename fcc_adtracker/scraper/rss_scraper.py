@@ -62,93 +62,97 @@ def parse_xml_from_text(xml):
     for  elt in tree.getiterator('{http://www.w3.org/2005/Atom}feed'):
         for childelt in elt.getiterator('{http://www.w3.org/2005/Atom}entry'):
             stringtext =  etree.tostring(childelt, pretty_print=True)
-            underscored_id = ""
-            [date_found, timefound] = [None, None]
-            [title, full_folder_path, folder_path, date_loaded, time_loaded, time_pm] = [None, None, None, None, None, None] 
-            datafound = re.search(datetime_re, stringtext)
-            if datafound:
-                (title, full_folder_path, folder_path, date_loaded, time_loaded, time_pm) = datafound.groups()
-                date_found = dateparse(date_loaded)
-                time_found = datetime.strptime(date_loaded + " " + time_loaded + " " + time_pm, '%m/%d/%Y %I:%M %p')
-            else:
-                pass
-                #print "!! no path / date info found"
-                
-            this_id = get_id(stringtext)
-            
-            urlfound = re.search(url_re, stringtext)
-            [federal_office, federal_district, office, district] = [None, None, None, None]
-            is_outside_group = False
-            if urlfound:
-                this_url = urlfound.group(1)
-                
-                fccidfound = re.search(fcc_infile_identifier, this_url)
-                if fccidfound:
-                    underscored_id = fccidfound.group(1)
-                
-                if re.search(political_re, this_url):
-                    #print "Found political file url: %s \n\n" % (this_url)
-                    
-                    (facility_id, details) = parse_file_url(this_url)
-                    
-                    if (details[1] == 'Non-Candidate Issue Ads'):
-                        is_outside_group = True 
-                    elif (details[1] == 'Federal'):
-                        office = details[2]
-                        if (office == 'US House'):
-                            district = details[3]
-                    # They're not very consisten about this... 
-                    path = details[1:]
-                    name = path[-2:-1][0]
-
-                    # hard truncate. This data's a mess.
-                    ad_type =details[1]
-                    if office:
-                        federal_office = office[:31]
-                    if district:
-                        federal_district = district[:31]
-                    raw_name_guess = name[:255]
-                    
-                    
-                    callsign_result = callsign_re.search(full_folder_path)
-                    if callsign_result:
-                        callsign = callsign_result.group(1).upper()
-                    
-                    
-                    underscored_url = ""
-                    filedir_url = ""
-                    ## Dont do this right now -- just make sure we've got url right. 
-                    # Now fix the underscored id if we've got it
-                    #if underscored_id and this_id:
-                    #    underscore_text = "(" + underscored_id + ")_"
-                    #    id_text = "(" + this_id + ")"
-                    #    filedir_url = this_url.replace(underscore_text, id_text)
-                    
-                    filestub = {
-                        'title':title,
-                        'full_folder_path':full_folder_path,
-                        'date_loaded':date_found,
-                        'time_loaded':time_found,
-                        'href':file_domain + this_url,
-                        'facility_id':facility_id,
-                        'callsign':callsign,
-                        'year':details[0],
-                        'ad_type':ad_type,
-                        'federal_office':federal_office,
-                        'federal_district':federal_district,
-                        'raw_name_guess':raw_name_guess,
-                        'is_outside_group':is_outside_group,
-                        'underscored_id':underscored_id,
-                        'id':this_id
-                    }
-                    political_files.append(filestub)
-                    
+            try:
+                underscored_id = ""
+                [date_found, timefound] = [None, None]
+                [title, full_folder_path, folder_path, date_loaded, time_loaded, time_pm] = [None, None, None, None, None, None] 
+                datafound = re.search(datetime_re, stringtext)
+                if datafound:
+                    (title, full_folder_path, folder_path, date_loaded, time_loaded, time_pm) = datafound.groups()
+                    date_found = dateparse(date_loaded)
+                    time_found = datetime.strptime(date_loaded + " " + time_loaded + " " + time_pm, '%m/%d/%Y %I:%M %p')
                 else:
                     pass
-                    #print "Other file url %s\n\n" %  (this_url)
-            else:
-                # It seems that files that don't have this link haven't finished processing. Ignore them, with unknown consequences.
-                print "URL missing!! "
+                    #print "!! no path / date info found"
+                
+                this_id = get_id(stringtext)
+            
+                urlfound = re.search(url_re, stringtext)
+                [federal_office, federal_district, office, district] = [None, None, None, None]
+                is_outside_group = False
+                if urlfound:
+                    this_url = urlfound.group(1)
+                
+                    fccidfound = re.search(fcc_infile_identifier, this_url)
+                    if fccidfound:
+                        underscored_id = fccidfound.group(1)
+                
+                    if re.search(political_re, this_url):
+                        print "Found political file url: %s \n\n" % (this_url)
+                    
+                        (facility_id, details) = parse_file_url(this_url)
+
+                        if (details[1] == 'Non-Candidate Issue Ads'):
+                            is_outside_group = True 
+                        elif (details[1] == 'Federal'):
+                            office = details[2]
+                            if (office == 'US House'):
+                                district = details[3]
+                        # They're not very consisten about this... 
+                        path = details[1:]
+                        name = path[-2:-1][0]
+
+                        # hard truncate. This data's a mess.
+                        ad_type =details[1]
+                        if office:
+                            federal_office = office[:31]
+                        if district:
+                            federal_district = district[:31]
+                        raw_name_guess = name[:255]
+                    
+                    
+                        callsign_result = callsign_re.search(full_folder_path)
+                        if callsign_result:
+                            callsign = callsign_result.group(1).upper()
+                    
+                    
+                        underscored_url = ""
+                        filedir_url = ""
+                        ## Dont do this right now -- just make sure we've got url right. 
+                        # Now fix the underscored id if we've got it
+                        #if underscored_id and this_id:
+                        #    underscore_text = "(" + underscored_id + ")_"
+                        #    id_text = "(" + this_id + ")"
+                        #    filedir_url = this_url.replace(underscore_text, id_text)
+                    
+                        filestub = {
+                            'title':title,
+                            'full_folder_path':full_folder_path,
+                            'date_loaded':date_found,
+                            'time_loaded':time_found,
+                            'href':file_domain + this_url,
+                            'facility_id':facility_id,
+                            'callsign':callsign,
+                            'year':details[0],
+                            'ad_type':ad_type,
+                            'federal_office':federal_office,
+                            'federal_district':federal_district,
+                            'raw_name_guess':raw_name_guess,
+                            'is_outside_group':is_outside_group,
+                            'underscored_id':underscored_id,
+                            'id':this_id
+                        }
+                        political_files.append(filestub)
+                    
+                    else:
+                        pass
+                        #print "Other file url %s\n\n" %  (this_url)
+                else:
+                    # It seems that files that don't have this link haven't finished processing. Ignore them, with unknown consequences.
+                    print "URL missing!! "
+            except:
+                # This is thrown for non-political files, which we've had to start processing because of feed breakage.
+                print "Error processing %s" % (stringtext)
                 
     return political_files
                 
