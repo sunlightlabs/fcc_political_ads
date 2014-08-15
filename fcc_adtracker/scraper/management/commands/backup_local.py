@@ -61,12 +61,17 @@ class Command(BaseCommand):
             #print "read the pdf"
             
             tempfile_full = SCRAPER_LOCAL_DOC_DIR + "/" + tempfile_name_fixed
-            tempfile = open(tempfile_full, "wb")
-            tempfile.write(page)
-            this_pdf.local_file_path = tempfile_name_fixed
-            this_pdf.save()
-            tempfile.close()
-            #print "wrote the pdf to %s" % (tempfile_full)
+            try:
+                tempfile = open(tempfile_full, "wb")
+                tempfile.write(page)
+                this_pdf.local_file_path = tempfile_name_fixed
+                this_pdf.save()
+                tempfile.close()
+                #print "wrote the pdf to %s" % (tempfile_full)
+            except:
+                # sometimes the file names are too long for the system, which sucks
+                print "Something went wrong with %s" % (tempfile_full)
+                
             
             sleep(0.5)
             
