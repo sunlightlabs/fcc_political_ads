@@ -30,10 +30,11 @@ class Command(BaseCommand):
         k.key = s3_string
         k.set_contents_from_filename(local_file_path, policy='public-read')
         
-        # hack to help philly folks
-        file_to_upload = 'dma_504_ad_buys.csv'
-        local_file_path = "%s/%s" % (CSV_EXPORT_DIR, file_to_upload)
-        s3_string = "media/csv/%s" % file_to_upload
-        print "pushing to S3: %s" % s3_string
-        k.key = s3_string
-        k.set_contents_from_filename(local_file_path, policy='public-read')
+        # hack to help local folks
+        for dma_id in ('504', '679', '682', '624', '637', '631'):
+            file_to_upload = "dma_%s_ad_buys.csv" % (dma_id)
+            local_file_path = "%s/%s" % (CSV_EXPORT_DIR, file_to_upload)
+            s3_string = "media/csv/%s" % file_to_upload
+            print "pushing to S3: %s" % s3_string
+            k.key = s3_string
+            k.set_contents_from_filename(local_file_path, policy='public-read')
