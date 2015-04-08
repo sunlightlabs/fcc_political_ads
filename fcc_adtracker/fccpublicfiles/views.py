@@ -466,6 +466,7 @@ def filing_state_list(request, state_id):
         (this_page, paginator) = paginate_filing_list(filings, pagenum)
 
         return render(request, 'filing_list.html', {
+            'feed_url': "state/%s" % state_id,
             'this_page': this_page,
             'last_page': paginator.num_pages,
             'geography_name': state_name,
