@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic.simple import direct_to_template
 from django.contrib import admin
-from feeds import MarketFeed
+from feeds import MarketFeed, StateFeed
 
 from broadcasters import views as broadcaster_views
 
@@ -39,6 +39,7 @@ urlpatterns = patterns('',
     url(r'^political-files/advertisers/', 'fccpublicfiles.views.advertiser_list', name='advertiser_list'),
     url(r'^political-files/advertiser/[\w-]+/(?P<advertiser_pk>\d+)/$', 'fccpublicfiles.views.advertiser_detail', name='advertiser_detail'),
     url(r'^political-files/feeds/market/(?P<dma_id>\d+)/$', MarketFeed()),
+    url(r'^political-files/feeds/state/(?P<state_abbreviation>\w\w)/$', StateFeed()),
 
     url(r'^happy-hour/', direct_to_template, {'template': 'happy_hour.html'}),
 

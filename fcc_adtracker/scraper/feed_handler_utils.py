@@ -4,9 +4,12 @@ from scraper.models import PDF_File, StationData
 from broadcasters.models import Broadcaster
 from scraper.management.commands.scrape_fcc_rss import handle_file
 
+add_data_to_existing_files = True
+
 def handle_feed_url(feed_url, create_new=True):
     read = get_rss(feed_url)
     #read = get_rss_from_file()
+    
     results = parse_xml_from_text(read)
     if not results:
         print "No results -- skipping"
@@ -48,15 +51,16 @@ def handle_feed_url(feed_url, create_new=True):
 
         if thisfile:
             # we've retrieved the file, so now add data to it. 
-            print "**Adding data"
+            if add_data_to_existing_files:
+                print "**Adding data"
             
-            thisfile.document_title = result['title']
-            thisfile.alternate_id = result['underscored_id']
-            thisfile.file_id = result['id']
-            thisfile.quickview_folder_path = result['full_folder_path']
-            thisfile.underscore_url = result['href']
+                thisfile.document_title = result['title']
+                thisfile.alternate_id = result['underscored_id']
+                thisfile.file_id = result['id']
+                thisfile.quickview_folder_path = result['full_folder_path']
+                thisfile.underscore_url = result['href']
             
-            thisfile.save()
+                thisfile.save()
         else:
             print "This file apparently doesn't exist %s" % (result['href'])
             if create_new:

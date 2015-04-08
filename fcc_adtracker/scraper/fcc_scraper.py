@@ -123,6 +123,8 @@ def parse_pdf_div(div_html):
         print "Found file %s match in %s " % (href, div_html)
     else:
         print "No match in file re %s" % (div_html)
+        
+    
     return (fileid, fileclass, title, href)
 
 
@@ -144,8 +146,9 @@ def get_feed_url_from_folder_url(folder_url):
         feed_url = "https://stations.fcc.gov/station-profile/%s/rss/feed-/political_file/%s" % (callsign, folder_list_formatted)
     return feed_url
         
-    
-    
+
+
+
 
 class folder_placeholder(object):
     url = None

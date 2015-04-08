@@ -252,7 +252,12 @@ class PoliticalBuy(MildModeratedModel):
         return self.related_FCC_file
 
     def advertiser_display(self):
-        return self.advertiser or 'Unknown'
+        if self.advertiser_name_exact:
+            return self.advertiser_name_exact
+        elif self.advertiser:
+            return self.advertiser
+        else:
+            return 'Unknown'
 
     def date_display(self):
         date_str = ''
