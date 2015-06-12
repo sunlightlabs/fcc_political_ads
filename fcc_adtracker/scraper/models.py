@@ -198,13 +198,18 @@ class PDF_File(models.Model):
         
     def search_text(self):
         rawpath = get_file_path(self.raw_url)
-        return " ".join(rawpath[1:])
+        if rawpath:
+            return " ".join(rawpath[1:])
+        rawpath = get_file_path(self.underscore_url)
+        if rawpath:
+            return " ".join(rawpath[1:])
+        return None
         
     def candidate_type(self):
         if self.federal_office:
             return self.federal_office
         else:
-            return self.ad_type
+            return "%s %s %s %s "
      
     def __unicode__(self):
         return self.search_text()
