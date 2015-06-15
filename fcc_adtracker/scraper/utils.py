@@ -60,6 +60,9 @@ def get_folder_path(url):
     return PathArray
 
 def parse_file_url(url):
+    if not url:
+        print "Nothing to parse"
+        return None, None
     url_parts = re.findall(file_url_re, url)
     (fac_id, pathArray) = (None, None)
     if url_parts:
