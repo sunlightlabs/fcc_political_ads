@@ -209,7 +209,9 @@ class PDF_File(models.Model):
         if self.federal_office:
             return self.federal_office
         else:
-            return " "
+            if self.ad_type:
+                return self.ad_type
+        return " "
      
     def __unicode__(self):
         return self.search_text()
