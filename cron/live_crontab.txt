@@ -1,0 +1,7 @@
+## Note that system time is UTC, or -5 hrs from DC
+*/5 * * * * /projects/fccpoliticalads/bin/scrape_fcc.sh 2>&1 >>/mnt/cron-log-scrape
+11 * * * * /projects/fccpoliticalads/bin/create_csv.sh 2>&1 >>/mnt/cron-log-create_csv
+53 * * * * /projects/fccpoliticalads/bin/hourly_updates.sh 2>&1 >>/mnt/cron-log-hourly
+#40 4 * * * /projects/fccpoliticalads/bin/backup_data.sh 2>&1 >>/mnt/cron-log
+#15 23 * * * /projects/fccpoliticalads/bin/pull_pp_data.sh 2>&1 >>/mnt/cron-log
+#20 * * * * /projects/fccpoliticalads/bin/backup_docs.sh 2>&1 >>/mnt/cron-log-backup
