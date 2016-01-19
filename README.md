@@ -133,10 +133,32 @@ To set up your local database and update migrations:
 App structure and other context clues for developers
 ----------------------------------------------------
 
+1. **App structure**
 
-1. **App structure** [forthcoming]
+The code in this repository contains commands for scraping ad data from three sources: the FCC's overall RSS feed for TV political ad buys, the FCC's station-by-station TV political ad buy RSS feeds, and the FCC's site. The first is the source used during normal operation of the AdSleuth site, and the latter two can be triggered manually (see below for instructions on manual scrapes).
 
-2. **Instructions for manually scraping and backing up data** [forthcoming]
+The following modules reside in fcc_political_ads/fcc_adtracker:
+
+- fcc_adtracker: Front-facing application
+- broadcasters, locations, volunteers: Manage these models
+- api, search, scraper: As named
+- fecdata: Gets candidate info from FEC data
+- geodata: Establishes geographical centers for media markets
+- fccpublicfiles: Code for modeling ad buys from scraper data
+- stronger_auth: Authentication functions
+- mildmoderator: Moderator code to handle volunteer and manual upload functionality
+
+
+2. **Instructions for manually scraping and backing up data**
+
+Under normal conditions (i.e. the FCC's RSS feeds are functioning properly), there should be no need to trigger manual scrapes of the feeds or the FCC site itself. If the RSS feed goes down, the code is also set up to recover any files missed once the feed is back up. However, if you want to manually scrape the RSS feed, run:
+
+```python manage.py fcc_adtracker/scraper/management/commands scrape_fcc_rss```
+
+To manually scrape the FCC's site, note that this process takes multiple days to complete due to folder-by-folder scraping across multiple TV stations, run:
+
+```python manage.py fcc_adtracker/scraper/management/commands scrape_fcc_site```
+
 
 3. **Email functionality**: If you are using a personal email to send account activation emails for new users (see configuring local settings section on how to set this up), note that this will send activation emails with the following link format:
     
