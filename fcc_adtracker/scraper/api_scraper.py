@@ -109,16 +109,10 @@ def create_pdf_filestub_from_json(pdf_json):
         # not a political file for TV
         return None
 
-
-def parse_api_feed():
+def run_date_range(startDate, endDate):
     filestubs = []
-    # Set the date to be one hour behind eastern time. 
-    # This way we're sure to get filings filed before midnight (assuming hourly scrapes)
-    now_minus_an_hour = datetime.datetime.now(pytz.timezone('US/Eastern')) - datetime.timedelta(hours=1)
-    today_string = "%s-%02d-%02d" % (now_minus_an_hour.year, now_minus_an_hour.month, now_minus_an_hour.day)
-    print("Processing files found for %s" % (today_string))
 
-    payload = {'startDate': today_string}
+    payload = {'startDate': startDate, 'endDate':endDate}
     result = requests.get(API_BASE, params=payload)
 
     if result.status_code == 200:
@@ -132,5 +126,14 @@ def parse_api_feed():
     else:
         print("API call failed with status %s " % result.status_code)
 
+    return filestubs
+
+def parse_api_feed():
+    ## use Eastern time minus an hour so we make sure to collect filings filed after midnight
+    ## assumes an hourly (or more frequent) scrape time.
+    now_minus_an_hour = datetime.datetime.now(pytz.timezone('US/Eastern')) - datetime.timedelta(hours=1)
+    today_string = "%s-%02d-%02d" % (now_minus_an_hour.year, now_minus_an_hour.month, now_minus_an_hour.day)
+    print("Processing files found for %s" % (today_string))
+    filestubs = run_date_range(today_string, today_string)
     return filestubs
 
