@@ -116,7 +116,7 @@ def parse_api_feed():
     # This way we're sure to get filings filed before midnight (assuming hourly scrapes)
     now_minus_an_hour = datetime.datetime.now(pytz.timezone('US/Eastern')) - datetime.timedelta(hours=1)
     today_string = "%s-%02d-%02d" % (now_minus_an_hour.year, now_minus_an_hour.month, now_minus_an_hour.day)
-    print("Processing files found for %s" % (today))
+    print("Processing files found for %s" % (today_string))
 
     payload = {'startDate': today_string}
     result = requests.get(API_BASE, params=payload)
