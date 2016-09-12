@@ -186,6 +186,13 @@ class PDF_File(models.Model):
     missing_as_of_date = models.DateTimeField(blank=True, null=True, auto_now=False, help_text="When did we first notice the file was missing?")
     paths_configured = models.NullBooleanField(default=False, help_text="Have we guessed file paths that we can guess?")
     
+    ## 2016 HACK FOR NEW API
+    fcc_file_id = models.CharField(max_length=40, blank=True, null=True, help_text='36-digit hash from FCC API')
+    folder_id = models.CharField(max_length=40, blank=True, null=True, help_text='36-digit hash from FCC API')
+    file_manager_id = models.CharField(max_length=40, blank=True, null=True, help_text='36-digit hash from FCC API')
+    download_url = models.CharField(max_length=255, blank=True, null=True, help_text='link to actually download file')
+    file_status = models.CharField(max_length=31, blank=True, null=True)
+    history_status = models.CharField(max_length=31, blank=True, null=True)
     
     def path(self):
         return get_file_path(self.raw_url)
