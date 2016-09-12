@@ -1,11 +1,8 @@
 import urllib2, re, pytz
-
 from datetime import datetime, date
 from lxml import etree
 from StringIO import StringIO
-
 from dateutil.parser import parse as dateparse
-
 
 est=pytz.timezone('US/Eastern')
 
@@ -36,7 +33,8 @@ def get_id(stringtext):
     else:
         print "Missing id in %s" % stringtext
     return this_id
-    
+
+
 def parse_file_url(url):
     url_parts = re.findall(file_url_re, url)
     (fac_id, pathArray) = (None, None)
@@ -52,6 +50,7 @@ def parse_file_url(url):
 def parse_xml_from_text(xml):
     datefound = date.today()
     political_files = []
+
     try:
         tree = etree.parse(StringIO(xml))
     except etree.XMLSyntaxError:
@@ -59,9 +58,9 @@ def parse_xml_from_text(xml):
         return None
     results = []
     
-    for  elt in tree.getiterator('{http://www.w3.org/2005/Atom}feed'):
+    for elt in tree.getiterator('{http://www.w3.org/2005/Atom}feed'):
         for childelt in elt.getiterator('{http://www.w3.org/2005/Atom}entry'):
-            stringtext =  etree.tostring(childelt, pretty_print=True)
+            stringtext = etree.tostring(childelt, pretty_print=True)
             try:
                 underscored_id = ""
                 [date_found, timefound] = [None, None]
@@ -73,13 +72,13 @@ def parse_xml_from_text(xml):
                     time_found = datetime.strptime(date_loaded + " " + time_loaded + " " + time_pm, '%m/%d/%Y %I:%M %p')
                 else:
                     pass
-                    #print "!! no path / date info found"
                 
                 this_id = get_id(stringtext)
             
                 urlfound = re.search(url_re, stringtext)
                 [federal_office, federal_district, office, district] = [None, None, None, None]
                 is_outside_group = False
+
                 if urlfound:
                     this_url = urlfound.group(1)
                 
@@ -103,7 +102,7 @@ def parse_xml_from_text(xml):
                         name = path[-2:-1][0]
 
                         # hard truncate. This data's a mess.
-                        ad_type =details[1]
+                        ad_type = details[1]
                         if office:
                             federal_office = office[:31]
                         if district:
@@ -114,7 +113,6 @@ def parse_xml_from_text(xml):
                         callsign_result = callsign_re.search(full_folder_path)
                         if callsign_result:
                             callsign = callsign_result.group(1).upper()
-                    
                     
                         underscored_url = ""
                         filedir_url = ""
@@ -164,7 +162,8 @@ def get_rss(this_rss_url):
     response = urllib2.urlopen(req)
     rssdata = response.read()
     return rssdata
-    
+
+
 def get_rss_from_web():
     return get_rss(rss_url)
 
@@ -174,9 +173,11 @@ def write_rss_to_file(rssdata):
     outfile.write(rssdata)
     outfile.close()
 
+
 def get_rss_from_file():
     infile = open(tempfile, 'r')
     return infile.read()
+
 
 if __name__ == '__main__':
     rssdata = get_rss_from_file()

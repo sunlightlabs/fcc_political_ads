@@ -164,6 +164,7 @@ INSTALLED_APPS = (
 
     'locksmith.auth',
     'tastypie',
+    'api',
 )
 
 # A sample logging configuration. The only tangible logging

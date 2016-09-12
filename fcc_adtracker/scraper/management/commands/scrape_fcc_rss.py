@@ -40,6 +40,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         rssdata = get_rss_from_web()
         political_files = parse_xml_from_text(rssdata)
+	print political_files
         for thisfile in political_files:
             handle_file(thisfile)
             

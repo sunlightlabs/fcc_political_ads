@@ -12,7 +12,7 @@ from scraper.utils import mandated_stations
 from scraper.models import PDF_File
 
 FCC_SCRAPER_LOG_DIRECTORY = getattr(settings, 'FCC_SCRAPER_LOG')
-YEARS_WE_CARE_ABOUT = ['2013', '2014']
+YEARS_WE_CARE_ABOUT = [ '2014']
 
 class Command(BaseCommand):        
         
@@ -34,9 +34,11 @@ class Command(BaseCommand):
             process_recursively = options.get('process_recursively')
 
             if (len(args) == 0):
-                all_station_values = PDF_File.objects.all().order_by('callsign').values('callsign').distinct()
+                #all_station_values = PDF_File.objects.all().order_by('callsign').values('callsign').distinct()
+                all_station_values = ['KYW-TV', 'WCAU', 'WFMZ', 'WMGM-TV', 'WPHL-TV', 'WPSG', 'WPVI-TV', 'WTVE', 'WTXF-TV', 'WUVP-DT', 'WWSI'] 
                 for this_station in all_station_values:
-                    this_callsign = this_station['callsign']
+                    #this_callsign = this_station['callsign']
+                    this_callsign = this_station
                     for year in YEARS_WE_CARE_ABOUT:
                         print "\n\nProcessing %s : %s - logs to: %s" % (year, this_callsign, FCC_SCRAPER_LOG_DIRECTORY)
                         url = "https://stations.fcc.gov/station-profile/%s/political-files/browse->%s" % (this_callsign, year)

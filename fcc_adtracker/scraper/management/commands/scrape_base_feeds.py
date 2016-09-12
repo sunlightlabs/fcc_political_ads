@@ -20,7 +20,8 @@ class Command(BaseCommand):
         
         
         def handle(self, *args, **options):
-            all_station_values = PDF_File.objects.all().order_by('callsign').values('callsign').distinct()
+            #all_station_values = PDF_File.objects.all().order_by('callsign').values('callsign').distinct()
+            all_station_values = PDF_File.objects.filter(callsign__gte='KMGH-TV').order_by('callsign').values('callsign').distinct()
             for this_station in all_station_values:
                 this_callsign = this_station['callsign']
                 feed_url = get_working_station_feed_url(this_callsign)
