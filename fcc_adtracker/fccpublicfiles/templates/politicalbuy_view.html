@@ -25,8 +25,7 @@
     <div class="row module">
         <div id="buyData" class="span5">
             <dl class="moduleSm floatedList clearfix stationProfile">
-				<dt>File Source:</dt><dd>{% if obj.is_FCC_doc %}<a href="https://stations.fcc.gov/">FCC site</a>{% else %}Submission{% endif %}</dd>
-                <dt>FCC file:</dt><dd>{{ obj.raw_url }}</dd>
+				<dt>FCC Path:</dt><dd>{% if obj.related_FCC_file.download_url %}<a href="{{obj.related_FCC_file.raw_url }}">Original Document</a>{% else %}</dd>
 				{% if obj.is_FCC_doc %}
 				<dt>Ad Type:</dt><dd>{{ obj.related_FCC_file.ad_type}}</dd>{% endif %}
 				{% if obj.advertiser %}<dt>Advertiser:</dt><dd>{{ obj.advertiser.name }} </a></dd>{% endif %}
