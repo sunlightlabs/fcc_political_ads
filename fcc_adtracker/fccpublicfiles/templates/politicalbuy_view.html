@@ -58,8 +58,7 @@
                 <li><p><a href="http://reporting.sunlightfoundation.com/outside-spending/search/?q={{obj.advertiser.name|urlencode}}">Search for {{obj.advertiser.name }}</a> on Follow the Unlimited Money</p>
                 {% endif %}
 -->
-                <li><p><a href="{{obj.related_FCC_file.raw_url }}">Original Document</a></p></li>
-{% if obj.using_pp_data %}<li>* Data from ProPublica's <a href="https://projects.propublica.org/free-the-files/">free the files</a> project.</li>{% endif %}
+                <li><p>{% if obj.related_FCC_file.download_url %}<a href="{{obj.related_FCC_file.download_url }}">Original Document</a>{% else %}Not available{% endif %}</p></li>
             </ul>
 		{% endif %}
         </div>
