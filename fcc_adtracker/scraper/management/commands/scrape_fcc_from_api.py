@@ -15,9 +15,17 @@ my_logger.info("starting fcc rss scrape...")
 
 class Command(BaseCommand):
     
-    
     def handle(self, *args, **options):
-        political_files = parse_api_feed()
+        political_files = None
+
+        if args:
+            start_date = args[0]
+            end_date = args[1]
+            print "start_date=%s end_date=%s" % (start_date, end_date)
+            political_files = parse_api_feed(start_date, end_date)
+        else:
+            political_files = parse_api_feed()
+
         for thisfile in political_files:
             if not thisfile:
                 # if there's no details, continue

@@ -128,12 +128,26 @@ def run_date_range(startDate, endDate):
 
     return filestubs
 
-def parse_api_feed():
-    ## use Eastern time minus an hour so we make sure to collect filings filed after midnight
-    ## assumes an hourly (or more frequent) scrape time.
-    now_minus_an_hour = datetime.datetime.now(pytz.timezone('US/Eastern')) - datetime.timedelta(hours=1)
-    today_string = "%s-%02d-%02d" % (now_minus_an_hour.year, now_minus_an_hour.month, now_minus_an_hour.day)
-    print("Processing files found for %s" % (today_string))
-    filestubs = run_date_range(today_string, today_string)
+def parse_api_feed(startDate=None, endDate=None):
+
+    filestubs = None
+    if startDate and endDate:
+        print("Processing files for time range %s-%s (inclusive)" % (startDate, endDate))
+        filestubs = run_date_range(startDate, endDate)
+
+    else:
+        ## use Eastern time minus an hour so we make sure to collect filings filed after midnight
+        ## assumes an hourly (or more frequent) scrape time.
+        now_minus_an_hour = datetime.datetime.now(pytz.timezone('US/Eastern')) - datetime.timedelta(hours=1)
+        today_string = "%s-%02d-%02d" % (now_minus_an_hour.year, now_minus_an_hour.month, now_minus_an_hour.day)
+        print("Processing files found for %s" % (today_string))
+        filestubs = run_date_range(today_string, today_string)
+        
     return filestubs
 
+"""
+To run longer time ranges manually from the django shell use:
+from scraper.api_scraper import run_date_range
+run_date_
+
+"""
