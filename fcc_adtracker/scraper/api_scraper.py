@@ -1,6 +1,8 @@
-import requests, json, re
-from datetime import date
-
+import requests
+import json
+import re
+import datetime
+import pytz
 
 
 API_BASE = "https://publicfiles.fcc.gov/api/manager/file/history.json"
@@ -110,9 +112,10 @@ def create_pdf_filestub_from_json(pdf_json):
 
 def parse_api_feed():
     filestubs = []
-    today = date.today()
-    ## still need to deal with timezones; this hack fails some of the time if tz varies
-    today_string = "%s-%02d-%02d" % (today.year, today.month, today.day)
+    # Set the date to be one hour behind eastern time. 
+    # This way we're sure to get filings filed before midnight (assuming hourly scrapes)
+    now_minus_an_hour = datetime.datetime.now(pytz.timezone('US/Eastern')) - datetime.timedelta(hours=1)
+    today_string = "%s-%02d-%02d" % (now_minus_an_hour.year, now_minus_an_hour.month, now_minus_an_hour.day)
     print("Processing files found for %s" % (today))
 
     payload = {'startDate': today_string}
