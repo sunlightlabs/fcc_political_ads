@@ -33,7 +33,7 @@ def read_url(url, dry_run=False):
 
 # assumes we're looking at 2012
 folder_url_re = re.compile(r'https://stations.fcc.gov/station-profile/(.*?)/political-files/browse->(.*)')
-file_url_re = re.compile(r'https://stations.fcc.gov/collect/files/(\d+)/Political File/(.+)')
+file_url_re = re.compile(r'Political Files/(\d+)/(.*)')
 
 #https://stations.fcc.gov/station-profile/wpvi-tv/political-files/browse->2012->state->delaware->markell_for_delaware
 def clean_path(url):
@@ -66,7 +66,6 @@ def parse_file_url(url):
     url_parts = re.findall(file_url_re, url)
     (fac_id, pathArray) = (None, None)
     if url_parts:
-        fac_id = url_parts[0][0]
         path = url_parts[0][1]
         pathArray = path.split('/')
     else:
