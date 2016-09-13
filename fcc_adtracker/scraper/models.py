@@ -200,8 +200,13 @@ class PDF_File(models.Model):
         rawpath = get_file_path(self.raw_url)
         return ":".join(rawpath[1:-1])
     def file_name(self):
-        rawpath = get_file_path(self.raw_url)
-        return (rawpath[-1:][0])
+        if self.download_url:
+            rawpath = get_file_path(self.raw_url)
+            return (rawpath[-1:][0])
+        else:
+            parts = self.raw_url.split('Political File')
+            return parts[-1].replace("/", " - ")
+
         
     def search_text(self):
         rawpath = get_file_path(self.raw_url)
@@ -210,7 +215,9 @@ class PDF_File(models.Model):
         rawpath = get_file_path(self.underscore_url)
         if rawpath:
             return " ".join(rawpath[1:])
-        return " "
+        else:
+            parts = self.raw_url.split('Political File')
+            return parts[-1].replace("/", " - ")
         
     def candidate_type(self):
         if self.federal_office:
