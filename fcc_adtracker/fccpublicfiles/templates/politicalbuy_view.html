@@ -51,7 +51,7 @@
 			<b>More Information</b>
 			{% if obj.related_FCC_file %}
            <ul class="unstyled">
-                <li><p>{% if obj.related_FCC_file.download_url %}<a href="{{obj.related_FCC_file.download_url }}">Original Document</a>{% else %}Not available{% endif %}{% if obj.related_FCC_file.folder_id %}<br><a href="https://publicfiles.fcc.gov/tv-profile/{{ obj.related_FCC_file.callsign }}/political-files/{{obj.related_FCC_file.folder_id }}/">See FCC folder</a></p></li>{% else %}Not available{% endif %}</p></li>
+                <li><p>{% if obj.related_FCC_file.download_url %}<a href="{{obj.related_FCC_file.download_url }}">Original Document</a>{% else %}Not available{% endif %}{% if obj.related_FCC_file.folder_id %}<br><a href="https://publicfiles.fcc.gov/tv-profile/{{ obj.related_FCC_file.callsign }}/political-files/{{obj.related_FCC_file.folder_id }}/">See FCC folder</a></p></li>{% else %}{% endif %}</p></li>
             </ul>
 		{% endif %}
         </div>
