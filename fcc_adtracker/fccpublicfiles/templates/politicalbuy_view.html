@@ -51,15 +51,7 @@
 			<b>More Information</b>
 			{% if obj.related_FCC_file %}
            <ul class="unstyled">
-				<!--
-                {% if obj.advertiser.fec_id != '' %}
-                <li><p id='fec_id'><a href="http://reporting.sunlightfoundation.com/outside-spending/committee/{{obj.advertiser.name|slugify}}/{{ obj.advertiser.fec_id }}/">Follow the Unlimited Money Profile</a></p>
-                {% else %}
-                <li><p><a href="http://reporting.sunlightfoundation.com/outside-spending/search/?q={{obj.advertiser.name|urlencode}}">Search for {{obj.advertiser.name }}</a> on Follow the Unlimited Money</p>
-                {% endif %}
--->
-                <li><p>{% if obj.related_FCC_file.download_url %}<a href="{{obj.related_FCC_file.download_url }}">Original Document</a>{% else %}Not available{% endif %}</p></li>
-                {% if obj.related_FCC_file.folder_id %}<li><p><a href="https://publicfiles.fcc.gov/tv-profile/{{ obj.related_FCC_file.callsign }}/political-files/{{obj.related_FCC_file.folder_id }}/">See FCC folder</a></p></li>{% else %}Not available</p></li>{% endif %}
+                <li><p>{% if obj.related_FCC_file.download_url %}<a href="{{obj.related_FCC_file.download_url }}">Original Document</a>{% else %}Not available{% endif %}{% if obj.related_FCC_file.folder_id %}<br><a href="https://publicfiles.fcc.gov/tv-profile/{{ obj.related_FCC_file.callsign }}/political-files/{{obj.related_FCC_file.folder_id }}/">See FCC folder</a></p></li>{% else %}Not available{% endif %}</p></li>
             </ul>
 		{% endif %}
         </div>
