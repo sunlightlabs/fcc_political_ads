@@ -59,6 +59,7 @@
                 {% endif %}
 -->
                 <li><p>{% if obj.related_FCC_file.download_url %}<a href="{{obj.related_FCC_file.download_url }}">Original Document</a>{% else %}Not available{% endif %}</p></li>
+                {% if obj.related_FCC_file.folder_id %}<li><p><a href=https://publicfiles.fcc.gov/tv-profile/{{ obj.related_FCC_file.callsign }}/political-files/"{{obj.related_FCC_file.folder_id }}/">See FCC folder</a></p></li>{% else %}Not available{</p></li>% endif %}
             </ul>
 		{% endif %}
         </div>
