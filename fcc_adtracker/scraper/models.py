@@ -205,7 +205,9 @@ class PDF_File(models.Model):
             return (rawpath[-1:][0])
         else:
             parts = self.raw_url.split('Political File')
-            return parts[-1].replace("/", " - ")
+            url_bits = parts[-1].split("/")
+            url_bits.reverse()
+            return url_bits.join("-")
 
         
     def search_text(self):
@@ -217,7 +219,9 @@ class PDF_File(models.Model):
             return " ".join(rawpath[1:])
         else:
             parts = self.raw_url.split('Political File')
-            return parts[-1].replace("/", " - ")
+            url_bits = parts[-1].split("/")
+            url_bits.reverse()
+            return url_bits.join("-")
         
     def candidate_type(self):
         if self.federal_office:
